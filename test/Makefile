@@ -10,7 +10,7 @@ LINKER=$(TOOL_PREFIX)clang++
 SOPATH=../build/capchk/libcapchk.so
 
 all:
-	$(TOOL_PREFIX)clang++ -O0 -c -emit-llvm chknchk.c -o test.bc ${CFLAGS}
+	$(TOOL_PREFIX)clang -O0 -c -emit-llvm chknchk.c -o test.bc ${CFLAGS}
 
 	$(TOOL_PREFIX)opt \
 					-load=${SOPATH} \

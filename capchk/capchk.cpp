@@ -59,6 +59,8 @@
 #include "stopwatch.h"
 STOP_WATCH;
 
+#define DEBUG 1
+
 using namespace llvm;
 
 #define DEBUG_TYPE "capchk"
@@ -67,7 +69,13 @@ using namespace llvm;
  * define statistics if not enabled in LLVM
  */
 
-#if (!LLVM_ENABLE_STATS)
+#if defined(LLVM_ENABLE_STATS)
+#undef LLVM_ENABLE_STATS
+#endif
+
+#if defined(NDEBUG)\
+    || !defined(LLVM_ENABLE_STATS)\
+    ||(!LLVM_ENABLE_STATS)
 
 #undef STATISTIC
 #define CUSTOM_STATISTICS 1
@@ -90,7 +98,7 @@ class capchk : public ModulePass
         bool capchkPass(Module &);
 
         void process_each_function(Module& module);
-        void verify(Module& module);
+        //void verify(Module& module);
         #ifdef CUSTOM_STATISTICS
         void dump_statistics();
         #endif
@@ -188,12 +196,83 @@ void capchk::dump_dbgstk()
 }
 
 /*
- * prcess all functions in module
+ * all critical function that should be protected goes here
+ */
+static const char* critical_functions [] =
+{
+    "critical_function",
+};
+
+bool is_critical_function(const std::string& str)
+{
+    if (std::find(std::begin(critical_functions),
+                std::end(critical_functions),
+            str) != std::end(critical_functions))
+    {
+        return true;
+    }
+    return false;                                  
+}
+
+/*
+ * prcess all interesting 
+ *
+ *------------------------
+ * algo1.
+ * way to find out all interesting branch conditions:
+ *
+ * Given interesting function list Pi, for each function pi , we find out all
+ * call site, for each call site, we do backward slicing to find out all path Psi
+ * then we intersect each items in Psi to see if there are branch conditions that
+ * intersect, if the conditional variable intersect, we consider the variable as
+ * an interesting variable, and put them into Omega.//
+ *
+ *------------------------
+ * algo2.
+ * turn each conditional branch check into return instruction and see if 
+ * the callsite is still reachable, if the callsite is still reachable then
+ * there's a missing check if it is unreachable then we think all things are
+ * checked.//
+ * The following algorithm implemented algo2, which assumes that we already know
+ * interesting variable.
+ *
+ * in order to findout which conditional (variable)check need to turn into Return
+ * instruction, we do IPA, find aliased variable for those conditional checks, 
+ * and turn them into Return instruction one by one
+ *
  */
 void capchk::process_each_function(Module& module)
 {
     std::list<Function*> processed_flist;
-    //for each function
+    //for each function find out all callsite(use)
+    //process one critical function at a time
+    for (Module::iterator f_begin = module.begin(), f_end = module.end();
+            f_begin != f_end; ++f_begin)
+    {
+        Function *func_ptr = dyn_cast<Function>(f_begin);
+        if (!is_critical_function(func_ptr->getName()))
+        {
+            continue;
+        }
+        errs()<<ANSI_COLOR_GREEN
+            << func_ptr->getName()
+            <<ANSI_COLOR_RED<<" called from:\n";
+        //interesting. let's find out all callsite
+        for (auto *U: func_ptr->users())
+        {
+            Value *u = dyn_cast<Value>(U);
+            //u->print(errs());
+            if (isa<CallInst>(u) || isa<InvokeInst>(u))
+            {
+                Instruction *csi = dyn_cast<Instruction>(u);
+                errs()<<"    "
+                    <<csi->getFunction()->getName()<<"\n";
+            }
+        }
+    }
+
+#if 0
+
     for (Module::iterator f_begin = module.begin(), f_end = module.end();
             f_begin != f_end; ++f_begin)
     {
@@ -206,11 +285,14 @@ void capchk::process_each_function(Module& module)
         {
             continue;
         }
+        processed_flist->push_back(func_ptr);
+        //no need to inspect Declaration
         if (func_ptr->isDeclaration())
         {
             ExternalFuncCounter++;
             continue;
         }
+
         FuncCounter++;
         #if DEBUG
         errs()<<ANSI_COLOR_MAGENTA
@@ -249,6 +331,18 @@ void capchk::process_each_function(Module& module)
                     ii!=ie; ++ii)
             {
                 Instruction *I = dyn_cast<Instruction>(ii);
+                switch(I->getOpcode())
+                {
+                    case(Instruction::Call):
+                        
+                        ;
+                    case(Instruction::Invoke):
+                        
+                        ;
+                    break:
+                        //ignore non-call site
+                        ;
+                }
             }
             /*
              * insert all successor of current basic block to work list
@@ -284,8 +378,9 @@ void capchk::process_each_function(Module& module)
             }
         }
     }
+#endif
 }
-
+#if 0
 void capchk::verify(Module& module)
 {
     errs()<<"  check bogus instruction parent ";
@@ -429,7 +524,7 @@ examine_ret_type_fail:
     errs()<<"["<<ANSI_COLOR_GREEN<<"OK"<<ANSI_COLOR_RESET<<"]\n";
     #endif
 }
-
+#endif
 
 bool capchk::runOnModule(Module &module)
 {
