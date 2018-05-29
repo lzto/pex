@@ -246,6 +246,9 @@ bool is_critical_function(const std::string& str)
  * and turn them into Return instruction one by one
  *
  */
+
+typedef std::list<Value*> VList;
+
 void capchk::process_each_function(Module& module)
 {
     std::list<Function*> processed_flist;
@@ -263,6 +266,8 @@ void capchk::process_each_function(Module& module)
             << func_ptr->getName()
             <<ANSI_COLOR_RED<<" called from:\n";
         //interesting. let's find out all callsite
+        //for each call site, figure out all variables used for conditional branch
+        std::list<VList*> dataflow;
         for (auto *U: func_ptr->users())
         {
             Value *u = dyn_cast<Value>(U);
@@ -272,6 +277,7 @@ void capchk::process_each_function(Module& module)
                 Instruction *csi = dyn_cast<Instruction>(u);
                 errs()<<"    "
                     <<csi->getFunction()->getName()<<"\n";
+                //figure out all predecessors and
             }
         }
     }
