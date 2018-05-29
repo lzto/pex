@@ -1,4 +1,4 @@
-#TOOL_PREFIX=/opt/toolchain/llvm-git/bin/
+TOOL_PREFIX=/opt/toolchain/llvm-git/bin/
 
 CFLAGS= -O0 -g
 LLC_CFLAGS=-O0
@@ -47,13 +47,16 @@ see: gendot
 	make cfg
 
 gendot:
-	$(TOOL_PREFIX)/opt test-inst.bc -dot-callgraph -dot-cfg
+	$(TOOL_PREFIX)/opt test.bc -dot-callgraph -dot-cfg
 
 DOTSRC=$(wildcard *.dot)
 
 cfg:
 	@$(foreach dotfile, $(DOTSRC), dot $(dotfile) -Tpdf -o $(dotfile).pdf;)
 #	@$(foreach dotfile, $(DOTSRC), dot $(dotfile) -Tpng -o $(dotfile).png;)
+
+xdot:
+	xdot callgraph.dot
 
 run:
 	./test
