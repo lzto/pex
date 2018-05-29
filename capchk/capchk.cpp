@@ -59,7 +59,12 @@
 #include "stopwatch.h"
 STOP_WATCH;
 
+#if defined(DEBUG)
+#undef DEBUG
 #define DEBUG 1
+#else
+#define DEBUG 1
+#endif
 
 using namespace llvm;
 
