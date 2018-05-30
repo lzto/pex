@@ -260,6 +260,52 @@ bool is_check_function(const std::string& str)
     return false;                                  
 }
 
+/*
+ * functions not interesting will be skipped
+ */
+static const char* skip_functions [] = 
+{
+    //may operate on wrong source?
+    "mutex_lock",
+    "mutex_unlock",
+    "schedule",
+    "_cond_resched",
+    "printk",
+    "__kmalloc",
+    "signal_fault",
+    "set_current_blocked",
+    "fpu__restore_sig",
+    "restore_altstack",
+    "__bitmap_clear",
+    "__bitmap_set",
+    "load_direct_gdt",
+    "load_fixmap_gdt",
+    "write_ldt",
+    "clear_user",
+    "_copy_to_user",
+    "_do_fork",
+    "_raw_write_lock_irq",
+    "_raw_spin_lock",
+    "__schedule",
+    "blk_flush_plug_list",
+    "mlock_fixup",
+    "rcu_all_qs",
+    "tty_vhangup_self",
+    "wakeup_flusher_threads",
+    "laptop_sync_completion",
+};
+
+bool is_skip_function(const std::string& str)
+{
+    if (std::find(std::begin(skip_functions),
+                std::end(skip_functions),
+            str) != std::end(skip_functions))
+    {
+        return true;
+    }
+    return false;                                  
+}
+
 
 /*
  * prcess all interesting 
@@ -297,14 +343,17 @@ void capchk::process_each_function(Module& module)
 {
 
     //generate critical functions from syscall entry function
+    //also check usage of check functions inside syscalls
     for (Module::iterator f_begin = module.begin(), f_end = module.end();
             f_begin != f_end; ++f_begin)
     {
         Function *func_ptr = dyn_cast<Function>(f_begin);
         if (func_ptr->isDeclaration())
             continue;
-        if (!func_ptr->getName().startswith("sys_"))
+        if (!(func_ptr->getName().startswith("sys_")
+                || func_ptr->getName().startswith("SyS_")))
             continue;
+        errs()<<func_ptr->getName()<<"\n";
         /*
          * we have a syscall entry, explore inside to create critical function
          * list,
@@ -344,8 +393,14 @@ void capchk::process_each_function(Module& module)
                 Function* csfunc = I->getCalledFunction();
                 if (csfunc && csfunc->hasName())
                 {
+                    if (is_check_function(csfunc->getName()))
+                    {
+                        errs()<<"    Check function used.\n";
+                    }
+
                     if (csfunc->getName().startswith("llvm.")
-                            ||is_check_function(csfunc->getName()))
+                            ||is_check_function(csfunc->getName())
+                            ||is_skip_function(csfunc->getName()))
                     {
                         //ignore all llvm internal functions
                         //and all check functions
@@ -356,7 +411,7 @@ void capchk::process_each_function(Module& module)
                     {
                         critical_functions.push_back(csfunc->getName());
                         cf_set.insert(csfunc->getName());
-                        //errs()<<"+"<<csfunc->getName()<<"\n";
+                        //errs()<<csfunc->getName()<<"\n";
                     }
                 }
             }
@@ -373,6 +428,8 @@ void capchk::process_each_function(Module& module)
         }
     }
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
+
+
     std::list<Function*> processed_flist;
     //for each critical function find out all callsite(use)
     //process one critical function at a time
