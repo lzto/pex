@@ -109,16 +109,22 @@ class capchk : public ModulePass
         bool capchkPass(Module &);
 
         void process_each_function(Module& module);
+        void chk_div0(Module& module);
+        void chk_unsafe_access(Module& module);
+
         //void verify(Module& module);
         #ifdef CUSTOM_STATISTICS
         void dump_statistics();
         #endif
 
+        //used by chk_unsafe_access
+        bool is_safe_access(Instruction *ins, Value* addr, uint64_t type_size);
+
         /*
          * context for current module
          */
         LLVMContext *ctx;
-        Module* module;
+        Module* m;
         /*
          * for debug purpose
          */
@@ -205,6 +211,220 @@ void capchk::dump_dbgstk()
         dbgstk.pop();
     }
     errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
+}
+
+bool capchk::is_safe_access(Instruction* ins,Value* addr, uint64_t type_size)
+{
+    uint64_t size;
+    uint64_t offset;
+    bool result;
+
+    bool know = false;
+    std::string reason = "";
+
+    if(isa<GlobalVariable>(addr))
+    {
+        GlobalVariable* gv = dyn_cast<GlobalVariable>(addr);
+        if(gv->getLinkage()==GlobalValue::ExternalLinkage)
+        {
+            goto fallthrough;
+        }
+        if (!gv->hasInitializer())
+        {
+            //we have no idea???
+            goto fallthrough;
+        }
+        Constant* initializer = gv->getInitializer();
+        Type* itype = initializer->getType();
+        unsigned allocated_size = m->getDataLayout()
+                        .getTypeAllocSize(itype);
+        size = allocated_size;
+        offset = 0;
+    }else
+    {
+fallthrough:
+        const TargetLibraryInfo * TLI = 
+            &getAnalysis<TargetLibraryInfoWrapperPass>().getTLI();
+        const DataLayout &dl = m->getDataLayout();
+        ObjectSizeOffsetVisitor* obj_size_vis;
+        ObjectSizeOpts ObjSizeOptions;
+        ObjSizeOptions.RoundToAlign = true;
+        obj_size_vis = new ObjectSizeOffsetVisitor(dl, TLI, *ctx, ObjSizeOptions);
+
+        SizeOffsetType size_offset = obj_size_vis->compute(addr);
+        if (!obj_size_vis->bothKnown(size_offset))
+        {
+            if (obj_size_vis->knownSize(size_offset))
+            {
+                reason += "size: " + size_offset.first.getZExtValue();
+            }else
+            {
+                reason += "size: NA ";
+            }
+            reason += " ";
+            if (obj_size_vis->knownOffset(size_offset))
+            {
+                reason += "Offset: " + size_offset.second.getSExtValue();
+            }else
+            {
+                reason += "offset: NA";
+            }
+            result = false;
+            goto dead_or_alive;
+        }
+        know = true;
+        size = size_offset.first.getZExtValue();
+        offset = size_offset.second.getSExtValue();
+    }
+    result = (offset >= 0) && (size >= uint64_t(offset)) &&
+        ((size - uint64_t(offset)) >= (type_size / 8));
+
+dead_or_alive:
+    if (know)
+    {   
+        if (!result)
+        {
+            errs()<<" "<<ins->getParent()->getParent()->getName()<<":"<<ANSI_COLOR_RED;
+            ins->getDebugLoc().print(errs());
+            errs()<<ANSI_COLOR_RESET"\n";
+
+            errs()<<ANSI_COLOR_RED
+                <<"NOT SAFE, "
+                <<ANSI_COLOR_RESET
+                <<"Reason:"
+                <<reason<<"  "
+                <<"Offset:"<<offset
+                <<", size:"<<size<<"\n";
+        }
+    }else//unknown
+    {
+        errs()<<" unknown "<<ins->getParent()->getParent()->getName()
+            <<":"<<ANSI_COLOR_RED;
+        ins->getDebugLoc().print(errs());
+        errs()<<ANSI_COLOR_RESET"\n";
+        
+        errs()<<"Reason:"<<reason<<"\n";
+    }
+    return result;
+}
+
+void capchk::chk_unsafe_access(Module& module)
+{
+    size_t total_dereference = 0;
+    std::map<Value*, Value*> safe_access_list;
+
+    for (Module::iterator mi = module.begin(), me = module.end();
+            mi != me; ++mi)
+    {
+        Function *func = dyn_cast<Function>(mi);
+        if (func->isDeclaration())
+        {
+            continue;
+        }
+        for(Function::iterator fi = func->begin(), fe = func->end();
+            fi != fe; ++fi)
+        {
+            BasicBlock* blk = dyn_cast<BasicBlock>(fi);
+            for (BasicBlock::iterator bi = blk->begin(), be = blk->end();
+                bi != be; ++bi)
+            {
+                Value* ptr_operand;
+                uint64_t rwsize;
+                if(isa<LoadInst>(bi))
+                {
+                    LoadInst* load = dyn_cast<LoadInst>(bi);
+                    ptr_operand = load->getPointerOperand();
+                    rwsize = module.getDataLayout()
+                             .getTypeStoreSizeInBits(load->getType());
+                }else if(isa<StoreInst>(bi))
+                {
+                    StoreInst* store = dyn_cast<StoreInst>(bi);
+                    ptr_operand = store->getPointerOperand();
+                    rwsize = module.getDataLayout()
+                             .getTypeStoreSizeInBits(store
+                                    ->getValueOperand()
+                                    ->getType());
+                }else
+                {
+                    continue;
+                }
+                total_dereference++;
+                if (is_safe_access(dyn_cast<Instruction>(bi),ptr_operand, rwsize))
+                {
+                    safe_access_list[dyn_cast<Instruction>(bi)] = ptr_operand;
+                }
+            }
+        }
+    }
+    errs()<<" "
+        <<safe_access_list.size()
+        <<"/"
+        <<total_dereference
+        <<" safe access collected\n";
+}
+
+static bool mayDivideByZero(Instruction *I) {
+    if (!(I->getOpcode() == Instruction::UDiv ||
+           I->getOpcode() == Instruction::SDiv ||
+           I->getOpcode() == Instruction::URem ||
+           I->getOpcode() == Instruction::SRem))
+    {
+        return false;
+    }
+    Value *Divisor = I->getOperand(1);
+    auto *CInt = dyn_cast<ConstantInt>(Divisor);
+    return !CInt || CInt->isZero();
+}
+
+void capchk::chk_div0(Module& module)
+{
+    for (Module::iterator f_begin = module.begin(), f_end = module.end();
+            f_begin != f_end; ++f_begin)
+    {
+        Function *func_ptr = dyn_cast<Function>(f_begin);
+        if (func_ptr->isDeclaration())
+            continue;
+        //errs()<<func_ptr->getName()<<"\n";
+        std::set<BasicBlock*> bb_visited;
+        std::queue<BasicBlock*> bb_work_list;
+        bb_work_list.push(&func_ptr->getEntryBlock());
+        while(bb_work_list.size())
+        {
+            BasicBlock* bb = bb_work_list.front();
+            bb_work_list.pop();
+            if(bb_visited.count(bb))
+            {
+                continue;
+            }
+            bb_visited.insert(bb);
+            
+            for (BasicBlock::iterator ii = bb->begin(),
+                    ie = bb->end();
+                    ii!=ie; ++ii)
+            {
+                Instruction* pvi = dyn_cast<Instruction>(ii);
+                if (!mayDivideByZero(pvi))
+                {
+                    continue;
+                }
+                errs()<<" "<<func_ptr->getName()<<":"<<ANSI_COLOR_RED;
+                pvi->getDebugLoc().print(errs());
+                errs()<<ANSI_COLOR_RESET"\n";
+                pvi->print(errs());
+                errs()<<"\n";
+            }
+            /*
+             * insert all successor of current basic block to work list
+             */
+            for (succ_iterator si = succ_begin(bb),
+                    se = succ_end(bb);
+                    si!=se; ++si)
+            {
+                BasicBlock* succ_bb = cast<BasicBlock>(*si);
+                bb_work_list.push(succ_bb);
+            }
+        }
+    }
 }
 
 /*
@@ -877,14 +1097,27 @@ examine_ret_type_fail:
 
 bool capchk::runOnModule(Module &module)
 {
+    m = &module;
     return capchkPass(module);
 }
 
 bool capchk::capchkPass(Module &module)
 {
+
+#if 0
     errs()<<ANSI_COLOR_CYAN
-        <<"--- CAP CHECKER ---"
+        <<"--- UNSAFE ACCESS CHECKER ---"
         <<ANSI_COLOR_RESET<<"\n";
+    chk_unsafe_access(module);
+#endif
+
+#if 1
+    errs()<<ANSI_COLOR_CYAN
+        <<"--- MAY DIV BY ZERO CHECKER ---"
+        <<ANSI_COLOR_RESET<<"\n";
+    chk_div0(module);
+#endif
+
 #if 0
     errs()<<ANSI_COLOR_CYAN
         <<"--- build SVFG ---"
@@ -897,7 +1130,7 @@ bool capchk::capchkPass(Module &module)
         <<"Query using constrains"
         <<ANSI_COLOR_RESET<<"\n";
 #endif
-    process_each_function(module);
+    //process_each_function(module);
     errs()<<ANSI_COLOR_CYAN
         <<"--- DONE! ---"
         <<ANSI_COLOR_RESET<<"\n";
