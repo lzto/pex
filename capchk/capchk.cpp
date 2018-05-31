@@ -151,7 +151,6 @@ class capchk : public ModulePass
 #ifdef CUSTOM_STATISTICS
 void capchk::dump_statistics()
 {
-
     errs()<<"------------STATISTICS---------------\n";
     STATISTICS_DUMP(FuncCounter);
     STATISTICS_DUMP(ExternalFuncCounter);
@@ -1111,29 +1110,19 @@ bool capchk::capchkPass(Module &module)
     chk_unsafe_access(module);
 #endif
 
-#if 1
+#if 0
     errs()<<ANSI_COLOR_CYAN
         <<"--- MAY DIV BY ZERO CHECKER ---"
         <<ANSI_COLOR_RESET<<"\n";
     chk_div0(module);
 #endif
 
-#if 0
-    errs()<<ANSI_COLOR_CYAN
-        <<"--- build SVFG ---"
-        <<ANSI_COLOR_RESET<<"\n";
-    //build svfg graph
-    PointerAnalysis * ander = AndersenWaveDiff::createAndersenWaveDiff(module);
-    svfg = new SVFGOPT(ptaCallGraph);
-    svfgbuilder.build(svfg, ander);
-    errs()<<ANSI_COLOR_CYAN
-        <<"Query using constrains"
-        <<ANSI_COLOR_RESET<<"\n";
-#endif
     //process_each_function(module);
+
     errs()<<ANSI_COLOR_CYAN
         <<"--- DONE! ---"
         <<ANSI_COLOR_RESET<<"\n";
+
 #if CUSTOM_STATISTICS
     dump_statistics();
 #endif

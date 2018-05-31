@@ -8,8 +8,8 @@ add_llvm_loadable_module( libcapchk
 
 target_compile_features(libcapchk PRIVATE cxx_range_for cxx_auto_type)
 
-set_target_properties(libcapchk PROPERTIES
-	COMPILE_FLAGS "-fno-rtti"
-	)
+#set_target_properties(libcapchk PROPERTIES
+#	COMPILE_FLAGS "-fno-rtti"
+#	)
 
 
