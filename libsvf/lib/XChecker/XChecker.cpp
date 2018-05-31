@@ -104,14 +104,18 @@ void XChecker::reportBug(ProgSlice* slice)
 
 bool XChecker::isSourceLikeFun(const llvm::Function* func)
 {
-    if(func->hasName() && func->getName().startswith("malloc"))
+    if (!func)
+        return false;
+    if(func->hasName() && func->getName().startswith("vmalloc"))
         return true;
     return false;
 }
 
 bool XChecker::isSinkLikeFun(const llvm::Function* func)
 {
-    if(func->hasName() && func->getName().startswith("free"))
+    if (!func)
+        return false;
+    if(func->hasName() && func->getName().startswith("vfree"))
         return true;
     return false;
 }
