@@ -46,7 +46,9 @@ set(SOURCES
     WPA/FlowSensitive.cpp
     WPA/FlowSensitiveStat.cpp
     WPA/WPAPass.cpp
+    XChecker/DDA.cpp
     XChecker/XChecker.cpp
+    XChecker/DoubleFetchChecker.cpp
 )
 
 add_llvm_loadable_module(Svf ${SOURCES})
