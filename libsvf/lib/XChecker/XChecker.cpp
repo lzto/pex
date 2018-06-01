@@ -106,7 +106,7 @@ bool XChecker::isSourceLikeFun(const llvm::Function* func)
 {
     if (!func)
         return false;
-    if(func->hasName() && func->getName().startswith("vmalloc"))
+    if(func->hasName() && func->getName().startswith("malloc"))
         return true;
     return false;
 }
@@ -115,7 +115,7 @@ bool XChecker::isSinkLikeFun(const llvm::Function* func)
 {
     if (!func)
         return false;
-    if(func->hasName() && func->getName().startswith("vfree"))
+    if(func->hasName() && func->getName().startswith("free"))
         return true;
     return false;
 }
