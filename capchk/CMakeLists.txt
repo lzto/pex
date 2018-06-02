@@ -1,5 +1,6 @@
 add_llvm_loadable_module( libcapchk
     capchk.cpp
+    progslice.cpp
 
     DEPENDS
     PLUGIN_TOOL

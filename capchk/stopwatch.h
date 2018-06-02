@@ -10,7 +10,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-#define USE_STOP_WATCH 0
+#define USE_STOP_WATCH 1
 
 #if USE_STOP_WATCH
 /*
