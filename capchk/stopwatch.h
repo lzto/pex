@@ -30,7 +30,8 @@ static struct timeval _sw_time_end;
 { \
     double speed = (double)(_sw_time_end.tv_sec - _sw_time_start.tv_sec)*1000.0+ \
         (_sw_time_end.tv_usec-_sw_time_start.tv_usec)/1000.0; \
-    printf("STOP WATCH: %f ms\n", speed); \
+    fprintf(stderr,"STOP WATCH: %f ms\n", speed); \
+    fflush(stderr);\
 }
 
 #else
