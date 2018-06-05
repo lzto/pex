@@ -537,6 +537,8 @@ static const char* skip_var [] =
 {
     "jiffies",
     "nr_cpu_ids",
+    "nr_irqs",
+    "nr_threads",
 };
 
 bool is_skip_var(const std::string& str)
@@ -1232,6 +1234,16 @@ void capchk::check_critical_variable_usage(Module& module)
             errs()<<"Use: ";
             ui->getDebugLoc().print(errs());
             errs()<<"\n";
+            if (isa<LoadInst>(ui))
+            {
+                errs()<<"LOAD\n";
+            }else if (isa<StoreInst>(ui))
+            {
+                errs()<<"STORE\n";
+            }else
+            {
+                errs()<<"non-load-store OPCODE:"<<ui->getOpcode()<<"\n";
+            }
 
             flist.push_back(f);
             errs()<<"Function: "
@@ -1299,8 +1311,8 @@ void capchk::process_each_function(Module& module)
         if (func_ptr->isDeclaration())
             continue;
 
-        if (!contains_interesting_kwd(func_ptr->getName()))
-            continue;
+        //if (!contains_interesting_kwd(func_ptr->getName()))
+        //    continue;
 
 #if DEBUG_PREPARE
         errs()<<func_ptr->getName()<<"\n";
