@@ -74,7 +74,6 @@ using namespace llvm;
 #define DEBUG_PREPARE 0
 #define DEBUG_ANALYZE 1
 
-#define MAX_PATH 1000
 
 #define DEBUG_TYPE "capchk"
 
@@ -115,6 +114,12 @@ typedef std::list<Value*> ValueList;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
 
+typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
+/*
+ * t2fs is used to fuzzy matching calling using function pointer
+ */
+TypeToFunctions t2fs;
+
 enum _REACHABLE
 {
     RFULL,
@@ -122,6 +127,10 @@ enum _REACHABLE
     RNONE,
     RUNRESOLVEABLE,
 };
+
+#define MAX_PATH 1000
+#define MAX_BACKWD_SLICE_DEPTH 100
+#define MAX_FWD_SLICE_DEPTH 100
 
 /*
  * for stdlib
@@ -139,7 +148,7 @@ class capchk : public ModulePass
         bool runOnModule(Module &);
         bool capchkPass(Module &);
 
-        void process_each_function(Module& module);
+        void process(Module& module);
         void collect_kernel_init_functions(Module& module);
         void chk_div0(Module& module);
         void chk_unsafe_access(Module& module);
@@ -148,6 +157,7 @@ class capchk : public ModulePass
         void check_critical_variable_usage(Module& module);
 
         bool is_kernel_init_functions(Function* f, std::set<Function*>& visited);
+        void forward_all_interesting_usage(Instruction* I, int depth);
         
         _REACHABLE backward_slice_build_callgraph(FunctionList &callgraph, Instruction* I);
         _REACHABLE backward_slice_reachable_to_chk_function(Instruction* I);
@@ -512,6 +522,8 @@ static const char* check_functions [] =
 {
     "capable",
     "ns_capable",
+    //"inode_owner_or_capable",
+    //"ptrace_may_access",
     //"prepare_creds",
     //"override_creds",
     //"get_cred",
@@ -554,38 +566,34 @@ bool is_skip_var(const std::string& str)
 
 
 /*
- * functions not interesting will be skipped
+ * common interface which is not considered dangerous function
+ * some of those functions need to analyze together with parameters
+ * (require SVF, data flow analysis)
  */
 static const char* skip_functions [] = 
 {
     //may operate on wrong source?
+    //"capable",
+    //"ns_capable",
+    "__mutex_init",
     "mutex_lock",
     "mutex_unlock",
     "schedule",
     "_cond_resched",
     "printk",
     "__kmalloc",
-    "signal_fault",
-    "set_current_blocked",
-    "fpu__restore_sig",
-    "restore_altstack",
-    "__bitmap_clear",
-    "__bitmap_set",
-    "load_direct_gdt",
-    "load_fixmap_gdt",
-    "write_ldt",
-    "clear_user",
     "_copy_to_user",
     "_do_fork",
-    "_raw_write_lock_irq",
-    "_raw_spin_lock",
-    "__schedule",
-    "blk_flush_plug_list",
-    "mlock_fixup",
-    "rcu_all_qs",
-    "tty_vhangup_self",
-    "wakeup_flusher_threads",
-    "laptop_sync_completion",
+    "__memcpy",
+    "strncmp",
+    "strlen",
+    "strim",
+    "strchr",
+    "strcmp",
+    "memcmp",
+    "skip_spaces",
+    "kfree",
+    "kmalloc"
 };
 
 bool is_skip_function(const std::string& str)
@@ -641,6 +649,11 @@ static const char* kernel_start_functions [] =
 
 std::list<std::string> kernel_init_functions;
 std::list<std::string> non_kernel_init_functions;
+
+/*
+ * all discovered wrapper function to check functions will be stored here
+ */
+std::set<Function*> chk_function_wrapper;
 
 /*bool is_kernel_init_functions(const std::string& str)
 {
@@ -826,237 +839,11 @@ void capchk::collect_kernel_init_functions(Module& module)
 std::list<Value*> critical_variables;
 
 
-
-
-/*
- * prcess all interesting 
- *
- *------------------------
- * algo1.
- * way to find out all interesting branch conditions:
- *
- * Given interesting function list Pi, for each function pi , we find out all
- * call site, for each call site, we do backward slicing to find out all path Psi
- * then we intersect each items in Psi to see if there are branch conditions that
- * intersect, if the conditional variable intersect, we consider the variable as
- * an interesting variable, and put them into Omega.//
- *
- *------------------------
- * algo2.
- * turn each conditional branch check into return instruction and see if 
- * the callsite is still reachable, if the callsite is still reachable then
- * there's a missing check if it is unreachable then we think all things are
- * checked.//
- * The following algorithm implemented algo2, which assumes that we already know
- * interesting variable.
- *
- * in order to findout which conditional (variable)check need to turn into Return
- * instruction, we do IPA, find aliased variable for those conditional checks, 
- * and turn them into Return instruction one by one
- *
- */
-
-
-
-void capchk::check_critical_function_usage(Module& module)
-{
-    std::list<Function*> processed_flist;
-    //for each critical function find out all callsite(use)
-    //process one critical function at a time
-    for (Module::iterator f_begin = module.begin(), f_end = module.end();
-            f_begin != f_end; ++f_begin)
-    {
-        Function *func_ptr = dyn_cast<Function>(f_begin);
-        if (!is_critical_function(func_ptr->getName()))
-        {
-            continue;
-        }
-#if DEBUG
-        errs()<<ANSI_COLOR_GREEN
-            << func_ptr->getName()
-            <<ANSI_COLOR_RED<<" called from:"
-            <<ANSI_COLOR_RESET<<"\n";
-#endif
-        //interesting. let's find out all callsite
-        //for each call site, figure out all variables used for conditional branch
-        //dataflow is context sensitive, path insensitive
-        std::list<ValueList> dataflow;
-        int xuser = 0;
-        //iterate through all call site
-        for (auto *U: func_ptr->users())
-        {
-            Value *u = dyn_cast<Value>(U);
-            xuser++;
-            if (xuser>MAX_PATH)
-            {
-                errs()<<"MAX_PATH("<<MAX_PATH<<")"
-                    <<" reached consider increasing MAX_PATH\n";
-                break;
-            }
-            //u->print(errs());
-            if (isa<CallInst>(u))
-            {
-                Instruction *csi = dyn_cast<Instruction>(u);
-#if DEBUG
-                errs()<<"    "<<ANSI_COLOR_RED
-                    <<csi->getFunction()->getName()
-                    <<ANSI_COLOR_RESET<<"\n";
-#endif
-                //figure out all predecessors
-                //the use of basic block should be branch instruction
-                //worklist algo.
-                BasicBlock* bb = csi->getParent();
-                std::list<BasicBlock*> worklist;
-                std::set<BasicBlock*> visited;
-                //context, path insensitive
-                std::list<Value*> conds;
-                //the first element in this list is the call site instruction
-                conds.push_back(csi);
-
-                worklist.push_back(bb);
-                visited.insert(bb);//starting point
-                /*
-                 * within the function belongs to current callsite
-                 * this will collect all conditional branch variables used
-                 * in this function
-                 */
-                std::set<BasicBlock*> svisited;
-                while (worklist.size()!=0)
-                {
-                    BasicBlock* cbu = worklist.front();
-                    worklist.pop_front();
-                    svisited.insert(cbu);
-                    for (auto* bu: cbu->users())
-                    {
-                        //we expect that the use of this bb is from branch instruction
-                        if (!isa<BranchInst>(bu))
-                            continue;
-                        BranchInst *br = dyn_cast<BranchInst>(bu);
-#if DEBUG
-                        errs()<<"        ";
-                        br->print(errs());
-                        errs()<<"\n";
-#endif
-
-                        if (br->isConditional())
-                        {
-                            Value* condition = br->getCondition();
-                            //collect this BranchInst
-                            conds.push_back(condition);
-                        }else
-                        {
-                            //non-conditional branch
-                        }
-                        if (svisited.count(br->getParent())!=0)
-                        {
-                            continue;
-                        }
-                        worklist.push_back(br->getParent());
-                        svisited.insert(br->getParent());
-                    }
-                }
-#if DEBUG
-                errs()<<ANSI_COLOR_YELLOW
-                    <<" to reach this call site, those conditions are used:"
-                    <<ANSI_COLOR_RESET<<"\n";
-                for (auto* cond: conds)
-                {
-                    errs()<<"          "<<ANSI_COLOR_CYAN;
-                    cond->print(errs());
-                    errs()<<ANSI_COLOR_RESET<<"\n";
-
-                }
-#endif
-                //save collected conds along the bbs
-                if (conds.size()>1)
-                    dataflow.push_back(conds);
-            }
-        }
-        // intersect all conditional variables along the path
-        // this requires inter-procedural alias analysis
-        int cnt = 0;
-        for (auto path_variables: dataflow)
-        {
-            errs()<<ANSI_COLOR_YELLOW
-                <<"-Path:"
-                <<cnt
-                <<ANSI_COLOR_RESET
-                <<"-\n";
-            bool matched = false;
-            for (auto* pv : path_variables)
-            {
-                //pv->print(errs());
-                //errs()<<"\n";
-
-                if (pv->hasName())
-                    pv->print(errs());
-
-                //if (isa<Instruction>(pv))
-                //{
-                //    Instruction* pvi = dyn_cast<Instruction>(pv);
-                //    errs()<<"     ";
-                //    pvi->getDebugLoc().print(errs());
-                //    errs()<<"\n";
-                //}
-                if (isa<CmpInst>(pv))
-                {
-                    //errs()<<"CMP:\n";
-                    CmpInst* ci = dyn_cast<CmpInst>(pv);
-                    Value* cio0 = ci->getOperand(0);
-                    //cio0->print(errs());
-                    //errs()<<"\n";
-                    if (isa<CallInst>(cio0))
-                    {
-                        CallInst *csi = dyn_cast<CallInst>(cio0);
-                        Function* csf = csi->getCalledFunction();
-                        if (csf)
-                        {
-                            if (csf->hasName())
-                            {
-                                errs()<<"Call: "<<csf->getName()<<"\n";
-                                if (is_check_function(csf->getName()))
-                                {
-                                    matched = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }//ignore all other instructions
-            }
-            assert(isa<Instruction>(path_variables.front()));
-            //if there's a match
-            Instruction* pvi = dyn_cast<Instruction>(path_variables.front());
-            pvi->print(errs());
-            errs()<<"     ";
-            pvi->getDebugLoc().print(errs());
-            errs()<<"\n";
-
-            DiscoveredPath++;
-
-            if (matched)
-            {
-                MatchedPath++;
-                errs()<<ANSI_COLOR_GREEN
-                    <<"Matched!"
-                    <<ANSI_COLOR_RESET<<"\n";
-            }else 
-            {
-                errs()<<ANSI_COLOR_RED
-                    <<"NO MATCH!"
-                    <<ANSI_COLOR_RESET<<"\n";
-            }
-
-            cnt++;
-        }
-    }
-}
-
-#define MAX_BACKWD_SLICE_DEPTH 100
-
 _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instruction* I)
 {
     Function* f = I->getFunction();
+
+    DominatorTree dt(*f);
 
     callgraph.push_back(f);
     //run backward slicing within this function to see if there's a check
@@ -1085,7 +872,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
 
     //all predecessor basic blocks
     //should call check function 
-    //FIXME:Only Scan Backward Dominante BasicBlocks
+    //Also check whether the check can dominate use
     while (bbl.size())
     {
         BasicBlock* bb = bbl.front();
@@ -1108,22 +895,74 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                 ie = bb->end();
                 ii!=ie; ++ii)
         {
-            if (!isa<CallInst>(ii))
-                continue;
             CallInst* ci = dyn_cast<CallInst>(ii);
+            if (!ci)
+                continue;
+            Function * ifunc = NULL;
             if (Function* f = ci->getCalledFunction())
             {
-                if (is_check_function(f->getName()))
+                ifunc = f;
+                //if this is either a check function or a wrapper to check function
+                if (is_check_function(ifunc->getName()) ||
+                        (chk_function_wrapper.count(ifunc)!=0))
                 {
-                    errs()<<"Hit Check Function:"<<f->getName()<<"\n";
+                    errs()<<"Hit Check Function:"<<ifunc->getName()<<"\n";
                     ci->getDebugLoc().print(errs());
+                    errs()<<"\n";
+                    if (!dt.dominates(ci, I))
+                    {
+                        errs()<<ANSI_COLOR_YELLOW
+                            <<"However, this is a partial check."
+                            <<ANSI_COLOR_RESET
+                            <<"\n";
+                        continue;
+                    }
                     goto checked_out;
                 }
             }else if (ci->getCalledValue())
             {
-                //function pointer?????
-                //should consider this unresolvable
-                UnResolv++;
+                Value* cv = ci->getCalledValue();
+                //function pointer
+                //errs()<<"call with function pointer\n";
+                //cv->getType()->print(errs());
+                //cv->print(errs());
+                //errs()<<"\n";
+                //ci->getDebugLoc().print(errs());
+
+                //try to match a function with the same signature
+                //FIXME: run SVF to figure out which function
+                // this pointer points to
+                std::set<Function*> *fl = t2fs[cv->getType()];
+                if (fl==NULL)
+                {
+                    //should consider this unresolvable???
+                    UnResolv++;
+                    continue;
+                }
+                /*
+                for (std::set<Function*>::iterator
+                        fit = fl->begin(), fe = fl->end();
+                        fit!=fe; ++fit)
+                {
+                    ifunc = *fit;
+                    //if this is either a check function or a wrapper to check function
+                    if (is_check_function(ifunc->getName()) ||
+                            (chk_function_wrapper.count(ifunc)!=0))
+                    {
+                        errs()<<"Hit Check Function(call with fptr):"<<ifunc->getName()<<"\n";
+                        ci->getDebugLoc().print(errs());
+                        errs()<<"\n";
+                        if (!dt.dominates(ci, I))
+                        {
+                            errs()<<ANSI_COLOR_YELLOW
+                                <<"However, this is a partial check."
+                                <<ANSI_COLOR_RESET
+                                <<"\n";
+                            continue;
+                        }
+                        continue;
+                    }
+                }*/
             }
         }
     }
@@ -1158,6 +997,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
         }else
         {
             //used by non-call instruction????
+            //should match to all call site using fptr
+            errs()<<"Used by non-call\n";
         }
     }
 
@@ -1204,6 +1045,96 @@ _REACHABLE capchk::backward_slice_reachable_to_chk_function(Instruction* I)
     return backward_slice_build_callgraph(callgraph, I);
 }
 
+/*
+ * prcess all interesting 
+ *
+ *------------------------
+ * algo1.
+ * way to find out all interesting branch conditions:
+ *
+ * Given interesting function list Pi, for each function pi , we find out all
+ * call site, for each call site, we do backward slicing to find out all path Psi
+ * then we intersect each items in Psi to see if there are branch conditions that
+ * intersect, if the conditional variable intersect, we consider the variable as
+ * an interesting variable, and put them into Omega.//
+ *
+ *------------------------
+ * algo2.
+ * turn each conditional branch check into return instruction and see if 
+ * the callsite is still reachable, if the callsite is still reachable then
+ * there's a missing check if it is unreachable then we think all things are
+ * checked.//
+ * The following algorithm implemented algo2, which assumes that we already know
+ * interesting variable.
+ *
+ * in order to findout which conditional (variable)check need to turn into Return
+ * instruction, we do IPA, find aliased variable for those conditional checks, 
+ * and turn them into Return instruction one by one
+ *
+ */
+void capchk::check_critical_function_usage(Module& module)
+{
+    std::list<Function*> processed_flist;
+    //for each critical function find out all callsite(use)
+    //process one critical function at a time
+    for (Module::iterator f_begin = module.begin(), f_end = module.end();
+            f_begin != f_end; ++f_begin)
+    {
+        Function *func_ptr = dyn_cast<Function>(f_begin);
+        if (!is_critical_function(func_ptr->getName()))
+        {
+            continue;
+        }
+        if (is_skip_function(func_ptr->getName()))
+        {
+            continue;
+        }
+        errs()<<ANSI_COLOR_YELLOW
+            <<"Inspect Use of Function:"
+            <<func_ptr->getName()
+            <<ANSI_COLOR_RESET
+            <<"\n";
+        //iterate through all call site
+        for (auto *U: func_ptr->users())
+        {
+            CallInst *cs = dyn_cast<CallInst>(U);
+            if (!cs)
+            {
+                continue;
+            }
+            errs()<<ANSI_COLOR_MAGENTA
+                <<"Use:";
+            cs->getDebugLoc().print(errs());
+            //U->print(errs());
+            errs()<<ANSI_COLOR_RESET<<"\n";
+            switch(backward_slice_reachable_to_chk_function(cs))
+            {
+                case(RFULL):
+                    GoodPath++;
+                    errs()<<ANSI_COLOR_GREEN
+                        <<"[FULL]"<<ANSI_COLOR_RESET<<"\n";
+                    break;
+                case(RPARTIAL):
+                    BadPath++;
+                    errs()<<ANSI_COLOR_YELLOW
+                        <<"[PARTIAL]"<<ANSI_COLOR_RESET<<"\n";
+                    break;
+                case(RNONE):
+                    BadPath++;
+                    errs()<<ANSI_COLOR_RED
+                        <<"[NONE]"<<ANSI_COLOR_RESET<<"\n";
+                    break;
+                case(RUNRESOLVEABLE):
+                    UnResolv++;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+
 
 /*
  * run inter-procedural backward analysis to figure out whether this can
@@ -1231,19 +1162,18 @@ void capchk::check_critical_variable_usage(Module& module)
             std::set<Function*> k_visited;
             if (is_kernel_init_functions(f, k_visited))
                 continue;
-            errs()<<"Use: ";
-            ui->getDebugLoc().print(errs());
-            errs()<<"\n";
             if (isa<LoadInst>(ui))
             {
-                errs()<<"LOAD\n";
+                errs()<<"LOAD: ";
             }else if (isa<StoreInst>(ui))
             {
-                errs()<<"STORE\n";
+                errs()<<"STORE: ";
             }else
             {
-                errs()<<"non-load-store OPCODE:"<<ui->getOpcode()<<"\n";
+                errs()<<"Use:opcode="<<ui->getOpcode()<<" ";
             }
+            ui->getDebugLoc().print(errs());
+            errs()<<"\n";
 
             flist.push_back(f);
             errs()<<"Function: "
@@ -1288,159 +1218,212 @@ void capchk::check_critical_variable_usage(Module& module)
     }
 }
 
-void capchk::process_each_function(Module& module)
+/*
+ * interprocedural program slicing
+ * figure out all global variable usage and function calls
+ */
+void capchk::forward_all_interesting_usage(Instruction* I, int depth)
+{
+    Function *func_ptr = I->getFunction();
+    bool is_function_permission_checked = false;
+    std::list<std::string> current_func_res_list;
+    /*
+     * collect interesting variables found in this function
+     */
+    ValueList current_critical_variables;
+
+    if (depth>MAX_FWD_SLICE_DEPTH)
+    {
+//        errs()<<ANSI_COLOR_RED
+//            <<"FWD SLICING MAX "
+//            <<MAX_FWD_SLICE_DEPTH
+//            <<" REACHED\n";
+        return;
+    }
+
+#if DEBUG_PREPARE
+    errs()<<func_ptr->getName()<<"\n";
+#endif
+    std::set<BasicBlock*> bb_visited;
+    std::queue<BasicBlock*> bb_work_list;
+    bb_work_list.push(I->getParent());
+    while(bb_work_list.size())
+    {
+        /*
+         * pick the first item in the worklist
+         */
+        BasicBlock* bb = bb_work_list.front();
+        bb_work_list.pop();
+        if(bb_visited.count(bb))
+        {
+            continue;
+        }
+        bb_visited.insert(bb);
+
+        for (BasicBlock::iterator ii = bb->begin(),
+                ie = bb->end();
+                ii!=ie; ++ii)
+        {
+            if (isa<CallInst>(ii))
+            {
+                if (is_function_permission_checked)
+                    continue;
+                //only interested in call site
+                CallInst *I = dyn_cast<CallInst>(ii);
+                Function* csfunc = I->getCalledFunction();
+                if (csfunc && csfunc->hasName())
+                {
+                    if (csfunc->getName().startswith("llvm.")
+                            ||is_skip_function(csfunc->getName()))
+                    {
+                        //ignore all llvm internal functions
+                        //and all check functions
+                        continue;
+                    }
+
+                    if (is_check_function(csfunc->getName()) ||
+                            (chk_function_wrapper.count(csfunc)!=0))
+                    {
+
+#if DEBUG_PREPARE
+                        errs()<<ANSI_COLOR_RED
+                            <<"    Check function used."
+                            <<ANSI_COLOR_RESET<<"\n";
+#endif
+                        is_function_permission_checked = true;
+                    }
+
+                    current_func_res_list.push_back(csfunc->getName());
+
+#if DEBUG_PREPARE
+                    errs()<<"        "
+                        <<ANSI_COLOR_YELLOW
+                        <<csfunc->getName()
+                        <<ANSI_COLOR_RESET<<"\n";
+#endif
+                }
+            }
+            /*
+             * load/store from/to global variable will be considered
+             * critical variable
+             */
+            else if (isa<LoadInst>(ii))
+            {
+                LoadInst *li = dyn_cast<LoadInst>(ii);
+                //li->getOperand(0);
+                if (is_function_permission_checked)
+                {
+                    Value* lval = li->getOperand(0);
+                    if (isa<GlobalValue>(lval))
+                    {
+#if DEBUG_PREPARE
+                        errs()<<"\t\t"<<ANSI_COLOR_GREEN;
+                        //li->print(errs());
+                        errs()<<"load from: ";
+                        li->getOperand(0)->print(errs());
+                        errs()<<ANSI_COLOR_RESET<<"\n";
+#endif
+                        if (!is_skip_var(lval->getName()))
+                            current_critical_variables.push_back(lval);
+                    }
+                }
+            }else if (isa<StoreInst>(ii))
+            {
+                StoreInst *si = dyn_cast<StoreInst>(ii);
+                //si->getOperand(1);
+                if (is_function_permission_checked)
+                {
+                    Value* sval = si->getOperand(1);
+                    if (isa<GlobalValue>(sval))
+                    {
+#if DEBUG_PREPARE
+                        errs()<<"\t\t"<<ANSI_COLOR_GREEN;
+                        //si->print(errs());
+                        errs()<<"store to: ";
+                        si->getOperand(1)->print(errs());
+                        errs()<<ANSI_COLOR_RESET<<"\n";
+#endif
+                        if (!is_skip_var(sval->getName()))
+                            current_critical_variables.push_back(sval);
+                    }
+                }
+            }
+        }
+        /*
+         * insert all successor of current basic block to work list
+         */
+        for (succ_iterator si = succ_begin(bb),
+                se = succ_end(bb);
+                si!=se; ++si)
+        {
+            BasicBlock* succ_bb = cast<BasicBlock>(*si);
+            bb_work_list.push(succ_bb);
+        }
+    }
+    if (is_function_permission_checked)
+    {
+        //forwar slicing
+        critical_functions.splice(critical_functions.begin(),
+                current_func_res_list);
+        critical_variables.splice(critical_variables.begin(),
+                current_critical_variables);
+        //this is a wrapper
+        //errs()<<"Adding wrapper: "<<func_ptr->getName()<<"\n";
+        //chk_function_wrapper.insert(func_ptr);
+
+        //if functions is permission checked, consider this as a wrapper
+        //and we need to check all use of this function
+        for (auto *U: func_ptr->users())
+        {
+            if (CallInst* cs = dyn_cast<CallInst>(U))
+            {
+                forward_all_interesting_usage(cs, depth+1);
+            }
+        }
+    }
+}
+
+void capchk::process(Module& module)
 {
     /*
      * pre-process
      * generate resource/functions from syscall entry function
      */
+    int count = 0;
     errs()<<"Pre-processing...\n";
+
+    errs()<<"Collecting Initialization Closure.\n";
     STOP_WATCH_START;
     //collect_kernel_init_functions(module);
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+    errs()<<"Running SVF on init functions.\n";
+    STOP_WATCH_START;
+    //run_svf();
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+
+    errs()<<"Collect all permission-checked variables\n";
+    STOP_WATCH_START;
     for (Module::iterator f_begin = module.begin(), f_end = module.end();
             f_begin != f_end; ++f_begin)
     {
         Function *func_ptr = dyn_cast<Function>(f_begin);
-        bool is_function_permission_checked = false;
-        std::list<std::string> current_func_res_list;
-        /*
-         * collect interesting variables found in this function
-         */
-        ValueList current_critical_variables;
-
         if (func_ptr->isDeclaration())
             continue;
 
+        Type* type = func_ptr->getType();
+        std::set<Function*> *fl = t2fs[type];
+        if (fl==NULL)
+        {
+            fl = new std::set<Function*>;
+            t2fs[type] = fl;
+        }
+        fl->insert(func_ptr);
+
         //if (!contains_interesting_kwd(func_ptr->getName()))
         //    continue;
-
-#if DEBUG_PREPARE
-        errs()<<func_ptr->getName()<<"\n";
-#endif
-        /*
-         * we have a syscall entry, explore inside to create critical function
-         * list, this is worklist algorithm
-         */
-        std::set<BasicBlock*> bb_visited;
-        std::queue<BasicBlock*> bb_work_list;
-        bb_work_list.push(&func_ptr->getEntryBlock());
-        while(bb_work_list.size())
-        {
-            /*
-             * pick the first item in the worklist
-             */
-            BasicBlock* bb = bb_work_list.front();
-            bb_work_list.pop();
-            if(bb_visited.count(bb))
-            {
-                continue;
-            }
-            bb_visited.insert(bb);
-
-            for (BasicBlock::iterator ii = bb->begin(),
-                    ie = bb->end();
-                    ii!=ie; ++ii)
-            {
-                if (isa<CallInst>(ii))
-                {
-                    //only interested in call site
-                    CallInst *I = dyn_cast<CallInst>(ii);
-                    Function* csfunc = I->getCalledFunction();
-                    if (csfunc && csfunc->hasName())
-                    {
-                        if (csfunc->getName().startswith("llvm.")
-                                ||is_skip_function(csfunc->getName()))
-                        {
-                            //ignore all llvm internal functions
-                            //and all check functions
-                            continue;
-                        }
-
-                        if (is_check_function(csfunc->getName()))
-                        {
-
-#if DEBUG_PREPARE
-                            errs()<<ANSI_COLOR_RED
-                                <<"    Check function used."
-                                <<ANSI_COLOR_RESET<<"\n";
-#endif
-                            is_function_permission_checked = true;
-                        }
-
-                        current_func_res_list.push_back(csfunc->getName());
-
-#if DEBUG_PREPARE
-                        errs()<<"        "
-                            <<ANSI_COLOR_YELLOW
-                            <<csfunc->getName()
-                            <<ANSI_COLOR_RESET<<"\n";
-#endif
-                    }
-                }
-                /*
-                 * load/store from/to global variable will be considered
-                 * critical variable
-                 */
-                else if (isa<LoadInst>(ii))
-                {
-                    LoadInst *li = dyn_cast<LoadInst>(ii);
-                    //li->getOperand(0);
-                    if (is_function_permission_checked)
-                    {
-                        Value* lval = li->getOperand(0);
-                        if (isa<GlobalValue>(lval))
-                        {
-#if DEBUG_PREPARE
-                            errs()<<"\t\t"<<ANSI_COLOR_GREEN;
-                            //li->print(errs());
-                            errs()<<"load from: ";
-                            li->getOperand(0)->print(errs());
-                            errs()<<ANSI_COLOR_RESET<<"\n";
-#endif
-                            if (!is_skip_var(lval->getName()))
-                                current_critical_variables.push_back(lval);
-                        }
-                    }
-                }else if (isa<StoreInst>(ii))
-                {
-                    StoreInst *si = dyn_cast<StoreInst>(ii);
-                    //si->getOperand(1);
-                    if (is_function_permission_checked)
-                    {
-                        Value* sval = si->getOperand(1);
-                        if (isa<GlobalValue>(sval))
-                        {
-#if DEBUG_PREPARE
-                            errs()<<"\t\t"<<ANSI_COLOR_GREEN;
-                            //si->print(errs());
-                            errs()<<"store to: ";
-                            si->getOperand(1)->print(errs());
-                            errs()<<ANSI_COLOR_RESET<<"\n";
-#endif
-                            if (!is_skip_var(sval->getName()))
-                                current_critical_variables.push_back(sval);
-                        }
-                    }
-                }
-            }
-            /*
-             * insert all successor of current basic block to work list
-             */
-            for (succ_iterator si = succ_begin(bb),
-                    se = succ_end(bb);
-                    si!=se; ++si)
-            {
-                BasicBlock* succ_bb = cast<BasicBlock>(*si);
-                bb_work_list.push(succ_bb);
-            }
-        }
-        if (is_function_permission_checked)
-        {
-            critical_functions.splice(critical_functions.begin(),
-                    current_func_res_list);
-            critical_variables.splice(critical_variables.begin(),
-                    current_critical_variables);
-        }
+        forward_all_interesting_usage(func_ptr->getEntryBlock().getFirstNonPHI(),0);
     }
 
     critical_functions.sort();
@@ -1462,120 +1445,16 @@ void capchk::process_each_function(Module& module)
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
 
-    STOP_WATCH_START;
+    errs()<<"Run Analysis.\n";
+    /*STOP_WATCH_START;
     check_critical_variable_usage(module);
     STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;*/
+
+    STOP_WATCH_START;
+    check_critical_function_usage(module);
+    STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
-
-    //check_critical_function_usage(module);
-
-#if 0
-    for (Module::iterator f_begin = module.begin(), f_end = module.end();
-            f_begin != f_end; ++f_begin)
-    {
-        Function *func_ptr = dyn_cast<Function>(f_begin);
-
-        bool found = (std::find(std::begin(processed_flist),
-                    std::end(processed_flist), func_ptr) 
-                != std::end(processed_flist));
-        if (found)
-        {
-            continue;
-        }
-        processed_flist->push_back(func_ptr);
-        //no need to inspect Declaration
-        if (func_ptr->isDeclaration())
-        {
-            ExternalFuncCounter++;
-            continue;
-        }
-
-        FuncCounter++;
-#if DEBUG
-        errs()<<ANSI_COLOR_MAGENTA
-            <<"Process Function : "
-            <<func_ptr->getName()
-            <<ANSI_COLOR_RESET
-            <<"\n";
-#endif
-
-        /*
-         * this is worklist algorithm
-         */
-        std::set<BasicBlock*> bb_visited;
-        std::queue<BasicBlock*> bb_work_list;
-        bb_work_list.push(&func_ptr->getEntryBlock());
-        while(bb_work_list.size())
-        {
-            /*
-             * pick the first item in the worklist
-             */
-            BasicBlock* bb = bb_work_list.front();
-            bb_work_list.pop();
-            if(bb_visited.count(bb))
-            {
-                continue;
-            }
-            bb_visited.insert(bb);
-            /*
-             * for each basic block, we scan through instructions
-             *  - gather bound information when new pointer is allocated
-             *  - insert bound check when pointer is dereferenced
-             */
-
-            for (BasicBlock::iterator ii = bb->begin(),
-                    ie = bb->end();
-                    ii!=ie; ++ii)
-            {
-                Instruction *I = dyn_cast<Instruction>(ii);
-                switch(I->getOpcode())
-                {
-                    case(Instruction::Call):
-
-                        ;
-                    case(Instruction::Invoke):
-
-                        ;
-break:
-                        //ignore non-call site
-                        ;
-                }
-            }
-            /*
-             * insert all successor of current basic block to work list
-             */
-            for (succ_iterator si = succ_begin(bb),
-                    se = succ_end(bb);
-                    si!=se; ++si)
-            {
-                BasicBlock* succ_bb = cast<BasicBlock>(*si);
-                bb_work_list.push(succ_bb);
-            }
-        }
-        /*
-         * there may be cases that block has no predecessor
-         * we need to handle this specially
-         */
-        Function* func = func_ptr;
-        for(Function::iterator i = func->begin(), e = func->end(); i != e; ++i)
-        {
-            BasicBlock* blk = dyn_cast<BasicBlock>(i);
-            if (bb_visited.count(blk)==0)
-            {
-#if (DEBUG>1)
-                errs()<<" return bb has no predecessor, scan it anyway\n";
-#endif
-                bb_visited.insert(blk);
-                for (BasicBlock::iterator ii = blk->begin(),
-                        ie = blk->end();
-                        ii!=ie; ++ii)
-                {
-                    Instruction *I = dyn_cast<Instruction>(ii);
-                }
-            }
-        }
-    }
-#endif
 }
 
 #if 0
@@ -1747,7 +1626,7 @@ bool capchk::capchkPass(Module &module)
     chk_div0(module);
 #endif
 
-    process_each_function(module);
+    process(module);
 
     errs()<<ANSI_COLOR_CYAN
         <<"--- DONE! ---"
