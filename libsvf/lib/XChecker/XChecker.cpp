@@ -1,5 +1,19 @@
 /*
  * XChecker
+ * - capability or unprotected critical variable access checker
+ * 2018 Tong Zhang
+ *
+ * ---------------------------------------------------------------------------- 
+ * Design:
+ *
+ * 1. scan use of critical permission check functions like capable/ns_capable
+ * 2. for call site, figure out whether a use of variable is alias to global 
+ *    variable, if true, add that global variable to check list(protected by
+ *    check function)
+ * 3. scan all functions, figure out all use of variables in check list, and 
+ *    do forward slicing to figure out whether the use of such variables are 
+ *    properly checked, report any path that does not have a check.
+ *
  */
 #include "XChecker/XChecker.h"
 #include "Util/AnalysisUtil.h"
@@ -13,6 +27,10 @@ char XChecker::ID = 0;
 
 static RegisterPass<XChecker> XCHECKER("XChecker", "X-Checker");
 
+#if 1
+/*
+ * called from DFA::initialize
+ */
 void XChecker::initSrcs()
 {
     PAG* pag = getPAG();
@@ -75,6 +93,7 @@ void XChecker::initSnks()
         }
     }
 }
+#endif
 
 bool XChecker::isInAWrapper(const SVFGNode* src, CallSiteSet& csIdSet)
 {

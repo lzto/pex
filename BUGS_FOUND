@@ -1,0 +1,25 @@
+@netns_wq = internal unnamed_addr global %struct.workqueue_struct* null, align 8, !dbg !5469325
+Use: net/core/net_namespace.c:532:13 @[ ./include/net/net_namespace.h:217:3 @[ net/core/net_namespace.c:667:2 ] ]
+Function: rtnl_net_newid
++1 rtnl_net_newid
+
++2  net_ns_init
+Hit Kernel Init Function
+[FULL]
+Use: net/core/net_namespace.c:532:13 @[ ./include/net/net_namespace.h:217:3 @[ net/core/net_namespace.c:751:2 ] ]
+Function: rtnl_net_getid
++1 rtnl_net_getid
+
++2  net_ns_init
+Hit Kernel Init Function
+[FULL]
+Use: net/core/net_namespace.c:532:13 @[ ./include/net/net_namespace.h:217:3 @[ net/core/net_namespace.c:1090:2 ] ]
+Function: netns_put
++1 netns_put
+[NONE]
+Use: net/core/net_namespace.c:532:13 @[ ./include/net/net_namespace.h:217:3 @[ net/core/net_namespace.c:1101:2 ] ]
+Function: netns_install
++1 netns_install
+Hit Check Function:ns_capable
+net/core/net_namespace.c:1098:7[FULL]
+

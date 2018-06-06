@@ -4,11 +4,11 @@
 
 #include "MSSA/SVFGStat.h"
 #include "Util/GraphUtil.h"
-#include "XChecker/DDA.h"
+#include "XChecker/DFA.h"
 
 using namespace llvm;
 
-class DoubleFetchChecker : public DDA, public llvm::ModulePass
+class DoubleFetchChecker : public DFA, public llvm::ModulePass
 {
 
 public:

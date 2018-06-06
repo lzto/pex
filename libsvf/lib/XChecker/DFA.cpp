@@ -1,6 +1,10 @@
-#include "XChecker/DDA.h"
+#include "XChecker/DFA.h"
 #include "MSSA/SVFGStat.h"
 #include "Util/GraphUtil.h"
+
+#include "stopwatch.h"
+
+STOP_WATCH;
 
 using namespace llvm;
 
@@ -10,10 +14,18 @@ static cl::opt<bool> DumpSlice("dump-slice", cl::init(false),
 static cl::opt<unsigned> cxtLimit("cxtlimit",  cl::init(3),
                                   cl::desc("Source-Sink Analysis Contexts Limit"));
 
-void DDA::analyze(SVFModule module) {
+/*
+ * called from XChecker::runOnModule
+ */
+void DFA::analyze(SVFModule module) {
 
+    //THIS IS SLOW????
+    STOP_WATCH_START;
     initialize(module);
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
 
+    STOP_WATCH_START;
     ContextCond::setMaxCxtLen(cxtLimit);
 
     for (SVFGNodeSetIter iter = sourcesBegin(), eiter = sourcesEnd();
@@ -51,13 +63,15 @@ void DDA::analyze(SVFModule module) {
     }
 
     finalize();
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
 }
 
 
 /*!
  * Propagate information forward by matching context
  */
-void DDA::forwardpropagate(const DPIm& item, SVFGEdge* edge) {
+void DFA::forwardpropagate(const DPIm& item, SVFGEdge* edge) {
     DBOUT(DSaber,outs() << "\n##processing source: " << getCurSlice()->getSource()->getId() <<" forward propagate from (" << edge->getSrcID());
 
     // for indirect SVFGEdge, the propagation should follow the def-use chains
@@ -116,7 +130,7 @@ void DDA::forwardpropagate(const DPIm& item, SVFGEdge* edge) {
 /*!
  * Propagate information backward without matching context, as forward analysis already did it
  */
-void DDA::backwardpropagate(const DPIm& item, SVFGEdge* edge) {
+void DFA::backwardpropagate(const DPIm& item, SVFGEdge* edge) {
     DBOUT(DSaber,outs() << "backward propagate from (" << edge->getDstID() << " --> " << edge->getSrcID() << ")\n");
     const SVFGNode* srcNode = edge->getSrcNode();
     if(backwardVisited(srcNode))
@@ -130,7 +144,7 @@ void DDA::backwardpropagate(const DPIm& item, SVFGEdge* edge) {
 }
 
 /// Guarded reachability search
-void DDA::AllPathReachability() {
+void DFA::AllPathReachability() {
     /// annotate SVFG with slice information for debugging purpose
     if(DumpSlice)
         annotateSlice(_curSlice);
@@ -142,7 +156,7 @@ void DDA::AllPathReachability() {
 }
 
 /// Set current slice
-void DDA::setCurSlice(const SVFGNode* src) {
+void DFA::setCurSlice(const SVFGNode* src) {
     if(_curSlice!=NULL) {
         delete _curSlice;
         _curSlice = NULL;
@@ -152,7 +166,7 @@ void DDA::setCurSlice(const SVFGNode* src) {
     _curSlice = new ProgSlice(src,getPathAllocator(), getSVFG());
 }
 
-void DDA::annotateSlice(ProgSlice* slice) {
+void DFA::annotateSlice(ProgSlice* slice) {
     getSVFG()->getStat()->addToSources(slice->getSource());
     for(SVFGNodeSetIter it = slice->sinksBegin(), eit = slice->sinksEnd(); it!=eit; ++it )
         getSVFG()->getStat()->addToSinks(*it);
@@ -162,13 +176,13 @@ void DDA::annotateSlice(ProgSlice* slice) {
         getSVFG()->getStat()->addToBackwardSlice(*it);
 }
 
-void DDA::dumpSlices() {
+void DFA::dumpSlices() {
 
     if(DumpSlice)
         const_cast<SVFG*>(getSVFG())->dump("Slice",true);
 }
 
-void DDA::printBDDStat() {
+void DFA::printBDDStat() {
 
     outs() << "BDD Mem usage: " << PathCondAllocator::getMemUsage() << "\n";
     outs() << "BDD Number: " << PathCondAllocator::getCondNum() << "\n";

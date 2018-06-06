@@ -1,5 +1,10 @@
-#ifndef DDA_H_
-#define DDA_H_
+/*
+ * Interprocedural Data Flow Analysis(DFA)
+ * This file is part of permission checker - xchecker
+ * 2018 Tong Zhang
+ */
+#ifndef DFA_H_
+#define DFA_H_
 
 #include "SABER/CFLSolver.h"
 #include "MSSA/SVFGOPT.h"
@@ -7,9 +12,9 @@
 #include "SABER/SaberSVFGBuilder.h"
 #include "WPA/Andersen.h"
 
-typedef CFLSolver<SVFG*,CxtDPItem> CFLSrcSnkSolver;
+typedef CFLSolver<SVFG*,CxtDPItem> CFLAASolver;
 
-class DDA : public CFLSrcSnkSolver {
+class DFA : public CFLAASolver {
 
 public:
     typedef ProgSlice::SVFGNodeSet SVFGNodeSet;
@@ -33,11 +38,11 @@ private:
 public:
 
     /// Constructor
-    DDA() : _curSlice(NULL), svfg(NULL), ptaCallGraph(NULL) {
+    DFA() : _curSlice(NULL), svfg(NULL), ptaCallGraph(NULL) {
         pathCondAllocator = new PathCondAllocator();
     }
     /// Destructor
-    virtual ~DDA() {
+    virtual ~DFA() {
         if (svfg != NULL)
             delete svfg;
         svfg = NULL;
@@ -52,6 +57,7 @@ public:
     }
 
     /// Start analysis here
+    // this function will be called from XChecker::runOnModule()
     virtual void analyze(SVFModule module);
 
     /// Initialize analysis
@@ -227,4 +233,4 @@ protected:
 };
 
 
-#endif /* SRCSNKDDA_H_ */
+#endif /* SRCSNKDFA_H_ */

@@ -46,7 +46,7 @@ set(SOURCES
     WPA/FlowSensitive.cpp
     WPA/FlowSensitiveStat.cpp
     WPA/WPAPass.cpp
-    XChecker/DDA.cpp
+    XChecker/DFA.cpp
     XChecker/XChecker.cpp
     XChecker/DoubleFetchChecker.cpp
 )

@@ -13,7 +13,8 @@ link_directories(${LLVM_LIBRARY_DIRS})
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(AddLLVM)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libsvf/include
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
+                    ${CMAKE_CURRENT_SOURCE_DIR}/libsvf/include
                     ${CMAKE_CURRENT_BINARY_DIR}/libsvf/include)
 
 
