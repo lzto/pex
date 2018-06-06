@@ -1405,12 +1405,14 @@ void capchk::process(Module& module)
 
     errs()<<"Collect all permission-checked variables\n";
     STOP_WATCH_START;
-    for (Module::iterator f_begin = module.begin(), f_end = module.end();
-            f_begin != f_end; ++f_begin)
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
     {
-        Function *func_ptr = dyn_cast<Function>(f_begin);
+        Function *func_ptr = dyn_cast<Function>(fi);
         if (func_ptr->isDeclaration())
             continue;
+
+        //auto& aa = getAnalysis<AAResultsWrapperPass>(*func_ptr).getAAResults();
 
         Type* type = func_ptr->getType();
         std::set<Function*> *fl = t2fs[type];
@@ -1423,6 +1425,12 @@ void capchk::process(Module& module)
 
         //if (!contains_interesting_kwd(func_ptr->getName()))
         //    continue;
+
+        /*
+         * FIXME: in order to figure out all use of critical variables,
+         * we should use SVF/or other AA method to figure out Interprocedural
+         * alias set
+         */
         forward_all_interesting_usage(func_ptr->getEntryBlock().getFirstNonPHI(),0);
     }
 
