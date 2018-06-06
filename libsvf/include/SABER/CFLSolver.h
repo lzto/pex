@@ -97,7 +97,7 @@ protected:
             }
         }
     }
-    /// CFL forward traverse solve
+    /// CFL backward traverse solve
     virtual void backwardTraverse(DPIm& it) {
         pushIntoWorklist(it);
 
