@@ -157,7 +157,7 @@ class capchk : public ModulePass
         void check_critical_variable_usage(Module& module);
 
         bool is_kernel_init_functions(Function* f, std::set<Function*>& visited);
-        void forward_all_interesting_usage(Instruction* I, int depth);
+        void forward_all_interesting_usage(Instruction* I, int depth, bool checked);
         
         _REACHABLE backward_slice_build_callgraph(FunctionList &callgraph, Instruction* I);
         _REACHABLE backward_slice_reachable_to_chk_function(Instruction* I);
@@ -590,10 +590,18 @@ static const char* skip_functions [] =
     "strim",
     "strchr",
     "strcmp",
+    "strcpy",
+    "strncat",
+    "strlcpy",
+    "sscanf",
+    "snprintf",
+    "scnprintf",
+    "memchr"
     "memcmp",
     "skip_spaces",
     "kfree",
-    "kmalloc"
+    "kmalloc",
+
 };
 
 bool is_skip_function(const std::string& str)
@@ -1222,22 +1230,21 @@ void capchk::check_critical_variable_usage(Module& module)
  * interprocedural program slicing
  * figure out all global variable usage and function calls
  */
-void capchk::forward_all_interesting_usage(Instruction* I, int depth)
+void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool checked)
 {
     Function *func_ptr = I->getFunction();
-    bool is_function_permission_checked = false;
+    DominatorTree dt(*func_ptr);
+
+    bool is_function_permission_checked = checked;
     std::list<std::string> current_func_res_list;
     /*
      * collect interesting variables found in this function
      */
     ValueList current_critical_variables;
 
+
     if (depth>MAX_FWD_SLICE_DEPTH)
     {
-//        errs()<<ANSI_COLOR_RED
-//            <<"FWD SLICING MAX "
-//            <<MAX_FWD_SLICE_DEPTH
-//            <<" REACHED\n";
         return;
     }
 
@@ -1246,18 +1253,27 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth)
 #endif
     std::set<BasicBlock*> bb_visited;
     std::queue<BasicBlock*> bb_work_list;
+
+    /*
+     * a list of instruction where check functions are used,
+     * that will be later used to do dominance checking
+     */
+    std::list<Instruction*> chk_instruction_list;
+
+    /*
+     * first figure out all checks
+     */
+    if (checked)
+    {
+        goto rescan_and_add_all;
+    }
     bb_work_list.push(I->getParent());
     while(bb_work_list.size())
     {
-        /*
-         * pick the first item in the worklist
-         */
         BasicBlock* bb = bb_work_list.front();
         bb_work_list.pop();
         if(bb_visited.count(bb))
-        {
             continue;
-        }
         bb_visited.insert(bb);
 
         for (BasicBlock::iterator ii = bb->begin(),
@@ -1266,8 +1282,6 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth)
         {
             if (isa<CallInst>(ii))
             {
-                if (is_function_permission_checked)
-                    continue;
                 //only interested in call site
                 CallInst *I = dyn_cast<CallInst>(ii);
                 Function* csfunc = I->getCalledFunction();
@@ -1275,32 +1289,86 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth)
                 {
                     if (csfunc->getName().startswith("llvm.")
                             ||is_skip_function(csfunc->getName()))
-                    {
-                        //ignore all llvm internal functions
-                        //and all check functions
                         continue;
-                    }
 
                     if (is_check_function(csfunc->getName()) ||
                             (chk_function_wrapper.count(csfunc)!=0))
                     {
-
-#if DEBUG_PREPARE
-                        errs()<<ANSI_COLOR_RED
-                            <<"    Check function used."
-                            <<ANSI_COLOR_RESET<<"\n";
-#endif
                         is_function_permission_checked = true;
+                        chk_instruction_list.push_back(I);
                     }
-
-                    current_func_res_list.push_back(csfunc->getName());
-
+                }
+            }
+        }
+        /*
+         * insert all successor of current basic block to work list
+         */
+        for (succ_iterator si = succ_begin(bb),
+                se = succ_end(bb);
+                si!=se; ++si)
+        {
+            BasicBlock* succ_bb = cast<BasicBlock>(*si);
+            bb_work_list.push(succ_bb);
+        }
+    }
 #if DEBUG_PREPARE
-                    errs()<<"        "
-                        <<ANSI_COLOR_YELLOW
-                        <<csfunc->getName()
-                        <<ANSI_COLOR_RESET<<"\n";
+    errs()<<"This round, collected:"<<chk_instruction_list.size()<<" chks\n";
+    for (auto* _ci : chk_instruction_list)
+    {
+        _ci->print(errs());
+        errs()<<"\n";
+    }
 #endif
+    if (!is_function_permission_checked)
+        goto out;
+    /*
+     * second, re-scan all instructions and figure out 
+     * which one can be dominated by those check instructions(protected)
+     */
+rescan_and_add_all:
+    bb_work_list.push(I->getParent());
+    bb_visited.clear();
+    while(bb_work_list.size())
+    {
+        BasicBlock* bb = bb_work_list.front();
+        bb_work_list.pop();
+        if(bb_visited.count(bb))
+            continue;
+        bb_visited.insert(bb);
+
+        for (BasicBlock::iterator ii = bb->begin(),
+                ie = bb->end();
+                ii!=ie; ++ii)
+        {
+            Instruction* si = dyn_cast<Instruction>(ii);
+            /*
+             * if any check dominate si then go ahead and
+             * add them to protected list
+             */
+            //already checked before entering current scope
+            if (checked)
+                goto add;
+            for (auto* _ci : chk_instruction_list)
+            {
+                if (dt.dominates(_ci,si))
+                {
+                    goto add;
+                }
+            }
+            continue;
+
+add:
+            if (isa<CallInst>(ii))
+            {
+                CallInst* cs = dyn_cast<CallInst>(ii);
+                if (Function* csf = cs->getCalledFunction())
+                {
+                    if (csf->getName().startswith("llvm.")
+                            ||is_skip_function(csf->getName())
+                            ||is_check_function(csf->getName())
+                            ||(chk_function_wrapper.count(csf)!=0))
+                        continue;
+                    current_func_res_list.push_back(csf->getName());
                 }
             }
             /*
@@ -1316,13 +1384,6 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth)
                     Value* lval = li->getOperand(0);
                     if (isa<GlobalValue>(lval))
                     {
-#if DEBUG_PREPARE
-                        errs()<<"\t\t"<<ANSI_COLOR_GREEN;
-                        //li->print(errs());
-                        errs()<<"load from: ";
-                        li->getOperand(0)->print(errs());
-                        errs()<<ANSI_COLOR_RESET<<"\n";
-#endif
                         if (!is_skip_var(lval->getName()))
                             current_critical_variables.push_back(lval);
                     }
@@ -1336,13 +1397,6 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth)
                     Value* sval = si->getOperand(1);
                     if (isa<GlobalValue>(sval))
                     {
-#if DEBUG_PREPARE
-                        errs()<<"\t\t"<<ANSI_COLOR_GREEN;
-                        //si->print(errs());
-                        errs()<<"store to: ";
-                        si->getOperand(1)->print(errs());
-                        errs()<<ANSI_COLOR_RESET<<"\n";
-#endif
                         if (!is_skip_var(sval->getName()))
                             current_critical_variables.push_back(sval);
                     }
@@ -1360,6 +1414,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth)
             bb_work_list.push(succ_bb);
         }
     }
+
     if (is_function_permission_checked)
     {
         //forwar slicing
@@ -1377,10 +1432,16 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth)
         {
             if (CallInst* cs = dyn_cast<CallInst>(U))
             {
-                forward_all_interesting_usage(cs, depth+1);
+                Function* pfunc = cs->getFunction();
+                std::set<Function*> k_visited;
+                if (is_kernel_init_functions(pfunc, k_visited))
+                    continue;
+                forward_all_interesting_usage(cs, depth+1, true);
             }
         }
     }
+out:
+    return;
 }
 
 void capchk::process(Module& module)
@@ -1431,7 +1492,7 @@ void capchk::process(Module& module)
          * we should use SVF/or other AA method to figure out Interprocedural
          * alias set
          */
-        forward_all_interesting_usage(func_ptr->getEntryBlock().getFirstNonPHI(),0);
+        forward_all_interesting_usage(func_ptr->getEntryBlock().getFirstNonPHI(),0,false);
     }
 
     critical_functions.sort();

@@ -30,6 +30,7 @@ static RegisterPass<XChecker> XCHECKER("XChecker", "X-Checker");
 #if 1
 /*
  * called from DFA::initialize
+ * This function marks all source SVFGNode
  */
 void XChecker::initSrcs()
 {
@@ -77,6 +78,9 @@ void XChecker::initSrcs()
 
 }
 
+/*
+ * This function marks all source SVFGNode
+ */
 void XChecker::initSnks()
 {
     PAG* pag = getPAG();

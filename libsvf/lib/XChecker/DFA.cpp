@@ -16,15 +16,24 @@ static cl::opt<unsigned> cxtLimit("cxtlimit",  cl::init(3),
 
 /*
  * called from XChecker::runOnModule
+ *
+ * This analyze explore path from source to sink marked in initialize()
+ *
  */
 void DFA::analyze(SVFModule module) {
 
     //THIS IS SLOW????
+    errs()<<"DFA::analyze initialize(module)\n";
     STOP_WATCH_START;
+    /*
+     * initialize will call initSrcs and initSnks
+     * to identify SVFGNodes which belongs to sources and sinks
+     */
     initialize(module);
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
+    errs()<<"DFA::analysze misc\n";
     STOP_WATCH_START;
     ContextCond::setMaxCxtLen(cxtLimit);
 

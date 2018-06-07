@@ -12,6 +12,11 @@
 #include "SABER/SaberSVFGBuilder.h"
 #include "WPA/Andersen.h"
 
+#include "stopwatch.h"
+#include "color.h"
+
+using namespace llvm;
+
 typedef CFLSolver<SVFG*,CxtDPItem> CFLAASolver;
 
 class DFA : public CFLAASolver {
@@ -62,9 +67,24 @@ public:
 
     /// Initialize analysis
     virtual void initialize(SVFModule module) {
+        errs()<<ANSI_COLOR_GREEN<<"Create PTACallGraph\n"<<ANSI_COLOR_RESET;
+STOP_WATCH;
+STOP_WATCH_START;
         ptaCallGraph = new PTACallGraph(module);
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
+        errs()<<ANSI_COLOR_GREEN<<"Create AndersenWaveDiff\n"<<ANSI_COLOR_RESET;
+STOP_WATCH_START;
         AndersenWaveDiff* ander = AndersenWaveDiff::createAndersenWaveDiff(module);
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
+        errs()<<ANSI_COLOR_GREEN<<"build MemorySSA\n"<<ANSI_COLOR_RESET;
+STOP_WATCH_START;
         svfg =  memSSA.buildSVFG(ander);
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
+        errs()<<ANSI_COLOR_GREEN<<"Misc\n"<<ANSI_COLOR_RESET;
+STOP_WATCH_START;
         setGraph(memSSA.getSVFG());
         //AndersenWaveDiff::releaseAndersenWaveDiff();
         /// allocate control-flow graph branch conditions
@@ -72,6 +92,8 @@ public:
 
         initSrcs();
         initSnks();
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
     }
 
     /// Finalize analysis
