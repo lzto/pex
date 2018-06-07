@@ -22,4 +22,290 @@ Function: netns_install
 +1 netns_install
 Hit Check Function:ns_capable
 net/core/net_namespace.c:1098:7[FULL]
+---------------------------------------------------
+Inspect Use of Function:SyS_kexec_load
+Use:kernel/kexec.c:275:9 @[ kernel/kexec.c:241:1 ]
+
++1 compat_SyS_kexec_load
+Used by non-call
+[NONE]
+
+
+
+also memory leak on ksegments,
+    kernel/kexec.c
+259     ksegments = compat_alloc_user_space(nr_segments * sizeof(out));              
+260     for (i = 0; i < nr_segments; i++) {                                          
+261         result = copy_from_user(&in, &segments[i], sizeof(in));                  
+262         if (result)                                                              
+263             return -EFAULT;                                                      
+264                                                                                  
+265         out.buf   = compat_ptr(in.buf);                                          
+266         out.bufsz = in.bufsz;                                                    
+267         out.mem   = in.mem;                                                      
+268         out.memsz = in.memsz;                                                    
+269                                                                                  
+270         result = copy_to_user(&ksegments[i], &out, sizeof(out));                 
+271         if (result)                                                              
+272             return -EFAULT;                                                      
+273     }                                                                            
+274                                                                                  
+275     return sys_kexec_load(entry, nr_segments, ksegments, flags);                 
+
+
+
+------------------------------------------------
+bug in perf ???
+install a normal debug point, stop and disable it.
+call int modify_user_hw_breakpoint() to modify it
+then start it.
+
+
+-------------------------------------------------
+unfiltered write to random pool
+
+Inspect Use of Function:mix_pool_bytes
+Use:drivers/char/random.c:1670:2
+
++1 init_std_data
+Hit Kernel Init Function
+[FULL]
+Use:drivers/char/random.c:1668:3
+
++1 init_std_data
+Hit Kernel Init Function
+[FULL]
+Use:drivers/char/random.c:1663:2
+
++1 init_std_data
+Hit Kernel Init Function
+[FULL]
+Use:drivers/char/random.c:2228:2
+
++1 add_hwgenerator_randomness
+Hit Kernel Init Function
+[FULL]
+Use:drivers/char/random.c:1025:2
+
++1 add_timer_randomness
+Hit Kernel Init Function
+[FULL]
+Use:drivers/char/random.c:1817:3 @[ drivers/char/random.c:1829:8 ]
+
++1 random_write
+Used by non-call
+Used by non-call
+[NONE]
+Use:drivers/char/random.c:1233:2
+
++1 _xfer_secondary_pool
+Hit Kernel Init Function
+[FULL]
+Use:drivers/char/random.c:1817:3 @[ drivers/char/random.c:1864:12 ]
+
++1 random_ioctl
+Hit Check Function:capable
+drivers/char/random.c:1856:8
+[FULL]
+
+
+--------------------------------------------------------------------------
+
+allow adding buffer from other place?
+
+Inspect Use of Function:drm_addmap_core
+Use:drivers/gpu/drm/drm_bufs.c:403:8
+
++1 drm_legacy_addmap_ioctl
+Hit Check Function:capable
+drivers/gpu/drm/drm_bufs.c:396:8
+[FULL]
+Use:drivers/gpu/drm/drm_bufs.c:371:7
+
++1 drm_legacy_addmap
+Used by non-call
+[NONE]
+
+--------------------------------------------------------------------------
+
+store efi raw variable no check??
+
+Inspect Use of Function:efivar_entry_set
+Use:drivers/firmware/efi/efivars.c:465:8
+
++1 efivar_create
+Hit Check Function:capable
+drivers/firmware/efi/efivars.c:428:7
+[FULL]
+Use:drivers/firmware/efi/efivars.c:303:8
+
++1 efivar_store_raw
+Used by non-call
+[NONE]
+
+--------------------------------------------------------------------------
+
+multiple places use acpi_evalf don't need check???
+
+Inspect Use of Function:acpi_evalf
+Use:drivers/platform/x86/thinkpad_acpi.c:2082:7 @[ drivers/platform/x86/thinkpad_acpi.c:1213:12 @[ drivers/platform/x86/thinkpad_acpi.c:1386:7 @[ drivers/platform/x86/thinkpad_acpi.c:4523:9 ] ] ]
+
++1 bluetooth_read
+Used by non-call
+[NONE]
+
+Use:drivers/platform/x86/thinkpad_acpi.c:5026:8 @[ drivers/platform/x86/thinkpad_acpi.c:5111:11 ]
+
++1 video_read
+Hit Check Function:capable
+drivers/platform/x86/thinkpad_acpi.c:5104:7
+[FULL]
+Use:drivers/platform/x86/thinkpad_acpi.c:5021:8 @[ drivers/platform/x86/thinkpad_acpi.c:5111:11 ]
+
++1 video_read
+Hit Check Function:capable
+drivers/platform/x86/thinkpad_acpi.c:5104:7
+[FULL]
+Use:drivers/platform/x86/thinkpad_acpi.c:4965:8
+
++1 video_outputsw_get
+Hit Kernel Init Function
+[FULL]
+Use:drivers/platform/x86/thinkpad_acpi.c:4961:8
+
++1 video_outputsw_get
+Hit Kernel Init Function
+[FULL]
+
+--------------------------------------------------------------------------------
+
+no check when changing ipip tunnel?
+
+Inspect Use of Function:ip_tunnel_update
+Use:net/ipv4/ip_tunnel.c:1153:2
+
++1 ip_tunnel_changelink
+Used by non-call
+[NONE]
+Use:net/ipv4/ip_tunnel.c:903:4
+
++1 ip_tunnel_ioctl
+Hit Check Function:ns_capable
+net/ipv4/ip_tunnel.c:855:8
+[FULL]
+
+
+--------------------------------------------------------------------------------
+ipv6 router discovery add default router no need to check permission?
+
+Inspect Use of Function:ip6_route_add
+Use:net/ipv6/route.c:3959:10
+
++1 inet6_rtm_newroute
+
++2  ip6_route_init
+Hit Kernel Init Function
+[FULL]
+Use:net/ipv6/route.c:3294:10
+
++1 ipv6_route_ioctl
+Hit Check Function:ns_capable
+net/ipv6/route.c:3282:8
+[FULL]
+Use:net/ipv6/route.c:3198:7
+
++1 rt6_add_dflt_router
+Used by non-call
+[NONE]
+
+--------------------------------------------------------------------------------
+
+ipip6 changelink don't need to check capability?
+
+Inspect Use of Function:ipip6_tunnel_update
+Use:net/ipv6/sit.c:1627:2
+
++1 ipip6_changelink
+Used by non-call
+[NONE]
+Use:net/ipv6/sit.c:1238:4
+
++1 ipip6_tunnel_ioctl
+Hit Check Function:ns_capable
+net/ipv6/sit.c:1205:8
+[FULL]
+
+
+--------------------------------------------------------------------------------
+RFKILL no capability check?
+
+Inspect Use of Function:rfkill_set_block
+Use:net/rfkill/core.c:398:3 @[ net/rfkill/core.c:474:3 ]
+
++1 rfkill_restore_states
+Hit Kernel Init Function
+[FULL]
+Use:net/rfkill/core.c:446:3
+
++1 rfkill_epo
+Hit Kernel Init Function
+[FULL]
+Use:net/rfkill/core.c:398:3 @[ net/rfkill/core.c:420:3 ]
+
++1 rfkill_switch_all
+Hit Kernel Init Function
+[FULL]
+Use:net/rfkill/core.c:994:2
+
++1 rfkill_sync_work
+Used by non-call
+[NONE]
+Use:net/rfkill/core.c:398:3 @[ net/rfkill/core.c:1045:4 ]
+
++1 rfkill_register
+Hit Kernel Init Function
+[FULL]
+Use:net/rfkill/core.c:1238:5
+
++1 rfkill_fop_write
+Used by non-call
+[NONE]
+Use:net/rfkill/core.c:1230:5
+
++1 rfkill_fop_write
+Used by non-call
+[NONE]
+Use:net/rfkill/core.c:780:2
+
++1 state_store.62015
+Hit Check Function:capable
+net/rfkill/core.c:768:7
+[FULL]
+Use:net/rfkill/core.c:736:2
+
++1 soft_store
+Hit Check Function:capable
+net/rfkill/core.c:725:7
+[FULL]
+Use:net/rfkill/core.c:877:3
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

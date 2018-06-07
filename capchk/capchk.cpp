@@ -596,12 +596,27 @@ static const char* skip_functions [] =
     "sscanf",
     "snprintf",
     "scnprintf",
+    "sort",
+    "prandom_u32",
     "memchr"
     "memcmp",
     "skip_spaces",
     "kfree",
     "kmalloc",
-
+    "kstrtoull",
+    "kstrtouint",
+    "kstrtoint",
+    "kstrtobool",
+    "strncpy_from_user",
+    "kstrtoul_from_user",
+    "__msecs_to_jiffies",
+    "drm_printk",
+    "cpumask_next_and",
+    "cpumask_next",
+    "dump_stack",//break KASLR here?
+    "___ratelimit",
+    "simple_strtoull",
+    "simple_strtoul",
 };
 
 bool is_skip_function(const std::string& str)
