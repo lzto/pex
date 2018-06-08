@@ -112,6 +112,9 @@ STATISTIC(CRITVAR, "Critical Variables");
 STATISTIC(CRITFUNC, "Critical Functions");
 STATISTIC(FwdAnalysisMaxHit, "# of times max depth for forward analysis hit");
 STATISTIC(BwdAnalysisMaxHit, "# of times max depth for backward analysis hit");
+STATISTIC(CPUnResolv, "Critical Function Pointer Unable to Resolve");
+STATISTIC(CPResolv, "Critical Function Pointer Resolved");
+STATISTIC(CFuncUsedByNonCall, "Critical Functions used by non CallInst");
 
 typedef std::list<Value*> ValueList;
 typedef std::list<BasicBlock*> BasicBlockList;
@@ -217,6 +220,9 @@ void capchk::dump_statistics()
     STATISTICS_DUMP(CRITVAR);
     STATISTICS_DUMP(FwdAnalysisMaxHit);
     STATISTICS_DUMP(BwdAnalysisMaxHit);
+    STATISTICS_DUMP(CPUnResolv);
+    STATISTICS_DUMP(CPResolv);
+    STATISTICS_DUMP(CFuncUsedByNonCall);
     errs()<<"\n\n\n";
 }
 #endif
@@ -432,6 +438,13 @@ bool capchk::is_complex_type(Type* t)
     for (int i = 0; i<ft->getNumParams(); i++)
     {
         Type* argt = ft->getParamType(i);
+strip_pointer:
+        if (argt->isPointerTy())
+        {
+            argt = argt->getPointerElementType();
+            goto strip_pointer;
+        }
+
         if (argt->isSingleValueType())
             continue;
         number_of_complex_type++;
@@ -439,7 +452,7 @@ bool capchk::is_complex_type(Type* t)
     //return type
     Type* rt = ft->getReturnType();
 
-again:
+again://to strip pointer
     if (rt->isPointerTy())
     {
         Type* pet = rt->getPointerElementType();
@@ -1063,7 +1076,9 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
         BwdAnalysisMaxHit++;
         goto nocheck_out;
     }
-
+    //FIXME: also need to check all CallSite using function pointer which precisely
+    //matches function type
+    //Check function user(all CallSite)
     for (auto *U: f->users())
     {
         has_user = true;
@@ -1090,7 +1105,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
         {
             //used by non-call instruction????
             //should match to all call site using fptr
-            errs()<<"Used by non-call\n";
+            //errs()<<"Used by non-call\n";
+            CFuncUsedByNonCall++;
         }
     }
 
@@ -1204,17 +1220,17 @@ void capchk::check_critical_function_usage(Module& module)
                 case(RFULL):
                     GoodPath++;
                     errs()<<ANSI_COLOR_GREEN
-                        <<"[FULL]"<<ANSI_COLOR_RESET<<"\n";
+                        <<"[FULLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
                     break;
                 case(RPARTIAL):
                     BadPath++;
                     errs()<<ANSI_COLOR_YELLOW
-                        <<"[PARTIAL]"<<ANSI_COLOR_RESET<<"\n";
+                        <<"[PARTIALLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
                     break;
                 case(RNONE):
                     BadPath++;
                     errs()<<ANSI_COLOR_RED
-                        <<"[NONE]"<<ANSI_COLOR_RESET<<"\n";
+                        <<"[NO CHECK]"<<ANSI_COLOR_RESET<<"\n";
                     break;
                 case(RUNRESOLVEABLE):
                     UnResolv++;
@@ -1454,6 +1470,36 @@ add:
                             ||(chk_function_wrapper.count(csf)!=0))
                         continue;
                     current_func_res_list.push_back(csf->getName());
+                }else if (Value* csv = cs->getCalledValue())
+                {
+                    //only allow precise match when collecting protected functions
+                    Type *ft = csv->getType()->getPointerElementType();
+                    //errs()<<"[FFFF] Want to resolve : ";
+                    ft->print(errs());
+                    errs()<<"\n";
+                    if (!is_complex_type(ft))
+                    {
+                        //errs()<<"[FFFF] Unable to resolve because of non-complex-type\n";
+                        CPUnResolv++;
+                        continue;
+                    }
+                    std::set<Function*> *fl = t2fs[ft];
+                    if (fl==NULL)
+                    {
+                        //errs()<<"[FFFF] Unable to resolve because of empty set\n";
+                        CPUnResolv++;
+                        continue;
+                    }
+                    if (fl->size()!=1)
+                    {
+                        //errs()<<"[FFFF] Unable to resolve because of multiple candidate:"
+                        //    <<fl->size()<<"\n";
+                        CPUnResolv++;
+                        continue;
+                    }
+                    //errs()<<"[FFFF] resolved as : "<<(*fl->begin())->getName()<<"\n";
+                    CPResolv++;
+                    current_func_res_list.push_back((*fl->begin())->getName());
                 }
             }
             /*
