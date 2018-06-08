@@ -1,7 +1,7 @@
 /*
  * CapChecker
  * linux kernel capability checker
- * 2018 Tong Zhang
+ * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
  */
 
 
@@ -683,6 +683,8 @@ static const char* skip_functions [] =
     "prandom_u32",
     "memchr",
     "memcmp",
+    "memset",
+    "memmove",
     "skip_spaces",
     "kfree",
     "kmalloc",
