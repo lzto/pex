@@ -176,6 +176,7 @@ class capchk : public ModulePass
         bool is_safe_access(Instruction *ins, Value* addr, uint64_t type_size);
 
         bool is_complex_type(Type*);
+        bool is_rw_global(Value*, std::set<Value*>& visited);
 
         /*
          * context for current module
@@ -232,10 +233,13 @@ char capchk::ID;
 /*
  * command line options
  */
-/*cl::opt<bool> capchk_no_check("capchk_no_check",
-  cl::desc("no checks at all, only bound propogation - disabled by default"),
-  cl::init(false));
-  */
+cl::opt<bool> knob_capchk_critical_var("ccv",
+        cl::desc("check critical variable usage - disabled by default"),
+        cl::init(false));
+
+cl::opt<bool> knob_capchk_critical_fun("ccf",
+        cl::desc("check critical function usage - enabled by default"),
+        cl::init(true));
 
 /*
  * helper function
@@ -470,6 +474,32 @@ again://to strip pointer
     return (number_of_complex_type!=0);
 }
 
+/*
+ * def/use global?
+ * intra-procedural
+ *
+ * take care of phi node using `visited'
+ */
+bool capchk::is_rw_global(Value* val, std::set<Value*>& visited)
+{
+    if (visited.count(val)!=0)
+        return false;
+    visited.insert(val);
+    if (isa<GlobalValue>(val))
+    {
+        return true;
+    }
+    Instruction* vali = dyn_cast<Instruction>(val);
+    if (!vali)
+        return false;
+    for (auto *U : vali->users())
+    {
+        if (is_rw_global(U, visited))
+            return true;
+    }
+    return false;
+}
+
 static bool mayDivideByZero(Instruction *I) {
     if (!(I->getOpcode() == Instruction::UDiv ||
                 I->getOpcode() == Instruction::SDiv ||
@@ -651,7 +681,7 @@ static const char* skip_functions [] =
     "scnprintf",
     "sort",
     "prandom_u32",
-    "memchr"
+    "memchr",
     "memcmp",
     "skip_spaces",
     "kfree",
@@ -670,6 +700,9 @@ static const char* skip_functions [] =
     "___ratelimit",
     "simple_strtoull",
     "simple_strtoul",
+    "dec_ucount",
+    "inc_ucount",
+    "jiffies_to_msecs",
 };
 
 bool is_skip_function(const std::string& str)
@@ -982,6 +1015,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                 if (is_check_function(ifunc->getName()) ||
                         (chk_function_wrapper.count(ifunc)!=0))
                 {
+                    has_check = true;
                     errs()<<"Hit Check Function:"<<ifunc->getName()<<"\n";
                     ci->getDebugLoc().print(errs());
                     errs()<<"\n";
@@ -991,6 +1025,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                             <<"However, this is a partial check."
                             <<ANSI_COLOR_RESET
                             <<"\n";
+                        has_no_check = true;
                         continue;
                     }
                     goto checked_out;
@@ -1034,7 +1069,11 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                     continue;
                 }
                 CSFPResolved++;
-                errs()<<"Found "<<fl->size()<<" Matches\n";
+                errs()<<"Found "
+                    <<fl->size()
+                    <<" Matches for ";
+                ft->print(errs());
+                errs()<<"\n";
                 ////////////////////////////////////////////////////////////////
                 for (std::set<Function*>::iterator
                         fit = fl->begin(), fe = fl->end();
@@ -1050,6 +1089,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                     if (is_check_function(ifunc->getName()) ||
                             (chk_function_wrapper.count(ifunc)!=0))
                     {
+                        has_check = true;
                         errs()<<"Hit Check Function(call with fptr):"<<ifunc->getName()<<"\n";
                         ci->getDebugLoc().print(errs());
                         errs()<<"\n";
@@ -1059,6 +1099,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                                 <<"However, this is a partial check."
                                 <<ANSI_COLOR_RESET
                                 <<"\n";
+                            has_no_check = true;
                             continue;
                         }
                         continue;
@@ -1247,6 +1288,11 @@ void capchk::check_critical_function_usage(Module& module)
 /*
  * run inter-procedural backward analysis to figure out whether this can
  * be reached from entry point without running check
+ *
+ * FIXME: check critical variable usage is different, 
+ * for global variable ned to scan all instructions and see if it tracks down
+ * to a critical global variable
+ *
  */
 void capchk::check_critical_variable_usage(Module& module)
 {
@@ -1255,9 +1301,10 @@ void capchk::check_critical_variable_usage(Module& module)
     {
         FunctionList flist;//known functions
 #if DEBUG_ANALYZE
-        errs()<<ANSI_COLOR_CYAN;
-        V->print(errs());
-        errs()<<ANSI_COLOR_RESET<<"\n";
+        errs()<<ANSI_COLOR_YELLOW
+            <<"Inspect Use of Variable:"
+            <<V->getName()
+            <<ANSI_COLOR_RESET<<"\n";
 #endif
         for (auto *U: V->users())
         {
@@ -1475,8 +1522,8 @@ add:
                     //only allow precise match when collecting protected functions
                     Type *ft = csv->getType()->getPointerElementType();
                     //errs()<<"[FFFF] Want to resolve : ";
-                    ft->print(errs());
-                    errs()<<"\n";
+                    //ft->print(errs());
+                    //errs()<<"\n";
                     if (!is_complex_type(ft))
                     {
                         //errs()<<"[FFFF] Unable to resolve because of non-complex-type\n";
@@ -1499,7 +1546,15 @@ add:
                     }
                     //errs()<<"[FFFF] resolved as : "<<(*fl->begin())->getName()<<"\n";
                     CPResolv++;
-                    current_func_res_list.push_back((*fl->begin())->getName());
+                    Function *csf = (*fl->begin());
+                    llvm::StringRef fname = csf->getName();
+                    if (fname.startswith("llvm.")
+                            ||is_skip_function(fname)
+                            ||is_check_function(fname)
+                            ||(chk_function_wrapper.count(csf)!=0))
+                        continue;
+
+                    current_func_res_list.push_back(fname);
                 }
             }
             /*
@@ -1513,10 +1568,11 @@ add:
                 if (is_function_permission_checked)
                 {
                     Value* lval = li->getOperand(0);
-                    if (isa<GlobalValue>(lval))
+                    std::set<Value*> v_visited;
+                    if (is_rw_global(lval, v_visited) && 
+                            (!is_skip_var(lval->getName())))
                     {
-                        if (!is_skip_var(lval->getName()))
-                            current_critical_variables.push_back(lval);
+                        current_critical_variables.push_back(lval);
                     }
                 }
             }else if (isa<StoreInst>(ii))
@@ -1526,10 +1582,11 @@ add:
                 if (is_function_permission_checked)
                 {
                     Value* sval = si->getOperand(1);
-                    if (isa<GlobalValue>(sval))
+                    std::set<Value*> v_visited;
+                    if (is_rw_global(sval, v_visited) && 
+                            (!is_skip_var(sval->getName())))
                     {
-                        if (!is_skip_var(sval->getName()))
-                            current_critical_variables.push_back(sval);
+                        current_critical_variables.push_back(sval);
                     }
                 }
             }
@@ -1551,6 +1608,11 @@ add:
         //forwar slicing
         critical_functions.splice(critical_functions.begin(),
                 current_func_res_list);
+        if (current_critical_variables.size()==0)
+        {
+            errs()<<"No global critical variables found for function?:"
+                <<func_ptr->getName()<<"\n";
+        }
         critical_variables.splice(critical_variables.begin(),
                 current_critical_variables);
         //this is a wrapper
@@ -1612,13 +1674,13 @@ void capchk::process(Module& module)
 
         Type* type = func_ptr->getFunctionType();
 
-        if (is_complex_type(type))
+        /*if (is_complex_type(type))
         {
             errs()<<ANSI_COLOR_YELLOW
                 <<"Found Function Type:";
             type->print(errs());
             errs()<<ANSI_COLOR_RESET<<"\n";
-        }
+        }*/
 
         std::set<Function*> *fl = t2fs[type];
         if (fl==NULL)
@@ -1659,15 +1721,22 @@ void capchk::process(Module& module)
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
 
     errs()<<"Run Analysis.\n";
-    /*STOP_WATCH_START;
-    check_critical_variable_usage(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;*/
-
-    STOP_WATCH_START;
-    check_critical_function_usage(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    if (knob_capchk_critical_var)
+    {
+        errs()<<"Critical variables\n";
+        STOP_WATCH_START;
+        check_critical_variable_usage(module);
+        STOP_WATCH_STOP;
+        STOP_WATCH_REPORT;
+    }
+    if (knob_capchk_critical_fun)
+    {
+        errs()<<"Critical functions\n";
+        STOP_WATCH_START;
+        check_critical_function_usage(module);
+        STOP_WATCH_STOP;
+        STOP_WATCH_REPORT;
+    }
 }
 
 bool capchk::runOnModule(Module &module)
