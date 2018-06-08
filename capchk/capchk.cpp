@@ -87,7 +87,7 @@ using namespace llvm;
 
 #if defined(NDEBUG)\
     || !defined(LLVM_ENABLE_STATS)\
-||(!LLVM_ENABLE_STATS)
+    || (!LLVM_ENABLE_STATS)
 
 #undef STATISTIC
 #define CUSTOM_STATISTICS 1
@@ -107,8 +107,11 @@ STATISTIC(MatchedPath, "Matched Path");
 STATISTIC(GoodPath, "Good Path");
 STATISTIC(BadPath, "Bad Path");
 STATISTIC(UnResolv, "Path Unable to Resolve");
+STATISTIC(CSFPResolved, "Resolved CallSite Using Function Pointer");
 STATISTIC(CRITVAR, "Critical Variables");
 STATISTIC(CRITFUNC, "Critical Functions");
+STATISTIC(FwdAnalysisMaxHit, "# of times max depth for forward analysis hit");
+STATISTIC(BwdAnalysisMaxHit, "# of times max depth for backward analysis hit");
 
 typedef std::list<Value*> ValueList;
 typedef std::list<BasicBlock*> BasicBlockList;
@@ -169,6 +172,8 @@ class capchk : public ModulePass
         //used by chk_unsafe_access
         bool is_safe_access(Instruction *ins, Value* addr, uint64_t type_size);
 
+        bool is_complex_type(Type*);
+
         /*
          * context for current module
          */
@@ -182,9 +187,8 @@ class capchk : public ModulePass
 
     public:
         static char ID;
-        capchk() : ModulePass(ID)
-    {
-    }
+        capchk() : ModulePass(ID){};
+
         const char* getPassName()
         {
             return "capchk";
@@ -208,8 +212,11 @@ void capchk::dump_statistics()
     STATISTICS_DUMP(GoodPath);
     STATISTICS_DUMP(BadPath);
     STATISTICS_DUMP(UnResolv);
+    STATISTICS_DUMP(CSFPResolved);
     STATISTICS_DUMP(CRITFUNC);
     STATISTICS_DUMP(CRITVAR);
+    STATISTICS_DUMP(FwdAnalysisMaxHit);
+    STATISTICS_DUMP(BwdAnalysisMaxHit);
     errs()<<"\n\n\n";
 }
 #endif
@@ -230,9 +237,7 @@ char capchk::ID;
 Instruction* GetNextInstruction(Instruction* I)
 {
     if (isa<TerminatorInst>(I))
-    {
         return I;
-    }
     BasicBlock::iterator BBI(I);
     return dyn_cast<Instruction>(++BBI);
 }
@@ -240,19 +245,15 @@ Instruction* GetNextInstruction(Instruction* I)
 Instruction* GetNextNonPHIInstruction(Instruction* I)
 {
     if (isa<TerminatorInst>(I))
-    {
         return I;
-    }
     BasicBlock::iterator BBI(I);
     while(isa<PHINode>(BBI))
-    {
         ++BBI;
-    }
     return dyn_cast<Instruction>(BBI);
 }
 
 /*
- * debug function
+ * debug function, track process progress internally
  */
 void capchk::dump_dbgstk()
 {
@@ -416,6 +417,46 @@ void capchk::chk_unsafe_access(Module& module)
         <<" safe access collected\n";
 }
 
+/*
+ * is this function type contains non-trivial(non-primary) type?
+ */
+bool capchk::is_complex_type(Type* t)
+{
+    if (!t->isFunctionTy())
+        return false;
+    if (t->isFunctionVarArg())
+        return true;
+    FunctionType *ft = dyn_cast<FunctionType>(t);
+    //params
+    int number_of_complex_type = 0;
+    for (int i = 0; i<ft->getNumParams(); i++)
+    {
+        Type* argt = ft->getParamType(i);
+        if (argt->isSingleValueType())
+            continue;
+        number_of_complex_type++;
+    }
+    //return type
+    Type* rt = ft->getReturnType();
+
+again:
+    if (rt->isPointerTy())
+    {
+        Type* pet = rt->getPointerElementType();
+        if (pet->isPointerTy())
+        {
+            rt = pet;
+            goto again;
+        }
+        if (!pet->isSingleValueType())
+        {
+            number_of_complex_type++;
+        }
+    }
+
+    return (number_of_complex_type!=0);
+}
+
 static bool mayDivideByZero(Instruction *I) {
     if (!(I->getOpcode() == Instruction::UDiv ||
                 I->getOpcode() == Instruction::SDiv ||
@@ -434,13 +475,13 @@ void capchk::chk_div0(Module& module)
     for (Module::iterator f_begin = module.begin(), f_end = module.end();
             f_begin != f_end; ++f_begin)
     {
-        Function *func_ptr = dyn_cast<Function>(f_begin);
-        if (func_ptr->isDeclaration())
+        Function *func = dyn_cast<Function>(f_begin);
+        if (func->isDeclaration())
             continue;
-        //errs()<<func_ptr->getName()<<"\n";
+        //errs()<<func->getName()<<"\n";
         std::set<BasicBlock*> bb_visited;
         std::queue<BasicBlock*> bb_work_list;
-        bb_work_list.push(&func_ptr->getEntryBlock());
+        bb_work_list.push(&func->getEntryBlock());
         while(bb_work_list.size())
         {
             BasicBlock* bb = bb_work_list.front();
@@ -460,7 +501,7 @@ void capchk::chk_div0(Module& module)
                 {
                     continue;
                 }
-                errs()<<" "<<func_ptr->getName()<<":"<<ANSI_COLOR_RED;
+                errs()<<" "<<func->getName()<<":"<<ANSI_COLOR_RED;
                 pvi->getDebugLoc().print(errs());
                 errs()<<ANSI_COLOR_RESET"\n";
                 pvi->print(errs());
@@ -943,30 +984,55 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                 }
             }else if (ci->getCalledValue())
             {
+                /*
+                 * try to match a correct function,(with signature)
+                 *
+                 * There are 3 ways(granualities):
+                 * - 1. whatever matches the function type
+                 * - 2. only match non-trivial function type(function with struct type e.g.)
+                 *      - implication is that this will result in fewer
+                 *        (presumably more accurate) matches
+                 * - 3. figure out using SVF, this will tells us a path how function
+                 *      pointer is defined.
+                 */
+
                 Value* cv = ci->getCalledValue();
+                Type *ft = cv->getType()->getPointerElementType();
+                if (!is_complex_type(ft))
+                {
+                    UnResolv++;
+                    continue;
+                }
+
                 //function pointer
-                //errs()<<"call with function pointer\n";
-                //cv->getType()->print(errs());
-                //cv->print(errs());
-                //errs()<<"\n";
+                
+                /*errs()<<ANSI_COLOR_MAGENTA
+                    <<"CallSite Using Function pointer: "
+                    <<ANSI_COLOR_RESET;
+                ft->print(errs());
+                errs()<<"\n";*/
                 //ci->getDebugLoc().print(errs());
 
-                //try to match a function with the same signature
-                //FIXME: run SVF to figure out which function
-                // this pointer points to
-                std::set<Function*> *fl = t2fs[cv->getType()];
+                std::set<Function*> *fl = t2fs[ft];
                 if (fl==NULL)
                 {
                     //should consider this unresolvable???
                     UnResolv++;
                     continue;
                 }
-                /*
+                CSFPResolved++;
+                errs()<<"Found "<<fl->size()<<" Matches\n";
+                ////////////////////////////////////////////////////////////////
                 for (std::set<Function*>::iterator
                         fit = fl->begin(), fe = fl->end();
                         fit!=fe; ++fit)
                 {
                     ifunc = *fit;
+                    errs()<<ANSI_COLOR_CYAN
+                            <<"may match: "
+                            <<ifunc->getName()
+                            <<ANSI_COLOR_RESET
+                            <<"\n";
                     //if this is either a check function or a wrapper to check function
                     if (is_check_function(ifunc->getName()) ||
                             (chk_function_wrapper.count(ifunc)!=0))
@@ -984,7 +1050,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                         }
                         continue;
                     }
-                }*/
+                }
+                ////////////////////////////////////////////////////////////////
             }
         }
     }
@@ -992,7 +1059,10 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
     //if no check and not entry function?
     //we need to go further if not reaching limit ye
     if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
+    {
+        BwdAnalysisMaxHit++;
         goto nocheck_out;
+    }
 
     for (auto *U: f->users())
     {
@@ -1259,6 +1329,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
 
     if (depth>MAX_FWD_SLICE_DEPTH)
     {
+        FwdAnalysisMaxHit++;
         return;
     }
 
@@ -1485,11 +1556,24 @@ void capchk::process(Module& module)
     {
         Function *func_ptr = dyn_cast<Function>(fi);
         if (func_ptr->isDeclaration())
+        {
+            ExternalFuncCounter++;
             continue;
+        }
+        FuncCounter++;
 
         //auto& aa = getAnalysis<AAResultsWrapperPass>(*func_ptr).getAAResults();
 
-        Type* type = func_ptr->getType();
+        Type* type = func_ptr->getFunctionType();
+
+        if (is_complex_type(type))
+        {
+            errs()<<ANSI_COLOR_YELLOW
+                <<"Found Function Type:";
+            type->print(errs());
+            errs()<<ANSI_COLOR_RESET<<"\n";
+        }
+
         std::set<Function*> *fl = t2fs[type];
         if (fl==NULL)
         {
