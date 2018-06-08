@@ -23,6 +23,9 @@ Function: netns_install
 Hit Check Function:ns_capable
 net/core/net_namespace.c:1098:7[FULL]
 ---------------------------------------------------
+
+memory leak on compat_alloc_user_space as well?
+
 Inspect Use of Function:SyS_kexec_load
 Use:kernel/kexec.c:275:9 @[ kernel/kexec.c:241:1 ]
 
