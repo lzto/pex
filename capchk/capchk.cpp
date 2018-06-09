@@ -115,16 +115,24 @@ STATISTIC(BwdAnalysisMaxHit, "# of times max depth for backward analysis hit");
 STATISTIC(CPUnResolv, "Critical Function Pointer Unable to Resolve");
 STATISTIC(CPResolv, "Critical Function Pointer Resolved");
 STATISTIC(CFuncUsedByNonCall, "Critical Functions used by non CallInst");
+STATISTIC(MatchCallCriticalFuncPtr, "# of times indirect call site matched with critical functions");
+STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to match with critical functions");
 
 typedef std::list<Value*> ValueList;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
+typedef std::set<CallInst*> InDirectCallSites;
 
 typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
 /*
  * t2fs is used to fuzzy matching calling using function pointer
  */
 TypeToFunctions t2fs;
+
+
+//stores all indirect call sites
+InDirectCallSites idcs;
+
 
 enum _REACHABLE
 {
@@ -166,7 +174,10 @@ class capchk : public ModulePass
         void forward_all_interesting_usage(Instruction* I, int depth, bool checked);
         
         _REACHABLE backward_slice_build_callgraph(FunctionList &callgraph, Instruction* I);
-        _REACHABLE backward_slice_reachable_to_chk_function(Instruction* I);
+        _REACHABLE _backward_slice_reachable_to_chk_function(Instruction* I);
+        void backward_slice_reachable_to_chk_function(Instruction* I);
+
+        void check_all_cs_using_fp(Function*);
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
@@ -224,6 +235,8 @@ void capchk::dump_statistics()
     STATISTICS_DUMP(CPUnResolv);
     STATISTICS_DUMP(CPResolv);
     STATISTICS_DUMP(CFuncUsedByNonCall);
+    STATISTICS_DUMP(MatchCallCriticalFuncPtr);
+    STATISTICS_DUMP(UnMatchCallCriticalFuncPtr);
     errs()<<"\n\n\n";
 }
 #endif
@@ -954,6 +967,12 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
 {
     Function* f = I->getFunction();
 
+    //dont allow recursive.
+    if (std::find(callgraph.begin(), callgraph.end(), f) != callgraph.end())
+    {
+        return RNONE;
+    }
+    
     DominatorTree dt(*f);
 
     callgraph.push_back(f);
@@ -1034,6 +1053,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                 }
             }else if (ci->getCalledValue())
             {
+                //not so many checks are not used in indirect calls?
+#if 1
                 /*
                  * try to match a correct function,(with signature)
                  *
@@ -1108,6 +1129,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                     }
                 }
                 ////////////////////////////////////////////////////////////////
+#endif
             }
         }
     }
@@ -1190,10 +1212,73 @@ checked_out:
     return RFULL;
 }
 
-_REACHABLE capchk::backward_slice_reachable_to_chk_function(Instruction* I)
+_REACHABLE capchk::_backward_slice_reachable_to_chk_function(Instruction* I)
 {
     FunctionList callgraph;
     return backward_slice_build_callgraph(callgraph, I);
+}
+
+void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
+{
+    errs()<<ANSI_COLOR_MAGENTA
+        <<"Use:";
+    cs->getDebugLoc().print(errs());
+    //U->print(errs());
+    errs()<<ANSI_COLOR_RESET<<"\n";
+    switch(_backward_slice_reachable_to_chk_function(cs))
+    {
+        case(RFULL):
+            GoodPath++;
+            errs()<<ANSI_COLOR_GREEN
+                <<"[FULLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
+            break;
+        case(RPARTIAL):
+            BadPath++;
+            errs()<<ANSI_COLOR_YELLOW
+                <<"[PARTIALLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
+            break;
+        case(RNONE):
+            BadPath++;
+            errs()<<ANSI_COLOR_RED
+                <<"[NO CHECK]"<<ANSI_COLOR_RESET<<"\n";
+            break;
+        case(RUNRESOLVEABLE):
+            UnResolv++;
+            break;
+        default:
+            break;
+    }
+}
+
+void capchk::check_all_cs_using_fp(Function* func)
+{
+    //we want exact match to non-trivial function
+    Type* func_type = func->getFunctionType();
+    if (!is_complex_type(func_type))
+    {
+        UnMatchCallCriticalFuncPtr+=idcs.size();
+        return;
+    }
+    std::set<Function*> *fl = t2fs[func_type];
+    if ((fl==NULL) || (fl->size()!=1))
+    {
+        return;
+    }
+    if ((*fl->begin())!=func)
+    {
+        return;
+    }
+
+    for (auto* idc: idcs)
+    {
+        Type* ft = idc->getCalledValue()->getType()->getPointerElementType();
+        if (func_type != ft)
+            continue;
+        errs()<<"Found matched functions for indirectcall:"
+            <<(*fl->begin())->getName()<<"\n";
+        backward_slice_reachable_to_chk_function(idc);
+        MatchCallCriticalFuncPtr++;
+    }
 }
 
 /*
@@ -1231,57 +1316,32 @@ void capchk::check_critical_function_usage(Module& module)
     for (Module::iterator f_begin = module.begin(), f_end = module.end();
             f_begin != f_end; ++f_begin)
     {
-        Function *func_ptr = dyn_cast<Function>(f_begin);
-        if (!is_critical_function(func_ptr->getName()))
+        Function *func = dyn_cast<Function>(f_begin);
+        if (!is_critical_function(func->getName()))
         {
             continue;
         }
-        if (is_skip_function(func_ptr->getName()))
+        if (is_skip_function(func->getName()))
         {
             continue;
         }
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Function:"
-            <<func_ptr->getName()
+            <<func->getName()
             <<ANSI_COLOR_RESET
             <<"\n";
         //iterate through all call site
-        for (auto *U: func_ptr->users())
+        //FIXME: this does not include function pointers
+        for (auto *U: func->users())
         {
             CallInst *cs = dyn_cast<CallInst>(U);
             if (!cs)
             {
                 continue;
             }
-            errs()<<ANSI_COLOR_MAGENTA
-                <<"Use:";
-            cs->getDebugLoc().print(errs());
-            //U->print(errs());
-            errs()<<ANSI_COLOR_RESET<<"\n";
-            switch(backward_slice_reachable_to_chk_function(cs))
-            {
-                case(RFULL):
-                    GoodPath++;
-                    errs()<<ANSI_COLOR_GREEN
-                        <<"[FULLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
-                    break;
-                case(RPARTIAL):
-                    BadPath++;
-                    errs()<<ANSI_COLOR_YELLOW
-                        <<"[PARTIALLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
-                    break;
-                case(RNONE):
-                    BadPath++;
-                    errs()<<ANSI_COLOR_RED
-                        <<"[NO CHECK]"<<ANSI_COLOR_RESET<<"\n";
-                    break;
-                case(RUNRESOLVEABLE):
-                    UnResolv++;
-                    break;
-                default:
-                    break;
-            }
+            backward_slice_reachable_to_chk_function(cs);
         }
+        check_all_cs_using_fp(func);
     }
 }
 
@@ -1337,7 +1397,7 @@ void capchk::check_critical_variable_usage(Module& module)
                 <<f->getName()
                 <<"";
             //is this instruction reachable from non-checked path?
-            switch(backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U)))
+            switch(_backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U)))
             {
                 case(RFULL):
                     GoodPath++;
@@ -1433,8 +1493,8 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
             if (isa<CallInst>(ii))
             {
                 //only interested in call site
-                CallInst *I = dyn_cast<CallInst>(ii);
-                Function* csfunc = I->getCalledFunction();
+                CallInst *ci = dyn_cast<CallInst>(ii);
+                Function* csfunc = ci->getCalledFunction();
                 if (csfunc && csfunc->hasName())
                 {
                     if (csfunc->getName().startswith("llvm.")
@@ -1445,8 +1505,12 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
                             (chk_function_wrapper.count(csfunc)!=0))
                     {
                         is_function_permission_checked = true;
-                        chk_instruction_list.push_back(I);
+                        chk_instruction_list.push_back(ci);
                     }
+                }else
+                {
+                    //this is in-direct call, collect it
+                    idcs.insert(ci);
                 }
             }
         }
