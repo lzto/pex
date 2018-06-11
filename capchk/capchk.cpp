@@ -119,6 +119,7 @@ STATISTIC(MatchCallCriticalFuncPtr, "# of times indirect call site matched with 
 STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to match with critical functions");
 
 typedef std::list<Value*> ValueList;
+typedef std::list<Instruction*> InstructionList;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
 typedef std::set<CallInst*> InDirectCallSites;
@@ -129,9 +130,10 @@ typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
  */
 TypeToFunctions t2fs;
 
-
 //stores all indirect call sites
 InDirectCallSites idcs;
+
+ValueList critical_variables;
 
 
 enum _REACHABLE
@@ -162,7 +164,8 @@ class capchk : public ModulePass
         bool runOnModule(Module &);
         bool capchkPass(Module &);
 
-        void process(Module& module);
+        void process_intras(Module& module);
+        void process_cpgf(Module& module);
         void collect_kernel_init_functions(Module& module);
         void chk_div0(Module& module);
         void chk_unsafe_access(Module& module);
@@ -210,9 +213,9 @@ class capchk : public ModulePass
         }
         void getAnalysisUsage(AnalysisUsage &au) const override
         {
-            au.addRequired<AAResultsWrapperPass>();
-            au.addRequired<TargetLibraryInfoWrapperPass>();
-            au.addRequired<ScalarEvolutionWrapperPass>();
+            //au.addRequired<AAResultsWrapperPass>();
+            //au.addRequired<TargetLibraryInfoWrapperPass>();
+            //au.addRequired<ScalarEvolutionWrapperPass>();
             au.setPreservesAll();
         }
 };
@@ -731,6 +734,9 @@ bool is_skip_function(const std::string& str)
     return false;
 }
 
+/*
+ * file/dev op handler and sys call prefix/suffix
+ */
 static const char* interesting_keyword [] = 
 {
     "SyS",
@@ -959,9 +965,6 @@ void capchk::collect_kernel_init_functions(Module& module)
         errs()<<I<<"\n";
     }
 }
-
-std::list<Value*> critical_variables;
-
 
 _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instruction* I)
 {
@@ -1436,7 +1439,7 @@ void capchk::check_critical_variable_usage(Module& module)
 }
 
 /*
- * interprocedural program slicing
+ * interprocedural program analysis
  * figure out all global variable usage and function calls
  */
 void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool checked)
@@ -1671,7 +1674,7 @@ add:
 
     if (is_function_permission_checked)
     {
-        //forwar slicing
+        //merge forwar slicing result
         critical_functions.splice(critical_functions.begin(),
                 current_func_res_list);
         if (current_critical_variables.size()==0)
@@ -1703,7 +1706,145 @@ out:
     return;
 }
 
-void capchk::process(Module& module)
+/*
+ * capability protected escaping variables and fields - intra-procedural
+ * (field sensitive?)
+ *
+ * TODO:
+ * 1. can collect protected type/field and extend analysis to other functions
+ * 2. check wrapper
+ *
+ * rules:
+ * 1. capability check should dominate >0 store to escaping variable
+ *    or return with value
+ * 2. capability check should cover all pathes which try to do the same thing
+ */
+void capchk::process_intras(Module& module)
+{
+    STOP_WATCH_START;
+    for (Module::iterator fi = module.begin(), fe = module.end();
+            fi != fe; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration() || func->isVarArg())
+            continue;
+
+        FunctionType* type = func->getFunctionType();
+        //is there any (escaping)pointer argument? return value?
+        //if no, we should expect global variables are modified/referenced
+        for (int i=0; i < type->getNumParams(); i++)
+            if (type->getParamType(i)->isPointerTy())
+                goto interesting;
+        if (type->getReturnType()->isVoidTy())
+            continue;
+
+interesting:
+        bool good = true;
+        //auto& aa = getAnalysis<AAResultsWrapperPass>(*func).getAAResults();
+
+
+        std::set<BasicBlock*> bb_visited;
+        std::queue<BasicBlock*> bb_work_list;
+        bb_work_list.push(&func->getEntryBlock());
+        InstructionList chk_ins;
+//phase-1, is check function used?
+        while(bb_work_list.size())
+        {
+            BasicBlock* bb = bb_work_list.front();
+            bb_work_list.pop();
+            if(bb_visited.count(bb))
+                continue;
+            bb_visited.insert(bb);
+
+            for (BasicBlock::iterator ii = bb->begin(),
+                    ie = bb->end();
+                    ii!=ie; ++ii)
+            {
+                CallInst* ci = dyn_cast<CallInst>(ii);
+                if (!ci)
+                    continue;
+                Function* nf = ci->getCalledFunction();
+                if (!nf)
+                    continue;
+                if (!is_check_function(nf->getName()))
+                    continue;
+                chk_ins.push_back(ci);
+            }
+            for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
+                bb_work_list.push(cast<BasicBlock>(*si));
+        }
+        bb_visited.clear();
+        if (chk_ins.size()==0)
+            continue;
+        errs()<<"-"<<func->getName()<<"\n";
+        DominatorTree dt(*func);
+//phase-2, intersect def-use chain for args
+//store only
+        for (Function::arg_iterator fai = func->arg_begin(), fae = func->arg_end();
+            fai!=fae; ++fai)
+        {
+            //find out all fai's user
+            ValueList fai_user;
+            ValueList wl;
+            wl.push_back(fai);
+            while (wl.size())
+            {
+                Value* v = wl.front();
+                wl.pop_front();
+                for (auto* u: v->users())
+                {
+                    //if already in fai_user, don't add
+                    if (std::find(fai_user.begin(), fai_user.end(), u)
+                            != fai_user.end())
+                        continue;
+                    wl.push_back(u);
+                    fai_user.push_back(u);
+                }
+            }
+            //is fai_user partially dominated by check?
+            InstructionList uil;
+            for (auto* u:fai_user)
+            {
+                if (!isa<StoreInst>(u))
+                    continue;
+                int domcnt = 0;
+                for (auto* ci: chk_ins)
+                {
+                    if (dt.dominates(ci, dyn_cast<Instruction>(u)))
+                        domcnt++;
+                }
+                if (domcnt==0)//this path is not checked
+                    uil.push_back(dyn_cast<Instruction>(u));
+            }
+            for (auto* ui: uil)
+            {
+                errs()<<"    "
+                    <<ANSI_COLOR_YELLOW
+                    <<"NOCHK @ "
+                    <<ANSI_COLOR_RESET;
+                assert(isa<Instruction>(ui));
+                ui->getDebugLoc().print(errs());
+                errs()<<"\n";
+                good = false;
+            }
+        }
+//phase-3, intersect def-use chain for return value
+//unchecked variable have impact on return value
+        if (good)
+        {
+            errs()<<ANSI_COLOR_GREEN<<"[OK]"<<ANSI_COLOR_RESET<<"\n";
+        }else{
+            errs()<<ANSI_COLOR_RED<<"[FAIL]"<<ANSI_COLOR_RESET<<"\n";
+        }
+    }
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+}
+
+/*
+ * process capability protected globals and functions
+ */
+void capchk::process_cpgf(Module& module)
 {
     /*
      * pre-process
@@ -1827,8 +1968,12 @@ bool capchk::capchkPass(Module &module)
         <<ANSI_COLOR_RESET<<"\n";
     chk_div0(module);
 #endif
+    errs()<<ANSI_COLOR_CYAN
+        <<"--- PROCESS FUNCTIONS ---"
+        <<ANSI_COLOR_RESET<<"\n";
+    //process_intras(module);
 
-    process(module);
+    process_cpgf(module);
 
     errs()<<ANSI_COLOR_CYAN
         <<"--- DONE! ---"
