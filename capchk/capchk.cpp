@@ -1476,10 +1476,12 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
     /*
      * first figure out all checks
      */
-    if (checked)
+    if (is_function_permission_checked)
     {
+        //already checked?
         goto rescan_and_add_all;
     }
+
     bb_work_list.push(I->getParent());
     while(bb_work_list.size())
     {
@@ -1563,8 +1565,9 @@ rescan_and_add_all:
              * add them to protected list
              */
             //already checked before entering current scope
-            if (checked)
+            if (is_function_permission_checked)
                 goto add;
+            //there should be at least one check dominate the use
             for (auto* _ci : chk_instruction_list)
             {
                 if (dt.dominates(_ci,si))
@@ -1634,29 +1637,23 @@ add:
             {
                 LoadInst *li = dyn_cast<LoadInst>(ii);
                 //li->getOperand(0);
-                if (is_function_permission_checked)
+                Value* lval = li->getOperand(0);
+                std::set<Value*> v_visited;
+                if (is_rw_global(lval, v_visited) && 
+                        (!is_skip_var(lval->getName())))
                 {
-                    Value* lval = li->getOperand(0);
-                    std::set<Value*> v_visited;
-                    if (is_rw_global(lval, v_visited) && 
-                            (!is_skip_var(lval->getName())))
-                    {
-                        current_critical_variables.push_back(lval);
-                    }
+                    current_critical_variables.push_back(lval);
                 }
             }else if (isa<StoreInst>(ii))
             {
                 StoreInst *si = dyn_cast<StoreInst>(ii);
                 //si->getOperand(1);
-                if (is_function_permission_checked)
+                Value* sval = si->getOperand(1);
+                std::set<Value*> v_visited;
+                if (is_rw_global(sval, v_visited) && 
+                        (!is_skip_var(sval->getName())))
                 {
-                    Value* sval = si->getOperand(1);
-                    std::set<Value*> v_visited;
-                    if (is_rw_global(sval, v_visited) && 
-                            (!is_skip_var(sval->getName())))
-                    {
-                        current_critical_variables.push_back(sval);
-                    }
+                    current_critical_variables.push_back(sval);
                 }
             }
         }
@@ -1677,11 +1674,11 @@ add:
         //merge forwar slicing result
         critical_functions.splice(critical_functions.begin(),
                 current_func_res_list);
-        if (current_critical_variables.size()==0)
-        {
-            errs()<<"No global critical variables found for function?:"
-                <<func_ptr->getName()<<"\n";
-        }
+        //if (current_critical_variables.size()==0)
+        //{
+        //    errs()<<"No global critical variables found for function?:"
+        //        <<func_ptr->getName()<<"\n";
+        //}
         critical_variables.splice(critical_variables.begin(),
                 current_critical_variables);
         //this is a wrapper
