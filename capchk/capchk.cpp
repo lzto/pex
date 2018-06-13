@@ -181,7 +181,8 @@ class capchk : public ModulePass
         void check_critical_variable_usage(Module& module);
 
         bool is_kernel_init_functions(Function* f, FunctionSet& visited);
-        void forward_all_interesting_usage(Instruction* I, int depth, bool checked);
+        void forward_all_interesting_usage(Instruction* I, int depth,
+                bool checked, InstructionList &callgraph);
         
         _REACHABLE backward_slice_build_callgraph(InstructionList &callgraph,
                 Instruction* I, FunctionToCheckResult& fvisited);
@@ -597,13 +598,8 @@ void capchk::chk_div0(Module& module)
             /*
              * insert all successor of current basic block to work list
              */
-            for (succ_iterator si = succ_begin(bb),
-                    se = succ_end(bb);
-                    si!=se; ++si)
-            {
-                BasicBlock* succ_bb = cast<BasicBlock>(*si);
-                bb_work_list.push(succ_bb);
-            }
+            for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
+                bb_work_list.push(cast<BasicBlock>(*si));
         }
     }
 }
@@ -757,6 +753,9 @@ static const char* skip_functions [] =
     "jiffies_to_msecs",
     "__warn_printk",//break KASLR here?
     "arch_release_task_struct",
+    "do_syscall_64",//syscall entry point
+    "do_fast_syscall_32",
+    "do_int80_syscall_32",
 };
 
 bool is_skip_function(const std::string& str)
@@ -1083,7 +1082,6 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     bool has_user = false;
 
     BasicBlockList bbl;
-    std::set<BasicBlock*>* bbvisited = new std::set<BasicBlock*>();
     bbl.push_back(I->getParent());
     
     std::set<Function*> k_visited;
@@ -1097,15 +1095,12 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     //all predecessor basic blocks
     //should call check function 
     //Also check whether the check can dominate use
-    bbvisited->insert(bbl.front());
     for (pred_iterator pi = pred_begin(bbl.front()),
             pe = pred_end(bbl.front());
             pi!=pe; ++pi)
     {
         BasicBlock *nbb = cast<BasicBlock>(*pi);
         assert(nbb);
-        if (bbvisited->count(nbb))
-            continue;
         bbl.push_back(nbb);
     }
 
@@ -1132,7 +1127,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                         (chk_function_wrapper.count(ifunc)!=0))
                 {
                     has_check = true;
-                    errs()<<"Hit Check Function:"<<ifunc->getName()<<"\n";
+                    errs()<<"Hit Check Function:"<<ifunc->getName()<<" @ ";
                     ci->getDebugLoc().print(errs());
                     errs()<<"\n";
                     if (!dt.dominates(ci, I))
@@ -1279,7 +1274,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
 
     if (!has_user)
     {
-        errs()<<"This Function has no user? consider as entry point???\n";
+        errs()<<" @ "<<f->getName()<<" ";
+        errs()<<"Not KInit/CallSite? consider as user entry point\n";
         ret = RNONE;
         goto nocheck_out;
     }
@@ -1290,38 +1286,33 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         if (has_no_check)
         {
             fvisited[f] = RPARTIAL;
-            delete bbvisited;
             return RPARTIAL;
         }
         fvisited[f] = RFULL;
-        delete bbvisited;
         return RFULL;
     }
     fvisited[f] = RNONE;
-    delete bbvisited;
     return RNONE;
 
 nocheck_out:
-    errs()<<ANSI_COLOR_RED
-        <<"\nNO CHECK ON PATH:\n"
-        <<ANSI_COLOR_YELLOW;
+    errs()<<"\n"<<ANSI_COLOR_RED
+        <<"=NO CHECK ON PATH="
+        <<ANSI_COLOR_RESET<<"\n";
     dump_callstack(callgraph);
     errs()<<ANSI_COLOR_RESET;
     callgraph.pop_back();
     fvisited[f] = RNONE;
-    delete bbvisited;
     return ret;
 
 checked_out:
     if (ret==RFULL)//dont print if it hit kernel init functions
     {
         errs()<<ANSI_COLOR_GREEN
-            <<"\n PATH OK ret:"<<ret<<"\n"
-            <<ANSI_COLOR_YELLOW;
+            <<"=PATH OK ret:"<<ret<<"="
+            <<ANSI_COLOR_RESET<<"\n";
         dump_callstack(callgraph);
     }
     callgraph.pop_back();
-    delete bbvisited;
     return ret;
 }
 
@@ -1563,7 +1554,8 @@ void capchk::check_critical_variable_usage(Module& module)
 /*
  * IPA: figure out all global variable usage and function calls
  */
-void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool checked)
+void capchk::forward_all_interesting_usage(Instruction* I, int depth,
+        bool checked, InstructionList& callgraph)
 {
     Function *func = I->getFunction();
     DominatorTree dt(*func);
@@ -1575,8 +1567,15 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
     StringList current_func_res_list;
     ValueList current_critical_variables;
 
+    //don't allow recursive
+    if (std::find(callgraph.begin(), callgraph.end(), I)!=callgraph.end())
+        return;
+
+    callgraph.push_back(I);
+
     if (depth>MAX_FWD_SLICE_DEPTH)
     {
+        callgraph.pop_back();
         FwdAnalysisMaxHit++;
         return;
     }
@@ -1699,6 +1698,12 @@ add:
                             ||(chk_function_wrapper.count(csf)!=0))
                         continue;
                     current_func_res_list.push_back(csf->getName());
+#if 1//DEBUG
+                    errs()<<"Adding <direct>"<<csf->getName()<<" use @ ";
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n cause:";
+                    dump_dbgstk();
+#endif
                 }else if (Value* csv = cs->getCalledValue())
                 {
 #if 1
@@ -1747,6 +1752,12 @@ add:
                         continue;
 
                     current_func_res_list.push_back(fname);
+#if 1//DEBUG
+                    errs()<<"Adding <indirect>"<<csf->getName()<<" use @ ";
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n cause:";
+                    dump_dbgstk();
+#endif
 #endif
                 }
             }
@@ -1820,12 +1831,13 @@ add:
                 }
 
                 dbgstk.push_back(cs);
-                forward_all_interesting_usage(cs, depth+1, true);
+                forward_all_interesting_usage(cs, depth+1, true, callgraph);
                 dbgstk.pop_back();
             }
         }
     }
 out:
+    callgraph.pop_back();
     return;
 }
 
@@ -2022,7 +2034,9 @@ void capchk::process_cpgf(Module& module)
          * alias set
          */
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
-        forward_all_interesting_usage(func->getEntryBlock().getFirstNonPHI(),0,false);
+        InstructionList callgraph;
+        forward_all_interesting_usage(func->getEntryBlock().getFirstNonPHI(),
+               0, false, callgraph);
         dbgstk.pop_back();
     }
 
