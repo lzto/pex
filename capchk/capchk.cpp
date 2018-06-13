@@ -721,6 +721,10 @@ static const char* skip_functions [] =
     "strcpy",
     "strncat",
     "strlcpy",
+    "strscpy",
+    "strsep",
+    "strndup_user",
+    "strnlen_user",
     "sscanf",
     "snprintf",
     "scnprintf",
@@ -1325,7 +1329,7 @@ _REACHABLE capchk::_backward_slice_reachable_to_chk_function(Instruction* I)
 {
     InstructionList callgraph;
     //FIXME: should consider function+instruction pair?
-    static FunctionToCheckResult fvisited;
+    FunctionToCheckResult fvisited;
     return backward_slice_build_callgraph(callgraph, I, fvisited);
 }
 
