@@ -117,12 +117,28 @@ STATISTIC(CPResolv, "Critical Function Pointer Resolved");
 STATISTIC(CFuncUsedByNonCall, "Critical Functions used by non CallInst");
 STATISTIC(MatchCallCriticalFuncPtr, "# of times indirect call site matched with critical functions");
 STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to match with critical functions");
+STATISTIC(CapChkInFPTR, "found capability check inside call using function ptr\n");
 
+////////////////////////////////////////////////////////////////////////////////
+
+enum _REACHABLE
+{
+    RFULL,
+    RPARTIAL,
+    RNONE,
+    RKINIT,//hit kernel init functions
+    RUNRESOLVEABLE,
+};
+
+typedef std::list<std::string> StringList;
+typedef std::set<std::string> StringSet;
 typedef std::list<Value*> ValueList;
 typedef std::list<Instruction*> InstructionList;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
+typedef std::set<Function*> FunctionSet;
 typedef std::set<CallInst*> InDirectCallSites;
+typedef std::map<Function*,_REACHABLE> FunctionToCheckResult;
 
 typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
 /*
@@ -134,15 +150,6 @@ TypeToFunctions t2fs;
 InDirectCallSites idcs;
 
 ValueList critical_variables;
-
-
-enum _REACHABLE
-{
-    RFULL,
-    RPARTIAL,
-    RNONE,
-    RUNRESOLVEABLE,
-};
 
 #define MAX_PATH 1000
 #define MAX_BACKWD_SLICE_DEPTH 100
@@ -173,10 +180,11 @@ class capchk : public ModulePass
         void check_critical_function_usage(Module& module);
         void check_critical_variable_usage(Module& module);
 
-        bool is_kernel_init_functions(Function* f, std::set<Function*>& visited);
+        bool is_kernel_init_functions(Function* f, FunctionSet& visited);
         void forward_all_interesting_usage(Instruction* I, int depth, bool checked);
         
-        _REACHABLE backward_slice_build_callgraph(FunctionList &callgraph, Instruction* I);
+        _REACHABLE backward_slice_build_callgraph(InstructionList &callgraph,
+                Instruction* I, FunctionToCheckResult& fvisited);
         _REACHABLE _backward_slice_reachable_to_chk_function(Instruction* I);
         void backward_slice_reachable_to_chk_function(Instruction* I);
 
@@ -200,8 +208,9 @@ class capchk : public ModulePass
         /*
          * for debug purpose
          */
-        std::stack<Value*> dbgstk;
+        InstructionList dbgstk;
         void dump_dbgstk();
+        void dump_callstack(InstructionList& callstk);
 
     public:
         static char ID;
@@ -240,6 +249,7 @@ void capchk::dump_statistics()
     STATISTICS_DUMP(CFuncUsedByNonCall);
     STATISTICS_DUMP(MatchCallCriticalFuncPtr);
     STATISTICS_DUMP(UnMatchCallCriticalFuncPtr);
+    STATISTICS_DUMP(CapChkInFPTR);
     errs()<<"\n\n\n";
 }
 #endif
@@ -284,11 +294,29 @@ Instruction* GetNextNonPHIInstruction(Instruction* I)
 void capchk::dump_dbgstk()
 {
     errs()<<ANSI_COLOR_GREEN<<"Process Stack:"<<ANSI_COLOR_RESET<<"\n";
-    while(dbgstk.size())
+    int cnt = 0;
+
+    for (auto* I: dbgstk)
     {
-        errs()<<(dbgstk.size()-1)<<" : ";
-        dbgstk.top()->dump();
-        dbgstk.pop();
+        errs()<<""<<cnt<<" "<<I->getFunction()->getName()<<" ";
+        I->getDebugLoc().print(errs());
+        errs()<<"\n";
+        cnt++;
+    }
+    errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
+}
+
+void capchk::dump_callstack(InstructionList& callstk)
+{
+    errs()<<ANSI_COLOR_GREEN<<"Call Stack:"<<ANSI_COLOR_RESET<<"\n";
+    int cnt = 0;
+
+    for (auto* I: callstk)
+    {
+        errs()<<""<<cnt<<" "<<I->getFunction()->getName()<<" ";
+        I->getDebugLoc().print(errs());
+        errs()<<"\n";
+        cnt++;
     }
     errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
 }
@@ -674,6 +702,7 @@ static const char* skip_functions [] =
     //may operate on wrong source?
     //"capable",
     //"ns_capable",
+    "add_taint",
     "__mutex_init",
     "mutex_lock",
     "mutex_unlock",
@@ -704,6 +733,7 @@ static const char* skip_functions [] =
     "skip_spaces",
     "kfree",
     "kmalloc",
+    "kstrdup",
     "kstrtoull",
     "kstrtouint",
     "kstrtoint",
@@ -721,6 +751,8 @@ static const char* skip_functions [] =
     "dec_ucount",
     "inc_ucount",
     "jiffies_to_msecs",
+    "__warn_printk",//break KASLR here?
+    "arch_release_task_struct",
 };
 
 bool is_skip_function(const std::string& str)
@@ -775,10 +807,11 @@ static const char* interesting_type_word [] =
 static const char* kernel_start_functions [] = 
 {
     "start_kernel",
+    "x86_64_start_kernel",
 };
 
-std::list<std::string> kernel_init_functions;
-std::list<std::string> non_kernel_init_functions;
+StringList kernel_init_functions;
+StringSet non_kernel_init_functions;
 
 /*
  * all discovered wrapper function to check functions will be stored here
@@ -801,23 +834,18 @@ std::set<Function*> chk_function_wrapper;
  * if function f has single user which goes to start_kernel(),
  * then this is a init function
  */
-bool capchk::is_kernel_init_functions(Function* f, std::set<Function*>& visited)
+bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
 {
-    std::string str = f->getName();
+    std::string name = f->getName();
     if (std::find(std::begin(kernel_init_functions),
                 std::end(kernel_init_functions),
-                str) != std::end(kernel_init_functions))
-    {
+                name) != std::end(kernel_init_functions))
         return true;
-    }
-    if (std::find(std::begin(non_kernel_init_functions),
-                std::end(non_kernel_init_functions),
-                str) != std::end(non_kernel_init_functions))
-    {
+    if (non_kernel_init_functions.count(name)!=0)
         return false;
-    }
+
     //init functions with initcall prefix belongs to kernel init sequence
-    std::string std_gv_spec = "__initcall_" + str;
+    std::string std_gv_spec = "__initcall_" + name;
     for (GlobalVariable &gvi: m->globals())
     {
         GlobalValue* gi = &gvi;
@@ -825,76 +853,86 @@ bool capchk::is_kernel_init_functions(Function* f, std::set<Function*>& visited)
         {
             if (gv->getName().startswith(std_gv_spec))
             {
-                kernel_init_functions.push_back(str);
+                kernel_init_functions.push_back(name);
                 return true;
             }
         }
     }
 
-
     //not found in cache?
     //all path that can reach to f should start from start_kernel()
+    //look backward(find who used f)
     FunctionList flist;
     for (auto *U : f->users())
-    {
         if (CallInst* cs = dyn_cast<CallInst>(U))
-        {
-            if (Function* csf = cs->getCalledFunction())
-            {
-                if (!csf->isDeclaration())
-                    flist.push_back(csf);
-            }
-        }
-    }
+            flist.push_back(cs->getFunction());
+
     //no user?
     if (flist.size()==0)
     {
-        non_kernel_init_functions.push_back(f->getName());
+        non_kernel_init_functions.insert(name);
         return false;
     }
 
     visited.insert(f);
     while (flist.size())
     {
-        Function* f = flist.front();
+        Function* xf = flist.front();
         flist.pop_front();
-        if (visited.count(f))
+        if (visited.count(xf))
             continue;
-        visited.insert(f);
-        if (!is_kernel_init_functions(f, visited))
+        visited.insert(xf);
+        if (!is_kernel_init_functions(xf, visited))
         {
-            non_kernel_init_functions.push_back(f->getName());
+            non_kernel_init_functions.insert(name);
             return false;
         }
     }
-    kernel_init_functions.push_back(f->getName());
+    kernel_init_functions.push_back(name);
     return true;
 }
 
 void capchk::collect_kernel_init_functions(Module& module)
 {
     Function *kstart = NULL;
-    kernel_init_functions.push_back("start_kernel");
+    FunctionSet kif;
     kernel_init_functions.push_back("x86_64_start_kernel");
-    for (Module::iterator f_begin = module.begin(), f_end = module.end();
-            f_begin != f_end; ++f_begin)
+    kernel_init_functions.push_back("start_kernel");
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
     {
-        Function *func_ptr = dyn_cast<Function>(f_begin);
-        if (func_ptr->isDeclaration())
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration())
             continue;
-        if (func_ptr->hasName())
+        if (func->hasName())
         {
-            if (func_ptr->getName().startswith("start_kernel"))
+            StringRef fname = func->getName();
+            if (fname.startswith("x86_64_start_kernel"))
             {
-                errs()<<"Found start_kernel\n";
-                kstart = func_ptr;
+                errs()<<ANSI_COLOR_GREEN
+                    <<"Found "<<func->getName()
+                    <<ANSI_COLOR_RESET<<"\n";
+                kstart = func;
                 break;
+            }else if (fname.startswith("start_kernel"))
+            {
+                //we should consider start_kernel as kernel init functions no
+                //matter what
+                kif.insert(func);
+                for (auto *U: func->users())
+                {
+                    if (Instruction *I = dyn_cast<Instruction>(U))
+                    {
+                        kif.insert(I->getFunction());
+                    }
+                }
             }
         }
     }
     assert(kstart!=NULL);
+    kif.insert(kstart);
 
-    //find all init functions starting from start_kernel
+    //find all init functions starting from x86_64_start_kernel
     std::set<Function*> func_visited;
     std::list<Function*> func_work_list;
     func_work_list.push_back(kstart);
@@ -906,7 +944,8 @@ void capchk::collect_kernel_init_functions(Module& module)
 
         if (cfunc->isDeclaration())
             continue;
-
+        
+        kif.insert(cfunc);
         func_visited.insert(cfunc);
         kernel_init_functions.push_back(cfunc->getName());
 
@@ -919,9 +958,7 @@ void capchk::collect_kernel_init_functions(Module& module)
             BasicBlock* bb = bb_work_list.front();
             bb_work_list.pop();
             if(bb_visited.count(bb))
-            {
                 continue;
-            }
             bb_visited.insert(bb);
 
             for (BasicBlock::iterator ii = bb->begin(),
@@ -945,13 +982,8 @@ void capchk::collect_kernel_init_functions(Module& module)
                     //function pointer
                 }
             }
-            for (succ_iterator si = succ_begin(bb),
-                    se = succ_end(bb);
-                    si!=se; ++si)
-            {
-                BasicBlock* succ_bb = cast<BasicBlock>(*si);
-                bb_work_list.push(succ_bb);
-            }
+            for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
+                bb_work_list.push(cast<BasicBlock>(*si));
         }
     }
     kernel_init_functions.sort();
@@ -959,26 +991,86 @@ void capchk::collect_kernel_init_functions(Module& module)
             std::unique(kernel_init_functions.begin(), kernel_init_functions.end()),
             kernel_init_functions.end());
 
+    /*
+     * ! BUG: query use of inlined function result in in-accurate result?
+     * inlined foo();
+     * bar(){zoo()} zoo(){foo};
+     *
+     * query user{foo()} -> zoo()
+     * query BasicBlocks in bar -> got call instruction in bar()?
+     */
+    //remove all non_kernel_init_functions from kernel_init_functions
+    errs()<<"NON-kernel-init functions:\n";
+    //purge all over approximation
+    int last_count = 0;
+
+again:
+    for (auto I: kif)
+    {
+        if ((I->getName()=="start_kernel") ||
+            (I->getName()=="x86_64_start_kernel"))
+        {
+            continue;
+        }
+        for (auto *U: I->users())
+        {
+            if (!isa<Instruction>(U))
+                continue;
+            if (kif.count(dyn_cast<Instruction>(U)->getFunction())==0)
+            {
+                //means that we have a user does not belong to kernel init functions
+                //we need to remove it
+                non_kernel_init_functions.insert(I->getName());
+                break;
+            }
+        }
+    }
+
+    for (auto I: non_kernel_init_functions)
+    {
+        auto i = std::find(kernel_init_functions.begin(),
+                    kernel_init_functions.end(),I);
+        if (i!=kernel_init_functions.end())
+            kernel_init_functions.erase(i);
+    }
+    if (last_count!=non_kernel_init_functions.size())
+    {
+        last_count = non_kernel_init_functions.size();
+        goto again;
+    }
+#if 1
+//this is imprecise
+    non_kernel_init_functions.clear();
+#endif
+#if 1
     errs()<<"Kernel Init Functions:\n";
     for (auto I: kernel_init_functions)
     {
-        errs()<<I<<"\n";
+        errs()<<ANSI_COLOR_GREEN<<I<<ANSI_COLOR_RESET<<"\n";
     }
+#endif
 }
 
-_REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instruction* I)
+_REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
+            Instruction* I, FunctionToCheckResult& fvisited)
 {
     Function* f = I->getFunction();
+    _REACHABLE ret = RNONE;
 
-    //dont allow recursive.
-    if (std::find(callgraph.begin(), callgraph.end(), f) != callgraph.end())
-    {
-        return RNONE;
-    }
+    if (fvisited.find(f)!=fvisited.end())
+        return fvisited[f];
+#if 0
+    errs()<<"+ "<<callgraph.size();
+    for (int i=0;i<callgraph.size();i++)
+        errs()<<" ";
+    errs()<<f->getName()<<"\n";
+#endif
+    //place holder
+    fvisited[f] = RNONE;
     
     DominatorTree dt(*f);
 
-    callgraph.push_back(f);
+    callgraph.push_back(I);
     //run backward slicing within this function to see if there's a check
 
     bool checked = false;
@@ -987,42 +1079,38 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
     bool has_user = false;
 
     BasicBlockList bbl;
-    std::set<BasicBlock*> bbvisited;
+    std::set<BasicBlock*>* bbvisited = new std::set<BasicBlock*>();
     bbl.push_back(I->getParent());
     
-    errs()<<"\n+"<<callgraph.size();
-    for (int i=0;i<callgraph.size();i++)
-        errs()<<" ";
-    errs()<<f->getName()<<"\n";
-
     std::set<Function*> k_visited;
     
     if (is_kernel_init_functions(f, k_visited))
     {
-        errs()<<"Hit Kernel Init Function\n";
+        ret = RKINIT;
         goto checked_out; 
     }
 
     //all predecessor basic blocks
     //should call check function 
     //Also check whether the check can dominate use
+    bbvisited->insert(bbl.front());
+    for (pred_iterator pi = pred_begin(bbl.front()),
+            pe = pred_end(bbl.front());
+            pi!=pe; ++pi)
+    {
+        BasicBlock *nbb = cast<BasicBlock>(*pi);
+        assert(nbb);
+        if (bbvisited->count(nbb))
+            continue;
+        bbl.push_back(nbb);
+    }
+
     while (bbl.size())
     {
+        //errs()<<" bbl="<<bbl.size()<<"\n";
+        //dump_callstack(callgraph);
         BasicBlock* bb = bbl.front();
-        bbvisited.insert(bb);
         bbl.pop_front();
-
-        for (pred_iterator pi = pred_begin(bb),
-                pe = pred_end(bb);
-                pi!=pe; ++pi)
-        {
-            BasicBlock *nbb = cast<BasicBlock>(*pi);
-            if (nbb==NULL)
-                continue;
-            if (bbvisited.count(nbb))
-                continue;
-            bbl.push_back(nbb);
-        }
 
         for(BasicBlock::iterator ii = bb->begin(),
                 ie = bb->end();
@@ -1052,12 +1140,13 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                         has_no_check = true;
                         continue;
                     }
+                    ret = RFULL;
                     goto checked_out;
                 }
             }else if (ci->getCalledValue())
             {
                 //not so many checks are not used in indirect calls?
-#if 1
+#if 0
                 /*
                  * try to match a correct function,(with signature)
                  *
@@ -1106,15 +1195,16 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                         fit!=fe; ++fit)
                 {
                     ifunc = *fit;
-                    errs()<<ANSI_COLOR_CYAN
+                    /*errs()<<ANSI_COLOR_CYAN
                             <<"may match: "
                             <<ifunc->getName()
                             <<ANSI_COLOR_RESET
-                            <<"\n";
+                            <<"\n";*/
                     //if this is either a check function or a wrapper to check function
                     if (is_check_function(ifunc->getName()) ||
                             (chk_function_wrapper.count(ifunc)!=0))
                     {
+                        CapChkInFPTR++;
                         has_check = true;
                         errs()<<"Hit Check Function(call with fptr):"<<ifunc->getName()<<"\n";
                         ci->getDebugLoc().print(errs());
@@ -1142,6 +1232,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
     if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
     {
         BwdAnalysisMaxHit++;
+        ret = RNONE;
         goto nocheck_out;
     }
     //FIXME: also need to check all CallSite using function pointer which precisely
@@ -1152,7 +1243,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
         has_user = true;
         if (isa<CallInst>(U))
         {
-            switch (backward_slice_build_callgraph(callgraph, dyn_cast<Instruction>(U)))
+            switch (backward_slice_build_callgraph(callgraph,
+                                            dyn_cast<Instruction>(U), fvisited))
             {
                 case RFULL:
                     has_check = true;
@@ -1165,6 +1257,9 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
                     has_no_check = true;
                     break;
                 case RUNRESOLVEABLE:
+                    break;
+                case RKINIT:
+                    break;
                 default:
                     llvm_unreachable("what????");
                     break;
@@ -1181,6 +1276,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
     if (!has_user)
     {
         errs()<<"This Function has no user? consider as entry point???\n";
+        ret = RNONE;
         goto nocheck_out;
     }
 
@@ -1189,36 +1285,48 @@ _REACHABLE capchk::backward_slice_build_callgraph(FunctionList &callgraph, Instr
     {
         if (has_no_check)
         {
+            fvisited[f] = RPARTIAL;
+            delete bbvisited;
             return RPARTIAL;
         }
+        fvisited[f] = RFULL;
+        delete bbvisited;
         return RFULL;
     }
+    fvisited[f] = RNONE;
+    delete bbvisited;
     return RNONE;
 
 nocheck_out:
     errs()<<ANSI_COLOR_RED
         <<"\nNO CHECK ON PATH:\n"
         <<ANSI_COLOR_YELLOW;
-    for (auto *c: callgraph)
-    {
-        errs()<<"\t->"<<c->getName()<<"\n";
-    }
+    dump_callstack(callgraph);
     errs()<<ANSI_COLOR_RESET;
     callgraph.pop_back();
-    return RNONE;
+    fvisited[f] = RNONE;
+    delete bbvisited;
+    return ret;
 
 checked_out:
-    //errs()<<ANSI_COLOR_GREEN
-    //    <<"Path Checked, return FULL\n"
-    //    <<ANSI_COLOR_RESET;
+    if (ret==RFULL)//dont print if it hit kernel init functions
+    {
+        errs()<<ANSI_COLOR_GREEN
+            <<"\n PATH OK ret:"<<ret<<"\n"
+            <<ANSI_COLOR_YELLOW;
+        dump_callstack(callgraph);
+    }
     callgraph.pop_back();
-    return RFULL;
+    delete bbvisited;
+    return ret;
 }
 
 _REACHABLE capchk::_backward_slice_reachable_to_chk_function(Instruction* I)
 {
-    FunctionList callgraph;
-    return backward_slice_build_callgraph(callgraph, I);
+    InstructionList callgraph;
+    //FIXME: should consider function+instruction pair?
+    static FunctionToCheckResult fvisited;
+    return backward_slice_build_callgraph(callgraph, I, fvisited);
 }
 
 void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
@@ -1248,7 +1356,13 @@ void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
         case(RUNRESOLVEABLE):
             UnResolv++;
             break;
+        case(RKINIT):
+            GoodPath++;
+            errs()<<ANSI_COLOR_CYAN
+                <<"[KINIT]"<<ANSI_COLOR_RESET<<"\n";
+            break;
         default:
+            llvm_unreachable("What???");
             break;
     }
 }
@@ -1420,7 +1534,11 @@ void capchk::check_critical_variable_usage(Module& module)
                 case(RUNRESOLVEABLE):
                     UnResolv++;
                     break;
+                case(RKINIT):
+                    GoodPath++;
+                    break;
                 default:
+                    llvm_unreachable("what?????");
                     break;
             }
         }
@@ -1439,21 +1557,19 @@ void capchk::check_critical_variable_usage(Module& module)
 }
 
 /*
- * interprocedural program analysis
- * figure out all global variable usage and function calls
+ * IPA: figure out all global variable usage and function calls
  */
 void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool checked)
 {
-    Function *func_ptr = I->getFunction();
-    DominatorTree dt(*func_ptr);
+    Function *func = I->getFunction();
+    DominatorTree dt(*func);
 
     bool is_function_permission_checked = checked;
-    std::list<std::string> current_func_res_list;
     /*
-     * collect interesting variables found in this function
+     * collect interesting variables/functions found in this function
      */
+    StringList current_func_res_list;
     ValueList current_critical_variables;
-
 
     if (depth>MAX_FWD_SLICE_DEPTH)
     {
@@ -1462,7 +1578,9 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
     }
 
 #if DEBUG_PREPARE
-    errs()<<func_ptr->getName()<<"\n";
+    errs()<<ANSI_COLOR_MAGENTA
+        <<func->getName()
+        <<ANSI_COLOR_RESET<<"\n";
 #endif
     std::set<BasicBlock*> bb_visited;
     std::queue<BasicBlock*> bb_work_list;
@@ -1471,16 +1589,14 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
      * a list of instruction where check functions are used,
      * that will be later used to do dominance checking
      */
-    std::list<Instruction*> chk_instruction_list;
+    InstructionList chk_instruction_list;
 
-    /*
-     * first figure out all checks
-     */
+/*****************************
+ * first figure out all checks
+ */
+    //already checked?
     if (is_function_permission_checked)
-    {
-        //already checked?
         goto rescan_and_add_all;
-    }
 
     bb_work_list.push(I->getParent());
     while(bb_work_list.size())
@@ -1519,31 +1635,26 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth, bool check
                 }
             }
         }
-        /*
-         * insert all successor of current basic block to work list
-         */
-        for (succ_iterator si = succ_begin(bb),
-                se = succ_end(bb);
-                si!=se; ++si)
-        {
-            BasicBlock* succ_bb = cast<BasicBlock>(*si);
-            bb_work_list.push(succ_bb);
-        }
+        //insert all successor of current basic block to work list
+        for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
+            bb_work_list.push(cast<BasicBlock>(*si));
     }
 #if DEBUG_PREPARE
     errs()<<"This round, collected:"<<chk_instruction_list.size()<<" chks\n";
     for (auto* _ci : chk_instruction_list)
     {
-        _ci->print(errs());
+        //_ci->print(errs());
+        _ci->getDebugLoc().print(errs());
         errs()<<"\n";
     }
 #endif
     if (!is_function_permission_checked)
         goto out;
-    /*
-     * second, re-scan all instructions and figure out 
-     * which one can be dominated by those check instructions(protected)
-     */
+
+/*******************************************************************
+ * second, re-scan all instructions and figure out 
+ * which one can be dominated by those check instructions(protected)
+ */
 rescan_and_add_all:
     bb_work_list.push(I->getParent());
     bb_visited.clear();
@@ -1555,9 +1666,7 @@ rescan_and_add_all:
             continue;
         bb_visited.insert(bb);
 
-        for (BasicBlock::iterator ii = bb->begin(),
-                ie = bb->end();
-                ii!=ie; ++ii)
+        for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
         {
             Instruction* si = dyn_cast<Instruction>(ii);
             /*
@@ -1567,14 +1676,11 @@ rescan_and_add_all:
             //already checked before entering current scope
             if (is_function_permission_checked)
                 goto add;
-            //there should be at least one check dominate the use
+            //otherwise, there should be at least one check dominate the use
             for (auto* _ci : chk_instruction_list)
-            {
                 if (dt.dominates(_ci,si))
-                {
                     goto add;
-                }
-            }
+            //dont care if not protected
             continue;
 
 add:
@@ -1591,32 +1697,42 @@ add:
                     current_func_res_list.push_back(csf->getName());
                 }else if (Value* csv = cs->getCalledValue())
                 {
+#if 1
                     //only allow precise match when collecting protected functions
                     Type *ft = csv->getType()->getPointerElementType();
-                    //errs()<<"[FFFF] Want to resolve : ";
+                    //errs()<<"[AAAA] Want to resolve : ";
                     //ft->print(errs());
                     //errs()<<"\n";
                     if (!is_complex_type(ft))
                     {
-                        //errs()<<"[FFFF] Unable to resolve because of non-complex-type\n";
+                        /*errs()<<"[BBBB] Unable to resolve because of non-complex-type\n";
+                        errs()<<" @ ";
+                        ii->getDebugLoc().print(errs());
+                        errs()<<"\n";*/
                         CPUnResolv++;
                         continue;
                     }
                     std::set<Function*> *fl = t2fs[ft];
                     if (fl==NULL)
                     {
-                        //errs()<<"[FFFF] Unable to resolve because of empty set\n";
+                        /*errs()<<"[CCCC] Unable to resolve because of empty set\n";
+                        errs()<<" @ ";
+                        ii->getDebugLoc().print(errs());
+                        errs()<<"\n";*/
                         CPUnResolv++;
                         continue;
                     }
                     if (fl->size()!=1)
                     {
-                        //errs()<<"[FFFF] Unable to resolve because of multiple candidate:"
-                        //    <<fl->size()<<"\n";
+                        /*errs()<<"[DDDD] Unable to resolve because of multiple candidate:"
+                            <<fl->size()<<"\n";
+                        errs()<<" @ ";
+                        ii->getDebugLoc().print(errs());
+                        errs()<<"\n";*/
                         CPUnResolv++;
                         continue;
                     }
-                    //errs()<<"[FFFF] resolved as : "<<(*fl->begin())->getName()<<"\n";
+                    //errs()<<"[EEEE] resolved as : "<<(*fl->begin())->getName()<<"\n";
                     CPResolv++;
                     Function *csf = (*fl->begin());
                     llvm::StringRef fname = csf->getName();
@@ -1627,6 +1743,7 @@ add:
                         continue;
 
                     current_func_res_list.push_back(fname);
+#endif
                 }
             }
             /*
@@ -1636,7 +1753,6 @@ add:
             else if (isa<LoadInst>(ii))
             {
                 LoadInst *li = dyn_cast<LoadInst>(ii);
-                //li->getOperand(0);
                 Value* lval = li->getOperand(0);
                 std::set<Value*> v_visited;
                 if (is_rw_global(lval, v_visited) && 
@@ -1647,7 +1763,6 @@ add:
             }else if (isa<StoreInst>(ii))
             {
                 StoreInst *si = dyn_cast<StoreInst>(ii);
-                //si->getOperand(1);
                 Value* sval = si->getOperand(1);
                 std::set<Value*> v_visited;
                 if (is_rw_global(sval, v_visited) && 
@@ -1657,18 +1772,12 @@ add:
                 }
             }
         }
-        /*
-         * insert all successor of current basic block to work list
-         */
-        for (succ_iterator si = succ_begin(bb),
-                se = succ_end(bb);
-                si!=se; ++si)
-        {
-            BasicBlock* succ_bb = cast<BasicBlock>(*si);
-            bb_work_list.push(succ_bb);
-        }
+        for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
+            bb_work_list.push(cast<BasicBlock>(*si));
     }
-
+    /**********
+     * merge 
+     */
     if (is_function_permission_checked)
     {
         //merge forwar slicing result
@@ -1677,25 +1786,38 @@ add:
         //if (current_critical_variables.size()==0)
         //{
         //    errs()<<"No global critical variables found for function?:"
-        //        <<func_ptr->getName()<<"\n";
+        //        <<func->getName()<<"\n";
         //}
         critical_variables.splice(critical_variables.begin(),
                 current_critical_variables);
         //this is a wrapper
-        //errs()<<"Adding wrapper: "<<func_ptr->getName()<<"\n";
-        //chk_function_wrapper.insert(func_ptr);
+        //errs()<<"Adding wrapper: "<<func->getName()<<"\n";
+        //chk_function_wrapper.insert(func);
 
         //if functions is permission checked, consider this as a wrapper
         //and we need to check all use of this function
-        for (auto *U: func_ptr->users())
+        for (auto *U: func->users())
         {
             if (CallInst* cs = dyn_cast<CallInst>(U))
             {
                 Function* pfunc = cs->getFunction();
+                if (pfunc->getName().startswith("llvm."))
+                    continue;
                 std::set<Function*> k_visited;
                 if (is_kernel_init_functions(pfunc, k_visited))
+                {
+                    dbgstk.push_back(cs);
+                    errs()<<ANSI_COLOR_YELLOW
+                        <<"capability check used during kernel initialization\n"
+                        <<ANSI_COLOR_RESET;
+                    dump_dbgstk();
+                    dbgstk.pop_back();
                     continue;
+                }
+
+                dbgstk.push_back(cs);
                 forward_all_interesting_usage(cs, depth+1, true);
+                dbgstk.pop_back();
             }
         }
     }
@@ -1852,7 +1974,7 @@ void capchk::process_cpgf(Module& module)
 
     errs()<<"Collecting Initialization Closure.\n";
     STOP_WATCH_START;
-    //collect_kernel_init_functions(module);
+    collect_kernel_init_functions(module);
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
     errs()<<"Running SVF on init functions.\n";
@@ -1866,25 +1988,21 @@ void capchk::process_cpgf(Module& module)
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
-        Function *func_ptr = dyn_cast<Function>(fi);
-        if (func_ptr->isDeclaration())
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration())
         {
             ExternalFuncCounter++;
             continue;
         }
+        //skip llvm internal functions
+        if (func->getName().startswith("llvm."))
+            continue;
+
         FuncCounter++;
 
-        //auto& aa = getAnalysis<AAResultsWrapperPass>(*func_ptr).getAAResults();
+        //auto& aa = getAnalysis<AAResultsWrapperPass>(*func).getAAResults();
 
-        Type* type = func_ptr->getFunctionType();
-
-        /*if (is_complex_type(type))
-        {
-            errs()<<ANSI_COLOR_YELLOW
-                <<"Found Function Type:";
-            type->print(errs());
-            errs()<<ANSI_COLOR_RESET<<"\n";
-        }*/
+        Type* type = func->getFunctionType();
 
         std::set<Function*> *fl = t2fs[type];
         if (fl==NULL)
@@ -1892,17 +2010,16 @@ void capchk::process_cpgf(Module& module)
             fl = new std::set<Function*>;
             t2fs[type] = fl;
         }
-        fl->insert(func_ptr);
 
-        //if (!contains_interesting_kwd(func_ptr->getName()))
-        //    continue;
-
+        fl->insert(func);
         /*
          * FIXME: in order to figure out all use of critical variables,
          * we should use SVF/or other AA method to figure out Interprocedural
          * alias set
          */
-        forward_all_interesting_usage(func_ptr->getEntryBlock().getFirstNonPHI(),0,false);
+        dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
+        forward_all_interesting_usage(func->getEntryBlock().getFirstNonPHI(),0,false);
+        dbgstk.pop_back();
     }
 
     critical_functions.sort();
@@ -1924,6 +2041,11 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
 
+    for (auto cf: critical_functions)
+    {
+        errs()<<" - "<<cf<<"\n";
+    }
+
     errs()<<"Run Analysis.\n";
     if (knob_capchk_critical_var)
     {
@@ -1941,6 +2063,13 @@ void capchk::process_cpgf(Module& module)
         STOP_WATCH_STOP;
         STOP_WATCH_REPORT;
     }
+#if 1
+    errs()<<"NON-Kernel Init Functions:\n";
+    for (auto I: non_kernel_init_functions)
+    {
+        errs()<<ANSI_COLOR_GREEN<<I<<ANSI_COLOR_RESET<<"\n";
+    }
+#endif
 }
 
 bool capchk::runOnModule(Module &module)
