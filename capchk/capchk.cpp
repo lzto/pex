@@ -101,7 +101,7 @@ const char* X##_desc = Y;
 #endif
 
 STATISTIC(FuncCounter, "Functions greeted");
-STATISTIC(ExternalFuncCounter, "External function");
+STATISTIC(ExternalFuncCounter, "External functions");
 STATISTIC(DiscoveredPath, "Discovered Path");
 STATISTIC(MatchedPath, "Matched Path");
 STATISTIC(GoodPath, "Good Path");
@@ -191,6 +191,8 @@ class capchk : public ModulePass
         void backward_slice_reachable_to_chk_function(Instruction* I);
 
         void check_all_cs_using_fp(Function*);
+        bool match_cs_using_fp_method_0(Function*);
+        bool match_cs_using_fp_method_1(Function*);
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
@@ -1372,25 +1374,21 @@ void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
     }
 }
 
-void capchk::check_all_cs_using_fp(Function* func)
+/*
+ * signature based method to find out indirect callee
+ */
+bool capchk::match_cs_using_fp_method_0(Function* func)
 {
     //we want exact match to non-trivial function
     Type* func_type = func->getFunctionType();
     if (!is_complex_type(func_type))
-    {
-        UnMatchCallCriticalFuncPtr+=idcs.size();
-        return;
-    }
-    std::set<Function*> *fl = t2fs[func_type];
+        return false;
+    FunctionSet *fl = t2fs[func_type];
     if ((fl==NULL) || (fl->size()!=1))
-    {
-        return;
-    }
+        return false;
     if ((*fl->begin())!=func)
-    {
-        return;
-    }
-
+        return false;
+    bool ret = false;
     for (auto* idc: idcs)
     {
         Type* ft = idc->getCalledValue()->getType()->getPointerElementType();
@@ -1399,8 +1397,32 @@ void capchk::check_all_cs_using_fp(Function* func)
         errs()<<"Found matched functions for indirectcall:"
             <<(*fl->begin())->getName()<<"\n";
         backward_slice_reachable_to_chk_function(idc);
-        MatchCallCriticalFuncPtr++;
+        ret = true;
     }
+    return ret;
+}
+
+/*
+ * global mod/ref, svf based method to find out indirect callee
+ */
+bool capchk::match_cs_using_fp_method_1(Function* func)
+{
+    return false;
+}
+
+void capchk::check_all_cs_using_fp(Function* func)
+{
+    if (match_cs_using_fp_method_0(func))
+    {
+        MatchCallCriticalFuncPtr++;
+        return;
+    }
+    if (match_cs_using_fp_method_1(func))
+    {
+        MatchCallCriticalFuncPtr++;
+        return;
+    }
+    UnMatchCallCriticalFuncPtr++;
 }
 
 /*
