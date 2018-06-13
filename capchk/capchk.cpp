@@ -135,6 +135,7 @@ typedef std::set<std::string> StringSet;
 typedef std::list<Value*> ValueList;
 typedef std::list<Instruction*> InstructionList;
 typedef std::list<BasicBlock*> BasicBlockList;
+typedef std::set<BasicBlock*> BasicBlockSet;
 typedef std::list<Function*> FunctionList;
 typedef std::set<Function*> FunctionSet;
 typedef std::set<CallInst*> InDirectCallSites;
@@ -1082,9 +1083,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     bool has_user = false;
 
     BasicBlockList bbl;
-    bbl.push_back(I->getParent());
-    
-    std::set<Function*> k_visited;
+
+    FunctionSet k_visited;
     
     if (is_kernel_init_functions(f, k_visited))
     {
@@ -1095,6 +1095,8 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     //all predecessor basic blocks
     //should call check function 
     //Also check whether the check can dominate use
+    #if 0
+    bbl.push_back(I->getParent());
     for (pred_iterator pi = pred_begin(bbl.front()),
             pe = pred_end(bbl.front());
             pi!=pe; ++pi)
@@ -1103,7 +1105,12 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         assert(nbb);
         bbl.push_back(nbb);
     }
-
+    #else
+    for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
+    {
+        bbl.push_back(dyn_cast<BasicBlock>(fi));
+    }
+    #endif
     while (bbl.size())
     {
         //errs()<<" bbl="<<bbl.size()<<"\n";
@@ -1127,9 +1134,12 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                         (chk_function_wrapper.count(ifunc)!=0))
                 {
                     has_check = true;
-                    errs()<<"Hit Check Function:"<<ifunc->getName()<<" @ ";
+                    errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
+                        <<"Hit Check Function:"
+                        <<ifunc->getName()
+                        <<" @ ";
                     ci->getDebugLoc().print(errs());
-                    errs()<<"\n";
+                    errs()<<ANSI_COLOR_RESET<<"\n";
                     if (!dt.dominates(ci, I))
                     {
                         errs()<<ANSI_COLOR_YELLOW
