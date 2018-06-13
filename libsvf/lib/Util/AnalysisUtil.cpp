@@ -30,6 +30,7 @@
 #include "Util/AnalysisUtil.h"
 
 #include <llvm/Analysis/Utils/Local.h>	// for FindDbgAddrUses
+#include <llvm/Transforms/Utils/Local.h>	// for FindDbgAddrUses
 #include <llvm/IR/GlobalVariable.h>	// for GlobalVariable
 #include <llvm/IR/Module.h>	// for Module
 #include <llvm/IR/InstrTypes.h>	// for TerminatorInst
