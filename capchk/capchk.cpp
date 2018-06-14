@@ -58,6 +58,7 @@
 #include <algorithm>
 
 #include "color.h"
+#include "aux.h"
 
 #include "stopwatch.h"
 STOP_WATCH;
@@ -133,18 +134,23 @@ enum _REACHABLE
 typedef std::list<std::string> StringList;
 typedef std::set<std::string> StringSet;
 typedef std::list<Value*> ValueList;
+typedef std::set<Value*> ValueSet;
 typedef std::list<Instruction*> InstructionList;
+typedef std::set<Instruction*> InstructionSet;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::set<BasicBlock*> BasicBlockSet;
 typedef std::list<Function*> FunctionList;
 typedef std::set<Function*> FunctionSet;
 typedef std::set<CallInst*> InDirectCallSites;
 typedef std::map<Function*,_REACHABLE> FunctionToCheckResult;
-
 typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
-/*
- * t2fs is used to fuzzy matching calling using function pointer
- */
+typedef std::map<Function*, InstructionSet*> Function2ChkInst;
+typedef std::map<Function*, int> FunctionData;
+
+//map function to its check instruction
+Function2ChkInst f2ci;
+
+//t2fs is used to fuzzy matching calling using function pointer
 TypeToFunctions t2fs;
 
 //stores all indirect call sites
@@ -175,6 +181,7 @@ class capchk : public ModulePass
         void process_intras(Module& module);
         void process_cpgf(Module& module);
         void collect_kernel_init_functions(Module& module);
+        void collect_wrappers(Module& module);
         void chk_div0(Module& module);
         void chk_unsafe_access(Module& module);
 
@@ -183,7 +190,8 @@ class capchk : public ModulePass
 
         bool is_kernel_init_functions(Function* f, FunctionSet& visited);
         void forward_all_interesting_usage(Instruction* I, int depth,
-                bool checked, InstructionList &callgraph);
+                bool checked, InstructionList &callgraph,
+                InstructionList& chks);
         
         _REACHABLE backward_slice_build_callgraph(InstructionList &callgraph,
                 Instruction* I, FunctionToCheckResult& fvisited);
@@ -201,8 +209,13 @@ class capchk : public ModulePass
         //used by chk_unsafe_access
         bool is_safe_access(Instruction *ins, Value* addr, uint64_t type_size);
 
+        /*
+         * several aux helper functions
+         */
         bool is_complex_type(Type*);
         bool is_rw_global(Value*, std::set<Value*>& visited);
+        int use_parent_func_arg(Value*, Function*);
+
 
         /*
          * context for current module
@@ -215,6 +228,8 @@ class capchk : public ModulePass
         InstructionList dbgstk;
         void dump_dbgstk();
         void dump_callstack(InstructionList& callstk);
+
+        void dump_f2ci();
 
     public:
         static char ID;
@@ -293,6 +308,241 @@ Instruction* GetNextNonPHIInstruction(Instruction* I)
 }
 
 /*
+ * all critical functions, should be permission checked before using are
+ * listed down here
+ */
+//sink
+#if 0
+static const char* critical_functions [] =
+{
+    //"critical_function",
+    //"commit_creds",
+    //"revert_creds",
+    //"put_cred",
+    //"rcu_read_unlock",
+    ""
+};
+#else
+//generate critical functions dynamically
+std::list<std::string> critical_functions;
+std::set<std::string> cf_set;
+#endif
+
+bool is_critical_function(const std::string& str)
+{
+    if (std::find(std::begin(critical_functions),
+                std::end(critical_functions),
+                str) != std::end(critical_functions))
+    {
+        return true;
+    }
+    return false;                                  
+}
+
+/*
+ * permission check functions,
+ * those function are used to perform permission check before
+ * using critical resources
+ */
+static const char* check_functions [] = 
+{
+    "capable",
+    "ns_capable",
+    //"inode_owner_or_capable",
+    //"ptrace_may_access",
+    //"prepare_creds",
+    //"override_creds",
+    //"get_cred",
+    //"rcu_read_lock",
+};
+
+bool is_check_function(const std::string& str)
+{
+    if (std::find(std::begin(check_functions),
+                std::end(check_functions),
+                str) != std::end(check_functions))
+    {
+        return true;
+    }
+    return false;                                  
+}
+
+/*
+ * skip those variables
+ */
+
+static const char* skip_var [] = 
+{
+    "jiffies",
+    "nr_cpu_ids",
+    "nr_irqs",
+    "nr_threads",
+};
+
+bool is_skip_var(const std::string& str)
+{
+    if (std::find(std::begin(skip_var),
+                std::end(skip_var),
+                str) != std::end(skip_var))
+    {
+        return true;
+    }
+    return false;                                  
+}
+
+
+/*
+ * common interface which is not considered dangerous function
+ * some of those functions need to analyze together with parameters
+ * (require SVF, data flow analysis)
+ */
+static const char* skip_functions [] = 
+{
+    //may operate on wrong source?
+    //"capable",
+    //"ns_capable",
+    "add_taint",
+    "__mutex_init",
+    "mutex_lock",
+    "mutex_unlock",
+    "schedule",
+    "_cond_resched",
+    "printk",
+    "__kmalloc",
+    "_copy_to_user",
+    "_do_fork",
+    "__memcpy",
+    "strncmp",
+    "strlen",
+    "strim",
+    "strchr",
+    "strcmp",
+    "strcpy",
+    "strncat",
+    "strlcpy",
+    "strscpy",
+    "strsep",
+    "strndup_user",
+    "strnlen_user",
+    "sscanf",
+    "snprintf",
+    "scnprintf",
+    "sort",
+    "prandom_u32",
+    "memchr",
+    "memcmp",
+    "memset",
+    "memmove",
+    "skip_spaces",
+    "kfree",
+    "kmalloc",
+    "kstrdup",
+    "kstrtoull",
+    "kstrtouint",
+    "kstrtoint",
+    "kstrtobool",
+    "strncpy_from_user",
+    "kstrtoul_from_user",
+    "__msecs_to_jiffies",
+    "drm_printk",
+    "cpumask_next_and",
+    "cpumask_next",
+    "dump_stack",//break KASLR here?
+    "___ratelimit",
+    "simple_strtoull",
+    "simple_strtoul",
+    "dec_ucount",
+    "inc_ucount",
+    "jiffies_to_msecs",
+    "__warn_printk",//break KASLR here?
+    "arch_release_task_struct",
+    "do_syscall_64",//syscall entry point
+    "do_fast_syscall_32",
+    "do_int80_syscall_32",
+};
+
+bool is_skip_function(const std::string& str)
+{
+    if (std::find(std::begin(skip_functions),
+                std::end(skip_functions),
+                str) != std::end(skip_functions))
+    {
+        return true;
+    }
+    return false;
+}
+
+/*
+ * file/dev op handler and sys call prefix/suffix
+ */
+static const char* interesting_keyword [] = 
+{
+    "SyS",
+    "sys",
+    "open",
+    "release",
+    "lseek",
+    "read",
+    "write",
+    "sync",
+    "ioctl",
+};
+
+bool contains_interesting_kwd(const std::string& str)
+{
+    for (auto i = std::begin(interesting_keyword);
+            i!=std::end(interesting_keyword); ++i)
+    {
+        std::size_t found = str.find(*i);
+        if (found != std::string::npos)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
+ * interesting type which contains functions pointers to deal with user request
+ */
+static const char* interesting_type_word [] = 
+{
+    "file_operations",
+};
+
+static const char* kernel_start_functions [] = 
+{
+    "start_kernel",
+    "x86_64_start_kernel",
+};
+
+StringList kernel_init_functions;
+StringSet non_kernel_init_functions;
+
+/*
+ * record capability parameter position passed to capability check function
+ * all discovered wrapper function to check functions will also have one entry
+ */
+FunctionData chk_func_cap_position;
+
+bool is_function_chk_or_wrapper(Function* f)
+{
+    return chk_func_cap_position.find(f)!=chk_func_cap_position.end();
+}
+
+/*bool is_kernel_init_functions(const std::string& str)
+{
+    if (std::find(std::begin(kernel_init_functions),
+                std::end(kernel_init_functions),
+                str) != std::end(kernel_init_functions))
+    {
+        return true;
+    }
+    return false;
+}*/
+
+
+/*
  * debug function, track process progress internally
  */
 void capchk::dump_dbgstk()
@@ -323,6 +573,42 @@ void capchk::dump_callstack(InstructionList& callstk)
         cnt++;
     }
     errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
+}
+
+void capchk::dump_f2ci()
+{
+    errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
+        <<"--- Function Protected By Capability---"
+        <<ANSI_COLOR_RESET<<"\n";
+    for (auto& cis: f2ci)
+    {
+        Function* func = cis.first;
+        errs()<<ANSI_COLOR_GREEN<<func->getName()<<ANSI_COLOR_RESET<<"\n";
+        for (auto *ci: *cis.second)
+        {
+            CallInst* cs = dyn_cast<CallInst>(ci);
+            Function* cf = cs->getCalledFunction();
+            int cap_no = -1;
+            if (is_function_chk_or_wrapper(cf))
+            {
+                cap_no = chk_func_cap_position[cf];
+                Value* capv = cs->getArgOperand(cap_no);
+                if (!isa<ConstantInt>(capv))
+                {
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n";
+                    cs->print(errs());
+                    errs()<<"\n";
+                    llvm_unreachable("expect ConstantInt in capable");
+                }
+                cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
+            }
+            assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
+            errs()<<"    "<<cap2string[cap_no]<<" @ ";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n";
+        }
+    }
 }
 
 bool capchk::is_safe_access(Instruction* ins,Value* addr, uint64_t type_size)
@@ -548,6 +834,23 @@ bool capchk::is_rw_global(Value* val, std::set<Value*>& visited)
     return false;
 }
 
+/*
+ * user can trace back to function argument?
+ * only support simple wrapper
+ * return -1 for not found
+ */
+int capchk::use_parent_func_arg(Value* v, Function* f)
+{
+    int cnt = 0;
+    for (auto a = f->arg_begin(), b = f->arg_end(); a!=b; ++a)
+    {
+        if (dyn_cast<Value>(a)==v)
+            return cnt;
+        cnt++;
+    }
+    return -1;
+}
+
 static bool mayDivideByZero(Instruction *I) {
     if (!(I->getOpcode() == Instruction::UDiv ||
                 I->getOpcode() == Instruction::SDiv ||
@@ -606,234 +909,6 @@ void capchk::chk_div0(Module& module)
         }
     }
 }
-
-/*
- * all critical functions, should be permission checked before using are
- * listed down here
- */
-//sink
-#if 0
-static const char* critical_functions [] =
-{
-    //"critical_function",
-    //"commit_creds",
-    //"revert_creds",
-    //"put_cred",
-    //"rcu_read_unlock",
-    ""
-};
-#else
-//generate critical functions dynamically
-std::list<std::string> critical_functions;
-std::set<std::string> cf_set;
-#endif
-
-bool is_critical_function(const std::string& str)
-{
-    if (std::find(std::begin(critical_functions),
-                std::end(critical_functions),
-                str) != std::end(critical_functions))
-    {
-        return true;
-    }
-    return false;                                  
-}
-
-/*
- * permission check functions,
- * those function are used to perform permission check before
- * using critical resources
- */
-static const char* check_functions [] = 
-{
-    "capable",
-    "ns_capable",
-    //"inode_owner_or_capable",
-    //"ptrace_may_access",
-    //"prepare_creds",
-    //"override_creds",
-    //"get_cred",
-    //"rcu_read_lock",
-};
-
-bool is_check_function(const std::string& str)
-{
-    if (std::find(std::begin(check_functions),
-                std::end(check_functions),
-                str) != std::end(check_functions))
-    {
-        return true;
-    }
-    return false;                                  
-}
-
-/*
- * skip those variables
- */
-
-static const char* skip_var [] = 
-{
-    "jiffies",
-    "nr_cpu_ids",
-    "nr_irqs",
-    "nr_threads",
-};
-
-bool is_skip_var(const std::string& str)
-{
-    if (std::find(std::begin(skip_var),
-                std::end(skip_var),
-                str) != std::end(skip_var))
-    {
-        return true;
-    }
-    return false;                                  
-}
-
-
-/*
- * common interface which is not considered dangerous function
- * some of those functions need to analyze together with parameters
- * (require SVF, data flow analysis)
- */
-static const char* skip_functions [] = 
-{
-    //may operate on wrong source?
-    //"capable",
-    //"ns_capable",
-    "add_taint",
-    "__mutex_init",
-    "mutex_lock",
-    "mutex_unlock",
-    "schedule",
-    "_cond_resched",
-    "printk",
-    "__kmalloc",
-    "_copy_to_user",
-    "_do_fork",
-    "__memcpy",
-    "strncmp",
-    "strlen",
-    "strim",
-    "strchr",
-    "strcmp",
-    "strcpy",
-    "strncat",
-    "strlcpy",
-    "strscpy",
-    "strsep",
-    "strndup_user",
-    "strnlen_user",
-    "sscanf",
-    "snprintf",
-    "scnprintf",
-    "sort",
-    "prandom_u32",
-    "memchr",
-    "memcmp",
-    "memset",
-    "memmove",
-    "skip_spaces",
-    "kfree",
-    "kmalloc",
-    "kstrdup",
-    "kstrtoull",
-    "kstrtouint",
-    "kstrtoint",
-    "kstrtobool",
-    "strncpy_from_user",
-    "kstrtoul_from_user",
-    "__msecs_to_jiffies",
-    "drm_printk",
-    "cpumask_next_and",
-    "cpumask_next",
-    "dump_stack",//break KASLR here?
-    "___ratelimit",
-    "simple_strtoull",
-    "simple_strtoul",
-    "dec_ucount",
-    "inc_ucount",
-    "jiffies_to_msecs",
-    "__warn_printk",//break KASLR here?
-    "arch_release_task_struct",
-    "do_syscall_64",//syscall entry point
-    "do_fast_syscall_32",
-    "do_int80_syscall_32",
-};
-
-bool is_skip_function(const std::string& str)
-{
-    if (std::find(std::begin(skip_functions),
-                std::end(skip_functions),
-                str) != std::end(skip_functions))
-    {
-        return true;
-    }
-    return false;
-}
-
-/*
- * file/dev op handler and sys call prefix/suffix
- */
-static const char* interesting_keyword [] = 
-{
-    "SyS",
-    "sys",
-    "open",
-    "release",
-    "lseek",
-    "read",
-    "write",
-    "sync",
-    "ioctl",
-};
-
-bool contains_interesting_kwd(const std::string& str)
-{
-    for (auto i = std::begin(interesting_keyword);
-            i!=std::end(interesting_keyword); ++i)
-    {
-        std::size_t found = str.find(*i);
-        if (found != std::string::npos)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-/*
- * interesting type which contains functions pointers to deal with user request
- */
-static const char* interesting_type_word [] = 
-{
-    "file_operations",
-};
-
-static const char* kernel_start_functions [] = 
-{
-    "start_kernel",
-    "x86_64_start_kernel",
-};
-
-StringList kernel_init_functions;
-StringSet non_kernel_init_functions;
-
-/*
- * all discovered wrapper function to check functions will be stored here
- */
-std::set<Function*> chk_function_wrapper;
-
-/*bool is_kernel_init_functions(const std::string& str)
-{
-    if (std::find(std::begin(kernel_init_functions),
-                std::end(kernel_init_functions),
-                str) != std::end(kernel_init_functions))
-    {
-        return true;
-    }
-    return false;
-}*/
 
 /*
  * is this functions part of the kernel init sequence?
@@ -1057,6 +1132,75 @@ again:
 #endif
 }
 
+void capchk::collect_wrappers(Module& module)
+{
+    //add capable and ns_capable
+    int cnt = 0;
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        StringRef fname = func->getName();
+        if (fname.startswith("capable"))
+        {
+            chk_func_cap_position[func] = 0;
+            cnt++;
+        }else if (fname.startswith("ns_capable"))
+        {
+            chk_func_cap_position[func] = 1;
+            cnt++;
+        }
+        if (cnt==2)
+            break;//we are done here
+    }
+
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration())
+            continue;
+        if (!is_function_chk_or_wrapper(func))
+            continue;
+        int cap_pos = chk_func_cap_position[func];
+        assert(cap_pos>=0);
+        //we got a capability check function or a wrapper function,
+        //find all use without Constant Value and add them to wrapper
+        for (auto U: func->users())
+        {
+            CallInst* cs = dyn_cast<CallInst>(U);
+            if (cs==NULL)
+                continue;//how come?
+            assert(cs->getCalledFunction()==func);
+            Value* capv = cs->getArgOperand(cap_pos);
+            if (isa<ConstantInt>(capv))
+                continue;
+            Function* parent_func = cs->getFunction();
+            //we have a wrapper,
+            if (int pos = use_parent_func_arg(capv, parent_func))
+            {
+                //type 1 wrapper, cap is from parent function argument
+                chk_func_cap_position[parent_func] = pos;
+            }else
+            {
+                //type 2 wrapper, cap is from inside this function
+                //what to do with this?
+            }
+        }
+    }
+
+    errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
+        <<"-chk functions and wrappers-"
+        <<ANSI_COLOR_RESET"\n";
+    for (auto &f2p: chk_func_cap_position)
+    {
+        errs()<<". "<<f2p.first->getName()
+            <<"  @ "<<f2p.second
+            <<"\n";
+    }
+    errs()<<"-----------------------\n";
+}
+
 _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             Instruction* I, FunctionToCheckResult& fvisited)
 {
@@ -1132,8 +1276,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             {
                 ifunc = f;
                 //if this is either a check function or a wrapper to check function
-                if (is_check_function(ifunc->getName()) ||
-                        (chk_function_wrapper.count(ifunc)!=0))
+                if (is_function_chk_or_wrapper(ifunc))
                 {
                     has_check = true;
                     errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
@@ -1212,8 +1355,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                             <<ANSI_COLOR_RESET
                             <<"\n";*/
                     //if this is either a check function or a wrapper to check function
-                    if (is_check_function(ifunc->getName()) ||
-                            (chk_function_wrapper.count(ifunc)!=0))
+                    if (is_function_chk_or_wrapper(ifunc))
                     {
                         CapChkInFPTR++;
                         has_check = true;
@@ -1610,7 +1752,8 @@ void capchk::check_critical_variable_usage(Module& module)
  * IPA: figure out all global variable usage and function calls
  */
 void capchk::forward_all_interesting_usage(Instruction* I, int depth,
-        bool checked, InstructionList& callgraph)
+        bool checked, InstructionList& callgraph,
+        InstructionList& chks)
 {
     Function *func = I->getFunction();
     DominatorTree dt(*func);
@@ -1680,11 +1823,11 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
                             ||is_skip_function(csfunc->getName()))
                         continue;
 
-                    if (is_check_function(csfunc->getName()) ||
-                            (chk_function_wrapper.count(csfunc)!=0))
+                    if (is_function_chk_or_wrapper(csfunc))
                     {
                         is_function_permission_checked = true;
                         chk_instruction_list.push_back(ci);
+                        chks.push_back(ci);
                     }
                 }else
                 {
@@ -1756,8 +1899,8 @@ add:
                 {
                     if (csf->getName().startswith("llvm.")
                             ||is_skip_function(csf->getName())
-                            ||is_check_function(csf->getName())
-                            ||(chk_function_wrapper.count(csf)!=0))
+                            ||is_function_chk_or_wrapper(csf)
+                            )
                         continue;
                     current_func_res_list.push_back(csf->getName());
 #if 1//DEBUG
@@ -1766,6 +1909,15 @@ add:
                     errs()<<"\n cause:";
                     dump_dbgstk();
 #endif
+                    InstructionSet* ill = f2ci[csf];
+                    if (ill==NULL)
+                    {
+                        ill = new InstructionSet;
+                        f2ci[csf] = ill;
+                    }
+                    for (auto chki: chks)
+                        ill->insert(chki);
+
                 }else if (Value* csv = cs->getCalledValue())
                 {
 #if 1
@@ -1809,8 +1961,7 @@ add:
                     llvm::StringRef fname = csf->getName();
                     if (fname.startswith("llvm.")
                             ||is_skip_function(fname)
-                            ||is_check_function(fname)
-                            ||(chk_function_wrapper.count(csf)!=0))
+                            ||is_function_chk_or_wrapper(csf))
                         continue;
 
                     current_func_res_list.push_back(fname);
@@ -1820,6 +1971,15 @@ add:
                     errs()<<"\n cause:";
                     dump_dbgstk();
 #endif
+                    InstructionSet* ill = f2ci[csf];
+                    if (ill==NULL)
+                    {
+                        ill = new InstructionSet;
+                        f2ci[csf] = ill;
+                    }
+                    //insert all chks?
+                    for (auto chki: chks)
+                        ill->insert(chki);
 #endif
                 }
             }
@@ -1867,9 +2027,6 @@ add:
         //}
         critical_variables.splice(critical_variables.begin(),
                 current_critical_variables);
-        //this is a wrapper
-        //errs()<<"Adding wrapper: "<<func->getName()<<"\n";
-        //chk_function_wrapper.insert(func);
 
         //if functions is permission checked, consider this as a wrapper
         //and we need to check all use of this function
@@ -1893,7 +2050,7 @@ add:
                 }
 
                 dbgstk.push_back(cs);
-                forward_all_interesting_usage(cs, depth+1, true, callgraph);
+                forward_all_interesting_usage(cs, depth+1, true, callgraph, chks);
                 dbgstk.pop_back();
             }
         }
@@ -2061,6 +2218,12 @@ void capchk::process_cpgf(Module& module)
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
+    STOP_WATCH_START;
+    errs()<<"Identify wrappers\n";
+    collect_wrappers(module);
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+
     errs()<<"Collect all permission-checked variables\n";
     STOP_WATCH_START;
     for (Module::iterator fi = module.begin(), f_end = module.end();
@@ -2072,8 +2235,10 @@ void capchk::process_cpgf(Module& module)
             ExternalFuncCounter++;
             continue;
         }
-        //skip llvm internal functions
-        if (func->getName().startswith("llvm."))
+        //skip llvm internal functions 
+        StringRef fname = func->getName();
+        if (fname.startswith("llvm.")
+                || is_function_chk_or_wrapper(func))
             continue;
 
         FuncCounter++;
@@ -2097,8 +2262,9 @@ void capchk::process_cpgf(Module& module)
          */
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
         InstructionList callgraph;
+        InstructionList chks;
         forward_all_interesting_usage(func->getEntryBlock().getFirstNonPHI(),
-               0, false, callgraph);
+               0, false, callgraph, chks);
         dbgstk.pop_back();
     }
 
@@ -2121,10 +2287,12 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
 
-    for (auto cf: critical_functions)
-    {
-        errs()<<" - "<<cf<<"\n";
-    }
+    //for (auto cf: critical_functions)
+    //{
+    //    errs()<<" - "<<cf<<"\n";
+    //}
+
+    dump_f2ci();
 
     errs()<<"Run Analysis.\n";
     if (knob_capchk_critical_var)
