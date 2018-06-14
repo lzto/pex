@@ -1135,22 +1135,19 @@ again:
 void capchk::collect_wrappers(Module& module)
 {
     //add capable and ns_capable
-    int cnt = 0;
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
         StringRef fname = func->getName();
-        if (fname.startswith("capable"))
+        if (fname=="capable")
         {
             chk_func_cap_position[func] = 0;
-            cnt++;
-        }else if (fname.startswith("ns_capable"))
+        }else if (fname=="ns_capable")
         {
             chk_func_cap_position[func] = 1;
-            cnt++;
         }
-        if (cnt==2)
+        if (chk_func_cap_position.size()==2)
             break;//we are done here
     }
 
@@ -2212,17 +2209,19 @@ void capchk::process_cpgf(Module& module)
     collect_kernel_init_functions(module);
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
-    errs()<<"Running SVF on init functions.\n";
-    STOP_WATCH_START;
-    //run_svf();
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
 
     STOP_WATCH_START;
     errs()<<"Identify wrappers\n";
     collect_wrappers(module);
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
+
+    errs()<<"Running SVF on init functions.\n";
+    STOP_WATCH_START;
+    //run_svf();
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+
 
     errs()<<"Collect all permission-checked variables\n";
     STOP_WATCH_START;
