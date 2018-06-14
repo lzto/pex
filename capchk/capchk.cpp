@@ -294,6 +294,28 @@ cl::opt<bool> knob_capchk_ccvv("ccvv",
         cl::desc("print path to critical variable(collect phase) - disabled by default"),
         cl::init(false));
 
+cl::opt<bool> knob_capchk_f2c("f2c",
+        cl::desc("print critical function to capability mapping - enabled by default"),
+        cl::init(true));
+
+cl::opt<bool> knob_capchk_v2c("v2c",
+        cl::desc("print critical variable to capability mapping - enabled by default"),
+        cl::init(true));
+
+cl::opt<bool> knob_capchk_caw("caw",
+        cl::desc("print check functions and wrappers discovered - enabled by default"),
+        cl::init(true));
+
+cl::opt<bool> knob_capchk_kinit("kinit",
+        cl::desc("print kernel init functions - enabled by default"),
+        cl::init(true));
+
+cl::opt<bool> knob_capchk_nkinit("nkinit",
+        cl::desc("print kernel non init functions - enabled by default"),
+        cl::init(true));
+
+
+
 /*
  * helper function
  */
@@ -541,6 +563,8 @@ void capchk::dump_callstack(InstructionList& callstk)
 
 void capchk::dump_v2ci()
 {
+    if (!knob_capchk_v2c)
+        return;
     errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
         <<"--- Variables Protected By Capability---"
         <<ANSI_COLOR_RESET<<"\n";
@@ -577,6 +601,8 @@ void capchk::dump_v2ci()
 
 void capchk::dump_f2ci()
 {
+    if (!knob_capchk_f2c)
+        return;
     errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
         <<"--- Function Protected By Capability---"
         <<ANSI_COLOR_RESET<<"\n";
@@ -613,6 +639,8 @@ void capchk::dump_f2ci()
 
 void capchk::dump_kinit()
 {
+    if (!knob_capchk_kinit)
+        return;
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
             <<"=Kernel Init Functions="
             <<ANSI_COLOR_RESET<<"\n";
@@ -625,6 +653,8 @@ void capchk::dump_kinit()
 
 void capchk::dump_non_kinit()
 {
+    if (!knob_capchk_nkinit)
+        return;
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
             <<"=NON-Kernel Init Functions="
             <<ANSI_COLOR_RESET<<"\n";
@@ -637,6 +667,8 @@ void capchk::dump_non_kinit()
 
 void capchk::dump_chk_and_wrap()
 {
+    if (!knob_capchk_caw)
+        return;
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
         <<"=chk functions and wrappers="
         <<ANSI_COLOR_RESET<<"\n";
@@ -1175,9 +1207,7 @@ again:
     errs()<<"clear NON-kernel-init functions\n";
     non_kernel_init_functions.clear();
 #endif
-#if 1
     dump_kinit();
-#endif
 }
 
 void capchk::collect_wrappers(Module& module)
@@ -2345,10 +2375,8 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
 
-    if (knob_capchk_critical_var)
-        dump_v2ci();
-    if (knob_capchk_critical_fun)
-        dump_f2ci();
+    dump_v2ci();
+    dump_f2ci();
 
     errs()<<"Run Analysis\n";
     if (knob_capchk_critical_var)
@@ -2367,10 +2395,7 @@ void capchk::process_cpgf(Module& module)
         STOP_WATCH_STOP;
         STOP_WATCH_REPORT;
     }
-#if 1
-    if (knob_capchk_critical_fun)
-        dump_non_kinit();
-#endif
+    dump_non_kinit();
 }
 
 bool capchk::runOnModule(Module &module)

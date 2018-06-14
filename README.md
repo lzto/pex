@@ -20,9 +20,15 @@ Linux Kernel Capability Checker
 ```
 
 #options
-* ccv - check critical variables
-* ccf - check critical functions
-* ccfv - print path to critical function during collect phase
-* ccvv - print path to critical variable during collect phase
+* ccv - check critical variables, default: 0
+* ccf - check critical functions, default: 1
+* ccfv - print path to critical function during collect phase, default 0
+* ccvv - print path to critical variable during collect phase, default 0
+* f2c - print critical function to capability mapping, default 1
+* v2c - print critical variable to capability mapping, default 1
+* caw - print check functions and wrappers discovered, default 1
+* kinit - print kernel init functions, default 1
+* nkinit - print kernel non init functions, default 1
+
 
 
