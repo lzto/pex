@@ -169,37 +169,45 @@ class capchk : public ModulePass
         bool runOnModule(Module &);
         bool capchkPass(Module &);
 
+        //capability checker
         void process_intras(Module& module);
         void process_cpgf(Module& module);
+
+        /*
+         * prepare
+         */
         void collect_kernel_init_functions(Module& module);
         void collect_wrappers(Module& module);
         void collect_crits(Module& module);
-        void chk_div0(Module& module);
-        void chk_unsafe_access(Module& module);
 
         void check_critical_function_usage(Module& module);
         void check_critical_variable_usage(Module& module);
 
-        bool is_kernel_init_functions(Function* f, FunctionSet& visited);
         void forward_all_interesting_usage(Instruction* I, int depth,
                 bool checked, InstructionList &callgraph,
                 InstructionList& chks);
         
+        /*
+         * analyze
+         */
         _REACHABLE backward_slice_build_callgraph(InstructionList &callgraph,
                 Instruction* I, FunctionToCheckResult& fvisited);
         _REACHABLE _backward_slice_reachable_to_chk_function(Instruction* I);
         void backward_slice_reachable_to_chk_function(Instruction* I);
 
-        void check_all_cs_using_fp(Function*);
-        bool match_cs_using_fp_method_0(Function*);
-        bool match_cs_using_fp_method_1(Function*);
+        void check_all_cs_using_fptr(Function*);
+        bool match_cs_using_fptr_method_0(Function*);
+        bool match_cs_using_fptr_method_1(Function*);
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
 #endif
 
+        //Other checker...
         //used by chk_unsafe_access
         bool is_safe_access(Instruction *ins, Value* addr, uint64_t type_size);
+        void chk_div0(Module& module);
+        void chk_unsafe_access(Module& module);
 
         /*
          * several aux helper functions
@@ -208,6 +216,8 @@ class capchk : public ModulePass
         bool is_rw_global(Value*);
         Value* get_global_def(Value*);
         Value* get_global_def(Value*, ValueSet&);
+        bool is_kernel_init_functions(Function* f);
+        bool is_kernel_init_functions(Function* f, FunctionSet& visited);
 
         int use_parent_func_arg(Value*, Function*);
 
@@ -342,17 +352,11 @@ Instruction* GetNextNonPHIInstruction(Instruction* I)
  * should be permission checked before use
  * generate critical functions on-the-fly
  */
-std::list<std::string> critical_functions;
+FunctionSet critical_functions;
 
-bool is_critical_function(const std::string& str)
+bool is_critical_function(Function* f)
 {
-    if (std::find(std::begin(critical_functions),
-                std::end(critical_functions),
-                str) != std::end(critical_functions))
-    {
-        return true;
-    }
-    return false;                                  
+    return critical_functions.count(f)!=0;
 }
 
 /*
@@ -1057,6 +1061,12 @@ bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
     return true;
 }
 
+bool capchk::is_kernel_init_functions(Function* f)
+{
+    FunctionSet visited;
+    return is_kernel_init_functions(f, visited);
+}
+
 void capchk::collect_kernel_init_functions(Module& module)
 {
     Function *kstart = NULL;
@@ -1293,7 +1303,7 @@ void capchk::collect_crits(Module& module)
         std::set<Function*> *fl = t2fs[type];
         if (fl==NULL)
         {
-            fl = new std::set<Function*>;
+            fl = new FunctionSet;
             t2fs[type] = fl;
         }
 
@@ -1310,11 +1320,6 @@ void capchk::collect_crits(Module& module)
                0, false, callgraph, chks);
         dbgstk.pop_back();
     }
-
-    critical_functions.sort();
-    critical_functions.erase(
-            std::unique(critical_functions.begin(), critical_functions.end()),
-            critical_functions.end());
 
     critical_variables.sort(cmp_llvm_val);
     critical_variables.erase(
@@ -1357,9 +1362,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
 
     BasicBlockList bbl;
 
-    FunctionSet k_visited;
-    
-    if (is_kernel_init_functions(f, k_visited))
+    if (is_kernel_init_functions(f))
     {
         ret = RKINIT;
         goto checked_out; 
@@ -1646,7 +1649,7 @@ void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
 /*
  * signature based method to find out indirect callee
  */
-bool capchk::match_cs_using_fp_method_0(Function* func)
+bool capchk::match_cs_using_fptr_method_0(Function* func)
 {
     //we want exact match to non-trivial function
     Type* func_type = func->getFunctionType();
@@ -1674,7 +1677,7 @@ bool capchk::match_cs_using_fp_method_0(Function* func)
 /*
  * global mod/ref, svf based method to find out indirect callee
  */
-bool capchk::match_cs_using_fp_method_1(Function* func)
+bool capchk::match_cs_using_fptr_method_1(Function* func)
 {
     Type* func_type = func->getFunctionType();
     for (auto* idc: idcs)
@@ -1701,14 +1704,14 @@ bool capchk::match_cs_using_fp_method_1(Function* func)
     return false;
 }
 
-void capchk::check_all_cs_using_fp(Function* func)
+void capchk::check_all_cs_using_fptr(Function* func)
 {
-    if (match_cs_using_fp_method_0(func))
+    if (match_cs_using_fptr_method_0(func))
     {
         MatchCallCriticalFuncPtr++;
         return;
     }
-    /*if (match_cs_using_fp_method_1(func))
+    /*if (match_cs_using_fptr_method_1(func))
     {
         MatchCallCriticalFuncPtr++;
         return;
@@ -1745,38 +1748,33 @@ void capchk::check_all_cs_using_fp(Function* func)
  */
 void capchk::check_critical_function_usage(Module& module)
 {
-    std::list<Function*> processed_flist;
+    FunctionList processed_flist;
     //for each critical function find out all callsite(use)
     //process one critical function at a time
     for (Module::iterator f_begin = module.begin(), f_end = module.end();
             f_begin != f_end; ++f_begin)
     {
         Function *func = dyn_cast<Function>(f_begin);
-        if (!is_critical_function(func->getName()))
-        {
+        if (!is_critical_function(func))
             continue;
-        }
         if (is_skip_function(func->getName()))
-        {
             continue;
-        }
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Function:"
             <<func->getName()
             <<ANSI_COLOR_RESET
             <<"\n";
         //iterate through all call site
-        //FIXME: this does not include function pointers
+        //direct call
         for (auto *U: func->users())
         {
             CallInst *cs = dyn_cast<CallInst>(U);
             if (!cs)
-            {
                 continue;
-            }
             backward_slice_reachable_to_chk_function(cs);
         }
-        check_all_cs_using_fp(func);
+        //indirect call
+        check_all_cs_using_fptr(func);
     }
 }
 
@@ -1811,8 +1809,7 @@ void capchk::check_critical_variable_usage(Module& module)
             Function* f = dyn_cast<Instruction>(U)->getFunction();
 
             //make sure this is not a kernel init function
-            std::set<Function*> k_visited;
-            if (is_kernel_init_functions(f, k_visited))
+            if (is_kernel_init_functions(f))
                 continue;
             if (isa<LoadInst>(ui))
             {
@@ -1888,7 +1885,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
     /*
      * collect interesting variables/functions found in this function
      */
-    StringList current_func_res_list;
+    FunctionSet current_crit_funcs;
     ValueList current_critical_variables;
 
     //don't allow recursive
@@ -2015,7 +2012,7 @@ add:
                             ||is_function_chk_or_wrapper(csf)
                             )
                         continue;
-                    current_func_res_list.push_back(csf->getName());
+                    current_crit_funcs.insert(csf);
 
                     if (knob_capchk_ccfv)
                     {
@@ -2080,7 +2077,7 @@ add:
                             ||is_function_chk_or_wrapper(csf))
                         continue;
 
-                    current_func_res_list.push_back(fname);
+                    current_crit_funcs.insert(csf);
                     if (knob_capchk_ccfv)
                     {
                         errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
@@ -2163,8 +2160,9 @@ add:
     if (is_function_permission_checked)
     {
         //merge forwar slicing result
-        critical_functions.splice(critical_functions.begin(),
-                current_func_res_list);
+        for (auto i: current_crit_funcs)
+            critical_functions.insert(i);
+
         //if (current_critical_variables.size()==0)
         //{
         //    errs()<<"No global critical variables found for function?:"
@@ -2182,8 +2180,7 @@ add:
                 Function* pfunc = cs->getFunction();
                 if (pfunc->getName().startswith("llvm."))
                     continue;
-                std::set<Function*> k_visited;
-                if (is_kernel_init_functions(pfunc, k_visited))
+                if (is_kernel_init_functions(pfunc))
                 {
                     dbgstk.push_back(cs);
                     errs()<<ANSI_COLOR_YELLOW
