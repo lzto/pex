@@ -134,10 +134,12 @@ typedef std::set<CallInst*> InDirectCallSites;
 typedef std::map<Function*,_REACHABLE> FunctionToCheckResult;
 typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
 typedef std::map<Function*, InstructionSet*> Function2ChkInst;
+typedef std::map<Value*, InstructionSet*> Value2ChkInst;
 typedef std::map<Function*, int> FunctionData;
 
 //map function to its check instruction
 Function2ChkInst f2ci;
+Value2ChkInst v2ci;
 
 //t2fs is used to fuzzy matching calling using function pointer
 TypeToFunctions t2fs;
@@ -203,7 +205,10 @@ class capchk : public ModulePass
          * several aux helper functions
          */
         bool is_complex_type(Type*);
-        bool is_rw_global(Value*, std::set<Value*>& visited);
+        bool is_rw_global(Value*);
+        Value* get_global_def(Value*);
+        Value* get_global_def(Value*, ValueSet&);
+
         int use_parent_func_arg(Value*, Function*);
 
 
@@ -221,6 +226,7 @@ class capchk : public ModulePass
 
         void dump_chk_and_wrap();
         void dump_f2ci();
+        void dump_v2ci();
         void dump_kinit();
         void dump_non_kinit();
 
@@ -523,6 +529,42 @@ void capchk::dump_callstack(InstructionList& callstk)
         cnt++;
     }
     errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
+}
+
+void capchk::dump_v2ci()
+{
+    errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
+        <<"--- Variables Protected By Capability---"
+        <<ANSI_COLOR_RESET<<"\n";
+    for (auto& cis: v2ci)
+    {
+        Value* v = cis.first;
+        errs()<<ANSI_COLOR_GREEN<<v->getName()<<ANSI_COLOR_RESET<<"\n";
+        for (auto *ci: *cis.second)
+        {
+            CallInst* cs = dyn_cast<CallInst>(ci);
+            Function* cf = cs->getCalledFunction();
+            int cap_no = -1;
+            if (is_function_chk_or_wrapper(cf))
+            {
+                cap_no = chk_func_cap_position[cf];
+                Value* capv = cs->getArgOperand(cap_no);
+                if (!isa<ConstantInt>(capv))
+                {
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n";
+                    cs->print(errs());
+                    errs()<<"\n";
+                    llvm_unreachable("expect ConstantInt in capable");
+                }
+                cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
+            }
+            assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
+            errs()<<"    "<<cap2string[cap_no]<<" @ ";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n";
+        }
+    }
 }
 
 void capchk::dump_f2ci()
@@ -861,29 +903,39 @@ again://to strip pointer
 
 /*
  * def/use global?
- * intra-procedural
- *
  * take care of phi node using `visited'
  */
-bool capchk::is_rw_global(Value* val, std::set<Value*>& visited)
+Value* capchk::get_global_def(Value* val, ValueSet& visited)
 {
     if (visited.count(val)!=0)
-        return false;
+        return NULL;
     visited.insert(val);
     if (isa<GlobalValue>(val))
-    {
-        return true;
-    }
+        return val;
     Instruction* vali = dyn_cast<Instruction>(val);
     if (!vali)
-        return false;
+        return NULL;
     for (auto *U : vali->users())
     {
-        if (is_rw_global(U, visited))
-            return true;
+        Value* v = get_global_def(U, visited);
+        if (v)
+            return v;
     }
-    return false;
+    return NULL;
 }
+
+Value* capchk::get_global_def(Value* val)
+{
+    ValueSet visited;
+    return get_global_def(val, visited);
+}
+
+bool capchk::is_rw_global(Value* val)
+{
+    ValueSet visited;
+    return get_global_def(val, visited)!=NULL;
+}
+
 
 /*
  * user can trace back to function argument?
@@ -1593,8 +1645,7 @@ bool capchk::match_cs_using_fp_method_1(Function* func)
         Type* ft = cv->getType()->getPointerElementType();
         if (func_type != ft)
             continue;
-        std::set<Value*> v_visited;
-        if(!is_rw_global(cv, v_visited))
+        if(!is_rw_global(cv))
         {
             errs()<<ANSI_COLOR(BG_RED, FG_WHITE)
                 <<"indirect CS not using global: @"
@@ -2015,21 +2066,36 @@ add:
             {
                 LoadInst *li = dyn_cast<LoadInst>(ii);
                 Value* lval = li->getOperand(0);
-                std::set<Value*> v_visited;
-                if (is_rw_global(lval, v_visited) && 
-                        (!is_skip_var(lval->getName())))
+                Value* gv = get_global_def(lval);
+                if (gv && (!is_skip_var(gv->getName())))
                 {
                     current_critical_variables.push_back(lval);
+
+                    InstructionSet* ill = v2ci[gv];
+                    if (ill==NULL)
+                    {
+                        ill = new InstructionSet;
+                        v2ci[lval] = ill;
+                    }
+                    for (auto chki: chks)
+                        ill->insert(chki);
                 }
             }else if (isa<StoreInst>(ii))
             {
                 StoreInst *si = dyn_cast<StoreInst>(ii);
                 Value* sval = si->getOperand(1);
-                std::set<Value*> v_visited;
-                if (is_rw_global(sval, v_visited) && 
-                        (!is_skip_var(sval->getName())))
+                Value* gv = get_global_def(sval);
+                if (gv && (!is_skip_var(gv->getName())))
                 {
                     current_critical_variables.push_back(sval);
+                    InstructionSet* ill = v2ci[gv];
+                    if (ill==NULL)
+                    {
+                        ill = new InstructionSet;
+                        v2ci[sval] = ill;
+                    }
+                    for (auto chki: chks)
+                        ill->insert(chki);
                 }
             }
         }
@@ -2254,7 +2320,10 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
 
-    dump_f2ci();
+    if (knob_capchk_critical_var)
+        dump_v2ci();
+    if (knob_capchk_critical_fun)
+        dump_f2ci();
 
     errs()<<"Run Analysis\n";
     if (knob_capchk_critical_var)
@@ -2274,7 +2343,8 @@ void capchk::process_cpgf(Module& module)
         STOP_WATCH_REPORT;
     }
 #if 1
-    dump_non_kinit();
+    if (knob_capchk_critical_fun)
+        dump_non_kinit();
 #endif
 }
 
