@@ -1407,6 +1407,29 @@ bool capchk::match_cs_using_fp_method_0(Function* func)
  */
 bool capchk::match_cs_using_fp_method_1(Function* func)
 {
+    Type* func_type = func->getFunctionType();
+    for (auto* idc: idcs)
+    {
+        Value* cv = idc->getCalledValue();
+        Type* ft = cv->getType()->getPointerElementType();
+        if (func_type != ft)
+            continue;
+        std::set<Value*> v_visited;
+        if(!is_rw_global(cv, v_visited))
+        {
+            errs()<<ANSI_COLOR(BG_RED, FG_WHITE)
+                <<"indirect CS not using global: @"
+                <<ANSI_COLOR_RESET;
+            if (Instruction* i=dyn_cast<Instruction>(cv))
+            {
+                i->getDebugLoc().print(errs());
+                errs()<<"\n";
+            }else
+            {
+                errs()<<"not Instruction.\n";
+            }
+        }
+    }
     return false;
 }
 
@@ -1417,11 +1440,11 @@ void capchk::check_all_cs_using_fp(Function* func)
         MatchCallCriticalFuncPtr++;
         return;
     }
-    if (match_cs_using_fp_method_1(func))
+    /*if (match_cs_using_fp_method_1(func))
     {
         MatchCallCriticalFuncPtr++;
         return;
-    }
+    }*/
     UnMatchCallCriticalFuncPtr++;
 }
 
@@ -1709,8 +1732,15 @@ rescan_and_add_all:
              * add them to protected list
              */
             //already checked before entering current scope
-            if (is_function_permission_checked)
-                goto add;
+            //all following usage should be dominated by incoming Instruction
+            if (checked)
+            {
+                //should dominate use
+                if (dt.dominates(I,si))
+                    goto add;
+                //or should have newly discovered check..
+            }
+
             //otherwise, there should be at least one check dominate the use
             for (auto* _ci : chk_instruction_list)
                 if (dt.dominates(_ci,si))
