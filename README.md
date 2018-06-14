@@ -12,7 +12,8 @@ Linux Kernel Capability Checker
     -analyze \
     -load=build/capchk/libcapchk.so \
     -capchk \
-    -ccv=flase -ccf=true \
+    -ccv=0 -ccf=1 \
+    -ccvv=0 -ccfv=0 \
     -stats \
     vmlinux.bc \
     -o /dev/null 2>&1 | tee log
@@ -21,5 +22,7 @@ Linux Kernel Capability Checker
 #options
 * ccv - check critical variables
 * ccf - check critical functions
+* ccfv - print path to critical function during collect phase
+* ccvv - print path to critical variable during collect phase
 
 

@@ -286,6 +286,14 @@ cl::opt<bool> knob_capchk_critical_fun("ccf",
         cl::desc("check critical function usage - enabled by default"),
         cl::init(true));
 
+cl::opt<bool> knob_capchk_ccfv("ccfv",
+        cl::desc("print path to critical function(collect phase) - disabled by default"),
+        cl::init(false));
+
+cl::opt<bool> knob_capchk_ccvv("ccvv",
+        cl::desc("print path to critical variable(collect phase) - disabled by default"),
+        cl::init(false));
+
 /*
  * helper function
  */
@@ -1978,12 +1986,15 @@ add:
                             )
                         continue;
                     current_func_res_list.push_back(csf->getName());
-#if 1//DEBUG
-                    errs()<<"Adding <direct>"<<csf->getName()<<" use @ ";
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n cause:";
-                    dump_dbgstk();
-#endif
+
+                    if (knob_capchk_ccfv)
+                    {
+                        errs()<<"Add call<direct> "<<csf->getName()<<" use @ ";
+                        cs->getDebugLoc().print(errs());
+                        errs()<<"\n cause:";
+                        dump_dbgstk();
+                    }
+
                     InstructionSet* ill = f2ci[csf];
                     if (ill==NULL)
                     {
@@ -2040,12 +2051,13 @@ add:
                         continue;
 
                     current_func_res_list.push_back(fname);
-#if 1//DEBUG
-                    errs()<<"Adding <indirect>"<<csf->getName()<<" use @ ";
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n cause:";
-                    dump_dbgstk();
-#endif
+                    if (knob_capchk_ccfv)
+                    {
+                        errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
+                        cs->getDebugLoc().print(errs());
+                        errs()<<"\n cause:";
+                        dump_dbgstk();
+                    }
                     InstructionSet* ill = f2ci[csf];
                     if (ill==NULL)
                     {
@@ -2069,8 +2081,14 @@ add:
                 Value* gv = get_global_def(lval);
                 if (gv && (!is_skip_var(gv->getName())))
                 {
+                    if (knob_capchk_ccvv)
+                    {
+                        errs()<<"Add Load "<<gv->getName()<<" use @ ";
+                        li->getDebugLoc().print(errs());
+                        errs()<<"\n cause:";
+                        dump_dbgstk();
+                    }
                     current_critical_variables.push_back(lval);
-
                     InstructionSet* ill = v2ci[gv];
                     if (ill==NULL)
                     {
@@ -2087,6 +2105,13 @@ add:
                 Value* gv = get_global_def(sval);
                 if (gv && (!is_skip_var(gv->getName())))
                 {
+                    if (knob_capchk_ccvv)
+                    {
+                        errs()<<"Add Store "<<gv->getName()<<" use @ ";
+                        si->getDebugLoc().print(errs());
+                        errs()<<"\n cause:";
+                        dump_dbgstk();
+                    }
                     current_critical_variables.push_back(sval);
                     InstructionSet* ill = v2ci[gv];
                     if (ill==NULL)
