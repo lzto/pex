@@ -139,6 +139,7 @@ typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
 typedef std::map<Function*, InstructionSet*> Function2ChkInst;
 typedef std::map<Value*, InstructionSet*> Value2ChkInst;
 typedef std::map<Function*, int> FunctionData;
+typedef std::map<Instruction*, FunctionSet*> Inst2Func;
 
 //map function to its check instruction
 Function2ChkInst f2ci;
@@ -149,6 +150,8 @@ TypeToFunctions t2fs;
 
 //stores all indirect call sites
 InDirectCallSites idcs;
+//store indirect call site to its candidates
+Inst2Func idcs2callee;
 
 ValueList critical_variables;
 
@@ -182,6 +185,7 @@ class capchk : public ModulePass
         void collect_kernel_init_functions(Module& module);
         void collect_wrappers(Module& module);
         void collect_crits(Module& module);
+        void resolve_indirect_callee(Module& module);
 
         void check_critical_function_usage(Module& module);
         void check_critical_variable_usage(Module& module);
@@ -1754,31 +1758,38 @@ void capchk::check_all_cs_using_fptr(Function* func)
 }
 
 /*
- * prcess all interesting 
+ * TODO: refactor method0~2, using following routine to pre-calculate
+ * candidate function so that we can make check simpler
  *
- *------------------------
- * algo1.
- * way to find out all interesting branch conditions:
- *
- * Given interesting function list Pi, for each function pi , we find out all
- * call site, for each call site, we do backward slicing to find out all path Psi
- * then we intersect each items in Psi to see if there are branch conditions that
- * intersect, if the conditional variable intersect, we consider the variable as
- * an interesting variable, and put them into Omega.//
- *
- *------------------------
- * algo2.
- * turn each conditional branch check into return instruction and see if 
- * the callsite is still reachable, if the callsite is still reachable then
- * there's a missing check if it is unreachable then we think all things are
- * checked.//
- * The following algorithm implemented algo2, which assumes that we already know
- * interesting variable.
- *
- * in order to findout which conditional (variable)check need to turn into Return
- * instruction, we do IPA, find aliased variable for those conditional checks, 
- * and turn them into Return instruction one by one
- *
+ * figure out candidate for indirect callee using value flow analysis
+ * work on idcs
+ */
+void capchk::resolve_indirect_callee(Module& modules)
+{
+    for (auto* idc: idcs)
+    {
+        Value* cv = idc->getCalledValue();
+
+        FunctionSet* funcs = idcs2callee[idc];
+        if (funcs==NULL)
+        {
+            funcs = new FunctionSet;
+            idcs2callee[idc] = funcs;
+        }
+        //case 1, simple type cast
+        if (Function* func = dyn_cast<Function>(cv->stripPointerCasts()))
+        {
+            funcs->insert(func);
+            continue;
+        }
+        //case 2, value flow, track down def-use-chain till we found
+        //function pointer assignment
+        
+    }
+}
+
+/*
+ * check possible critical function path 
  */
 void capchk::check_critical_function_usage(Module& module)
 {
@@ -1825,7 +1836,6 @@ void capchk::check_critical_function_usage(Module& module)
  */
 void capchk::check_critical_variable_usage(Module& module)
 {
-    errs()<<"Analysing critical variable usage\n";
     for (auto *V: critical_variables)
     {
         FunctionList flist;//known functions
@@ -1891,17 +1901,6 @@ void capchk::check_critical_variable_usage(Module& module)
                     break;
             }
         }
-#if 0//DEBUG_ANALYZE
-        flist.unique();
-        for (auto f: flist)
-        {
-            //U->print(errs());
-            //errs()<<"\n";
-            errs()<<"\t"
-                <<f->getName()
-                <<"\n";
-        }
-#endif
     }
 }
 
@@ -2396,11 +2395,11 @@ void capchk::process_cpgf(Module& module)
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
-    errs()<<"Running SVF on init functions.\n";
-    STOP_WATCH_START;
+    //errs()<<"Running SVF on init functions.\n";
+    //STOP_WATCH_START;
     //run_svf();
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    //STOP_WATCH_STOP;
+    //STOP_WATCH_REPORT;
 
     errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_START;
@@ -2410,6 +2409,12 @@ void capchk::process_cpgf(Module& module)
 
     dump_v2ci();
     dump_f2ci();
+
+    errs()<<"Resolving callee for indirect call.\n";
+    STOP_WATCH_START;
+    resolve_indirect_callee(module);
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
 
     errs()<<"Run Analysis\n";
     if (knob_capchk_critical_var)
