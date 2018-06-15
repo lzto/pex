@@ -148,6 +148,8 @@ Value2ChkInst v2ci;
 //t2fs is used to fuzzy matching calling using function pointer
 TypeToFunctions t2fs;
 
+//all function pointer assignment,(part of function use)
+InstructionSet fptrassign;
 //stores all indirect call sites
 InDirectCallSites idcs;
 //store indirect call site to its candidates
@@ -332,6 +334,9 @@ cl::opt<bool> knob_capchk_nkinit("nkinit",
         cl::desc("print kernel non init functions - enabled by default"),
         cl::init(true));
 
+cl::opt<bool> knob_capchk_cvf("cvf",
+        cl::desc("complex value flow analysis - disabled by default"),
+        cl::init(false));
 
 
 /*
@@ -599,7 +604,11 @@ void capchk::dump_v2ci()
                     errs()<<"\n";
                     cs->print(errs());
                     errs()<<"\n";
-                    llvm_unreachable("expect ConstantInt in capable");
+                    //llvm_unreachable("expect ConstantInt in capable");
+                    errs()<<"Dynamic Load CAP\n";
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n";
+                    continue;
                 }
                 cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
             }
@@ -1305,10 +1314,7 @@ void capchk::collect_crits(Module& module)
             ExternalFuncCounter++;
             continue;
         }
-        //skip llvm internal functions 
-        StringRef fname = func->getName();
-        if (fname.startswith("llvm.")
-                || is_function_chk_or_wrapper(func))
+        if (func->isIntrinsic() || is_function_chk_or_wrapper(func))
             continue;
 
         FuncCounter++;
@@ -1763,14 +1769,32 @@ void capchk::check_all_cs_using_fptr(Function* func)
 }
 
 /*
+ * Complex Value Flow Analysis
+ * figure out candidate for indirect callee using value flow analysis
+ *
  * TODO: refactor method0~2, using following routine to pre-calculate
  * candidate function so that we can make check simpler
  *
- * figure out candidate for indirect callee using value flow analysis
- * work on idcs
  */
-void capchk::resolve_indirect_callee(Module& modules)
+void capchk::resolve_indirect_callee(Module& module)
 {
+    //collect all function pointer assignment(fptrassign=source)
+    for (Module::iterator mi = module.begin(), me = module.end(); mi != me; ++mi)
+    {
+        Function *func = dyn_cast<Function>(mi);
+        if (func->isDeclaration() || func->isIntrinsic())
+            continue;
+        for (auto* U: func->users())
+        {
+            Value* u = dyn_cast<Value>(U);
+            if (isa<CallInst>(U))
+                continue;
+            //not interested in pure bitcast?
+            if (Instruction* i = dyn_cast<Instruction>(u))
+                fptrassign.insert(i);
+        }
+    }
+    //do analysis(idcs=sink)
     for (auto* idc: idcs)
     {
         Value* cv = idc->getCalledValue();
@@ -1975,7 +1999,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
                 Function* csfunc = ci->getCalledFunction();
                 if (csfunc && csfunc->hasName())
                 {
-                    if (csfunc->getName().startswith("llvm.")
+                    if (csfunc->isIntrinsic()
                             ||is_skip_function(csfunc->getName()))
                         continue;
 
@@ -2047,7 +2071,7 @@ add:
                 CallInst* cs = dyn_cast<CallInst>(ii);
                 if (Function* csf = cs->getCalledFunction())
                 {
-                    if (csf->getName().startswith("llvm.")
+                    if (csf->isIntrinsic()
                             ||is_skip_function(csf->getName())
                             ||is_function_chk_or_wrapper(csf)
                             )
@@ -2111,8 +2135,8 @@ add:
                     //errs()<<"[EEEE] resolved as : "<<(*fl->begin())->getName()<<"\n";
                     CPResolv++;
                     Function *csf = (*fl->begin());
-                    llvm::StringRef fname = csf->getName();
-                    if (fname.startswith("llvm.")
+                    StringRef fname = csf->getName();
+                    if (csf->isIntrinsic()
                             ||is_skip_function(fname)
                             ||is_function_chk_or_wrapper(csf))
                         continue;
@@ -2218,7 +2242,7 @@ add:
             if (CallInst* cs = dyn_cast<CallInst>(U))
             {
                 Function* pfunc = cs->getFunction();
-                if (pfunc->getName().startswith("llvm."))
+                if (pfunc->isIntrinsic())
                     continue;
                 if (is_kernel_init_functions(pfunc))
                 {
@@ -2414,13 +2438,14 @@ void capchk::process_cpgf(Module& module)
 
     dump_v2ci();
     dump_f2ci();
-
-    errs()<<"Resolving callee for indirect call.\n";
-    STOP_WATCH_START;
-    resolve_indirect_callee(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
-
+    if (knob_capchk_cvf)
+    {
+        errs()<<"Resolving callee for indirect call.\n";
+        STOP_WATCH_START;
+        resolve_indirect_callee(module);
+        STOP_WATCH_STOP;
+        STOP_WATCH_REPORT;
+    }
     errs()<<"Run Analysis\n";
     if (knob_capchk_critical_var)
     {
