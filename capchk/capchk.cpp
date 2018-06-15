@@ -1274,7 +1274,8 @@ void capchk::collect_wrappers(Module& module)
                 continue;
             Function* parent_func = cs->getFunction();
             //we have a wrapper,
-            if (int pos = use_parent_func_arg(capv, parent_func))
+            int pos = use_parent_func_arg(capv, parent_func);
+            if (pos>=0)
             {
                 //type 1 wrapper, cap is from parent function argument
                 chk_func_cap_position[parent_func] = pos;
