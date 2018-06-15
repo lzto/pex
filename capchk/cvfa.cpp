@@ -37,7 +37,7 @@ STOP_WATCH_STOP;
 STOP_WATCH_REPORT;
     errs()<<ANSI_COLOR_GREEN<<"build MemorySSA\n"<<ANSI_COLOR_RESET;
 STOP_WATCH_START;
-    svfg =  memSSA.buildSVFG(ander);
+    svfg = memSSA.buildSVFG(ander);
 STOP_WATCH_STOP;
 STOP_WATCH_REPORT;
     errs()<<ANSI_COLOR_GREEN<<"Misc\n"<<ANSI_COLOR_RESET;
@@ -276,15 +276,20 @@ void CVFA::clear_source()
 {
     sources.clear();
 }
-//TODO: add sink
+
 void CVFA::set_sink(InstructionSet& _snks)
 {
     PAG* pag = PAG::getPAG();
     sinks.clear();
     for (auto s: _snks)
     {
-        //SVFGNode* svfgnode = getSVFG()->get();
-        //addToSinks(svfgnode);
+        CallInst* cs = dyn_cast<CallInst>(s);
+        Value* cv = cs->getCalledValue();
+        assert(pag->hasValueNode(cv));
+        NodeID cvid = pag->getValueNode(cv);
+        //PAGNode* pagnode = pag->getPAGNode(cvid);
+        SVFGNode* svfgnode = getSVFG()->getSVFGNode(cvid);
+        addToSinks(svfgnode);
     }
 }
 
