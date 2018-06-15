@@ -1304,8 +1304,6 @@ void capchk::collect_crits(Module& module)
 
         FuncCounter++;
 
-        //auto& aa = getAnalysis<AAResultsWrapperPass>(*func).getAAResults();
-
         Type* type = func->getFunctionType();
 
         FunctionSet *fl = t2fs[type];
@@ -1316,11 +1314,7 @@ void capchk::collect_crits(Module& module)
         }
 
         fl->insert(func);
-        /*
-         * FIXME: in order to figure out all use of critical variables,
-         * we should use SVF/or other AA method to figure out Interprocedural
-         * alias set
-         */
+
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
         InstructionList callgraph;
         InstructionList chks;
