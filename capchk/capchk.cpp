@@ -637,7 +637,11 @@ void capchk::dump_f2ci()
                     errs()<<"\n";
                     cs->print(errs());
                     errs()<<"\n";
-                    llvm_unreachable("expect ConstantInt in capable");
+                    //llvm_unreachable("expect ConstantInt in capable");
+                    errs()<<"Dynamic Load CAP\n";
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n";
+                    continue;
                 }
                 cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
             }
