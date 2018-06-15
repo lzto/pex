@@ -46,6 +46,9 @@
 #include "llvm/ADT/SetVector.h"
 
 //SVF headers goes here
+
+
+//my aux headers
 #include "color.h"
 #include "aux.h"
 
@@ -198,6 +201,7 @@ class capchk : public ModulePass
         void check_all_cs_using_fptr(Function*);
         bool match_cs_using_fptr_method_0(Function*);
         bool match_cs_using_fptr_method_1(Function*);
+        bool match_cs_using_fptr_method_2(Function*);
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
@@ -1154,6 +1158,10 @@ void capchk::collect_kernel_init_functions(Module& module)
                     func_work_list.push_back(nf);
                 }else if (Value* nv = ci->getCalledValue())
                 {
+                    if (ci->isInlineAsm())
+                    {
+                        continue;
+                    }
                     //function pointer
                 }
             }
@@ -1300,7 +1308,7 @@ void capchk::collect_crits(Module& module)
 
         Type* type = func->getFunctionType();
 
-        std::set<Function*> *fl = t2fs[type];
+        FunctionSet *fl = t2fs[type];
         if (fl==NULL)
         {
             fl = new FunctionSet;
@@ -1429,6 +1437,10 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                 }
             }else if (ci->getCalledValue())
             {
+                if (ci->isInlineAsm())
+                {
+                    continue;
+                }
                 //not so many checks are not used in indirect calls?
 #if 0
                 /*
@@ -1645,11 +1657,33 @@ void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
             break;
     }
 }
+/*
+ * exact match with bitcast
+ */
+bool capchk::match_cs_using_fptr_method_0(Function* func)
+{
+    bool ret = false;
+    for (auto* idc: idcs)
+    {
+        Value* cv = idc->getCalledValue();
+        //or strip function pointer can do the trick?
+        Function* _func = dyn_cast<Function>(cv->stripPointerCasts());
+        if (_func==func)
+        {
+            errs()<<"Found matched functions(bitcast) for call-by-val:"
+                <<func->getName()<<"\n";
+            backward_slice_reachable_to_chk_function(idc);
+            ret = true;
+            continue;
+        }
+    }
+    return ret;
+}
 
 /*
  * signature based method to find out indirect callee
  */
-bool capchk::match_cs_using_fptr_method_0(Function* func)
+bool capchk::match_cs_using_fptr_method_1(Function* func)
 {
     //we want exact match to non-trivial function
     Type* func_type = func->getFunctionType();
@@ -1663,60 +1697,66 @@ bool capchk::match_cs_using_fptr_method_0(Function* func)
     bool ret = false;
     for (auto* idc: idcs)
     {
-        Type* ft = idc->getCalledValue()->getType()->getPointerElementType();
-        if (func_type != ft)
+        Value* cv = idc->getCalledValue();
+        //or strip function pointer can do the trick?
+        Function* _func = dyn_cast<Function>(cv->stripPointerCasts());
+        if (_func==func)
             continue;
-        errs()<<"Found matched functions for indirectcall:"
-            <<(*fl->begin())->getName()<<"\n";
-        backward_slice_reachable_to_chk_function(idc);
-        ret = true;
+
+        Type* ft = cv->getType()->getPointerElementType();
+        Type* ft2 = cv->stripPointerCasts()->getType()->getPointerElementType();
+        if ((func_type == ft) || (func_type == ft2))
+        {
+            errs()<<"Found matched functions for indirectcall:"
+                <<(*fl->begin())->getName()<<"\n";
+            backward_slice_reachable_to_chk_function(idc);
+            ret = true;
+            continue;
+        }
     }
     return ret;
 }
 
 /*
- * global mod/ref, svf based method to find out indirect callee
+ * TODO: figure out function pointer using SVF
  */
-bool capchk::match_cs_using_fptr_method_1(Function* func)
+bool capchk::match_cs_using_fptr_method_2(Function* func)
 {
     Type* func_type = func->getFunctionType();
     for (auto* idc: idcs)
     {
         Value* cv = idc->getCalledValue();
-        Type* ft = cv->getType()->getPointerElementType();
-        if (func_type != ft)
+        Function* _func = dyn_cast<Function>(cv->stripPointerCasts());
+        if (_func==func)
             continue;
-        if(!is_rw_global(cv))
-        {
-            errs()<<ANSI_COLOR(BG_RED, FG_WHITE)
-                <<"indirect CS not using global: @"
-                <<ANSI_COLOR_RESET;
-            if (Instruction* i=dyn_cast<Instruction>(cv))
-            {
-                i->getDebugLoc().print(errs());
-                errs()<<"\n";
-            }else
-            {
-                errs()<<"not Instruction.\n";
-            }
-        }
     }
     return false;
 }
 
+/*
+ * CAUTION: inprecise function pointer analysis may result in FP and FN
+ */
 void capchk::check_all_cs_using_fptr(Function* func)
 {
+    int cnt = 0;
     if (match_cs_using_fptr_method_0(func))
     {
+        cnt++;
         MatchCallCriticalFuncPtr++;
-        return;
     }
-    /*if (match_cs_using_fptr_method_1(func))
+    if (match_cs_using_fptr_method_1(func))
     {
+        cnt++;
+        MatchCallCriticalFuncPtr++;
+    }
+    /*if (match_cs_using_fptr_method_2(func))
+    {
+        cnt++;
         MatchCallCriticalFuncPtr++;
         return;
     }*/
-    UnMatchCallCriticalFuncPtr++;
+    if (cnt==0)
+        UnMatchCallCriticalFuncPtr++;
 }
 
 /*
@@ -1950,7 +1990,9 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
                 }else
                 {
                     //this is in-direct call, collect it
-                    idcs.insert(ci);
+                    //don't really care inline asm
+                    if (!ci->isInlineAsm())
+                        idcs.insert(ci);
                 }
             }
         }
@@ -2366,7 +2408,7 @@ void capchk::process_cpgf(Module& module)
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
-    errs()<<"Collect all permission-checked variables\n";
+    errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_START;
     collect_crits(module);
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
