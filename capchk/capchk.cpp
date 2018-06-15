@@ -4,13 +4,6 @@
  * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
  */
 
-#include <list>
-#include <map>
-#include <stack>
-#include <queue>
-#include <set>
-#include <algorithm>
-
 #include "llvm-c/Core.h"
 #include "llvm/Pass.h"
 #include "llvm/Transforms/Instrumentation.h"
@@ -25,11 +18,11 @@
 #include "llvm/Analysis/ScalarEvolution.h"
 #include "llvm/Analysis/ScalarEvolutionAliasAnalysis.h"
 #include "llvm/IR/Module.h"
-#include "llvm/IR/Function.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/GetElementPtrTypeIterator.h"
 #include "llvm/IR/InstIterator.h"
+#include "llvm/IR/Function.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/GlobalValue.h"
@@ -45,13 +38,11 @@
 #include "llvm/ADT/Statistic.h"
 #include "llvm/ADT/SetVector.h"
 
-//SVF headers goes here
-
-
+#include "cvfa.h"
 //my aux headers
+#include "commontypes.h"
 #include "color.h"
 #include "aux.h"
-
 #include "stopwatch.h"
 STOP_WATCH;
 
@@ -112,35 +103,6 @@ STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to m
 STATISTIC(CapChkInFPTR, "found capability check inside call using function ptr\n");
 
 ////////////////////////////////////////////////////////////////////////////////
-enum _REACHABLE
-{
-    RFULL,
-    RPARTIAL,
-    RNONE,
-    RKINIT,//hit kernel init functions
-    RUNRESOLVEABLE,
-};
-
-typedef std::list<std::string> StringList;
-typedef std::list<Value*> ValueList;
-typedef std::list<Instruction*> InstructionList;
-typedef std::list<BasicBlock*> BasicBlockList;
-typedef std::list<Function*> FunctionList;
-
-typedef std::set<std::string> StringSet;
-typedef std::set<Value*> ValueSet;
-typedef std::set<Instruction*> InstructionSet;
-typedef std::set<BasicBlock*> BasicBlockSet;
-typedef std::set<Function*> FunctionSet;
-typedef std::set<CallInst*> InDirectCallSites;
-
-typedef std::map<Function*,_REACHABLE> FunctionToCheckResult;
-typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
-typedef std::map<Function*, InstructionSet*> Function2ChkInst;
-typedef std::map<Value*, InstructionSet*> Value2ChkInst;
-typedef std::map<Function*, int> FunctionData;
-typedef std::map<Instruction*, FunctionSet*> Inst2Func;
-
 //map function to its check instruction
 Function2ChkInst f2ci;
 Value2ChkInst v2ci;
@@ -1794,6 +1756,14 @@ void capchk::resolve_indirect_callee(Module& module)
                 fptrassign.insert(i);
         }
     }
+
+    //create svf instance
+    CVFA cvfa;
+    //initialize, this will take some time
+    cvfa.initialize(module);
+    //setup source here
+    cvfa.set_source(fptrassign);
+
     //do analysis(idcs=sink)
     for (auto* idc: idcs)
     {
@@ -1813,7 +1783,18 @@ void capchk::resolve_indirect_callee(Module& module)
         }
         //case 2, value flow, track down def-use-chain till we found
         //function pointer assignment
-        
+        //setup sink 
+        InstructionSet is;
+        is.insert(idc);
+        cvfa.set_sink(is);
+        //analyze
+        cvfa.analyze();
+        FunctionSet R;
+        R = cvfa.get_callee_funs();
+        for (auto r: R)
+        {
+            funcs->insert(r);
+        }
     }
 }
 
@@ -1900,7 +1881,7 @@ void capchk::check_critical_variable_usage(Module& module)
             flist.push_back(f);
             errs()<<"Function: "
                 <<f->getName()
-                <<"";
+                <<"\n";
             //is this instruction reachable from non-checked path?
             switch(_backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U)))
             {

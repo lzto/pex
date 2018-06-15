@@ -46,16 +46,13 @@ set(SOURCES
     WPA/FlowSensitive.cpp
     WPA/FlowSensitiveStat.cpp
     WPA/WPAPass.cpp
-    XChecker/DFA.cpp
-    XChecker/XChecker.cpp
-    XChecker/DoubleFetchChecker.cpp
 )
 
 add_llvm_loadable_module(Svf ${SOURCES})
 add_llvm_Library(LLVMSvf ${SOURCES})
 
 link_directories( ${CMAKE_BINARY_DIR}/libsvf/lib/Cudd )
-llvm_map_components_to_libnames(llvm_libs bitwriter core ipo irreader instcombine instrumentation target linker analysis scalaropts support )
+#llvm_map_components_to_libnames(llvm_libs bitwriter core ipo irreader instcombine instrumentation target linker analysis scalaropts support )
 target_link_libraries(LLVMSvf ${llvm_libs})
 if ( CMAKE_SYSTEM_NAME MATCHES "Darwin")
     target_link_libraries(Svf LLVMCudd ${llvm_libs})

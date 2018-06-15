@@ -1,9 +1,15 @@
-#include "XChecker/DFA.h"
+/*
+ * complex value flow analysis
+ * 2018 Tong Zhang <t.zhang2@partner.samsung.com>
+ */
+
+#include "cvfa.h"
+
 #include "MSSA/SVFGStat.h"
 #include "Util/GraphUtil.h"
 
+#include "color.h"
 #include "stopwatch.h"
-
 STOP_WATCH;
 
 using namespace llvm;
@@ -14,26 +20,40 @@ static cl::opt<bool> DumpSlice("dump-slice", cl::init(false),
 static cl::opt<unsigned> cxtLimit("cxtlimit",  cl::init(3),
                                   cl::desc("Source-Sink Analysis Contexts Limit"));
 
-/*
- * called from XChecker::runOnModule
- *
- * This analyze explore path from source to sink marked in initialize()
- *
- */
-void DFA::analyze(SVFModule module) {
+void CVFA::initialize(Module& module)
+{
+    m = &module;
+    errs()<<ANSI_COLOR_GREEN<<"Create PTACallGraph\n"<<ANSI_COLOR_RESET;
+STOP_WATCH;
+STOP_WATCH_START;
+    ptaCallGraph = new PTACallGraph(module);
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
+    errs()<<ANSI_COLOR_GREEN<<"Create AndersenWaveDiff, this will take some time\n"
+        <<ANSI_COLOR_RESET;
+STOP_WATCH_START;
+    AndersenWaveDiff* ander = AndersenWaveDiff::createAndersenWaveDiff(module);
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
+    errs()<<ANSI_COLOR_GREEN<<"build MemorySSA\n"<<ANSI_COLOR_RESET;
+STOP_WATCH_START;
+    svfg =  memSSA.buildSVFG(ander);
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
+    errs()<<ANSI_COLOR_GREEN<<"Misc\n"<<ANSI_COLOR_RESET;
+STOP_WATCH_START;
+    setGraph(memSSA.getSVFG());
+    //AndersenWaveDiff::releaseAndersenWaveDiff();
+    /// allocate control-flow graph branch conditions
+    getPathAllocator()->allocate(module);
+STOP_WATCH_STOP;
+STOP_WATCH_REPORT;
+}
 
-    //THIS IS SLOW????
-    errs()<<"DFA::analyze initialize(module)\n";
-    STOP_WATCH_START;
-    /*
-     * initialize will call initSrcs and initSnks
-     * to identify SVFGNodes which belongs to sources and sinks
-     */
-    initialize(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
-
-    errs()<<"DFA::analysze misc\n";
+//should call initialize/add_src/add_sink first then call analyze
+void CVFA::analyze()
+{
+    errs()<<"CVFA::analysze\n";
     STOP_WATCH_START;
     ContextCond::setMaxCxtLen(cxtLimit);
 
@@ -41,7 +61,8 @@ void DFA::analyze(SVFModule module) {
             iter != eiter; ++iter) {
         setCurSlice(*iter);
 
-        DBOUT(DGENERAL, outs() << "Analysing slice:" << (*iter)->getId() << ")\n");
+        DBOUT(DGENERAL, outs() << "Analysing slice:"
+                << (*iter)->getId() << ")\n");
         ContextCond cxt;
         DPIm item((*iter)->getId(),cxt);
         forwardTraverse(item);
@@ -49,10 +70,14 @@ void DFA::analyze(SVFModule module) {
         /// do not consider there is bug when reaching a global SVFGNode
         /// if we touch a global, then we assume the client uses this memory until the program exits.
         if (getCurSlice()->isReachGlobal()) {
-            DBOUT(DSaber, outs() << "Forward analysis reaches globals for slice:" << (*iter)->getId() << ")\n");
+            DBOUT(DSaber, outs() << "Forward analysis reaches globals for slice:"
+                    << (*iter)->getId() << ")\n");
         }
         else {
-            DBOUT(DSaber, outs() << "Forward process for slice:" << (*iter)->getId() << " (size = " << getCurSlice()->getForwardSliceSize() << ")\n");
+            DBOUT(DSaber, outs() << "Forward process for slice:"
+                    << (*iter)->getId()
+                    << " (size = " << getCurSlice()->getForwardSliceSize()
+                    << ")\n");
 
             for (SVFGNodeSetIter sit = getCurSlice()->sinksBegin(), esit =
                         getCurSlice()->sinksEnd(); sit != esit; ++sit) {
@@ -61,14 +86,18 @@ void DFA::analyze(SVFModule module) {
                 backwardTraverse(item);
             }
 
-            DBOUT(DSaber, outs() << "Backward process for slice:" << (*iter)->getId() << " (size = " << getCurSlice()->getBackwardSliceSize() << ")\n");
+            DBOUT(DSaber, outs() << "Backward process for slice:"
+                    << (*iter)->getId()
+                    << " (size = " << getCurSlice()->getBackwardSliceSize()
+                    << ")\n");
 
             AllPathReachability();
 
-            DBOUT(DSaber, outs() << "Guard computation for slice:" << (*iter)->getId() << ")\n");
+            DBOUT(DSaber, outs() << "Guard computation for slice:"
+                    << (*iter)->getId() << ")\n");
         }
 
-        reportBug(getCurSlice());
+        collect_reachable_src(getCurSlice());
     }
 
     finalize();
@@ -80,8 +109,10 @@ void DFA::analyze(SVFModule module) {
 /*!
  * Propagate information forward by matching context
  */
-void DFA::forwardpropagate(const DPIm& item, SVFGEdge* edge) {
-    DBOUT(DSaber,outs() << "\n##processing source: " << getCurSlice()->getSource()->getId() <<" forward propagate from (" << edge->getSrcID());
+void CVFA::forwardpropagate(const DPIm& item, SVFGEdge* edge) {
+    DBOUT(DSaber,outs() << "\n##processing source: "
+            << getCurSlice()->getSource()->getId()
+            <<" forward propagate from (" << edge->getSrcID());
 
     // for indirect SVFGEdge, the propagation should follow the def-use chains
     // points-to on the edge indicate whether the object of source node can be propagated
@@ -125,22 +156,29 @@ void DFA::forwardpropagate(const DPIm& item, SVFGEdge* edge) {
 
     /// whether this dstNode has been visited or not
     if(forwardVisited(dstNode,newItem)) {
-        DBOUT(DSaber,outs() << " node "<< dstNode->getId() <<" has been visited\n");
+        DBOUT(DSaber,outs() << " node "
+                << dstNode->getId()
+                <<" has been visited\n");
         return;
     }
     else
         addForwardVisited(dstNode, newItem);
 
     if(pushIntoWorklist(newItem))
-        DBOUT(DSaber,outs() << " --> " << edge->getDstID() << ", cxt size: " << newItem.getContexts().cxtSize() <<")\n");
-
+        DBOUT(DSaber,outs() << " --> "
+                << edge->getDstID()
+                << ", cxt size: "
+                << newItem.getContexts().cxtSize()
+                <<")\n");
 }
 
 /*!
  * Propagate information backward without matching context, as forward analysis already did it
  */
-void DFA::backwardpropagate(const DPIm& item, SVFGEdge* edge) {
-    DBOUT(DSaber,outs() << "backward propagate from (" << edge->getDstID() << " --> " << edge->getSrcID() << ")\n");
+void CVFA::backwardpropagate(const DPIm& item, SVFGEdge* edge) {
+    DBOUT(DSaber,outs() << "backward propagate from (" 
+            << edge->getDstID() << " --> "
+            << edge->getSrcID() << ")\n");
     const SVFGNode* srcNode = edge->getSrcNode();
     if(backwardVisited(srcNode))
         return;
@@ -153,7 +191,7 @@ void DFA::backwardpropagate(const DPIm& item, SVFGEdge* edge) {
 }
 
 /// Guarded reachability search
-void DFA::AllPathReachability() {
+void CVFA::AllPathReachability() {
     /// annotate SVFG with slice information for debugging purpose
     if(DumpSlice)
         annotateSlice(_curSlice);
@@ -165,7 +203,7 @@ void DFA::AllPathReachability() {
 }
 
 /// Set current slice
-void DFA::setCurSlice(const SVFGNode* src) {
+void CVFA::setCurSlice(const SVFGNode* src) {
     if(_curSlice!=NULL) {
         delete _curSlice;
         _curSlice = NULL;
@@ -175,7 +213,7 @@ void DFA::setCurSlice(const SVFGNode* src) {
     _curSlice = new ProgSlice(src,getPathAllocator(), getSVFG());
 }
 
-void DFA::annotateSlice(ProgSlice* slice) {
+void CVFA::annotateSlice(ProgSlice* slice) {
     getSVFG()->getStat()->addToSources(slice->getSource());
     for(SVFGNodeSetIter it = slice->sinksBegin(), eit = slice->sinksEnd(); it!=eit; ++it )
         getSVFG()->getStat()->addToSinks(*it);
@@ -185,15 +223,83 @@ void DFA::annotateSlice(ProgSlice* slice) {
         getSVFG()->getStat()->addToBackwardSlice(*it);
 }
 
-void DFA::dumpSlices() {
-
+void CVFA::dumpSlices()
+{
     if(DumpSlice)
         const_cast<SVFG*>(getSVFG())->dump("Slice",true);
 }
 
-void DFA::printBDDStat() {
+void CVFA::printBDDStat() {
 
     outs() << "BDD Mem usage: " << PathCondAllocator::getMemUsage() << "\n";
     outs() << "BDD Number: " << PathCondAllocator::getCondNum() << "\n";
     outs() << "BDD max live number: " << PathCondAllocator::getMaxLiveCondNumber() << "\n";
 }
+
+void CVFA::finalize()
+{
+    dumpSlices();
+}
+
+/*
+ * add reachable slice to result
+ */
+void CVFA::collect_reachable_src(ProgSlice* slice)
+{
+}
+
+/*
+ * should call analyze first
+ */
+FunctionSet& CVFA::get_callee_funs()
+{
+    return res_funcs;
+}
+
+void CVFA::set_source(InstructionSet& _srcs)
+{
+    PAG* pag = PAG::getPAG();
+    sources.clear();
+    for (auto s: _srcs)
+    {
+        assert(isa<StoreInst>(s));
+        if (!isa<StoreInst>(s))
+            continue;
+        std::list<const PAGEdge*> pel = pag->getInstPAGEdgeList(s);
+        assert(pel.size()==1);
+        const SVFGNode* svfgnode = getSVFG()->getStoreSVFGNode(dyn_cast<StorePE>(pel.front()));
+        addToSources(svfgnode);
+    }
+}
+
+void CVFA::clear_source()
+{
+    sources.clear();
+}
+//TODO: add sink
+void CVFA::set_sink(InstructionSet& _snks)
+{
+    PAG* pag = PAG::getPAG();
+    sinks.clear();
+    for (auto s: _snks)
+    {
+        //SVFGNode* svfgnode = getSVFG()->get();
+        //addToSinks(svfgnode);
+    }
+}
+
+void CVFA::clear_sink()
+{
+    sinks.clear();
+}
+
+bool CVFA::isSource(const SVFGNode* node)
+{
+    return false;
+}
+
+bool CVFA::isSink(const SVFGNode* node)
+{
+    return false;
+}
+
