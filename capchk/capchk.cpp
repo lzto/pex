@@ -171,6 +171,9 @@ class capchk : public ModulePass
         bool match_cs_using_fptr_method_1(Function*);
         bool match_cs_using_fptr_method_2(Function*);
 
+        FunctionSet resolve_indirect_callee(CallInst*);
+
+
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
 #endif
@@ -1050,6 +1053,45 @@ bool capchk::is_kernel_init_functions(Function* f)
     return is_kernel_init_functions(f, visited);
 }
 
+FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
+{
+    FunctionSet fs;
+    Function* callee = NULL;
+    if (ci->isInlineAsm())
+        return fs;
+    if (callee = ci->getCalledFunction())
+    {
+        //not indirect call
+        fs.insert(callee);
+        return fs;
+    }
+    Value* cv = ci->getCalledValue();
+    callee = dyn_cast<Function>(cv->stripPointerCasts());
+    if (callee)
+    {
+        fs.insert(callee);
+        return fs;
+    }
+    //FUZZY MATCHING
+    //
+    //TODO: use svf
+    //
+    //method 1: signature based matching
+    //only allow precise match when collecting protected functions
+    Type *ft = cv->getType()->getPointerElementType();
+    if (!is_complex_type(ft))
+    {
+        return fs;
+    }
+    std::set<Function*> *fl = t2fs[ft];
+    for (auto* f: *fl)
+    {
+        fs.insert(f);
+    }
+
+    return fs;
+}
+
 void capchk::collect_kernel_init_functions(Module& module)
 {
     Function *kstart = NULL;
@@ -1130,18 +1172,17 @@ void capchk::collect_kernel_init_functions(Module& module)
                 }
                 if (Function* nf = ci->getCalledFunction())
                 {
-                    if (nf->isDeclaration())
-                        continue;
-                    if (func_visited.count(nf))
+                    if (nf->isDeclaration() || 
+                        nf->isIntrinsic() ||
+                        func_visited.count(nf))
                         continue;
                     func_work_list.push_back(nf);
                 }else if (Value* nv = ci->getCalledValue())
                 {
-                    if (ci->isInlineAsm())
-                    {
-                        continue;
-                    }
-                    //function pointer
+                    //function pointer?
+                    FunctionSet fs = resolve_indirect_callee(ci);
+                    for (auto callee: fs)
+                        func_work_list.push_back(callee);
                 }
             }
             for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
@@ -1793,6 +1834,7 @@ void capchk::resolve_indirect_callee(Module& module)
         R = cvfa.get_callee_funs();
         for (auto r: R)
         {
+            errs()<<"SVF: got "<<r->getName()<<"\n";
             funcs->insert(r);
         }
     }
@@ -2050,7 +2092,16 @@ add:
             if (isa<CallInst>(ii))
             {
                 CallInst* cs = dyn_cast<CallInst>(ii);
-                if (Function* csf = cs->getCalledFunction())
+                Function* csf = cs->getCalledFunction();
+                //ignore inline asm
+                if (cs->isInlineAsm())
+                    continue;
+                //simple type cast?
+                if (csf==NULL)
+                        csf = dyn_cast<Function>(cs->getCalledValue()
+                                                    ->stripPointerCasts());
+
+                if (csf!=NULL)
                 {
                     if (csf->isIntrinsic()
                             ||is_skip_function(csf->getName())
@@ -2078,44 +2129,15 @@ add:
 
                 }else if (Value* csv = cs->getCalledValue())
                 {
-#if 1
-                    //only allow precise match when collecting protected functions
-                    Type *ft = csv->getType()->getPointerElementType();
-                    //errs()<<"[AAAA] Want to resolve : ";
-                    //ft->print(errs());
-                    //errs()<<"\n";
-                    if (!is_complex_type(ft))
+                    FunctionSet fs = resolve_indirect_callee(cs);
+                    if (fs.size()!=1)
                     {
-                        /*errs()<<"[BBBB] Unable to resolve because of non-complex-type\n";
-                        errs()<<" @ ";
-                        ii->getDebugLoc().print(errs());
-                        errs()<<"\n";*/
                         CPUnResolv++;
                         continue;
                     }
-                    std::set<Function*> *fl = t2fs[ft];
-                    if (fl==NULL)
-                    {
-                        /*errs()<<"[CCCC] Unable to resolve because of empty set\n";
-                        errs()<<" @ ";
-                        ii->getDebugLoc().print(errs());
-                        errs()<<"\n";*/
-                        CPUnResolv++;
-                        continue;
-                    }
-                    if (fl->size()!=1)
-                    {
-                        /*errs()<<"[DDDD] Unable to resolve because of multiple candidate:"
-                            <<fl->size()<<"\n";
-                        errs()<<" @ ";
-                        ii->getDebugLoc().print(errs());
-                        errs()<<"\n";*/
-                        CPUnResolv++;
-                        continue;
-                    }
-                    //errs()<<"[EEEE] resolved as : "<<(*fl->begin())->getName()<<"\n";
                     CPResolv++;
-                    Function *csf = (*fl->begin());
+                    Function* csf = *fs.begin();
+#if 1
                     StringRef fname = csf->getName();
                     if (csf->isIntrinsic()
                             ||is_skip_function(fname)

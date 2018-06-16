@@ -287,6 +287,15 @@ void CVFA::set_sink(InstructionSet& _snks)
         Value* cv = cs->getCalledValue();
         assert(pag->hasValueNode(cv));
         NodeID cvid = pag->getValueNode(cv);
+        if (!pag->hasValueNode(cv))
+        {
+            errs()<<"SVF: ValueNode Not Found for ";
+            cs->print(errs());
+            errs()<<"\n";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n";
+            continue;
+        }
         //PAGNode* pagnode = pag->getPAGNode(cvid);
         SVFGNode* svfgnode = getSVFG()->getSVFGNode(cvid);
         addToSinks(svfgnode);
