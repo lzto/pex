@@ -149,7 +149,7 @@ class capchk : public ModulePass
         void collect_kernel_init_functions(Module& module);
         void collect_wrappers(Module& module);
         void collect_crits(Module& module);
-        void resolve_indirect_callee(Module& module);
+        void resolve_all_indirect_callee(Module& module);
 
         void check_critical_function_usage(Module& module);
         void check_critical_variable_usage(Module& module);
@@ -1088,7 +1088,8 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
     {
         fs.insert(f);
     }
-
+    //method 2: use svf to figure out
+    
     return fs;
 }
 
@@ -1779,7 +1780,7 @@ void capchk::check_all_cs_using_fptr(Function* func)
  * candidate function so that we can make check simpler
  *
  */
-void capchk::resolve_indirect_callee(Module& module)
+void capchk::resolve_all_indirect_callee(Module& module)
 {
     //collect all function pointer assignment(fptrassign=source)
     for (Module::iterator mi = module.begin(), me = module.end(); mi != me; ++mi)
@@ -2445,7 +2446,7 @@ void capchk::process_cpgf(Module& module)
     {
         errs()<<"Resolving callee for indirect call.\n";
         STOP_WATCH_START;
-        resolve_indirect_callee(module);
+        resolve_all_indirect_callee(module);
         STOP_WATCH_STOP;
         STOP_WATCH_REPORT;
     }
