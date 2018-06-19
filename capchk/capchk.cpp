@@ -2,6 +2,7 @@
  * CapChecker
  * linux kernel capability checker
  * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
+ * TODO: remove critical functions which don't store
  */
 
 #include "llvm-c/Core.h"
@@ -110,6 +111,9 @@ Value2ChkInst v2ci;
 //t2fs is used to fuzzy matching calling using function pointer
 TypeToFunctions t2fs;
 
+//map function to check instructions inside that function
+Function2ChkInst f2chks;
+
 //all function pointer assignment,(part of function use)
 InstructionSet fptrassign;
 //stores all indirect call sites
@@ -153,6 +157,7 @@ class capchk : public ModulePass
         void collect_wrappers(Module& module);
         void collect_crits(Module& module);
         void collect_pp(Module& module);
+        void collect_chkps(Module&);
         void resolve_all_indirect_callee(Module& module);
 
         void check_critical_function_usage(Module& module);
@@ -447,6 +452,54 @@ static const char* skip_functions [] =
     "do_syscall_64",//syscall entry point
     "do_fast_syscall_32",
     "do_int80_syscall_32",
+    "complete",
+    "__wake_up",
+    "mutex_trylock",
+    "finish_wait",
+    "__init_waitqueue_head",
+    "complete",
+    "mutex_lock_interruptible",
+    "up_write",
+    "up_read",
+    "down_write_trylock",
+    "down_write",
+    "down_read",
+    "find_vma",
+    "vzalloc",
+    "vmalloc",
+    "vfree",
+    "vmalloc_to_page",
+    "__vmalloc",
+    "kfree_call_rcu",
+    "kvfree",
+    "krealloc",
+    "_copy_from_user",
+    "__free_pages",
+    "__put_page",
+    "kvmalloc_node",
+    "free_percpu",
+    "__alloc_percpu",
+    "get_user_pages",
+    "__mm_populate",
+    "dput",
+    "d_path",
+    "iput",
+    "inode_dio_wait",
+    "current_time",
+    "is_bad_inode",
+    "__fdget",
+    "mntput",
+    "mntget",
+    "seq_puts",
+    "seq_putc",
+    "seq_printf",
+    "blkdev_put",
+    "blkdev_get",
+    "bdget",
+    "bdput",
+    "bdgrab",
+    "thaw_bdev",
+    "__brelse",
 };
 
 bool is_skip_function(const std::string& str)
@@ -1248,6 +1301,42 @@ again:
     dump_kinit();
 }
 
+void capchk::collect_chkps(Module& module)
+{
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration() || func->isIntrinsic()
+                ||!is_function_chk_or_wrapper(func))
+            continue;
+        
+        InstructionSet *chks = f2chks[func];
+        if (!chks)
+        {
+            chks = new InstructionSet();
+            f2chks[func] = chks;
+        }
+
+        for(Function::iterator fi = func->begin(), fe = func->end();
+                fi != fe; ++fi)
+        {
+            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
+            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+            {
+                CallInst* ci = dyn_cast<CallInst>(ii);
+                if (!ci)
+                    continue;
+                if (Function* _f = ci->getCalledFunction())
+                {
+                    if (is_function_chk_or_wrapper(_f))
+                        chks->insert(ci);
+                }
+            }
+        }
+    }
+}
+
 void capchk::collect_wrappers(Module& module)
 {
     //add capable and ns_capable
@@ -1402,160 +1491,39 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     bool has_no_check = false;
     bool has_user = false;
 
-    BasicBlockList bbl;
+    InstructionSet* chks = f2chks[f];
 
     if (is_kernel_init_functions(f))
     {
         ret = RKINIT;
         goto checked_out; 
     }
-
+////////////////////////////////////////////////////////////////////////////////
     //all predecessor basic blocks
     //should call check function 
     //Also check whether the check can dominate use
-    #if 0
-    bbl.push_back(I->getParent());
-    for (pred_iterator pi = pred_begin(bbl.front()),
-            pe = pred_end(bbl.front());
-            pi!=pe; ++pi)
+    for (auto* chk: *chks)
     {
-        BasicBlock *nbb = cast<BasicBlock>(*pi);
-        assert(nbb);
-        bbl.push_back(nbb);
-    }
-    #else
-    for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
-    {
-        bbl.push_back(dyn_cast<BasicBlock>(fi));
-    }
-    #endif
-    while (bbl.size())
-    {
-        //errs()<<" bbl="<<bbl.size()<<"\n";
-        //dump_callstack(callgraph);
-        BasicBlock* bb = bbl.front();
-        bbl.pop_front();
-
-        for(BasicBlock::iterator ii = bb->begin(),
-                ie = bb->end();
-                ii!=ie; ++ii)
+        if (dt.dominates(chk, I))
         {
-            CallInst* ci = dyn_cast<CallInst>(ii);
-            if (!ci)
-                continue;
-            Function * ifunc = NULL;
-            if (Function* f = ci->getCalledFunction())
-            {
-                ifunc = f;
-                //if this is either a check function or a wrapper to check function
-                if (is_function_chk_or_wrapper(ifunc))
-                {
-                    has_check = true;
-                    errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
-                        <<"Hit Check Function:"
-                        <<ifunc->getName()
-                        <<" @ ";
-                    ci->getDebugLoc().print(errs());
-                    errs()<<ANSI_COLOR_RESET<<"\n";
-                    if (!dt.dominates(ci, I))
-                    {
-                        errs()<<ANSI_COLOR_YELLOW
-                            <<"However, this is a partial check."
-                            <<ANSI_COLOR_RESET
-                            <<"\n";
-                        has_no_check = true;
-                        continue;
-                    }
-                    ret = RFULL;
-                    goto checked_out;
-                }
-            }else if (ci->getCalledValue())
-            {
-                if (ci->isInlineAsm())
-                {
-                    continue;
-                }
-                //not so many checks are not used in indirect calls?
-#if 0
-                /*
-                 * try to match a correct function,(with signature)
-                 *
-                 * There are 3 ways(granualities):
-                 * - 1. whatever matches the function type
-                 * - 2. only match non-trivial function type(function with struct type e.g.)
-                 *      - implication is that this will result in fewer
-                 *        (presumably more accurate) matches
-                 * - 3. figure out using SVF, this will tells us a path how function
-                 *      pointer is defined.
-                 */
+            errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
+                <<"Hit Check Function:"
+                <<dyn_cast<CallInst>(chk)->getCalledFunction()->getName()
+                <<" @ ";
+            chk->getDebugLoc().print(errs());
+            errs()<<ANSI_COLOR_RESET<<"\n";
 
-                Value* cv = ci->getCalledValue();
-                Type *ft = cv->getType()->getPointerElementType();
-                if (!is_complex_type(ft))
-                {
-                    UnResolv++;
-                    continue;
-                }
-
-                //function pointer
-                
-                /*errs()<<ANSI_COLOR_MAGENTA
-                    <<"CallSite Using Function pointer: "
-                    <<ANSI_COLOR_RESET;
-                ft->print(errs());
-                errs()<<"\n";*/
-                //ci->getDebugLoc().print(errs());
-
-                std::set<Function*> *fl = t2fs[ft];
-                if (fl==NULL)
-                {
-                    //should consider this unresolvable???
-                    UnResolv++;
-                    continue;
-                }
-                CSFPResolved++;
-                errs()<<"Found "
-                    <<fl->size()
-                    <<" Matches for ";
-                ft->print(errs());
-                errs()<<"\n";
-                ////////////////////////////////////////////////////////////////
-                for (std::set<Function*>::iterator
-                        fit = fl->begin(), fe = fl->end();
-                        fit!=fe; ++fit)
-                {
-                    ifunc = *fit;
-                    /*errs()<<ANSI_COLOR_CYAN
-                            <<"may match: "
-                            <<ifunc->getName()
-                            <<ANSI_COLOR_RESET
-                            <<"\n";*/
-                    //if this is either a check function or a wrapper to check function
-                    if (is_function_chk_or_wrapper(ifunc))
-                    {
-                        CapChkInFPTR++;
-                        has_check = true;
-                        errs()<<"Hit Check Function(call with fptr):"<<ifunc->getName()<<"\n";
-                        ci->getDebugLoc().print(errs());
-                        errs()<<"\n";
-                        if (!dt.dominates(ci, I))
-                        {
-                            errs()<<ANSI_COLOR_YELLOW
-                                <<"However, this is a partial check."
-                                <<ANSI_COLOR_RESET
-                                <<"\n";
-                            has_no_check = true;
-                            continue;
-                        }
-                        continue;
-                    }
-                }
-                ////////////////////////////////////////////////////////////////
-#endif
-            }
+            ret = RFULL;
+            has_check = true;
+            goto checked_out;
+        }else
+        {
+            has_no_check = true;
         }
     }
+    //FIXME: should consider check inside other Callee used by this function
 
+////////////////////////////////////////////////////////////////////////////////
     //if no check and not entry function?
     //we need to go further if not reaching limit ye
     if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
@@ -1564,12 +1532,13 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         ret = RNONE;
         goto nocheck_out;
     }
-    //FIXME: also need to check all CallSite using function pointer which precisely
-    //matches function type
     //Check function user(all CallSite)
     for (auto *U: f->users())
     {
         has_user = true;
+        //FIXME: also need to check all CallSite using function pointer which precisely
+        //matches function type
+
         if (isa<CallInst>(U))
         {
             switch (backward_slice_build_callgraph(callgraph,
@@ -1777,6 +1746,8 @@ void capchk::check_all_cs_using_fptr(Function* func)
     {
         cnt++;
         MatchCallCriticalFuncPtr++;
+        //exact match don't need to look further
+        return;
     }
     if (match_cs_using_fptr_method_1(func))
     {
@@ -2464,6 +2435,12 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Identify wrappers\n";
     STOP_WATCH_START;
     collect_wrappers(module);
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+
+    errs()<<"Collect Checkpoints\n";
+    STOP_WATCH_START;
+    collect_chkps(module);
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
