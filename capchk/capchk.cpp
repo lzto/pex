@@ -500,6 +500,7 @@ static const char* skip_functions [] =
     "bdgrab",
     "thaw_bdev",
     "__brelse",
+    "nla_parse",
 };
 
 bool is_skip_function(const std::string& str)
@@ -1502,27 +1503,29 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     //all predecessor basic blocks
     //should call check function 
     //Also check whether the check can dominate use
-    for (auto* chk: *chks)
+    if (chks!=NULL)
     {
-        if (dt.dominates(chk, I))
+        for (auto* chk: *chks)
         {
-            errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
-                <<"Hit Check Function:"
-                <<dyn_cast<CallInst>(chk)->getCalledFunction()->getName()
-                <<" @ ";
-            chk->getDebugLoc().print(errs());
-            errs()<<ANSI_COLOR_RESET<<"\n";
+            if (dt.dominates(chk, I))
+            {
+                errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
+                    <<"Hit Check Function:"
+                    <<dyn_cast<CallInst>(chk)->getCalledFunction()->getName()
+                    <<" @ ";
+                chk->getDebugLoc().print(errs());
+                errs()<<ANSI_COLOR_RESET<<"\n";
 
-            ret = RFULL;
-            has_check = true;
-            goto checked_out;
-        }else
-        {
-            has_no_check = true;
+                ret = RFULL;
+                has_check = true;
+                goto checked_out;
+            }else
+            {
+                has_no_check = true;
+            }
         }
-    }
     //FIXME: should consider check inside other Callee used by this function
-
+    }
 ////////////////////////////////////////////////////////////////////////////////
     //if no check and not entry function?
     //we need to go further if not reaching limit ye
