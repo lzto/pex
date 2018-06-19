@@ -2485,8 +2485,6 @@ void capchk::process_cpgf(Module& module)
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
-    exit(0);
-
     errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_START;
     collect_crits(module);
