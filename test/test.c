@@ -64,7 +64,7 @@ void bar_ioctl()
 	if (capable(1))
 	{
 		bar();
-		func_ptr(1);
+		fun_ptr(1);
 		xxx(&a);
 		return;
 	}
@@ -75,7 +75,7 @@ void bar_open()
 {
     struct non_trivial_struct a;
 	bar();
-	func_ptr(0);
+	fun_ptr(0);
     xxx_ptr(&a);
 }
 
@@ -83,7 +83,7 @@ void bar_open()
 void dummy()
 {
     struct non_trivial_struct b;
-    start_kernel();
+    x86_64_start_kernel();
     bar_open();
     xxx_ptr = &xxx;
     xxx_ptr(&b);

@@ -242,69 +242,16 @@ void CVFA::finalize()
 }
 
 /*
- * add reachable slice to result
+ * add reachable source to result
  */
 void CVFA::collect_reachable_src(ProgSlice* slice)
 {
 }
 
-/*
- * should call analyze first
- */
-FunctionSet& CVFA::get_callee_funs()
+void CVFA::get_indirect_callee_for_func(const Function* callee, std::set<const Instruction*>& css)
 {
-    return res_funcs;
-}
-
-void CVFA::set_source(InstructionSet& _srcs)
-{
-    PAG* pag = PAG::getPAG();
-    sources.clear();
-    for (auto s: _srcs)
-    {
-        assert(isa<StoreInst>(s));
-        if (!isa<StoreInst>(s))
-            continue;
-        std::list<const PAGEdge*> pel = pag->getInstPAGEdgeList(s);
-        assert(pel.size()==1);
-        const SVFGNode* svfgnode = getSVFG()->getStoreSVFGNode(dyn_cast<StorePE>(pel.front()));
-        addToSources(svfgnode);
-    }
-}
-
-void CVFA::clear_source()
-{
-    sources.clear();
-}
-
-void CVFA::set_sink(InstructionSet& _snks)
-{
-    PAG* pag = PAG::getPAG();
-    sinks.clear();
-    for (auto s: _snks)
-    {
-        CallInst* cs = dyn_cast<CallInst>(s);
-        Value* cv = cs->getCalledValue();
-        assert(pag->hasValueNode(cv));
-        NodeID cvid = pag->getValueNode(cv);
-        if (!pag->hasValueNode(cv))
-        {
-            errs()<<"SVF: ValueNode Not Found for ";
-            cs->print(errs());
-            errs()<<"\n";
-            cs->getDebugLoc().print(errs());
-            errs()<<"\n";
-            continue;
-        }
-        //PAGNode* pagnode = pag->getPAGNode(cvid);
-        SVFGNode* svfgnode = getSVFG()->getSVFGNode(cvid);
-        addToSinks(svfgnode);
-    }
-}
-
-void CVFA::clear_sink()
-{
-    sinks.clear();
+    getSVFG()->getPTACallGraph()->getIndCallSitesInvokingCallee(callee, css);
+    //getSVFG()->getPTACallGraph()->getAllCallSitesInvokingCallee(callee, css);
 }
 
 bool CVFA::isSource(const SVFGNode* node)

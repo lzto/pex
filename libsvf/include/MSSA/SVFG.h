@@ -118,6 +118,9 @@ protected:
     virtual void buildSVFG(MemSSA* m);
 
 public:
+
+    PTACallGraph* getPTACallGraph() { return pta->getPTACallGraph(); }
+
     /// Destructor
     virtual ~SVFG() {
         destroy();

@@ -115,9 +115,12 @@ InstructionSet fptrassign;
 //stores all indirect call sites
 InDirectCallSites idcs;
 //store indirect call site to its candidates
-Inst2Func idcs2callee;
+ConstInst2Func idcs2callee;
 
 ValueList critical_variables;
+
+//all functions in the kernel
+FunctionSet all_functions;
 
 #define MAX_PATH 1000
 #define MAX_BACKWD_SLICE_DEPTH 100
@@ -149,6 +152,7 @@ class capchk : public ModulePass
         void collect_kernel_init_functions(Module& module);
         void collect_wrappers(Module& module);
         void collect_crits(Module& module);
+        void collect_idcs(Module& module);
         void resolve_all_indirect_callee(Module& module);
 
         void check_critical_function_usage(Module& module);
@@ -1073,28 +1077,42 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
         return fs;
     }
     //FUZZY MATCHING
-    //
-    //TODO: use svf
-    //
     //method 1: signature based matching
     //only allow precise match when collecting protected functions
-    Type *ft = cv->getType()->getPointerElementType();
-    if (!is_complex_type(ft))
+    if (!knob_capchk_cvf)
     {
-        return fs;
-    }
-    std::set<Function*> *fl = t2fs[ft];
-    for (auto* f: *fl)
+        Type *ft = cv->getType()->getPointerElementType();
+        if (!is_complex_type(ft))
+        {
+            return fs;
+        }
+        std::set<Function*> *fl = t2fs[ft];
+        for (auto* f: *fl)
+        {
+            fs.insert(f);
+        }
+    }else
     {
-        fs.insert(f);
-    }
     //method 2: use svf to figure out
-    
+        if (FunctionSet* _fs = idcs2callee[ci])
+            for (auto* f: *_fs)
+                fs.insert(f);
+    }
     return fs;
 }
 
 void capchk::collect_kernel_init_functions(Module& module)
 {
+    //all functions
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration() || func->isIntrinsic())
+            continue;
+        all_functions.insert(func);
+    }
+
     Function *kstart = NULL;
     FunctionSet kif;
     kernel_init_functions.push_back("x86_64_start_kernel");
@@ -1305,6 +1323,41 @@ void capchk::collect_wrappers(Module& module)
     }
 
     dump_chk_and_wrap();
+}
+
+void capchk::collect_idcs(Module& module)
+{
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration() || func->isIntrinsic())
+            continue;
+        BasicBlockSet bb_visited;
+        std::queue<BasicBlock*> bb_work_list;
+        bb_work_list.push(&func->getEntryBlock());
+        InstructionList chk_ins;
+        while(bb_work_list.size())
+        {
+            BasicBlock* bb = bb_work_list.front();
+            bb_work_list.pop();
+            if(bb_visited.count(bb))
+                continue;
+            bb_visited.insert(bb);
+
+            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+            {
+                CallInst* ci = dyn_cast<CallInst>(ii);
+                if (!ci)
+                    continue;
+                if (ci->getCalledFunction() || ci->isInlineAsm())
+                    continue;
+                idcs.insert(ci);
+            }
+            for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
+                bb_work_list.push(cast<BasicBlock>(*si));
+        }
+    }
 }
 
 void capchk::collect_crits(Module& module)
@@ -1803,10 +1856,9 @@ void capchk::resolve_all_indirect_callee(Module& module)
     CVFA cvfa;
     //initialize, this will take some time
     cvfa.initialize(module);
-    //setup source here
-    cvfa.set_source(fptrassign);
 
     //do analysis(idcs=sink)
+    //method 1, simple type cast
     for (auto* idc: idcs)
     {
         Value* cv = idc->getCalledValue();
@@ -1817,26 +1869,42 @@ void capchk::resolve_all_indirect_callee(Module& module)
             funcs = new FunctionSet;
             idcs2callee[idc] = funcs;
         }
-        //case 1, simple type cast
         if (Function* func = dyn_cast<Function>(cv->stripPointerCasts()))
         {
             funcs->insert(func);
             continue;
         }
-        //case 2, value flow, track down def-use-chain till we found
-        //function pointer assignment
-        //setup sink 
-        InstructionSet is;
-        is.insert(idc);
-        cvfa.set_sink(is);
-        //analyze
-        cvfa.analyze();
-        FunctionSet R;
-        R = cvfa.get_callee_funs();
-        for (auto r: R)
+    }
+    //method 2, value flow, track down def-use-chain till we found
+    //function pointer assignment
+    if (knob_capchk_cvf)
+    {
+        errs()<<"SVF indirect call track:\n";
+        for (auto f: all_functions)
         {
-            errs()<<"SVF: got "<<r->getName()<<"\n";
-            funcs->insert(r);
+            std::set<const Instruction*> css;
+            cvfa.get_indirect_callee_for_func(f, css);
+            if (css.size()==0)
+                continue;
+            errs()<<"FUNC:"<<f->getName()<<", found "<<css.size()<<"\n";
+            for (auto* _ci: css)
+            {
+                const CallInst* ci = dyn_cast<CallInst>(_ci);
+                FunctionSet* funcs = idcs2callee[ci];
+                if (funcs==NULL)
+                {
+                    funcs = new FunctionSet;
+                    idcs2callee[ci] = funcs;
+                }
+                funcs->insert(f);
+#if 1
+                errs()<<"CallSite: ";
+                ci->getDebugLoc().print(errs());
+                errs()<<"\n";
+                ci->print(errs());
+                errs()<<"\n";
+#endif
+            }
         }
     }
 }
@@ -2038,7 +2106,8 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
                     //this is in-direct call, collect it
                     //don't really care inline asm
                     if (!ci->isInlineAsm())
-                        idcs.insert(ci);
+                    {
+                    }
                 }
             }
         }
@@ -2068,6 +2137,9 @@ rescan_and_add_all:
         for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
         {
             Instruction* si = dyn_cast<Instruction>(ii);
+            errs()<<"Saw:";
+            si->getDebugLoc().print(errs());
+            errs()<<"\n";
             /*
              * if any check dominate si then go ahead and
              * add them to protected list
@@ -2130,8 +2202,12 @@ add:
 
                 }else if (Value* csv = cs->getCalledValue())
                 {
+                    errs()<<"Want to resolve indirect call @ ";
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n";
+
                     FunctionSet fs = resolve_indirect_callee(cs);
-                    if (fs.size()!=1)
+                    if (!fs.size())
                     {
                         CPUnResolv++;
                         continue;
@@ -2428,11 +2504,20 @@ void capchk::process_cpgf(Module& module)
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
-    //errs()<<"Running SVF on init functions.\n";
-    //STOP_WATCH_START;
-    //run_svf();
-    //STOP_WATCH_STOP;
-    //STOP_WATCH_REPORT;
+    errs()<<"Collect all indirect calls\n";
+    STOP_WATCH_START;
+    collect_idcs(module);
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+
+    if (knob_capchk_cvf)
+    {
+        errs()<<"Resolving callee for indirect call.\n";
+        STOP_WATCH_START;
+        resolve_all_indirect_callee(module);
+        STOP_WATCH_STOP;
+        STOP_WATCH_REPORT;
+    }
 
     errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_START;
@@ -2442,14 +2527,7 @@ void capchk::process_cpgf(Module& module)
 
     dump_v2ci();
     dump_f2ci();
-    if (knob_capchk_cvf)
-    {
-        errs()<<"Resolving callee for indirect call.\n";
-        STOP_WATCH_START;
-        resolve_all_indirect_callee(module);
-        STOP_WATCH_STOP;
-        STOP_WATCH_REPORT;
-    }
+
     errs()<<"Run Analysis\n";
     if (knob_capchk_critical_var)
     {

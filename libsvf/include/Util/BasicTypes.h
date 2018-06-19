@@ -70,7 +70,8 @@ typedef SmallVector16 CallStrCxt;
 
 
 /// LLVM debug macros, define type of your DEBUG model of each pass
-#define DBOUT(TYPE, X) 	DEBUG_WITH_TYPE(TYPE, X)
+//#define DBOUT(TYPE, X) 	DEBUG_WITH_TYPE(TYPE, X)
+#define DBOUT(TYPE, X) X
 #define DOSTAT(X) 	X
 #define DOTIMESTAT(X) 	X
 

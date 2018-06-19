@@ -101,8 +101,8 @@ bool ProgSlice::isSatisfiableForAll() {
 /*!
  * Solve by analysing each pair of sinks (e.g., double free)
  */
-bool ProgSlice::isSatisfiableForPairs() {
-
+bool ProgSlice::isSatisfiableForPairs()
+{
     for(SVFGNodeSetIter it = sinksBegin(), eit = sinksEnd(); it!=eit; ++it) {
         for(SVFGNodeSetIter sit = it, esit = sinksEnd(); sit!=esit; ++sit) {
             Condition* guard = condAnd(getVFCond(*sit),getVFCond(*it));

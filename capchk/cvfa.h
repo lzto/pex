@@ -38,12 +38,6 @@ private:
     SVFG* svfg;
     PTACallGraph* ptaCallGraph;
     Module* m;
-    /*
-     * functions used to define function pointer,
-     * by tracking back to reachable source
-     */
-    FunctionSet res_funcs;
-
     void collect_reachable_src(ProgSlice* slice);
 
 public:
@@ -74,7 +68,7 @@ public:
     virtual void finalize();
 
     /// Get SVFG
-    inline const SVFG* getSVFG() const {
+    inline SVFG* getSVFG() const {
         return graph();
     }
 
@@ -110,12 +104,6 @@ public:
     {
         _curSlice->addToBackwardSlice(node);
     }
-
-    //Initialize sources and sinks
-    void set_source(InstructionSet&);
-    void clear_source();
-    void set_sink(InstructionSet&);
-    void clear_sink();
 
     virtual bool isSource(const SVFGNode* node);
     virtual bool isSink(const SVFGNode* node);
@@ -160,7 +148,7 @@ public:
         return pathCondAllocator;
     }
 
-    FunctionSet& get_callee_funs();
+    void get_indirect_callee_for_func(const Function* callee, std::set<const Instruction*>& css);
 
 protected:
     /// Forward traverse

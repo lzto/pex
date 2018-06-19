@@ -43,6 +43,7 @@ typedef std::map<Function*, InstructionSet*> Function2ChkInst;
 typedef std::map<Value*, InstructionSet*> Value2ChkInst;
 typedef std::map<Function*, int> FunctionData;
 typedef std::map<Instruction*, FunctionSet*> Inst2Func;
+typedef std::map<const Instruction*, FunctionSet*> ConstInst2Func;
 
 
 
