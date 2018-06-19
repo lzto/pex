@@ -501,6 +501,10 @@ static const char* skip_functions [] =
     "thaw_bdev",
     "__brelse",
     "nla_parse",
+    "dev_warn",
+    "dev_printk",
+    "dev_notice",
+    "dev_alert",
 };
 
 bool is_skip_function(const std::string& str)
@@ -1309,7 +1313,7 @@ void capchk::collect_chkps(Module& module)
     {
         Function *func = dyn_cast<Function>(fi);
         if (func->isDeclaration() || func->isIntrinsic()
-                ||!is_function_chk_or_wrapper(func))
+                ||is_function_chk_or_wrapper(func))
             continue;
         
         InstructionSet *chks = f2chks[func];
@@ -1319,8 +1323,7 @@ void capchk::collect_chkps(Module& module)
             f2chks[func] = chks;
         }
 
-        for(Function::iterator fi = func->begin(), fe = func->end();
-                fi != fe; ++fi)
+        for(Function::iterator fi = func->begin(), fe = func->end(); fi != fe; ++fi)
         {
             BasicBlock* bb = dyn_cast<BasicBlock>(fi);
             for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
