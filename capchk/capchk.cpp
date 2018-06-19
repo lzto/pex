@@ -2105,9 +2105,6 @@ rescan_and_add_all:
         for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
         {
             Instruction* si = dyn_cast<Instruction>(ii);
-            errs()<<"Saw:";
-            si->getDebugLoc().print(errs());
-            errs()<<"\n";
             /*
              * if any check dominate si then go ahead and
              * add them to protected list
