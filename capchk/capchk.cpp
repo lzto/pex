@@ -152,7 +152,7 @@ class capchk : public ModulePass
         void collect_kernel_init_functions(Module& module);
         void collect_wrappers(Module& module);
         void collect_crits(Module& module);
-        void collect_idcs(Module& module);
+        void collect_pp(Module& module);
         void resolve_all_indirect_callee(Module& module);
 
         void check_critical_function_usage(Module& module);
@@ -1087,6 +1087,8 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
             return fs;
         }
         std::set<Function*> *fl = t2fs[ft];
+        if (fl==NULL)
+            return fs;
         for (auto* f: *fl)
         {
             fs.insert(f);
@@ -1103,16 +1105,6 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
 
 void capchk::collect_kernel_init_functions(Module& module)
 {
-    //all functions
-    for (Module::iterator fi = module.begin(), f_end = module.end();
-            fi != f_end; ++fi)
-    {
-        Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration() || func->isIntrinsic())
-            continue;
-        all_functions.insert(func);
-    }
-
     Function *kstart = NULL;
     FunctionSet kif;
     kernel_init_functions.push_back("x86_64_start_kernel");
@@ -1121,7 +1113,7 @@ void capchk::collect_kernel_init_functions(Module& module)
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration())
+        if (func->isDeclaration() || func->isIntrinsic())
             continue;
         if (func->hasName())
         {
@@ -1152,8 +1144,8 @@ void capchk::collect_kernel_init_functions(Module& module)
     kif.insert(kstart);
 
     //find all init functions starting from x86_64_start_kernel
-    std::set<Function*> func_visited;
-    std::list<Function*> func_work_list;
+    FunctionSet func_visited;
+    FunctionList func_work_list;
     func_work_list.push_back(kstart);
 
     while (func_work_list.size())
@@ -1161,7 +1153,7 @@ void capchk::collect_kernel_init_functions(Module& module)
         Function* cfunc = func_work_list.front();
         func_work_list.pop_front();
 
-        if (cfunc->isDeclaration())
+        if (cfunc->isDeclaration() || cfunc->isIntrinsic())
             continue;
         
         kif.insert(cfunc);
@@ -1169,20 +1161,10 @@ void capchk::collect_kernel_init_functions(Module& module)
         kernel_init_functions.push_back(cfunc->getName());
 
         //for current function
-        std::set<BasicBlock*> bb_visited;
-        std::queue<BasicBlock*> bb_work_list;
-        bb_work_list.push(&cfunc->getEntryBlock());
-        while(bb_work_list.size())
+        for(Function::iterator fi = cfunc->begin(), fe = cfunc->end(); fi != fe; ++fi)
         {
-            BasicBlock* bb = bb_work_list.front();
-            bb_work_list.pop();
-            if(bb_visited.count(bb))
-                continue;
-            bb_visited.insert(bb);
-
-            for (BasicBlock::iterator ii = bb->begin(),
-                    ie = bb->end();
-                    ii!=ie; ++ii)
+            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
+            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
             {
                 CallInst* ci = dyn_cast<CallInst>(ii);
                 if (!ci)
@@ -1201,11 +1183,10 @@ void capchk::collect_kernel_init_functions(Module& module)
                     //function pointer?
                     FunctionSet fs = resolve_indirect_callee(ci);
                     for (auto callee: fs)
-                        func_work_list.push_back(callee);
+                        if (!func_visited.count(callee))
+                            func_work_list.push_back(callee);
                 }
             }
-            for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
-                bb_work_list.push(cast<BasicBlock>(*si));
         }
     }
     kernel_init_functions.sort();
@@ -1290,9 +1271,8 @@ void capchk::collect_wrappers(Module& module)
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration())
-            continue;
-        if (!is_function_chk_or_wrapper(func))
+        if (func->isDeclaration() || func->isIntrinsic()
+                ||!is_function_chk_or_wrapper(func))
             continue;
         int cap_pos = chk_func_cap_position[func];
         assert(cap_pos>=0);
@@ -1325,37 +1305,37 @@ void capchk::collect_wrappers(Module& module)
     dump_chk_and_wrap();
 }
 
-void capchk::collect_idcs(Module& module)
+void capchk::collect_pp(Module& module)
 {
+    errs()<<"Collect all functions and indirect callsites\n";
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
         if (func->isDeclaration() || func->isIntrinsic())
             continue;
-        BasicBlockSet bb_visited;
-        std::queue<BasicBlock*> bb_work_list;
-        bb_work_list.push(&func->getEntryBlock());
-        InstructionList chk_ins;
-        while(bb_work_list.size())
-        {
-            BasicBlock* bb = bb_work_list.front();
-            bb_work_list.pop();
-            if(bb_visited.count(bb))
-                continue;
-            bb_visited.insert(bb);
 
+        all_functions.insert(func);
+        Type* type = func->getFunctionType();
+        FunctionSet *fl = t2fs[type];
+        if (fl==NULL)
+        {
+            fl = new FunctionSet;
+            t2fs[type] = fl;
+        }
+        fl->insert(func);
+
+        for(Function::iterator fi = func->begin(), fe = func->end();
+                fi != fe; ++fi)
+        {
+            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
             for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
             {
                 CallInst* ci = dyn_cast<CallInst>(ii);
-                if (!ci)
-                    continue;
-                if (ci->getCalledFunction() || ci->isInlineAsm())
+                if (!ci || ci->getCalledFunction() || ci->isInlineAsm())
                     continue;
                 idcs.insert(ci);
             }
-            for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
-                bb_work_list.push(cast<BasicBlock>(*si));
         }
     }
 }
@@ -1375,18 +1355,6 @@ void capchk::collect_crits(Module& module)
             continue;
 
         FuncCounter++;
-
-        Type* type = func->getFunctionType();
-
-        FunctionSet *fl = t2fs[type];
-        if (fl==NULL)
-        {
-            fl = new FunctionSet;
-            t2fs[type] = fl;
-        }
-
-        fl->insert(func);
-
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
         InstructionList callgraph;
         InstructionList chks;
@@ -2491,22 +2459,14 @@ void capchk::process_cpgf(Module& module)
      * generate resource/functions from syscall entry function
      */
     errs()<<"Pre-processing...\n";
-
-    errs()<<"Collecting Initialization Closure.\n";
     STOP_WATCH_START;
-    collect_kernel_init_functions(module);
+    collect_pp(module);
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
     errs()<<"Identify wrappers\n";
     STOP_WATCH_START;
     collect_wrappers(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
-
-    errs()<<"Collect all indirect calls\n";
-    STOP_WATCH_START;
-    collect_idcs(module);
     STOP_WATCH_STOP;
     STOP_WATCH_REPORT;
 
@@ -2518,6 +2478,14 @@ void capchk::process_cpgf(Module& module)
         STOP_WATCH_STOP;
         STOP_WATCH_REPORT;
     }
+
+    errs()<<"Collecting Initialization Closure.\n";
+    STOP_WATCH_START;
+    collect_kernel_init_functions(module);
+    STOP_WATCH_STOP;
+    STOP_WATCH_REPORT;
+
+    exit(0);
 
     errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_START;
