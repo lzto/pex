@@ -1335,7 +1335,12 @@ void capchk::collect_chkps(Module& module)
                 {
                     if (is_function_chk_or_wrapper(_f))
                         chks->insert(ci);
+                    continue;
                 }
+                Value* cv = ci->getCalledValue();
+                Function* _cf = dyn_cast<Function>(cv->stripPointerCasts());
+                if(_cf && is_function_chk_or_wrapper(_cf))
+                    chks->insert(ci);
             }
         }
     }
