@@ -89,7 +89,6 @@ mutex_lock_interruptible
 mutex_trylock
 percpu_counter_add_batch
 __percpu_counter_sum
-plist_del
 pm_restore_gfp_mask
 posix_acl_fix_xattr_to_user
 prepare_creds
@@ -140,3 +139,17 @@ wake_up_bit
 wake_up_new_task
 __memcpy
 mmput
+plist_del
+plist_add
+plist_requeue
+__warn_printk
+printk
+wake_up_process
+free_modprobe_argv
+mutex_unlock
+mutex_lock
+__mutex_init
+up_write
+up_read
+down_write
+down_read
