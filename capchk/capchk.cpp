@@ -180,19 +180,24 @@ class capchk : public ModulePass
         /*
          * analyze
          */
-        _REACHABLE backward_slice_build_callgraph(InstructionList &callgraph,
-                Instruction* I, FunctionToCheckResult& fvisited);
-        _REACHABLE _backward_slice_reachable_to_chk_function(Instruction* I);
-        void backward_slice_reachable_to_chk_function(Instruction* I);
+        void backward_slice_build_callgraph(InstructionList &callgraph,
+                Instruction* I, FunctionToCheckResult& fvisited,
+                int& good, int& bad, int& ignored);
+        void _backward_slice_reachable_to_chk_function(Instruction* I,
+                int& good, int& bad, int& ignored);
+        void backward_slice_reachable_to_chk_function(Instruction* I,
+                int& good, int& bad, int& ignored);
 
-        _REACHABLE bs_using_indcs(Function*,
-                InstructionList& callgraph, FunctionToCheckResult& visited);
-        _REACHABLE match_cs_using_fptr_method_0(Function*,
-                InstructionList& callgraph, FunctionToCheckResult& visited);
-        _REACHABLE match_cs_using_fptr_method_1(Function*,
-                InstructionList& callgraph, FunctionToCheckResult& visited);
-        _REACHABLE match_cs_using_fptr_method_2(Function*,
-                InstructionList& callgraph, FunctionToCheckResult& visited);
+        bool bs_using_indcs(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored);
+
+        bool match_cs_using_fptr_method_0(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored);
+        bool match_cs_using_fptr_method_1(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored);
 
         FunctionSet resolve_indirect_callee(CallInst*);
 
@@ -200,13 +205,6 @@ class capchk : public ModulePass
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
 #endif
-
-        //Other checker...
-        //used by chk_unsafe_access
-        bool is_safe_access(Instruction *ins, Value* addr, uint64_t type_size);
-        void chk_div0(Module& module);
-        void chk_unsafe_access(Module& module);
-
         /*
          * several aux helper functions
          */
@@ -229,6 +227,9 @@ class capchk : public ModulePass
          */
         InstructionList dbgstk;
         void dump_dbgstk();
+        void dump_as_good(InstructionList& callstk);
+        void dump_as_bad(InstructionList& callstk);
+        void dump_as_ignored(InstructionList& callstk);
         void dump_callstack(InstructionList& callstk);
 
         void dump_chk_and_wrap();
@@ -236,6 +237,9 @@ class capchk : public ModulePass
         void dump_v2ci();
         void dump_kinit();
         void dump_non_kinit();
+    
+
+        void my_debug(Module& module);
 
     public:
         static char ID;
@@ -328,6 +332,18 @@ cl::opt<bool> knob_capchk_cvf("cvf",
 cl::opt<string> knob_skip_func_list("skipfun",
         cl::desc("non-critical function list"),
         cl::init("skip.fun"));
+
+cl::opt<bool> knob_dump_good_path("prt-good",
+        cl::desc("print good path - disabled by default"),
+        cl::init(false));
+
+cl::opt<bool> knob_dump_bad_path("prt-bad",
+        cl::desc("print bad path - enabled by default"),
+        cl::init(true));
+
+cl::opt<bool> knob_dump_ignore_path("prt-ign",
+        cl::desc("print ignored path - disabled by default"),
+        cl::init(false));
 
 /*
  * helper function
@@ -632,17 +648,20 @@ bool contains_interesting_kwd(const std::string& str)
  */
 static const char* interesting_type_word [] = 
 {
-    "file_operations",
+    "struct.file_operations",
 };
 
 bool is_interesting_type(Type* ty)
 {
     if (!ty->isStructTy())
         return false;
-    std::string tyn = ty->getStructName();
-    return std::find(std::begin(interesting_type_word),
-                     std::end(interesting_type_word), tyn)
-                    != std::end(interesting_type_word);
+    StringRef tyn = ty->getStructName();
+    for (int i=0;i<1;i++)
+    {
+        if (tyn.startswith(interesting_type_word[i]))
+            return true;
+    }
+    return false;
 }
 
 static const char* syscall_prefix [] =
@@ -676,8 +695,8 @@ static const char* kernel_start_functions [] =
     "x86_64_start_kernel",
 };
 
-StringList kernel_init_functions;
-StringSet non_kernel_init_functions;
+FunctionSet kernel_init_functions;
+FunctionSet non_kernel_init_functions;
 
 /*
  * record capability parameter position passed to capability check function
@@ -723,6 +742,50 @@ void capchk::dump_callstack(InstructionList& callstk)
     }
     errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
 }
+
+void capchk::dump_as_good(InstructionList& callstk)
+{
+    if (!knob_dump_good_path)
+        return;
+
+    errs()<<ANSI_COLOR_MAGENTA
+        <<"Use:";
+    callstk.front()->getDebugLoc().print(errs());
+    errs()<<ANSI_COLOR_RESET;
+    errs()<<ANSI_COLOR_GREEN
+        <<"=Meet Check On PATH"<<"="
+        <<ANSI_COLOR_RESET<<"\n";
+    dump_callstack(callstk);
+}
+
+void capchk::dump_as_bad(InstructionList& callstk)
+{
+    if (!knob_dump_bad_path)
+        return;
+    errs()<<ANSI_COLOR_MAGENTA
+        <<"Use:";
+    callstk.front()->getDebugLoc().print(errs());
+    errs()<<ANSI_COLOR_RESET;
+    errs()<<"\n"<<ANSI_COLOR_RED
+        <<"=NO CHECK ON PATH="
+        <<ANSI_COLOR_RESET<<"\n";
+    dump_callstack(callstk);
+}
+
+void capchk::dump_as_ignored(InstructionList& callstk)
+{
+    if (!knob_dump_ignore_path)
+        return;
+    errs()<<ANSI_COLOR_MAGENTA
+        <<"Use:";
+    callstk.front()->getDebugLoc().print(errs());
+    errs()<<ANSI_COLOR_RESET;
+    errs()<<"\n"<<ANSI_COLOR_YELLOW
+        <<"=IGNORE PATH="
+        <<ANSI_COLOR_RESET<<"\n";
+    dump_callstack(callstk);
+}
+
 
 void capchk::dump_v2ci()
 {
@@ -817,7 +880,7 @@ void capchk::dump_kinit()
             <<ANSI_COLOR_RESET<<"\n";
     for (auto I: kernel_init_functions)
     {
-        errs()<<I<<"\n";
+        errs()<<I->getName()<<"\n";
     }
     errs()<<"=o=\n";
 }
@@ -831,7 +894,7 @@ void capchk::dump_non_kinit()
             <<ANSI_COLOR_RESET<<"\n";
     for (auto I: non_kernel_init_functions)
     {
-        errs()<<I<<"\n";
+        errs()<<I->getName()<<"\n";
     }
     errs()<<"=o=\n";
 }
@@ -851,219 +914,6 @@ void capchk::dump_chk_and_wrap()
     }
     errs()<<"=o=\n";
 }
-
-////////////////////////////////////////////////////////////////////////////////
-
-bool capchk::is_safe_access(Instruction* ins,Value* addr, uint64_t type_size)
-{
-    uint64_t size;
-    uint64_t offset;
-    bool result;
-
-    bool know = false;
-    std::string reason = "";
-
-    if(isa<GlobalVariable>(addr))
-    {
-        GlobalVariable* gv = dyn_cast<GlobalVariable>(addr);
-        if(gv->getLinkage()==GlobalValue::ExternalLinkage)
-        {
-            goto fallthrough;
-        }
-        if (!gv->hasInitializer())
-        {
-            //we have no idea???
-            goto fallthrough;
-        }
-        Constant* initializer = gv->getInitializer();
-        Type* itype = initializer->getType();
-        unsigned allocated_size = m->getDataLayout()
-            .getTypeAllocSize(itype);
-        size = allocated_size;
-        offset = 0;
-    }else
-    {
-fallthrough:
-        const TargetLibraryInfo * TLI = 
-            &getAnalysis<TargetLibraryInfoWrapperPass>().getTLI();
-        const DataLayout &dl = m->getDataLayout();
-        ObjectSizeOffsetVisitor* obj_size_vis;
-        ObjectSizeOpts ObjSizeOptions;
-        ObjSizeOptions.RoundToAlign = true;
-        obj_size_vis = new ObjectSizeOffsetVisitor(dl, TLI, *ctx, ObjSizeOptions);
-
-        SizeOffsetType size_offset = obj_size_vis->compute(addr);
-        if (!obj_size_vis->bothKnown(size_offset))
-        {
-            if (obj_size_vis->knownSize(size_offset))
-            {
-                reason += "size: " + size_offset.first.getZExtValue();
-            }else
-            {
-                reason += "size: NA ";
-            }
-            reason += " ";
-            if (obj_size_vis->knownOffset(size_offset))
-            {
-                reason += "Offset: " + size_offset.second.getSExtValue();
-            }else
-            {
-                reason += "offset: NA";
-            }
-            result = false;
-            goto dead_or_alive;
-        }
-        know = true;
-        size = size_offset.first.getZExtValue();
-        offset = size_offset.second.getSExtValue();
-    }
-    result = (offset >= 0) && (size >= uint64_t(offset)) &&
-        ((size - uint64_t(offset)) >= (type_size / 8));
-
-dead_or_alive:
-    if (know)
-    {   
-        if (!result)
-        {
-            errs()<<" "<<ins->getParent()->getParent()->getName()<<":"<<ANSI_COLOR_RED;
-            ins->getDebugLoc().print(errs());
-            errs()<<ANSI_COLOR_RESET"\n";
-
-            errs()<<ANSI_COLOR_RED
-                <<"NOT SAFE, "
-                <<ANSI_COLOR_RESET
-                <<"Reason:"
-                <<reason<<"  "
-                <<"Offset:"<<offset
-                <<", size:"<<size<<"\n";
-        }
-    }else//unknown
-    {
-        errs()<<" unknown "<<ins->getParent()->getParent()->getName()
-            <<":"<<ANSI_COLOR_RED;
-        ins->getDebugLoc().print(errs());
-        errs()<<ANSI_COLOR_RESET"\n";
-
-        errs()<<"Reason:"<<reason<<"\n";
-    }
-    return result;
-}
-
-void capchk::chk_unsafe_access(Module& module)
-{
-    size_t total_dereference = 0;
-    std::map<Value*, Value*> safe_access_list;
-
-    for (Module::iterator mi = module.begin(), me = module.end();
-            mi != me; ++mi)
-    {
-        Function *func = dyn_cast<Function>(mi);
-        if (func->isDeclaration())
-        {
-            continue;
-        }
-        for(Function::iterator fi = func->begin(), fe = func->end();
-                fi != fe; ++fi)
-        {
-            BasicBlock* blk = dyn_cast<BasicBlock>(fi);
-            for (BasicBlock::iterator bi = blk->begin(), be = blk->end();
-                    bi != be; ++bi)
-            {
-                Value* ptr_operand;
-                uint64_t rwsize;
-                if(isa<LoadInst>(bi))
-                {
-                    LoadInst* load = dyn_cast<LoadInst>(bi);
-                    ptr_operand = load->getPointerOperand();
-                    rwsize = module.getDataLayout()
-                        .getTypeStoreSizeInBits(load->getType());
-                }else if(isa<StoreInst>(bi))
-                {
-                    StoreInst* store = dyn_cast<StoreInst>(bi);
-                    ptr_operand = store->getPointerOperand();
-                    rwsize = module.getDataLayout()
-                        .getTypeStoreSizeInBits(store
-                                ->getValueOperand()
-                                ->getType());
-                }else
-                {
-                    continue;
-                }
-                total_dereference++;
-                if (is_safe_access(dyn_cast<Instruction>(bi),ptr_operand, rwsize))
-                {
-                    safe_access_list[dyn_cast<Instruction>(bi)] = ptr_operand;
-                }
-            }
-        }
-    }
-    errs()<<" "
-        <<safe_access_list.size()
-        <<"/"
-        <<total_dereference
-        <<" safe access collected\n";
-}
-////////////////////////////////////////////////////////////////////////////////
-//DIV 0 checker
-static bool mayDivideByZero(Instruction *I) {
-    if (!(I->getOpcode() == Instruction::UDiv ||
-                I->getOpcode() == Instruction::SDiv ||
-                I->getOpcode() == Instruction::URem ||
-                I->getOpcode() == Instruction::SRem))
-    {
-        return false;
-    }
-    Value *Divisor = I->getOperand(1);
-    auto *CInt = dyn_cast<ConstantInt>(Divisor);
-    return !CInt || CInt->isZero();
-}
-
-void capchk::chk_div0(Module& module)
-{
-    for (Module::iterator f_begin = module.begin(), f_end = module.end();
-            f_begin != f_end; ++f_begin)
-    {
-        Function *func = dyn_cast<Function>(f_begin);
-        if (func->isDeclaration())
-            continue;
-        //errs()<<func->getName()<<"\n";
-        std::set<BasicBlock*> bb_visited;
-        std::queue<BasicBlock*> bb_work_list;
-        bb_work_list.push(&func->getEntryBlock());
-        while(bb_work_list.size())
-        {
-            BasicBlock* bb = bb_work_list.front();
-            bb_work_list.pop();
-            if(bb_visited.count(bb))
-            {
-                continue;
-            }
-            bb_visited.insert(bb);
-
-            for (BasicBlock::iterator ii = bb->begin(),
-                    ie = bb->end();
-                    ii!=ie; ++ii)
-            {
-                Instruction* pvi = dyn_cast<Instruction>(ii);
-                if (!mayDivideByZero(pvi))
-                {
-                    continue;
-                }
-                errs()<<" "<<func->getName()<<":"<<ANSI_COLOR_RED;
-                pvi->getDebugLoc().print(errs());
-                errs()<<ANSI_COLOR_RESET"\n";
-                pvi->print(errs());
-                errs()<<"\n";
-            }
-            /*
-             * insert all successor of current basic block to work list
-             */
-            for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
-                bb_work_list.push(cast<BasicBlock>(*si));
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 
 /*
  * is this function type contains non-trivial(non-primary) type?
@@ -1173,11 +1023,9 @@ int capchk::use_parent_func_arg(Value* v, Function* f)
 bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
 {
     std::string name = f->getName();
-    if (std::find(std::begin(kernel_init_functions),
-                std::end(kernel_init_functions),
-                name) != std::end(kernel_init_functions))
+    if (kernel_init_functions.count(f)!=0)
         return true;
-    if (non_kernel_init_functions.count(name)!=0)
+    if (non_kernel_init_functions.count(f)!=0)
         return false;
 
     //init functions with initcall prefix belongs to kernel init sequence
@@ -1189,7 +1037,7 @@ bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
         {
             if (gv->getName().startswith(std_gv_spec))
             {
-                kernel_init_functions.push_back(name);
+                kernel_init_functions.insert(f);
                 return true;
             }
         }
@@ -1206,7 +1054,7 @@ bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
     //no user?
     if (flist.size()==0)
     {
-        non_kernel_init_functions.insert(name);
+        non_kernel_init_functions.insert(f);
         return false;
     }
 
@@ -1220,11 +1068,11 @@ bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
         visited.insert(xf);
         if (!is_kernel_init_functions(xf, visited))
         {
-            non_kernel_init_functions.insert(name);
+            non_kernel_init_functions.insert(f);
             return false;
         }
     }
-    kernel_init_functions.push_back(name);
+    kernel_init_functions.insert(f);
     return true;
 }
 
@@ -1284,8 +1132,6 @@ void capchk::collect_kernel_init_functions(Module& module)
 {
     Function *kstart = NULL;
     FunctionSet kif;
-    kernel_init_functions.push_back("x86_64_start_kernel");
-    kernel_init_functions.push_back("start_kernel");
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
@@ -1301,11 +1147,12 @@ void capchk::collect_kernel_init_functions(Module& module)
                     <<"Found "<<func->getName()
                     <<ANSI_COLOR_RESET<<"\n";
                 kstart = func;
-                break;
+                kernel_init_functions.insert(func);
             }else if (fname.startswith("start_kernel"))
             {
                 //we should consider start_kernel as kernel init functions no
                 //matter what
+                kernel_init_functions.insert(func);
                 kif.insert(func);
                 for (auto *U: func->users())
                 {
@@ -1316,6 +1163,8 @@ void capchk::collect_kernel_init_functions(Module& module)
                 }
             }
         }
+        if (kernel_init_functions.size()==2)
+            break;
     }
     assert(kstart!=NULL);
     kif.insert(kstart);
@@ -1335,7 +1184,7 @@ void capchk::collect_kernel_init_functions(Module& module)
         
         kif.insert(cfunc);
         func_visited.insert(cfunc);
-        kernel_init_functions.push_back(cfunc->getName());
+        kernel_init_functions.insert(cfunc);
 
         //for current function
         for(Function::iterator fi = cfunc->begin(), fe = cfunc->end(); fi != fe; ++fi)
@@ -1345,9 +1194,9 @@ void capchk::collect_kernel_init_functions(Module& module)
             {
                 CallInst* ci = dyn_cast<CallInst>(ii);
                 if (!ci)
-                {
                     continue;
-                }
+                if (ci->isInlineAsm())
+                    continue;
                 if (Function* nf = ci->getCalledFunction())
                 {
                     if (nf->isDeclaration() || 
@@ -1366,10 +1215,6 @@ void capchk::collect_kernel_init_functions(Module& module)
             }
         }
     }
-    kernel_init_functions.sort();
-    kernel_init_functions.erase(
-            std::unique(kernel_init_functions.begin(), kernel_init_functions.end()),
-            kernel_init_functions.end());
 
     /*
      * ! BUG: query use of inlined function result in in-accurate result?
@@ -1399,7 +1244,7 @@ again:
             {
                 //means that we have a user does not belong to kernel init functions
                 //we need to remove it
-                non_kernel_init_functions.insert(I->getName());
+                non_kernel_init_functions.insert(I);
                 break;
             }
         }
@@ -1407,14 +1252,14 @@ again:
 
     for (auto I: non_kernel_init_functions)
     {
-        auto i = std::find(kernel_init_functions.begin(),
-                    kernel_init_functions.end(),I);
-        if (i!=kernel_init_functions.end())
-            kernel_init_functions.erase(i);
+        kernel_init_functions.erase(I);
     }
     if (last_count!=non_kernel_init_functions.size())
     {
         last_count = non_kernel_init_functions.size();
+        static int refine_pass = 0;
+        errs()<<"refine pass "<<refine_pass<<"\n";
+        refine_pass++;
         goto again;
     }
 #if 1
@@ -1612,282 +1457,190 @@ void capchk::collect_crits(Module& module)
     CRITVAR = critical_variables.size();
 }
 
-_REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
-            Instruction* I, FunctionToCheckResult& fvisited)
+void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
+            Instruction* I, FunctionToCheckResult& fvisited, int& good, int& bad, int& ignored)
 {
+    //we've reached the limit
+    if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
+    {
+        BwdAnalysisMaxHit++;
+        return;
+    }
     Function* f = I->getFunction();
-    _REACHABLE ret = RNONE;
-
     if (fvisited.find(f)!=fvisited.end())
-        return fvisited[f];
-#if 0
-    errs()<<"+ "<<callgraph.size();
-    for (int i=0;i<callgraph.size();i++)
-        errs()<<" ";
-    errs()<<f->getName()<<"\n";
-#endif
-    //place holder
-    fvisited[f] = RNONE;
-    
-    DominatorTree dt(*f);
-
+    {
+        switch(fvisited[f])
+        {
+            case(RFULL):
+                good++;
+                break;
+            case(RNONE):
+                bad++;
+                break;
+            case(RNA):
+                break;
+            default:
+                ignored++;
+                break;
+        }
+        return;
+    }
     callgraph.push_back(I);
-    //run backward slicing within this function to see if there's a check
-
-    bool checked = false;
-    bool has_check = false;
-    bool has_no_check = false;
-    bool has_user = false;
-    bool used_by_interesting_type = false;
-
-    InstructionSet* chks = f2chks[f];
+    //place holder
+    fvisited[f] = RNA;
+    DominatorTree dt(*f);
 
     if (is_kernel_init_functions(f))
     {
-        ret = RKINIT;
-        goto checked_out; 
+        //kernel init function?
+        ignored++;
+        dump_as_ignored(callgraph);
+        goto ignored_out; 
     }
 ////////////////////////////////////////////////////////////////////////////////
-    //all predecessor basic blocks
-    //should call check function 
-    //Also check whether the check can dominate use
-    if (chks!=NULL)
+    //inside this function, check should dominate use
+    if (InstructionSet* chks = f2chks[f])
     {
         for (auto* chk: *chks)
         {
             if (dt.dominates(chk, I))
             {
-                errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
-                    <<"Hit Check Function:"
-                    <<get_callee_function_name(chk)
-                    <<" @ ";
-                chk->getDebugLoc().print(errs());
-                errs()<<ANSI_COLOR_RESET<<"\n";
-
-                ret = RFULL;
-                has_check = true;
-                goto checked_out;
-            }else
-            {
-                has_no_check = true;
+                if (knob_dump_good_path)
+                {
+                    errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
+                        <<"Hit Check Function:"
+                        <<get_callee_function_name(chk)
+                        <<" @ ";
+                    chk->getDebugLoc().print(errs());
+                    errs()<<ANSI_COLOR_RESET<<"\n";
+                }
+                good++;
+                goto good_out;
             }
         }
     //FIXME: should consider check inside other Callee used by this function
     }
-////////////////////////////////////////////////////////////////////////////////
-    //if no check and not entry function?
-    //we need to go further if not reaching limit ye
-    if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
+    if (is_syscall(f))
     {
-        BwdAnalysisMaxHit++;
-        ret = RNONE;
-        goto nocheck_out;
+        //this is syscall and no check, report it as bad
+        bad++;
+        goto bad_out;
     }
-    //Check function user
+////////////////////////////////////////////////////////////////////////////////
+    /*
+     * we havn't got a check yet, we need to go to f's user to see
+     * if it is checked there
+     */
     //Direct CallSite
     for (auto *U: f->users())
     {
-        if (isa<CallInst>(U))
+        if (CallInst* _ci = dyn_cast<CallInst>(U))
         {
-            has_user = true;
-            switch (backward_slice_build_callgraph(callgraph,
-                                            dyn_cast<Instruction>(U), fvisited))
+            if (_ci->getCalledFunction()!=f)
             {
-                case RFULL:
-                    has_check = true;
-                    break;
-                case RPARTIAL:
-                    has_check = true;
-                    has_no_check = true;
-                    break;
-                case RNONE:
-                    has_no_check = true;
-                    break;
-                case RUNRESOLVEABLE:
-                    break;
-                case RKINIT:
-                    break;
-                default:
-                    llvm_unreachable("what????");
-                    break;
+                //this should match otherwise it is used as a call back function
+                //which is not our interest
+                //errs()<<"Function "<<f->getName()<< " used as a callback @ ";
+                //_ci->getDebugLoc().print(errs());
+                //errs()<<"\n";
+                ignored++;
+                dump_as_ignored(callgraph);
+                continue;
             }
+            backward_slice_build_callgraph(callgraph,
+                    dyn_cast<Instruction>(U), fvisited, good, bad, ignored);
         }else
         {
-            if (isa<GlobalValue>(U))
+            if (!isa<Instruction>(U))
             {
-                if (!used_by_interesting_type)
+                //must be non-instruction
+                if (is_interesting_type(U->getType()))
                 {
-                    GlobalValue* gv = dyn_cast<GlobalValue>(U);
-                    if (is_interesting_type(gv->getType()))
-                        used_by_interesting_type = true;
+                    //used as kernel entry point and no check
+                    bad++;
+                    dump_as_bad(callgraph);
+                }else
+                {
+                    ignored++;
+                    dump_as_ignored(callgraph);
                 }
+            }else
+            {
+                //other use of current function?
+                //llvm_unreachable("what?");
             }
             CFuncUsedByNonCall++;
         }
     }
-    //indirect CallSite
-    switch(bs_using_indcs(f, callgraph, fvisited))
-    {
-        case RFULL:
-            has_check = true;
-            has_user = true;
-            break;
-        case RPARTIAL:
-            has_check = true;
-            has_no_check = true;
-            has_user = true;
-            break;
-        case RNONE:
-            has_no_check = true;
-            has_user = true;
-            break;
-        case RUNRESOLVEABLE:
-            break;
-        case RKINIT:
-            has_user = true;
-            break;
-        default:
-            llvm_unreachable("what????");
-            break;
-    }
-    if (!has_user)
-    {
-        //means that there are no direct/indirect call to current function
-        //could this be a device driver not directly interacting with user space?
-        //any function used by global struct, driver layer is not entry point
-        if (is_interesting_type)
-        {
-            ret = RNONE;
-            goto nocheck_out;
-        }
-        if (is_syscall(f))
-        {
-            ret = RNONE;
-            goto nocheck_out;
-        }
-        errs()<<" @ "<<f->getName()<<" ";
-        errs()<<"Not KInit/CallSite? consider as user entry point\n";
-        ret = RKINIT;
-        goto nocheck_out;
-    }
+    //Indirect CallSite(also user of current function)
+    bs_using_indcs(f, callgraph, fvisited, good, bad, ignored);
 
+//intermediate.. just return.
+ignored_out:
     callgraph.pop_back();
-    if (has_check)
-    {
-        if (has_no_check)
-        {
-            fvisited[f] = RPARTIAL;
-            return RPARTIAL;
-        }
-        fvisited[f] = RFULL;
-        return RFULL;
-    }
+    return;
+
+good_out:
+    fvisited[f] = RFULL;
+    dump_as_good(callgraph);
+    callgraph.pop_back();
+    return;
+
+bad_out:
     fvisited[f] = RNONE;
-    return RNONE;
-
-nocheck_out:
-    errs()<<"\n"<<ANSI_COLOR_RED
-        <<"=NO CHECK ON PATH="
-        <<ANSI_COLOR_RESET<<"\n";
-    dump_callstack(callgraph);
-    errs()<<ANSI_COLOR_RESET;
+    dump_as_bad(callgraph);
     callgraph.pop_back();
-    fvisited[f] = RNONE;
-    return ret;
-
-checked_out:
-    if (ret==RFULL)//dont print if it hit kernel init functions
-    {
-        errs()<<ANSI_COLOR_GREEN
-            <<"=PATH OK ret:"<<ret<<"="
-            <<ANSI_COLOR_RESET<<"\n";
-        dump_callstack(callgraph);
-    }
-    callgraph.pop_back();
-    return ret;
+    return;
 }
 
-_REACHABLE capchk::_backward_slice_reachable_to_chk_function(Instruction* I)
+void capchk::_backward_slice_reachable_to_chk_function(Instruction* I,
+        int& good, int& bad, int& ignored)
 {
     InstructionList callgraph;
     //FIXME: should consider function+instruction pair?
     FunctionToCheckResult fvisited;
-    return backward_slice_build_callgraph(callgraph, I, fvisited);
+    return backward_slice_build_callgraph(callgraph, I, fvisited, good, bad, ignored);
 }
 
-void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
+void capchk::backward_slice_reachable_to_chk_function(Instruction* cs,
+        int& good, int& bad, int& ignored)
 {
-    errs()<<ANSI_COLOR_MAGENTA
-        <<"Use:";
-    cs->getDebugLoc().print(errs());
-    //U->print(errs());
-    errs()<<ANSI_COLOR_RESET<<"\n";
-    switch(_backward_slice_reachable_to_chk_function(cs))
-    {
-        case(RFULL):
-            GoodPath++;
-            errs()<<ANSI_COLOR_GREEN
-                <<"[FULLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
-            break;
-        case(RPARTIAL):
-            BadPath++;
-            errs()<<ANSI_COLOR_YELLOW
-                <<"[PARTIALLY CHECKED]"<<ANSI_COLOR_RESET<<"\n";
-            break;
-        case(RNONE):
-            BadPath++;
-            errs()<<ANSI_COLOR_RED
-                <<"[NO CHECK]"<<ANSI_COLOR_RESET<<"\n";
-            break;
-        case(RUNRESOLVEABLE):
-            UnResolv++;
-            break;
-        case(RKINIT):
-            GoodPath++;
-            errs()<<ANSI_COLOR_CYAN
-                <<"[KINIT]"<<ANSI_COLOR_RESET<<"\n";
-            break;
-        default:
-            llvm_unreachable("What???");
-            break;
-    }
+    //collect all path and meet condition
+    _backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
 }
+
 /*
  * exact match with bitcast
  */
-_REACHABLE capchk::match_cs_using_fptr_method_0(Function* func,
-                InstructionList& callgraph, FunctionToCheckResult& visited)
+bool capchk::match_cs_using_fptr_method_0(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored)
 {
-    _REACHABLE ret = RUNRESOLVEABLE;
-    int cnt = 0;
-    
+    bool ret = false;
     InstructionSet *csis = f2csi_type0[func];
 
     if (csis==NULL)
-        goto end;
-
-    for (auto* csi: *csis)
     {
-        cnt++;
-        MatchCallCriticalFuncPtr++;
-        //FIXME merge multiple return value
-        ret = backward_slice_build_callgraph(callgraph, csi, visited);
+        UnMatchCallCriticalFuncPtr++;
+        goto end;
     }
+    ret = true;
+    MatchCallCriticalFuncPtr = csis->size();
+    for (auto* csi: *csis)
+        backward_slice_build_callgraph(callgraph, csi, visited, good, bad, ignored);
 
 end:
-    if (cnt!=0)
-        UnMatchCallCriticalFuncPtr++;
     return ret;
 }
 
 /*
  * signature based method to find out indirect callee
  */
-_REACHABLE capchk::match_cs_using_fptr_method_1(Function* func,
-                InstructionList& callgraph, FunctionToCheckResult& visited)
+bool capchk::match_cs_using_fptr_method_1(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored)
 {
     //we want exact match to non-trivial function
-    _REACHABLE ret = RUNRESOLVEABLE;
     int cnt = 0;
     Type* func_type = func->getFunctionType();
     FunctionSet *fl = t2fs[func_type];
@@ -1910,53 +1663,29 @@ _REACHABLE capchk::match_cs_using_fptr_method_1(Function* func,
         if ((func_type == ft) || (func_type == ft2))
         {
             cnt++;
-            MatchCallCriticalFuncPtr++;
             //errs()<<"Found matched functions for indirectcall:"
             //    <<(*fl->begin())->getName()<<"\n";
-            ret = backward_slice_build_callgraph(callgraph, idc, visited);
-            continue;
+            backward_slice_build_callgraph(callgraph, idc, visited, good, bad, ignored);
         }
     }
 end:
-    if (cnt!=0)
+    MatchCallCriticalFuncPtr+=cnt;
+    if (cnt==0)
         UnMatchCallCriticalFuncPtr++;
-    return ret;
+    return cnt!=0;
 }
 
-/*
- * TODO: figure out function pointer using SVF
- */
-_REACHABLE capchk::match_cs_using_fptr_method_2(Function* func,
-                InstructionList& callgraph, FunctionToCheckResult& visited)
-{
-    Type* func_type = func->getFunctionType();
-    for (auto* idc: idcs)
-    {
-        Value* cv = idc->getCalledValue();
-        Function* _func = dyn_cast<Function>(cv->stripPointerCasts());
-        if (_func==func)
-            continue;
-    }
-    return RUNRESOLVEABLE;
-}
 
-_REACHABLE capchk::bs_using_indcs(Function* func,
-                InstructionList& callgraph, FunctionToCheckResult& visited)
+bool capchk::bs_using_indcs(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored)
 {
-    _REACHABLE ret;
+    bool ret;
+    ret = match_cs_using_fptr_method_0(func, callgraph, visited, good, bad, ignored);
     //exact match don't need to look further
-    ret = match_cs_using_fptr_method_0(func, callgraph, visited);
-    if (ret!=RUNRESOLVEABLE)
+    if (ret)
         return ret;
-    ret = (match_cs_using_fptr_method_1(func, callgraph, visited));
-    if (ret!=RUNRESOLVEABLE)
-        return ret;
-    /*if (match_cs_using_fptr_method_2(func, callgraph, visited))
-    {
-        cnt++;
-        MatchCallCriticalFuncPtr++;
-        return;
-    }*/
+    ret = match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
     return ret;
 }
 
@@ -2067,13 +1796,24 @@ void capchk::check_critical_function_usage(Module& module)
             <<"\n";
         //iterate through all call site
         //direct call
+        int good=0, bad=0, ignored=0;
         for (auto *U: func->users())
         {
             CallInst *cs = dyn_cast<CallInst>(U);
             if (!cs)
                 continue;
-            backward_slice_reachable_to_chk_function(cs);
+            backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
         }
+        //summary
+        if (bad!=0)
+        {
+            errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
+                  <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
+                  <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
+                  <<ANSI_COLOR_RESET<<"\n";
+        }
+        BadPath+=bad;
+        GoodPath+=good;
     }
 }
 
@@ -2127,33 +1867,14 @@ void capchk::check_critical_variable_usage(Module& module)
                 <<f->getName()
                 <<"\n";
             //is this instruction reachable from non-checked path?
-            switch(_backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U)))
-            {
-                case(RFULL):
-                    GoodPath++;
-                    errs()<<ANSI_COLOR_GREEN
-                        <<"[FULL]"<<ANSI_COLOR_RESET<<"\n";
-                    break;
-                case(RPARTIAL):
-                    BadPath++;
-                    errs()<<ANSI_COLOR_YELLOW
-                        <<"[PARTIAL]"<<ANSI_COLOR_RESET<<"\n";
-                    break;
-                case(RNONE):
-                    BadPath++;
-                    errs()<<ANSI_COLOR_RED
-                        <<"[NONE]"<<ANSI_COLOR_RESET<<"\n";
-                    break;
-                case(RUNRESOLVEABLE):
-                    UnResolv++;
-                    break;
-                case(RKINIT):
-                    GoodPath++;
-                    break;
-                default:
-                    llvm_unreachable("what?????");
-                    break;
-            }
+            int good, bad, ignored;
+            _backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U), good, bad, ignored);
+            errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
+                  <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
+                  <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
+                  <<ANSI_COLOR_RESET<<"\n";
+            BadPath+=bad;
+            GoodPath+=good;
         }
     }
 }
@@ -2611,11 +2332,43 @@ interesting:
     STOP_WATCH_REPORT;
 }
 
+void capchk::my_debug(Module& module)
+{
+    Function* f;
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration() || func->isIntrinsic())
+            continue;
+        if (func->hasName())
+        {
+            StringRef fname = func->getName();
+            if (fname=="mix_pool_bytes")
+            {
+                f = func;
+                break;
+            }
+        }
+    }
+    for (auto* u: f->users())
+    {
+        if (Instruction*i = dyn_cast<Instruction>(u))
+        {
+            Function* xf = i->getFunction();
+            errs()<<xf->getName()<<"\n";
+        }
+    }
+
+    exit(0);
+}
+
 /*
  * process capability protected globals and functions
  */
 void capchk::process_cpgf(Module& module)
 {
+    //my_debug(module);
     /*
      * pre-process
      * generate resource/functions from syscall entry function
@@ -2691,20 +2444,6 @@ bool capchk::runOnModule(Module &module)
 
 bool capchk::capchkPass(Module &module)
 {
-
-#if 0
-    errs()<<ANSI_COLOR_CYAN
-        <<"--- UNSAFE ACCESS CHECKER ---"
-        <<ANSI_COLOR_RESET<<"\n";
-    chk_unsafe_access(module);
-#endif
-
-#if 0
-    errs()<<ANSI_COLOR_CYAN
-        <<"--- MAY DIV BY ZERO CHECKER ---"
-        <<ANSI_COLOR_RESET<<"\n";
-    chk_div0(module);
-#endif
     errs()<<ANSI_COLOR_CYAN
         <<"--- PROCESS FUNCTIONS ---"
         <<ANSI_COLOR_RESET<<"\n";

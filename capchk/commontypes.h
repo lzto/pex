@@ -22,6 +22,7 @@ enum _REACHABLE
     RNONE,
     RKINIT,//hit kernel init functions
     RUNRESOLVEABLE,
+    RNA,//not available
 };
 
 typedef std::list<std::string> StringList;

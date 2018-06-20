@@ -24,6 +24,7 @@ clear_user
 clock_t_to_jiffies
 complete
 _cond_resched
+__const_udelay
 copy_fpstate_to_sigframe
 _copy_from_user
 copy_siginfo_to_user
@@ -32,7 +33,6 @@ count_swap_pages
 cpumask_next
 cpumask_next_and
 create_basic_memory_bitmaps
-credit_entropy_bits
 current_time
 dec_ucount
 dentry_open
@@ -62,6 +62,8 @@ dput
 dqget
 dqput
 dquot_initialize
+drm_printk
+dump_stack
 __fdget
 file_open_name
 file_open_root
@@ -125,19 +127,21 @@ kmem_cache_free
 kobject_put
 krealloc
 kstrtobool
+kstrtoint
 kstrtouint
 kstrtoul_from_user
 kstrtoull
+kthread_should_stop
 ktime_get_with_offset
 kvfree
 kvmalloc_node
 load_module
 lock_sock_nested
 machine_kexec_prepare
+memchr
 memcmp
 __memcpy
 microcode_open
-mix_pool_bytes
 __mm_populate
 mmput
 mntget
@@ -188,9 +192,10 @@ __put_page
 put_pid
 __put_task_struct
 put_unused_fd
-queue_work_on
 queue_delayed_work_on
+queue_work_on
 radix_tree_lookup
+___ratelimit
 ___rate_limit
 _raw_read_lock
 _raw_read_lock_bh
@@ -243,6 +248,7 @@ skb_trim
 __sk_free
 sk_free
 snprintf
+sort
 sprintf
 sscanf
 strchr
@@ -260,6 +266,7 @@ __sysfs_match_string
 thaw_bdev
 thaw_kernel_threads
 thaw_processes
+try_module_get
 up
 up_read
 up_write
@@ -276,8 +283,3 @@ wake_up_bit
 wake_up_new_task
 wake_up_process
 __warn_printk
-kthread_should_stop
-__const_udelay
-kstrtoint
-drm_printk
-try_module_get
