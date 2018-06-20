@@ -15,6 +15,7 @@ Linux Kernel Capability Checker
     -ccv=0 -ccf=1 \
     -ccvv=0 -ccfv=0 \
     -cvf=0 \
+    -skipfun=skip.fun \
     -stats \
     vmlinux.bc \
     -o /dev/null 2>&1 | tee log
@@ -31,5 +32,5 @@ Linux Kernel Capability Checker
 * kinit - print kernel init functions, default 1
 * nkinit - print kernel non init functions, default 1
 * cvf - complex value flow, default 0
-
+* skipfun - list of skip files
 

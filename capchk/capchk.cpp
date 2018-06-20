@@ -2,8 +2,9 @@
  * CapChecker
  * linux kernel capability checker
  * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
- * TODO: remove critical functions which don't store
  */
+
+#include <fstream>
 
 #include "llvm-c/Core.h"
 #include "llvm/Pass.h"
@@ -209,7 +210,6 @@ class capchk : public ModulePass
 
         int use_parent_func_arg(Value*, Function*);
 
-
         /*
          * context for current module
          */
@@ -316,6 +316,9 @@ cl::opt<bool> knob_capchk_cvf("cvf",
         cl::desc("complex value flow analysis - disabled by default"),
         cl::init(false));
 
+cl::opt<string> knob_skip_func_list("skipfun",
+        cl::desc("non-critical function list"),
+        cl::init("skip.fun"));
 
 /*
  * helper function
@@ -410,7 +413,8 @@ StringRef get_callee_function_name(Instruction* i)
  * some of those functions need to analyze together with parameters
  * (require SVF, data flow analysis)
  */
-static const char* skip_functions [] = 
+bool use_internal_skip_func_list = false;
+static const char* _skip_functions [] = 
 {
     //may operate on wrong source?
     "add_taint",
@@ -524,12 +528,64 @@ static const char* skip_functions [] =
     "dev_printk",
     "dev_notice",
     "dev_alert",
+    "__put_task_struct",
+    "__set_current_blocked",
+    "copy_siginfo_to_user",
+    "fpu__clear",
+    "fpu__alloc_mathframe",
+    "copy_fpstate_to_sigframe",
+    "ia32_setup_frame",
+    "ia32_setup_rt_frame",
+    "mmput",
+    "setup_sigcontext",
+    "queue_work_on",
+    "__request_module",
+    "__module_put_and_exit",
+    "__get_free_pages",
+    "__put_page",
+    "__wake_up",
+    "__init_waitqueue_head",
+    "_raw_write_unlock_bh",
+    "_raw_write_lock_irqsave",
+    "_raw_write_lock_irq",
+    "_raw_write_lock_bh",
+    "_raw_write_lock",
+    "_raw_spin_unlock_irqrestore",
+    "_raw_spin_unlock_bh",
+    "_raw_spin_lock_irqsave",
+    "_raw_spin_lock_irq",
+    "_raw_spin_lock_bh",
+    "_raw_spin_lock",
+    "_raw_read_unlock_irqrestore",
+    "_raw_read_lock_irqsave",
+    "__put_task_struct"
 };
+
+StringSet skip_functions;
 
 bool is_skip_function(const std::string& str)
 {
-    return std::find(std::begin(skip_functions), std::end(skip_functions), str)
-            != std::end(skip_functions);
+    if (use_internal_skip_func_list)
+        return std::find(std::begin(_skip_functions), std::end(_skip_functions), str)
+            != std::end(_skip_functions);
+    return skip_functions.count(str)!=0;
+}
+
+void load_skip_func_list(std::string& fn)
+{
+    std::ifstream input(fn);
+    if (!input.is_open())
+    {
+        use_internal_skip_func_list = true;
+        return;
+    }
+    std::string line;
+    while(std::getline(input,line))
+    {
+        skip_functions.insert(line);
+    }
+    input.close();
+    errs()<<"Load skip function list, totoal:"<<skip_functions.size()<<"\n";
 }
 
 /*
@@ -1598,17 +1654,21 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     {
         case RFULL:
             has_check = true;
+            has_user = 1;
             break;
         case RPARTIAL:
             has_check = true;
             has_no_check = true;
+            has_user = 1;
             break;
         case RNONE:
             has_no_check = true;
+            has_user = 1;
             break;
         case RUNRESOLVEABLE:
             break;
         case RKINIT:
+            has_user = 1;
             break;
         default:
             llvm_unreachable("what????");
@@ -1711,7 +1771,7 @@ void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
 _REACHABLE capchk::match_cs_using_fptr_method_0(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited)
 {
-    _REACHABLE ret = RNONE;
+    _REACHABLE ret = RUNRESOLVEABLE;
     int cnt = 0;
     for (auto* idc: idcs)
     {
@@ -1722,8 +1782,8 @@ _REACHABLE capchk::match_cs_using_fptr_method_0(Function* func,
         {
             cnt++;
             MatchCallCriticalFuncPtr++;
-            errs()<<"Found matched functions(bitcast) for call-by-val:"
-                <<func->getName()<<"\n";
+            //errs()<<"Found matched functions(bitcast) for call-by-val:"
+            //    <<func->getName()<<"\n";
             //FIXME return value
             ret = backward_slice_build_callgraph(callgraph, idc, visited);
             continue;
@@ -1742,7 +1802,7 @@ _REACHABLE capchk::match_cs_using_fptr_method_1(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited)
 {
     //we want exact match to non-trivial function
-    _REACHABLE ret = RNONE;
+    _REACHABLE ret = RUNRESOLVEABLE;
     int cnt = 0;
     Type* func_type = func->getFunctionType();
     FunctionSet *fl = t2fs[func_type];
@@ -1766,8 +1826,8 @@ _REACHABLE capchk::match_cs_using_fptr_method_1(Function* func,
         {
             cnt++;
             MatchCallCriticalFuncPtr++;
-            errs()<<"Found matched functions for indirectcall:"
-                <<(*fl->begin())->getName()<<"\n";
+            //errs()<<"Found matched functions for indirectcall:"
+            //    <<(*fl->begin())->getName()<<"\n";
             ret = backward_slice_build_callgraph(callgraph, idc, visited);
             continue;
         }
@@ -1792,7 +1852,7 @@ _REACHABLE capchk::match_cs_using_fptr_method_2(Function* func,
         if (_func==func)
             continue;
     }
-    return RNONE;
+    return RUNRESOLVEABLE;
 }
 
 _REACHABLE capchk::bs_using_indcs(Function* func,
@@ -1801,10 +1861,10 @@ _REACHABLE capchk::bs_using_indcs(Function* func,
     _REACHABLE ret;
     //exact match don't need to look further
     ret = match_cs_using_fptr_method_0(func, callgraph, visited);
-    if (ret==RFULL)
+    if (ret!=RUNRESOLVEABLE)
         return ret;
     ret = (match_cs_using_fptr_method_1(func, callgraph, visited));
-    if (ret==RFULL)
+    if (ret!=RUNRESOLVEABLE)
         return ret;
     /*if (match_cs_using_fptr_method_2(func, callgraph, visited))
     {
@@ -2476,6 +2536,7 @@ void capchk::process_cpgf(Module& module)
      * generate resource/functions from syscall entry function
      */
     errs()<<"Pre-processing...\n";
+    load_skip_func_list(knob_skip_func_list);
     STOP_WATCH_START;
     collect_pp(module);
     STOP_WATCH_STOP;
