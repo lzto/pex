@@ -119,6 +119,12 @@ Function2ChkInst f2chks;
 InstructionSet fptrassign;
 //stores all indirect call sites
 InDirectCallSites idcs;
+//function to callsite instruction
+//type0: direct call with type cast
+Function2CSInst f2csi_type0;
+//type1: indirect call
+Function2CSInst f2csi_type1;
+
 //store indirect call site to its candidates
 ConstInst2Func idcs2callee;
 
@@ -1507,6 +1513,21 @@ void capchk::collect_pp(Module& module)
                 CallInst* ci = dyn_cast<CallInst>(ii);
                 if (!ci || ci->getCalledFunction() || ci->isInlineAsm())
                     continue;
+                
+                Value* cv = ci->getCalledValue();
+                Function *bcf = dyn_cast<Function>(cv->stripPointerCasts());
+                if (bcf)
+                {
+                    //this is actually a direct call with function type cast
+                    InstructionSet* csis = f2csi_type0[bcf];
+                    if (csis==NULL)
+                    {
+                        csis = new InstructionSet;
+                        f2csi_type0[bcf] = csis;
+                    }
+                    csis->insert(ci);
+                    continue;
+                }
                 idcs.insert(ci);
             }
         }
@@ -1773,22 +1794,20 @@ _REACHABLE capchk::match_cs_using_fptr_method_0(Function* func,
 {
     _REACHABLE ret = RUNRESOLVEABLE;
     int cnt = 0;
-    for (auto* idc: idcs)
+    
+    InstructionSet *csis = f2csi_type0[func];
+
+    if (csis==NULL)
+        goto end;
+
+    for (auto* csi: *csis)
     {
-        Value* cv = idc->getCalledValue();
-        //or strip function pointer can do the trick?
-        Function* _func = dyn_cast<Function>(cv->stripPointerCasts());
-        if (_func==func)
-        {
-            cnt++;
-            MatchCallCriticalFuncPtr++;
-            //errs()<<"Found matched functions(bitcast) for call-by-val:"
-            //    <<func->getName()<<"\n";
-            //FIXME return value
-            ret = backward_slice_build_callgraph(callgraph, idc, visited);
-            continue;
-        }
+        cnt++;
+        MatchCallCriticalFuncPtr++;
+        //FIXME merge multiple return value
+        ret = backward_slice_build_callgraph(callgraph, csi, visited);
     }
+
 end:
     if (cnt!=0)
         UnMatchCallCriticalFuncPtr++;

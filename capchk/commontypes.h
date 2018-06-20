@@ -40,6 +40,7 @@ typedef std::set<CallInst*> InDirectCallSites;
 typedef std::map<Function*,_REACHABLE> FunctionToCheckResult;
 typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
 typedef std::map<Function*, InstructionSet*> Function2ChkInst;
+typedef std::map<Function*, InstructionSet*> Function2CSInst;
 typedef std::map<Value*, InstructionSet*> Value2ChkInst;
 typedef std::map<Function*, int> FunctionData;
 typedef std::map<Instruction*, FunctionSet*> Inst2Func;
