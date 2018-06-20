@@ -175,10 +175,14 @@ class capchk : public ModulePass
         _REACHABLE _backward_slice_reachable_to_chk_function(Instruction* I);
         void backward_slice_reachable_to_chk_function(Instruction* I);
 
-        void check_all_cs_using_fptr(Function*);
-        bool match_cs_using_fptr_method_0(Function*);
-        bool match_cs_using_fptr_method_1(Function*);
-        bool match_cs_using_fptr_method_2(Function*);
+        _REACHABLE bs_using_indcs(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited);
+        _REACHABLE match_cs_using_fptr_method_0(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited);
+        _REACHABLE match_cs_using_fptr_method_1(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited);
+        _REACHABLE match_cs_using_fptr_method_2(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited);
 
         FunctionSet resolve_indirect_callee(CallInst*);
 
@@ -1558,13 +1562,11 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         ret = RNONE;
         goto nocheck_out;
     }
-    //Check function user(all CallSite)
+    //Check function user
+    //Direct CallSite
     for (auto *U: f->users())
     {
         has_user = true;
-        //FIXME: also need to check all CallSite using function pointer which precisely
-        //matches function type
-
         if (isa<CallInst>(U))
         {
             switch (backward_slice_build_callgraph(callgraph,
@@ -1589,14 +1591,12 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                     break;
             }
         }else
-        {
-            //used by non-call instruction????
-            //should match to all call site using fptr
-            //errs()<<"Used by non-call\n";
             CFuncUsedByNonCall++;
-        }
     }
-
+    //indirect CallSite
+    bs_using_indcs(f, callgraph, fvisited);
+    //other indirect call site using this function?
+    
     if (!has_user)
     {
         errs()<<" @ "<<f->getName()<<" ";
@@ -1689,9 +1689,11 @@ void capchk::backward_slice_reachable_to_chk_function(Instruction* cs)
 /*
  * exact match with bitcast
  */
-bool capchk::match_cs_using_fptr_method_0(Function* func)
+_REACHABLE capchk::match_cs_using_fptr_method_0(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited)
 {
-    bool ret = false;
+    _REACHABLE ret = RNONE;
+    int cnt = 0;
     for (auto* idc: idcs)
     {
         Value* cv = idc->getCalledValue();
@@ -1699,31 +1701,38 @@ bool capchk::match_cs_using_fptr_method_0(Function* func)
         Function* _func = dyn_cast<Function>(cv->stripPointerCasts());
         if (_func==func)
         {
+            cnt++;
+            MatchCallCriticalFuncPtr++;
             errs()<<"Found matched functions(bitcast) for call-by-val:"
                 <<func->getName()<<"\n";
-            backward_slice_reachable_to_chk_function(idc);
-            ret = true;
+            //FIXME return value
+            ret = backward_slice_build_callgraph(callgraph, idc, visited);
             continue;
         }
     }
+end:
+    if (cnt!=0)
+        UnMatchCallCriticalFuncPtr++;
     return ret;
 }
 
 /*
  * signature based method to find out indirect callee
  */
-bool capchk::match_cs_using_fptr_method_1(Function* func)
+_REACHABLE capchk::match_cs_using_fptr_method_1(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited)
 {
     //we want exact match to non-trivial function
+    _REACHABLE ret = RNONE;
+    int cnt = 0;
     Type* func_type = func->getFunctionType();
-    if (!is_complex_type(func_type))
-        return false;
     FunctionSet *fl = t2fs[func_type];
+    if (!is_complex_type(func_type))
+        goto end;
     if ((fl==NULL) || (fl->size()!=1))
-        return false;
+        goto end;
     if ((*fl->begin())!=func)
-        return false;
-    bool ret = false;
+        goto end;
     for (auto* idc: idcs)
     {
         Value* cv = idc->getCalledValue();
@@ -1736,20 +1745,25 @@ bool capchk::match_cs_using_fptr_method_1(Function* func)
         Type* ft2 = cv->stripPointerCasts()->getType()->getPointerElementType();
         if ((func_type == ft) || (func_type == ft2))
         {
+            cnt++;
+            MatchCallCriticalFuncPtr++;
             errs()<<"Found matched functions for indirectcall:"
                 <<(*fl->begin())->getName()<<"\n";
-            backward_slice_reachable_to_chk_function(idc);
-            ret = true;
+            ret = backward_slice_build_callgraph(callgraph, idc, visited);
             continue;
         }
     }
+end:
+    if (cnt!=0)
+        UnMatchCallCriticalFuncPtr++;
     return ret;
 }
 
 /*
  * TODO: figure out function pointer using SVF
  */
-bool capchk::match_cs_using_fptr_method_2(Function* func)
+_REACHABLE capchk::match_cs_using_fptr_method_2(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited)
 {
     Type* func_type = func->getFunctionType();
     for (auto* idc: idcs)
@@ -1759,35 +1773,27 @@ bool capchk::match_cs_using_fptr_method_2(Function* func)
         if (_func==func)
             continue;
     }
-    return false;
+    return RNONE;
 }
 
-/*
- * CAUTION: inprecise function pointer analysis may result in FP and FN
- */
-void capchk::check_all_cs_using_fptr(Function* func)
+_REACHABLE capchk::bs_using_indcs(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited)
 {
-    int cnt = 0;
-    if (match_cs_using_fptr_method_0(func))
-    {
-        cnt++;
-        MatchCallCriticalFuncPtr++;
-        //exact match don't need to look further
-        return;
-    }
-    if (match_cs_using_fptr_method_1(func))
-    {
-        cnt++;
-        MatchCallCriticalFuncPtr++;
-    }
-    /*if (match_cs_using_fptr_method_2(func))
+    _REACHABLE ret;
+    //exact match don't need to look further
+    ret = match_cs_using_fptr_method_0(func, callgraph, visited);
+    if (ret==RFULL)
+        return ret;
+    ret = (match_cs_using_fptr_method_1(func, callgraph, visited));
+    if (ret==RFULL)
+        return ret;
+    /*if (match_cs_using_fptr_method_2(func, callgraph, visited))
     {
         cnt++;
         MatchCallCriticalFuncPtr++;
         return;
     }*/
-    if (cnt==0)
-        UnMatchCallCriticalFuncPtr++;
+    return ret;
 }
 
 /*
@@ -1904,8 +1910,6 @@ void capchk::check_critical_function_usage(Module& module)
                 continue;
             backward_slice_reachable_to_chk_function(cs);
         }
-        //indirect call
-        check_all_cs_using_fptr(func);
     }
 }
 
