@@ -385,6 +385,21 @@ bool is_skip_var(const std::string& str)
             != std::end(skip_var);
 }
 
+StringRef get_callee_function_name(Instruction* i)
+{
+    CallInst* ci = dyn_cast<CallInst>(i);
+    if (Function* f = ci->getCalledFunction())
+    {
+        return f->getName();
+    }
+    Value* cv = ci->getCalledValue();
+    Function* f = dyn_cast<Function>(cv->stripPointerCasts());
+    if (f)
+    {
+        return f->getName();
+    }
+    return "";
+}
 
 /*
  * common interface which is not considered dangerous function
@@ -1519,7 +1534,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             {
                 errs()<<ANSI_COLOR(BG_GREEN, FG_BLACK)
                     <<"Hit Check Function:"
-                    <<dyn_cast<CallInst>(chk)->getCalledFunction()->getName()
+                    <<get_callee_function_name(chk)
                     <<" @ ";
                 chk->getDebugLoc().print(errs());
                 errs()<<ANSI_COLOR_RESET<<"\n";
