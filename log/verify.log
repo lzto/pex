@@ -1,0 +1,63 @@
+* rtc_cmos_write
+
+drivers/char/nvram.c:nvram_ioctl requires CAP_SYS_ADMIN to write to address
+ NVRAM_FIRST_BYTE(14)+offset
+
+nvram_write allows arbitary write to nvram bypass the check.
+
+also presented in drivers/rtc/rtc-cmos.c
+
+* kernel_restart
+
+Use:drivers/tty/sysrq.c:664:2
+
+allows anonymouse user to perform reboot using keyboard or serial tty
+
+* mix_pool_bytes
+
+drivers/char/random.c
+
+allow write to pool using random_write(), bypass capability check in random_ioctl
+
+* rtc_set_time
+Use:drivers/rtc/systohc.c:64:8
+allows remote NTP server modifying system time
+
+* efivar_entry_set
+Use:drivers/firmware/efi/efivars.c:303:8
+arbitary through raw_store_var()
+
+===IPv6 address auto configurations[default] allows router hijack===
+
+* ip6_route_add
+Use:net/ipv6/route.c:3198:7
+allows ipv6 route hijack if ipv6 autoconfiguration is enabled
+
+* ipip6_tunnel_init
+* ipip6_tunnel_update
+
+* rfkill_set_block
+no capability check in rfkill_fop_write,
+allows power control over RF-devices
+
+===Intel DRM Driver=======
+
+Inspect Use of Function:drm_gem_handle_create
+Found matched functions(bitcast) for call-by-val:drm_gem_handle_create
+Use:drivers/gpu/drm/i915/intel_display.c:13815:9
+[NO CHECK]
+Found matched functions(bitcast) for call-by-val:drm_gem_handle_create
+Use:drivers/gpu/drm/drm_gem_framebuffer_helper.c:124:9
+[NO CHECK]
+Found matched functions(bitcast) for call-by-val:drm_gem_handle_create
+Use:drivers/gpu/drm/i915/i915_gem.c:615:8 @[ drivers/gpu/drm/i915/i915_gem.c:633:9 ]
+[NO CHECK]
+Found matched functions(bitcast) for call-by-val:drm_gem_handle_create
+Use:drivers/gpu/drm/i915/i915_gem.c:615:8 @[ drivers/gpu/drm/i915/i915_gem.c:658:9 ]
+[NO CHECK]
+
+
+
+
+
+
