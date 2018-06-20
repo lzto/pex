@@ -1,5 +1,16 @@
+add_taint
+alloc_uid
+free_uid
+put_pid
+pid_vnr
+pid_task
+pid_nr_ns
+get_task_pid
+get_pid_task
+find_vpid
 alloc_counters
 alloc_pages_current
+_cond_resched
 __alloc_percpu
 alloc_swapdev_block
 async_synchronize_full
@@ -17,6 +28,7 @@ copy_siginfo_to_user
 count_swap_pages
 create_basic_memory_bitmaps
 credit_entropy_bits
+dec_ucount
 do_add_counters
 do_exit
 do_migrate_pages
@@ -109,6 +121,7 @@ read_cache_page
 __refrigerator
 __release_sock
 __request_module
+schedule
 set_current_groups
 setup_sigcontext
 signal_setup_done
