@@ -189,6 +189,7 @@ put_pid
 __put_task_struct
 put_unused_fd
 queue_work_on
+queue_delayed_work_on
 radix_tree_lookup
 ___rate_limit
 _raw_read_lock
@@ -275,3 +276,8 @@ wake_up_bit
 wake_up_new_task
 wake_up_process
 __warn_printk
+kthread_should_stop
+__const_udelay
+kstrtoint
+drm_printk
+try_module_get

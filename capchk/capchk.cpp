@@ -133,6 +133,9 @@ ValueList critical_variables;
 //all functions in the kernel
 FunctionSet all_functions;
 
+//all syscall is listed here
+FunctionSet syscall_list;
+
 #define MAX_PATH 1000
 #define MAX_BACKWD_SLICE_DEPTH 100
 #define MAX_FWD_SLICE_DEPTH 100
@@ -631,6 +634,41 @@ static const char* interesting_type_word [] =
 {
     "file_operations",
 };
+
+bool is_interesting_type(Type* ty)
+{
+    if (!ty->isStructTy())
+        return false;
+    std::string tyn = ty->getStructName();
+    return std::find(std::begin(interesting_type_word),
+                     std::end(interesting_type_word), tyn)
+                    != std::end(interesting_type_word);
+}
+
+static const char* syscall_prefix [] =
+{
+    "compat_SyS_",
+    "compat_sys_",
+    "SyS_",
+    "sys_"
+};
+
+bool is_syscall_prefix(StringRef str)
+{
+    for (int i=0;i<4;i++)
+    {
+        if (str.startswith(syscall_prefix[i]))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool is_syscall(Function *f)
+{
+    return syscall_list.count(f)!=0;
+}
 
 static const char* kernel_start_functions [] = 
 {
@@ -1503,6 +1541,11 @@ void capchk::collect_pp(Module& module)
             t2fs[type] = fl;
         }
         fl->insert(func);
+        
+        if (is_syscall_prefix(func->getName()))
+        {
+            syscall_list.insert(func);
+        }
 
         for(Function::iterator fi = func->begin(), fe = func->end();
                 fi != fe; ++fi)
@@ -1595,6 +1638,7 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     bool has_check = false;
     bool has_no_check = false;
     bool has_user = false;
+    bool used_by_interesting_type = false;
 
     InstructionSet* chks = f2chks[f];
 
@@ -1643,9 +1687,9 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     //Direct CallSite
     for (auto *U: f->users())
     {
-        has_user = true;
         if (isa<CallInst>(U))
         {
+            has_user = true;
             switch (backward_slice_build_callgraph(callgraph,
                                             dyn_cast<Instruction>(U), fvisited))
             {
@@ -1668,40 +1712,62 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                     break;
             }
         }else
+        {
+            if (isa<GlobalValue>(U))
+            {
+                if (!used_by_interesting_type)
+                {
+                    GlobalValue* gv = dyn_cast<GlobalValue>(U);
+                    if (is_interesting_type(gv->getType()))
+                        used_by_interesting_type = true;
+                }
+            }
             CFuncUsedByNonCall++;
+        }
     }
     //indirect CallSite
     switch(bs_using_indcs(f, callgraph, fvisited))
     {
         case RFULL:
             has_check = true;
-            has_user = 1;
+            has_user = true;
             break;
         case RPARTIAL:
             has_check = true;
             has_no_check = true;
-            has_user = 1;
+            has_user = true;
             break;
         case RNONE:
             has_no_check = true;
-            has_user = 1;
+            has_user = true;
             break;
         case RUNRESOLVEABLE:
             break;
         case RKINIT:
-            has_user = 1;
+            has_user = true;
             break;
         default:
             llvm_unreachable("what????");
             break;
     }
-    //other indirect call site using this function?
-    
     if (!has_user)
     {
+        //means that there are no direct/indirect call to current function
+        //could this be a device driver not directly interacting with user space?
+        //any function used by global struct, driver layer is not entry point
+        if (is_interesting_type)
+        {
+            ret = RNONE;
+            goto nocheck_out;
+        }
+        if (is_syscall(f))
+        {
+            ret = RNONE;
+            goto nocheck_out;
+        }
         errs()<<" @ "<<f->getName()<<" ";
         errs()<<"Not KInit/CallSite? consider as user entry point\n";
-        ret = RNONE;
+        ret = RKINIT;
         goto nocheck_out;
     }
 
