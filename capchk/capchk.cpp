@@ -1594,7 +1594,26 @@ _REACHABLE capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             CFuncUsedByNonCall++;
     }
     //indirect CallSite
-    bs_using_indcs(f, callgraph, fvisited);
+    switch(bs_using_indcs(f, callgraph, fvisited))
+    {
+        case RFULL:
+            has_check = true;
+            break;
+        case RPARTIAL:
+            has_check = true;
+            has_no_check = true;
+            break;
+        case RNONE:
+            has_no_check = true;
+            break;
+        case RUNRESOLVEABLE:
+            break;
+        case RKINIT:
+            break;
+        default:
+            llvm_unreachable("what????");
+            break;
+    }
     //other indirect call site using this function?
     
     if (!has_user)
