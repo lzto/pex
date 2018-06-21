@@ -675,6 +675,8 @@ void capchk::dump_v2ci()
         Value* v = cis.first;
         errs()<<ANSI_COLOR_GREEN<<v->getName()<<ANSI_COLOR_RESET<<"\n";
         int last_cap_no = -1;
+        bool mismatched_chk_func = false;
+        Function* last_cap_chk_func = NULL;
         for (auto *ci: *cis.second)
         {
             CallInst* cs = dyn_cast<CallInst>(ci);
@@ -698,16 +700,21 @@ void capchk::dump_v2ci()
                 }
                 cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
                 if (last_cap_no==-1)
+                {
                     last_cap_no=cap_no;
+                    last_cap_chk_func = cf;
+                }
                 if (last_cap_no!=cap_no)
                     last_cap_no = -2;
+                if (last_cap_chk_func!=cf)
+                    mismatched_chk_func = true;
             }
             assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
-            errs()<<"    "<<cap2string[cap_no]<<" @ ";
+            errs()<<"    "<<cap2string[cap_no]<<" @ "<<cf->getName()<<" ";
             cs->getDebugLoc().print(errs());
             errs()<<"\n";
         }
-        if (last_cap_no==-2)
+        if ((last_cap_no==-2) || (mismatched_chk_func))
             errs()<<ANSI_COLOR_RED<<"inconsistent check"
                     <<ANSI_COLOR_RESET<<"\n";
     }
@@ -725,6 +732,8 @@ void capchk::dump_f2ci()
         Function* func = cis.first;
         errs()<<ANSI_COLOR_GREEN<<func->getName()<<ANSI_COLOR_RESET<<"\n";
         int last_cap_no = -1;
+        bool mismatched_chk_func = false;
+        Function* last_cap_chk_func = NULL;
         for (auto *ci: *cis.second)
         {
             CallInst* cs = dyn_cast<CallInst>(ci);
@@ -748,16 +757,21 @@ void capchk::dump_f2ci()
                 }
                 cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
                 if (last_cap_no==-1)
+                {
                     last_cap_no=cap_no;
+                    last_cap_chk_func = cf;
+                }
                 if (last_cap_no!=cap_no)
                     last_cap_no = -2;
+                if (last_cap_chk_func!=cf)
+                    mismatched_chk_func = true;
             }
             assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
-            errs()<<"    "<<cap2string[cap_no]<<" @ ";
+            errs()<<"    "<<cap2string[cap_no]<<" @ "<<cf->getName()<<" ";
             cs->getDebugLoc().print(errs());
             errs()<<"\n";
         }
-        if (last_cap_no==-2)
+        if ((last_cap_no==-2) || (mismatched_chk_func))
             errs()<<ANSI_COLOR_RED<<"inconsistent check"
                     <<ANSI_COLOR_RESET<<"\n";
     }

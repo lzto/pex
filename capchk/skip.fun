@@ -311,3 +311,4 @@ wake_up_bit
 wake_up_new_task
 wake_up_process
 __warn_printk
+wait_for_completion
