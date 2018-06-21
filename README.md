@@ -16,6 +16,7 @@ Linux Kernel Capability Checker
     -ccvv=0 -ccfv=0 \
     -cvf=0 \
     -skipfun=skip.fun \
+    -skipvar=skip.var \
     -prt-good=0 -prt-bad=1 -prt-ign=0 \
     -stats \
     vmlinux.bc \
@@ -33,7 +34,8 @@ Linux Kernel Capability Checker
 * kinit - print kernel init functions, default 1
 * nkinit - print kernel non init functions, default 1
 * cvf - complex value flow, default 0
-* skipfun - list of skip files
+* skipfun - list of functions don't care
+* skipvar - list of variables don't care
 * prt-good - print good path, default 0
 * prt-bad - print bad path, default 1
 * prt-ign - print ignored path, default 0

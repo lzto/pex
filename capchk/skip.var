@@ -1,0 +1,6 @@
+jiffies
+nr_cpu_ids
+nr_irqs
+nr_threads
+vmemmap_base
+page_offset_base

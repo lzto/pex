@@ -42,6 +42,7 @@
 
 #include "cvfa.h"
 //my aux headers
+#include "internal.h"
 #include "commontypes.h"
 #include "color.h"
 #include "aux.h"
@@ -99,7 +100,8 @@ STATISTIC(FwdAnalysisMaxHit, "# of times max depth for forward analysis hit");
 STATISTIC(BwdAnalysisMaxHit, "# of times max depth for backward analysis hit");
 STATISTIC(CPUnResolv, "Critical Function Pointer Unable to Resolve");
 STATISTIC(CPResolv, "Critical Function Pointer Resolved");
-STATISTIC(CFuncUsedByNonCall, "Critical Functions used by non CallInst");
+STATISTIC(CFuncUsedByNonCallInst, "Critical Functions used by non CallInst");
+STATISTIC(CFuncUsedByStaticAssign, "Critical Functions used by static assignment");
 STATISTIC(MatchCallCriticalFuncPtr, "# of times indirect call site matched with critical functions");
 STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to match with critical functions");
 STATISTIC(CapChkInFPTR, "found capability check inside call using function ptr\n");
@@ -127,8 +129,6 @@ Function2CSInst f2csi_type1;
 
 //store indirect call site to its candidates
 ConstInst2Func idcs2callee;
-
-ValueList critical_variables;
 
 //all functions in the kernel
 FunctionSet all_functions;
@@ -202,6 +202,9 @@ class capchk : public ModulePass
 
         FunctionSet resolve_indirect_callee(CallInst*);
 
+
+        InstructionSet discover_chks(Function* f);
+        InstructionSet discover_chks(Function* f, FunctionSet& visited);
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
@@ -277,7 +280,8 @@ void capchk::dump_statistics()
     STATISTICS_DUMP(BwdAnalysisMaxHit);
     STATISTICS_DUMP(CPUnResolv);
     STATISTICS_DUMP(CPResolv);
-    STATISTICS_DUMP(CFuncUsedByNonCall);
+    STATISTICS_DUMP(CFuncUsedByNonCallInst);
+    STATISTICS_DUMP(CFuncUsedByStaticAssign);
     STATISTICS_DUMP(MatchCallCriticalFuncPtr);
     STATISTICS_DUMP(UnMatchCallCriticalFuncPtr);
     STATISTICS_DUMP(CapChkInFPTR);
@@ -334,6 +338,10 @@ cl::opt<string> knob_skip_func_list("skipfun",
         cl::desc("non-critical function list"),
         cl::init("skip.fun"));
 
+cl::opt<string> knob_skip_var_list("skipvar",
+        cl::desc("non-critical variable name list"),
+        cl::init("skip.var"));
+
 cl::opt<bool> knob_dump_good_path("prt-good",
         cl::desc("print good path - disabled by default"),
         cl::init(false));
@@ -345,6 +353,7 @@ cl::opt<bool> knob_dump_bad_path("prt-bad",
 cl::opt<bool> knob_dump_ignore_path("prt-ign",
         cl::desc("print ignored path - disabled by default"),
         cl::init(false));
+
 
 /*
  * helper function
@@ -367,12 +376,30 @@ Instruction* GetNextNonPHIInstruction(Instruction* I)
     return dyn_cast<Instruction>(BBI);
 }
 
+Function* get_callee_function_direct(Instruction* i)
+{
+    CallInst* ci = dyn_cast<CallInst>(i);
+    if (Function* f = ci->getCalledFunction())
+        return f;
+    Value* cv = ci->getCalledValue();
+    Function* f = dyn_cast<Function>(cv->stripPointerCasts());
+    return f;
+}
+
+StringRef get_callee_function_name(Instruction* i)
+{
+    if (Function* f = get_callee_function_direct(i))
+        return f->getName();
+    return "";
+}
+
 /*
- * all critical functions
+ * all critical functions and variables
  * should be permission checked before use
  * generate critical functions on-the-fly
  */
 FunctionSet critical_functions;
+ValueList critical_variables;
 
 bool is_critical_function(Function* f)
 {
@@ -401,192 +428,36 @@ bool is_check_function(const std::string& str)
     return false;                                  
 }
 
-/*
- * skip those variables
- */
-static const char* skip_var [] = 
-{
-    "jiffies",
-    "nr_cpu_ids",
-    "nr_irqs",
-    "nr_threads",
-};
+//skip variables
+bool use_internal_skip_var_list = false;
+StringSet skip_var;
 
 bool is_skip_var(const std::string& str)
 {
-    return std::find(std::begin(skip_var), std::end(skip_var), str)
-            != std::end(skip_var);
+    if (use_internal_skip_var_list)
+        return std::find(std::begin(_skip_var), std::end(_skip_var), str)
+            != std::end(_skip_var);
+    return skip_var.count(str)!=0;
 }
 
-StringRef get_callee_function_name(Instruction* i)
+void load_skip_var_list(std::string& fn)
 {
-    CallInst* ci = dyn_cast<CallInst>(i);
-    if (Function* f = ci->getCalledFunction())
+    std::ifstream input(fn);
+    if (!input.is_open())
     {
-        return f->getName();
+        use_internal_skip_var_list = true;
+        return;
     }
-    Value* cv = ci->getCalledValue();
-    Function* f = dyn_cast<Function>(cv->stripPointerCasts());
-    if (f)
+    std::string line;
+    while(std::getline(input,line))
     {
-        return f->getName();
+        skip_var.insert(line);
     }
-    return "";
+    input.close();
+    errs()<<"Load skip var list, total:"<<skip_var.size()<<"\n";
 }
-
-/*
- * common interface which is not considered dangerous function
- * some of those functions need to analyze together with parameters
- * (require SVF, data flow analysis)
- */
+//skip functions
 bool use_internal_skip_func_list = false;
-static const char* _skip_functions [] = 
-{
-    //may operate on wrong source?
-    "add_taint",
-    "__mutex_init",
-    "mutex_lock",
-    "mutex_unlock",
-    "schedule",
-    "_cond_resched",
-    "printk",
-    "__kmalloc",
-    "_copy_to_user",
-    "_do_fork",
-    "__memcpy",
-    "strncmp",
-    "strlen",
-    "strim",
-    "strchr",
-    "strcmp",
-    "strcpy",
-    "strncat",
-    "strlcpy",
-    "strscpy",
-    "strsep",
-    "strndup_user",
-    "strnlen_user",
-    "sscanf",
-    "snprintf",
-    "scnprintf",
-    "sort",
-    "prandom_u32",
-    "memchr",
-    "memcmp",
-    "memset",
-    "memmove",
-    "skip_spaces",
-    "kfree",
-    "kmalloc",
-    "kstrdup",
-    "kstrtoull",
-    "kstrtouint",
-    "kstrtoint",
-    "kstrtobool",
-    "strncpy_from_user",
-    "kstrtoul_from_user",
-    "__msecs_to_jiffies",
-    "drm_printk",
-    "cpumask_next_and",
-    "cpumask_next",
-    "dump_stack",//break KASLR here?
-    "___ratelimit",
-    "simple_strtoull",
-    "simple_strtoul",
-    "dec_ucount",
-    "inc_ucount",
-    "jiffies_to_msecs",
-    "__warn_printk",//break KASLR here?
-    "arch_release_task_struct",
-    "do_syscall_64",//syscall entry point
-    "do_fast_syscall_32",
-    "do_int80_syscall_32",
-    "complete",
-    "__wake_up",
-    "mutex_trylock",
-    "finish_wait",
-    "__init_waitqueue_head",
-    "complete",
-    "mutex_lock_interruptible",
-    "up_write",
-    "up_read",
-    "down_write_trylock",
-    "down_write",
-    "down_read",
-    "find_vma",
-    "vzalloc",
-    "vmalloc",
-    "vfree",
-    "vmalloc_to_page",
-    "__vmalloc",
-    "kfree_call_rcu",
-    "kvfree",
-    "krealloc",
-    "_copy_from_user",
-    "__free_pages",
-    "__put_page",
-    "kvmalloc_node",
-    "free_percpu",
-    "__alloc_percpu",
-    "get_user_pages",
-    "__mm_populate",
-    "dput",
-    "d_path",
-    "iput",
-    "inode_dio_wait",
-    "current_time",
-    "is_bad_inode",
-    "__fdget",
-    "mntput",
-    "mntget",
-    "seq_puts",
-    "seq_putc",
-    "seq_printf",
-    "blkdev_put",
-    "blkdev_get",
-    "bdget",
-    "bdput",
-    "bdgrab",
-    "thaw_bdev",
-    "__brelse",
-    "nla_parse",
-    "dev_warn",
-    "dev_printk",
-    "dev_notice",
-    "dev_alert",
-    "__put_task_struct",
-    "__set_current_blocked",
-    "copy_siginfo_to_user",
-    "fpu__clear",
-    "fpu__alloc_mathframe",
-    "copy_fpstate_to_sigframe",
-    "ia32_setup_frame",
-    "ia32_setup_rt_frame",
-    "mmput",
-    "setup_sigcontext",
-    "queue_work_on",
-    "__request_module",
-    "__module_put_and_exit",
-    "__get_free_pages",
-    "__put_page",
-    "__wake_up",
-    "__init_waitqueue_head",
-    "_raw_write_unlock_bh",
-    "_raw_write_lock_irqsave",
-    "_raw_write_lock_irq",
-    "_raw_write_lock_bh",
-    "_raw_write_lock",
-    "_raw_spin_unlock_irqrestore",
-    "_raw_spin_unlock_bh",
-    "_raw_spin_lock_irqsave",
-    "_raw_spin_lock_irq",
-    "_raw_spin_lock_bh",
-    "_raw_spin_lock",
-    "_raw_read_unlock_irqrestore",
-    "_raw_read_lock_irqsave",
-    "__put_task_struct"
-};
-
 StringSet skip_functions;
 
 bool is_skip_function(const std::string& str)
@@ -611,24 +482,14 @@ void load_skip_func_list(std::string& fn)
         skip_functions.insert(line);
     }
     input.close();
-    errs()<<"Load skip function list, totoal:"<<skip_functions.size()<<"\n";
+    errs()<<"Load skip function list, total:"<<skip_functions.size()<<"\n";
 }
+
+
 
 /*
  * file/dev op handler and sys call prefix/suffix
  */
-static const char* interesting_keyword [] = 
-{
-    "SyS",
-    "sys",
-    "open",
-    "release",
-    "lseek",
-    "read",
-    "write",
-    "sync",
-    "ioctl",
-};
 
 bool contains_interesting_kwd(const std::string& str)
 {
@@ -801,6 +662,7 @@ void capchk::dump_v2ci()
     {
         Value* v = cis.first;
         errs()<<ANSI_COLOR_GREEN<<v->getName()<<ANSI_COLOR_RESET<<"\n";
+        int last_cap_no = -1;
         for (auto *ci: *cis.second)
         {
             CallInst* cs = dyn_cast<CallInst>(ci);
@@ -823,12 +685,19 @@ void capchk::dump_v2ci()
                     continue;
                 }
                 cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
+                if (last_cap_no==-1)
+                    last_cap_no=cap_no;
+                if (last_cap_no!=cap_no)
+                    last_cap_no = -2;
             }
             assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
             errs()<<"    "<<cap2string[cap_no]<<" @ ";
             cs->getDebugLoc().print(errs());
             errs()<<"\n";
         }
+        if (last_cap_no==-2)
+            errs()<<ANSI_COLOR_RED<<"inconsistent check"
+                    <<ANSI_COLOR_RESET<<"\n";
     }
 }
 
@@ -1468,6 +1337,47 @@ void capchk::collect_crits(Module& module)
     CRITVAR = critical_variables.size();
 }
 
+/*
+ * discover checks inside functions f, including checks inside other callee
+ */
+InstructionSet capchk::discover_chks(Function* f, FunctionSet& visited)
+{
+    InstructionSet ret;
+    if (visited.count(f))
+        return ret;
+    visited.insert(f);
+
+    if (InstructionSet* chks = f2chks[f])
+        for (auto *i: *chks)
+            ret.insert(i);
+
+    for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
+    {
+        BasicBlock* bb = dyn_cast<BasicBlock>(fi);
+        for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+        {
+            CallInst* ci = dyn_cast<CallInst>(ii);
+            if (!ci)
+                continue;
+            if (ci->isInlineAsm())
+                continue;
+
+            Function *nextf = get_callee_function_direct(ci);
+            InstructionSet r = discover_chks(nextf, visited);
+            if (r.size())
+                ret.insert(ci);
+        }
+    }
+
+    return ret;
+}
+
+InstructionSet capchk::discover_chks(Function* f)
+{
+    FunctionSet visited;
+    return discover_chks(f, visited);
+}
+
 void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             Instruction* I, FunctionToCheckResult& fvisited, int& good, int& bad, int& ignored)
 {
@@ -1500,6 +1410,7 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     //place holder
     fvisited[f] = RNA;
     DominatorTree dt(*f);
+    InstructionSet chks;
 
     if (is_kernel_init_functions(f))
     {
@@ -1509,10 +1420,25 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         goto ignored_out; 
     }
 ////////////////////////////////////////////////////////////////////////////////
-    //inside this function, check should dominate use
-    if (InstructionSet* chks = f2chks[f])
+    /*
+     * should consider check inside other Callee used by this function
+     * if there's a check inside those function, also consider this function
+     * checked
+     * for example:
+     * ------------------------------------------------------
+     * foo()                         | bar()
+     * {                             | {
+     *   if(bar())                   |    if (capable())
+     *   {                           |        return true;
+     *       zoo();                  |    return false;
+     *   }                           | }
+     * }                             |
+     *-------------------------------------------------------
+     */
+    chks = discover_chks(f);
+    if (chks.size())
     {
-        for (auto* chk: *chks)
+        for (auto* chk: chks)
         {
             if (dt.dominates(chk, I))
             {
@@ -1529,8 +1455,8 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                 goto good_out;
             }
         }
-    //FIXME: should consider check inside other Callee used by this function
     }
+
     if (is_syscall(f))
     {
         //this is syscall and no check, report it as bad
@@ -1564,6 +1490,7 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         {
             if (!isa<Instruction>(U))
             {
+                CFuncUsedByStaticAssign++;
                 //must be non-instruction
                 if (is_interesting_type(U->getType()))
                 {
@@ -1579,8 +1506,8 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             {
                 //other use of current function?
                 //llvm_unreachable("what?");
+                CFuncUsedByNonCallInst++;
             }
-            CFuncUsedByNonCall++;
         }
     }
     //Indirect CallSite(also user of current function)
@@ -1860,6 +1787,8 @@ void capchk::check_critical_variable_usage(Module& module)
             //make sure this is not a kernel init function
             if (is_kernel_init_functions(f))
                 continue;
+            if (!isa<StoreInst>(ui))
+                continue;
             if (isa<LoadInst>(ui))
             {
                 errs()<<"LOAD: ";
@@ -1870,20 +1799,21 @@ void capchk::check_critical_variable_usage(Module& module)
             {
                 errs()<<"Use:opcode="<<ui->getOpcode()<<" ";
             }
+            errs()<<" @ "<<f->getName()<<" ";
             ui->getDebugLoc().print(errs());
             errs()<<"\n";
-
             flist.push_back(f);
-            errs()<<"Function: "
-                <<f->getName()
-                <<"\n";
+
             //is this instruction reachable from non-checked path?
             int good=0, bad=0, ignored=0;
             _backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U), good, bad, ignored);
-            errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
-                  <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
-                  <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
-                  <<ANSI_COLOR_RESET<<"\n";
+            if (bad!=0)
+            {
+                errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
+                      <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
+                      <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
+                      <<ANSI_COLOR_RESET<<"\n";
+            }
             BadPath+=bad;
             GoodPath+=good;
         }
@@ -2386,6 +2316,7 @@ void capchk::process_cpgf(Module& module)
      */
     errs()<<"Pre-processing...\n";
     load_skip_func_list(knob_skip_func_list);
+    load_skip_var_list(knob_skip_var_list);
     STOP_WATCH_START;
     collect_pp(module);
     STOP_WATCH_STOP;
