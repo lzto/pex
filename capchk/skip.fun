@@ -98,6 +98,7 @@ get_info
 getname
 get_pid_task
 get_task_pid
+get_unmapped_area
 get_unused_fd_flags
 get_user_pages
 groups_alloc
@@ -106,6 +107,7 @@ groups_sort
 hrtimer_init
 ia32_setup_frame
 ia32_setup_rt_frame
+ida_simple_remove
 idr_get_next
 import_iovec
 in_group_p
@@ -131,6 +133,7 @@ kimage_free_page_list
 __kmalloc
 kmem_cache_alloc
 kmem_cache_free
+kmemdup
 kobject_put
 krealloc
 kstrtobool
@@ -149,6 +152,7 @@ machine_kexec_prepare
 memchr
 memcmp
 __memcpy
+memdup_user
 microcode_open
 __mm_populate
 mmput
@@ -171,6 +175,7 @@ mutex_unlock
 netdev_err
 netdev_notice
 netdev_warn
+net_ratelimit
 nla_memcpy
 nla_parse
 nla_put
@@ -295,6 +300,7 @@ up_write
 user_path_at_empty
 vfree
 __vfs_getxattr
+__vma_adjust
 vmalloc
 __vmalloc
 vmalloc_to_page
