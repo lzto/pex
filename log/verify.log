@@ -6,19 +6,21 @@ drivers/char/nvram.c:nvram_ioctl requires CAP_SYS_ADMIN to write to address
 nvram_write allows arbitary write to nvram bypass the check.
 
 also presented in drivers/rtc/rtc-cmos.c
-
+--------------------------------------------------------------------------------
 * kernel_restart
 
 Use:drivers/tty/sysrq.c:664:2
 
 allows anonymouse user to perform reboot using keyboard or serial tty
 
+--------------------------------------------------------------------------------
 * mix_pool_bytes
 
 drivers/char/random.c
 
 allow write to pool using random_write(), bypass capability check in random_ioctl
 
+--------------------------------------------------------------------------------
 * rtc_set_time
 Use:drivers/rtc/systohc.c:64:8
 allows remote NTP server modifying system time
@@ -27,6 +29,7 @@ allows remote NTP server modifying system time
 Use:drivers/firmware/efi/efivars.c:303:8
 arbitary through raw_store_var()
 
+--------------------------------------------------------------------------------
 ===IPv6 address auto configurations[default] allows router hijack===
 
 * ip6_route_add
@@ -40,6 +43,7 @@ allows ipv6 route hijack if ipv6 autoconfiguration is enabled
 no capability check in rfkill_fop_write,
 allows power control over RF-devices
 
+--------------------------------------------------------------------------------
 ===Intel DRM Driver=======
 
 Inspect Use of Function:drm_gem_handle_create
@@ -56,8 +60,97 @@ Found matched functions(bitcast) for call-by-val:drm_gem_handle_create
 Use:drivers/gpu/drm/i915/i915_gem.c:615:8 @[ drivers/gpu/drm/i915/i915_gem.c:658:9 ]
 [NO CHECK]
 
+--------------------------------------------------------------------------------
+
+Inspect Use of Function:sock_prot_inuse_add
+Use:net/unix/af_unix.c:793:3
+=NO CHECK ON PATH=
+Call Stack:
+0 unix_create1 net/unix/af_unix.c:793:3
+1 unix_create net/unix/af_unix.c:828:9
+2 __sock_create net/socket.c:1267:8
+3 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+-------------
+Use:net/unix/af_unix.c:793:3
+=NO CHECK ON PATH=
+Call Stack:
+0 unix_create1 net/unix/af_unix.c:793:3
+1 unix_create net/unix/af_unix.c:828:9
+2 __sock_create net/socket.c:1267:8
+3 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+-------------
+Good: 1 Bad: 3 Ignored: 39
+
+-------------------------------------------------------------------------------
+
+arbitary user command execution
+
+Inspect Use of Function:blk_execute_rq
+Use:drivers/mmc/core/block.c:645:2
+=NO CHECK ON PATH=
+Call Stack:
+0 mmc_blk_ioctl_cmd drivers/mmc/core/block.c:645:2
+1 mmc_rpmb_ioctl drivers/mmc/core/block.c:2286:9
+-------------
+Use:drivers/mmc/core/block.c:715:2
+=NO CHECK ON PATH=
+Call Stack:
+0 mmc_blk_ioctl_multi_cmd drivers/mmc/core/block.c:715:2
+1 mmc_rpmb_ioctl drivers/mmc/core/block.c:2291:9
+-------------
+Use:drivers/mmc/core/block.c:2612:2
+=NO CHECK ON PATH=
+Call Stack:
+0 mmc_ext_csd_open drivers/mmc/core/block.c:2612:2
+-------------
+Good: 2 Bad: 3 Ignored: 1
 
 
+-------------------------------------------------------------------------------
+
+arbitary user command execution
+
+Inspect Use of Function:DAC960_WaitForCommand
+Use:drivers/block/DAC960.c:6238:5 @[ drivers/block/DAC960.c:6565:13 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 dac960_user_command_proc_write drivers/block/DAC960.c:6238:5 @[ drivers/block/DAC960.c:6565:13 ]
+-------------
+Use:drivers/block/DAC960.c:5975:5 @[ drivers/block/DAC960.c:6562:13 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 dac960_user_command_proc_write drivers/block/DAC960.c:5975:5 @[ drivers/block/DAC960.c:6562:13 ]
+-------------
+Good: 3 Bad: 2 Ignored: 0
+
+-------------------------------------------------------------------------------
+UBI FileSystem
+
+some path in ioctl is checked some is not
+
+call to ubi_volume_notify also used in vol_cdev_write,
+use unfiltered ioctl to do stuff and call vol_cdev_write to ubi_volume_notify
+
+Inspect Use of Function:ubi_volume_notify
+Use:drivers/mtd/ubi/cdev.c:380:3
+=NO CHECK ON PATH=
+Call Stack:
+0 vol_cdev_write drivers/mtd/ubi/cdev.c:380:3
+-------------
+Good: 7 Bad: 1 Ignored: 1
+
+--------------------------------------------------------------------------------
+register net network device without net_admin capability?
+
+Inspect Use of Function:register_netdevice
+Use:net/core/dev.c:7835:8
+=NO CHECK ON PATH=
+Call Stack:
+0 register_netdev net/core/dev.c:7835:8
+1 i40e_vsi_setup drivers/net/ethernet/intel/i40e/i40e_main.c:12523:9
+2 i40e_dbg_command_write drivers/net/ethernet/intel/i40e/i40e_debugfs.c:804:9
+-------------
+Good: 22 Bad: 1 Ignored: 105
 
 
 

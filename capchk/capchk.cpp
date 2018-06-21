@@ -516,6 +516,7 @@ bool contains_interesting_kwd(const std::string& str)
 static const char* interesting_type_word [] = 
 {
     "struct.file_operations",
+    "struct.net_proto_family"
 };
 
 bool is_interesting_type(Type* ty)
