@@ -1363,6 +1363,8 @@ InstructionSet capchk::discover_chks(Function* f, FunctionSet& visited)
                 continue;
 
             Function *nextf = get_callee_function_direct(ci);
+            if (!nextf)//ignore all indirect call
+                continue;
             InstructionSet r = discover_chks(nextf, visited);
             if (r.size())
                 ret.insert(ci);
