@@ -115,7 +115,11 @@ Value2ChkInst v2ci;
 TypeToFunctions t2fs;
 
 //map function to check instructions inside that function
+//only include direct check
 Function2ChkInst f2chks;
+//discovered check inside functions, including other callee
+//which will call the check, which is the super set of f2chks
+Function2ChkInst f2chks_disc;
 
 //all function pointer assignment,(part of function use)
 InstructionSet fptrassign;
@@ -135,6 +139,7 @@ FunctionSet all_functions;
 
 //all syscall is listed here
 FunctionSet syscall_list;
+
 
 #define MAX_PATH 1000
 #define MAX_BACKWD_SLICE_DEPTH 100
@@ -203,8 +208,8 @@ class capchk : public ModulePass
         FunctionSet resolve_indirect_callee(CallInst*);
 
 
-        InstructionSet discover_chks(Function* f);
-        InstructionSet discover_chks(Function* f, FunctionSet& visited);
+        InstructionSet& discover_chks(Function* f);
+        InstructionSet& discover_chks(Function* f, FunctionSet& visited);
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
@@ -1340,17 +1345,22 @@ void capchk::collect_crits(Module& module)
 /*
  * discover checks inside functions f, including checks inside other callee
  */
-InstructionSet capchk::discover_chks(Function* f, FunctionSet& visited)
+InstructionSet& capchk::discover_chks(Function* f, FunctionSet& visited)
 {
-    InstructionSet ret;
+    InstructionSet* ret;
     if (visited.count(f))
-        return ret;
+        return *f2chks_disc[f];
     visited.insert(f);
 
+    ret = new InstructionSet;
+    f2chks_disc[f] = ret;
+
+    //any direct check
     if (InstructionSet* chks = f2chks[f])
         for (auto *i: *chks)
-            ret.insert(i);
+            ret->insert(i);
 
+    //indirect check
     for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
     {
         BasicBlock* bb = dyn_cast<BasicBlock>(fi);
@@ -1367,17 +1377,21 @@ InstructionSet capchk::discover_chks(Function* f, FunctionSet& visited)
                 continue;
             InstructionSet r = discover_chks(nextf, visited);
             if (r.size())
-                ret.insert(ci);
+                ret->insert(ci);
         }
     }
 
-    return ret;
+    return *ret;
 }
 
-InstructionSet capchk::discover_chks(Function* f)
+InstructionSet& capchk::discover_chks(Function* f)
 {
+    if (f2chks_disc.count(f)!=0)
+        return *f2chks_disc[f];
+
     FunctionSet visited;
-    return discover_chks(f, visited);
+    InstructionSet& ret = discover_chks(f, visited);
+    return ret;
 }
 
 void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
