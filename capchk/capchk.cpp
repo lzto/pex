@@ -1878,7 +1878,7 @@ void capchk::check_critical_variable_usage(Module& module)
                 <<f->getName()
                 <<"\n";
             //is this instruction reachable from non-checked path?
-            int good, bad, ignored;
+            int good=0, bad=0, ignored=0;
             _backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U), good, bad, ignored);
             errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
                   <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
