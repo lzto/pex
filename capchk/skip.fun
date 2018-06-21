@@ -1,3 +1,4 @@
+abort_creds
 add_taint
 alloc_counters
 alloc_file
@@ -7,6 +8,7 @@ __alloc_percpu
 __alloc_skb
 alloc_swapdev_block
 alloc_uid
+anon_inode_getfile
 async_synchronize_full
 __audit_fd_pair
 __audit_log_kern_module
@@ -40,6 +42,7 @@ dev_err
 __dev_get_by_flags
 __dev_get_by_index
 __dev_get_by_name
+dev_get_by_name_rcu
 _dev_info
 __dev_kfree_skb_any
 dev_notice
@@ -64,6 +67,8 @@ dqput
 dquot_initialize
 drm_printk
 dump_stack
+__ext4_error
+__ext4_warning
 __fdget
 file_open_name
 file_open_root
@@ -77,6 +82,7 @@ flush_work
 fpu__alloc_mathframe
 fpu__clear
 fput
+free_basic_memory_bitmaps
 _free_event
 free_modprobe_argv
 free_module
@@ -114,6 +120,7 @@ is_audit_feature_set
 is_bad_inode
 jiffies_to_msecs
 kcore_update_ram
+key_put
 key_user_lookup
 key_user_put
 kfree
@@ -136,6 +143,7 @@ ktime_get_with_offset
 kvfree
 kvmalloc_node
 load_module
+lockref_get
 lock_sock_nested
 machine_kexec_prepare
 memchr
@@ -144,8 +152,12 @@ __memcpy
 microcode_open
 __mm_populate
 mmput
+mnt_drop_write
+mnt_drop_write_file
 mntget
 mntput
+mnt_want_write
+mnt_want_write_file
 __module_get
 module_put
 __module_put_and_exit
@@ -178,10 +190,13 @@ plist_del
 plist_requeue
 pm_restore_gfp_mask
 posix_acl_fix_xattr_to_user
+prandom_u32
 prepare_creds
 prepare_to_wait_event
 printk
 proc_free_inum
+ptrace_may_access
+ptrace_notify
 put_compat_itimerspec64
 put_ctx
 put_device
@@ -223,6 +238,9 @@ __release_sock
 release_sock
 __request_module
 round_jiffies_up
+rtnl_is_locked
+rtnl_lock
+rtnl_unlock
 schedule
 schedule_timeout
 schedule_timeout_interruptible
@@ -247,7 +265,11 @@ skb_queue_tail
 skb_trim
 __sk_free
 sk_free
+skip_spaces
 snprintf
+sock_init_data
+sock_kfree_s
+sock_kmalloc
 sort
 sprintf
 sscanf
