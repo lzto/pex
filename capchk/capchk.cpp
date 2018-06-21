@@ -177,6 +177,7 @@ class capchk : public ModulePass
                 bool checked, InstructionList &callgraph,
                 InstructionList& chks);
         
+
         /*
          * analyze
          */
@@ -655,6 +656,8 @@ bool is_interesting_type(Type* ty)
 {
     if (!ty->isStructTy())
         return false;
+    if (!dyn_cast<StructType>(ty)->hasName())
+        return false;
     StringRef tyn = ty->getStructName();
     for (int i=0;i<1;i++)
     {
@@ -840,6 +843,7 @@ void capchk::dump_f2ci()
     {
         Function* func = cis.first;
         errs()<<ANSI_COLOR_GREEN<<func->getName()<<ANSI_COLOR_RESET<<"\n";
+        int last_cap_no = -1;
         for (auto *ci: *cis.second)
         {
             CallInst* cs = dyn_cast<CallInst>(ci);
@@ -862,12 +866,19 @@ void capchk::dump_f2ci()
                     continue;
                 }
                 cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
+                if (last_cap_no==-1)
+                    last_cap_no=cap_no;
+                if (last_cap_no!=cap_no)
+                    last_cap_no = -2;
             }
             assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
             errs()<<"    "<<cap2string[cap_no]<<" @ ";
             cs->getDebugLoc().print(errs());
             errs()<<"\n";
         }
+        if (last_cap_no==-2)
+            errs()<<ANSI_COLOR_RED<<"inconsistent check"
+                    <<ANSI_COLOR_RESET<<"\n";
     }
 }
 
@@ -2417,6 +2428,7 @@ void capchk::process_cpgf(Module& module)
     dump_f2ci();
 
     errs()<<"Run Analysis\n";
+
     if (knob_capchk_critical_var)
     {
         errs()<<"Critical variables\n";
