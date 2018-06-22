@@ -42,6 +42,7 @@ create_basic_memory_bitmaps
 current_time
 dec_ucount
 del_timer
+del_timer_sync
 dentry_open
 dev_err
 __dev_get_by_flags
