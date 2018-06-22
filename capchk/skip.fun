@@ -180,6 +180,7 @@ mntget
 mntput
 mnt_want_write
 mnt_want_write_file
+mod_timer
 __module_get
 module_put
 __module_put_and_exit
