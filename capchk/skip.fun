@@ -11,6 +11,7 @@ __alloc_skb
 alloc_swapdev_block
 alloc_uid
 anon_inode_getfile
+arch_dma_alloc_attrs
 async_synchronize_full
 __audit_fd_pair
 __audit_log_kern_module
