@@ -10,7 +10,12 @@
 
 #include "color.h"
 #include "stopwatch.h"
-STOP_WATCH;
+
+#define TOTOAL_NUMBER_OF_STOP_WATCHES 1
+#define WID_INIT 0
+#define WID_ANAL 1
+
+STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 
 using namespace llvm;
 
@@ -24,37 +29,36 @@ void CVFA::initialize(Module& module)
 {
     m = &module;
     errs()<<ANSI_COLOR_GREEN<<"Create PTACallGraph\n"<<ANSI_COLOR_RESET;
-STOP_WATCH;
-STOP_WATCH_START;
+STOP_WATCH_START(WID_INIT);
     ptaCallGraph = new PTACallGraph(module);
-STOP_WATCH_STOP;
-STOP_WATCH_REPORT;
+STOP_WATCH_STOP(WID_INIT);
+STOP_WATCH_REPORT(WID_INIT);
     errs()<<ANSI_COLOR_GREEN<<"Create AndersenWaveDiff, this will take some time\n"
         <<ANSI_COLOR_RESET;
-STOP_WATCH_START;
+STOP_WATCH_START(WID_INIT);
     AndersenWaveDiff* ander = AndersenWaveDiff::createAndersenWaveDiff(module);
-STOP_WATCH_STOP;
-STOP_WATCH_REPORT;
+STOP_WATCH_STOP(WID_INIT);
+STOP_WATCH_REPORT(WID_INIT);
     errs()<<ANSI_COLOR_GREEN<<"build MemorySSA\n"<<ANSI_COLOR_RESET;
-STOP_WATCH_START;
+STOP_WATCH_START(WID_INIT);
     svfg = memSSA.buildSVFG(ander);
-STOP_WATCH_STOP;
-STOP_WATCH_REPORT;
+STOP_WATCH_STOP(WID_INIT);
+STOP_WATCH_REPORT(WID_INIT);
     errs()<<ANSI_COLOR_GREEN<<"Misc\n"<<ANSI_COLOR_RESET;
-STOP_WATCH_START;
+STOP_WATCH_START(WID_INIT);
     setGraph(memSSA.getSVFG());
     //AndersenWaveDiff::releaseAndersenWaveDiff();
     /// allocate control-flow graph branch conditions
     getPathAllocator()->allocate(module);
-STOP_WATCH_STOP;
-STOP_WATCH_REPORT;
+STOP_WATCH_STOP(WID_INIT);
+STOP_WATCH_REPORT(WID_INIT);
 }
 
 //should call initialize/add_src/add_sink first then call analyze
 void CVFA::analyze()
 {
     errs()<<"CVFA::analysze\n";
-    STOP_WATCH_START;
+    STOP_WATCH_START(WID_ANAL);
     ContextCond::setMaxCxtLen(cxtLimit);
 
     for (SVFGNodeSetIter iter = sourcesBegin(), eiter = sourcesEnd();
@@ -101,8 +105,8 @@ void CVFA::analyze()
     }
 
     finalize();
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    STOP_WATCH_STOP(WID_ANAL);
+    STOP_WATCH_REPORT(WID_ANAL);
 }
 
 

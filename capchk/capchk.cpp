@@ -12,7 +12,14 @@
 #include "color.h"
 #include "aux.h"
 #include "stopwatch.h"
-STOP_WATCH;
+
+#define TOTOAL_NUMBER_OF_STOP_WATCHES 2
+#define WID_0 0
+#define WID_KINIT 1
+#define WID_CC 1
+#define WID_PI 1
+
+STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 
 #define DEBUG_PREPARE 0
 #define DEBUG_ANALYZE 1
@@ -22,6 +29,8 @@ STOP_WATCH;
 #define MAX_FWD_SLICE_DEPTH 100
 
 using namespace llvm;
+
+char capchk::ID;
 
 STATISTIC(FuncCounter, "Functions greeted");
 STATISTIC(ExternalFuncCounter, "External functions");
@@ -797,46 +806,50 @@ bool capchk::is_kernel_init_functions(Function* f)
 
 void capchk::collect_kernel_init_functions(Module& module)
 {
+    //kstart is the first function in boot sequence
     Function *kstart = NULL;
-    FunctionSet kif;
+    //kernel init functions
+    FunctionSet kinit_funcs;
+    //Step 1: find kernel entry point
+    errs()<<"Finding Kernel Entry Point\n";
+    STOP_WATCH_START(WID_KINIT);
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration() || func->isIntrinsic())
+        if (func->isDeclaration() || func->isIntrinsic() || (!func->hasName()))
             continue;
-        if (func->hasName())
+        StringRef fname = func->getName();
+        if (fname.startswith("x86_64_start_kernel"))
         {
-            StringRef fname = func->getName();
-            if (fname.startswith("x86_64_start_kernel"))
-            {
-                errs()<<ANSI_COLOR_GREEN
-                    <<"Found "<<func->getName()
-                    <<ANSI_COLOR_RESET<<"\n";
-                kstart = func;
-                kernel_init_functions.insert(func);
-            }else if (fname.startswith("start_kernel"))
-            {
-                //we should consider start_kernel as kernel init functions no
-                //matter what
-                kernel_init_functions.insert(func);
-                kif.insert(func);
-                for (auto *U: func->users())
-                {
-                    if (Instruction *I = dyn_cast<Instruction>(U))
-                    {
-                        kif.insert(I->getFunction());
-                    }
-                }
-            }
+            errs()<<ANSI_COLOR_GREEN
+                <<"Found "<<func->getName()
+                <<ANSI_COLOR_RESET<<"\n";
+            kstart = func;
+            kinit_funcs.insert(kstart);
+            kernel_init_functions.insert(func);
+        }else if (fname.startswith("start_kernel"))
+        {
+            //we should consider start_kernel as kernel init functions no
+            //matter what
+            kernel_init_functions.insert(func);
+            kinit_funcs.insert(func);
+            //everything calling start_kernel should be considered init
+            for (auto *U: func->users())
+                if (Instruction *I = dyn_cast<Instruction>(U))
+                    kinit_funcs.insert(I->getFunction());
         }
         if (kernel_init_functions.size()==2)
             break;
     }
+    //should always find kstart
     assert(kstart!=NULL);
-    kif.insert(kstart);
+    STOP_WATCH_STOP(WID_KINIT);
+    STOP_WATCH_REPORT(WID_KINIT);
 
-    //find all init functions starting from x86_64_start_kernel
+    //Step 2: over approximate kernel init functions
+    errs()<<"Over Approximate Kernel Init Functions\n";
+    STOP_WATCH_START(WID_KINIT);
     FunctionSet func_visited;
     FunctionList func_work_list;
     func_work_list.push_back(kstart);
@@ -849,7 +862,7 @@ void capchk::collect_kernel_init_functions(Module& module)
         if (cfunc->isDeclaration() || cfunc->isIntrinsic())
             continue;
         
-        kif.insert(cfunc);
+        kinit_funcs.insert(cfunc);
         func_visited.insert(cfunc);
         kernel_init_functions.insert(cfunc);
 
@@ -882,7 +895,11 @@ void capchk::collect_kernel_init_functions(Module& module)
             }
         }
     }
+    STOP_WATCH_STOP(WID_KINIT);
+    STOP_WATCH_REPORT(WID_KINIT);
 
+    errs()<<"Refine Result\n";
+    STOP_WATCH_START(WID_KINIT);
     /*
      * ! BUG: query use of inlined function result in in-accurate result?
      * inlined foo();
@@ -896,7 +913,7 @@ void capchk::collect_kernel_init_functions(Module& module)
     int last_count = 0;
 
 again:
-    for (auto I: kif)
+    for (auto I: kinit_funcs)
     {
         if ((I->getName()=="start_kernel") ||
             (I->getName()=="x86_64_start_kernel"))
@@ -907,7 +924,7 @@ again:
         {
             if (!isa<Instruction>(U))
                 continue;
-            if (kif.count(dyn_cast<Instruction>(U)->getFunction())==0)
+            if (kinit_funcs.count(dyn_cast<Instruction>(U)->getFunction())==0)
             {
                 //means that we have a user does not belong to kernel init functions
                 //we need to remove it
@@ -929,6 +946,9 @@ again:
         refine_pass++;
         goto again;
     }
+    STOP_WATCH_STOP(WID_KINIT);
+    STOP_WATCH_REPORT(WID_KINIT);
+
 #if 1
 //this is imprecise, clear it
     errs()<<"clear NON-kernel-init functions\n";
@@ -1137,6 +1157,7 @@ void capchk::collect_pp(Module& module)
 
 void capchk::collect_crits(Module& module)
 {
+    STOP_WATCH_START(WID_CC);
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
@@ -1158,8 +1179,8 @@ void capchk::collect_crits(Module& module)
         dbgstk.pop_back();
     }
 
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    STOP_WATCH_STOP(WID_CC);
+    STOP_WATCH_REPORT(WID_CC);
 
     CRITFUNC = critical_functions.size();
     CRITVAR = critical_variables.size();
@@ -1988,7 +2009,7 @@ out:
  */
 void capchk::process_intras(Module& module)
 {
-    STOP_WATCH_START;
+    STOP_WATCH_START(WID_PI);
     for (Module::iterator fi = module.begin(), fe = module.end();
             fi != fe; ++fi)
     {
@@ -2104,8 +2125,8 @@ interesting:
             errs()<<ANSI_COLOR_RED<<"[FAIL]"<<ANSI_COLOR_RESET<<"\n";
         }
     }
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    STOP_WATCH_STOP(WID_PI);
+    STOP_WATCH_REPORT(WID_PI);
 }
 
 void capchk::my_debug(Module& module)
@@ -2170,40 +2191,40 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Pre-processing...\n";
     load_skip_func_list(knob_skip_func_list);
     load_skip_var_list(knob_skip_var_list);
-    STOP_WATCH_START;
+    STOP_WATCH_START(WID_0);
     collect_pp(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
 
     errs()<<"Identify wrappers\n";
-    STOP_WATCH_START;
+    STOP_WATCH_START(WID_0);
     collect_wrappers(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
 
     errs()<<"Collect Checkpoints\n";
-    STOP_WATCH_START;
+    STOP_WATCH_START(WID_0);
     collect_chkps(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
 
     if (knob_capchk_cvf)
     {
         errs()<<"Resolving callee for indirect call.\n";
-        STOP_WATCH_START;
+        STOP_WATCH_START(WID_0);
         resolve_all_indirect_callee(module);
-        STOP_WATCH_STOP;
-        STOP_WATCH_REPORT;
+        STOP_WATCH_STOP(WID_0);
+        STOP_WATCH_REPORT(WID_0);
     }
 
     errs()<<"Collecting Initialization Closure.\n";
-    STOP_WATCH_START;
+    STOP_WATCH_START(WID_0);
     collect_kernel_init_functions(module);
-    STOP_WATCH_STOP;
-    STOP_WATCH_REPORT;
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
 
     errs()<<"Collect all permission-checked variables and functions\n";
-    STOP_WATCH_START;
+    STOP_WATCH_START(WID_0);
     collect_crits(module);
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
@@ -2216,18 +2237,18 @@ void capchk::process_cpgf(Module& module)
     if (knob_capchk_critical_var)
     {
         errs()<<"Critical variables\n";
-        STOP_WATCH_START;
+        STOP_WATCH_START(WID_0);
         check_critical_variable_usage(module);
-        STOP_WATCH_STOP;
-        STOP_WATCH_REPORT;
+        STOP_WATCH_STOP(WID_0);
+        STOP_WATCH_REPORT(WID_0);
     }
     if (knob_capchk_critical_fun)
     {
         errs()<<"Critical functions\n";
-        STOP_WATCH_START;
+        STOP_WATCH_START(WID_0);
         check_critical_function_usage(module);
-        STOP_WATCH_STOP;
-        STOP_WATCH_REPORT;
+        STOP_WATCH_STOP(WID_0);
+        STOP_WATCH_REPORT(WID_0);
     }
     dump_non_kinit();
 }
