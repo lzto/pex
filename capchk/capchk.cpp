@@ -680,7 +680,7 @@ void capchk::dump_v2ci()
         for (auto *ci: *cis.second)
         {
             CallInst* cs = dyn_cast<CallInst>(ci);
-            Function* cf = cs->getCalledFunction();
+            Function* cf = get_callee_function_direct(cs);
             int cap_no = -1;
             if (is_function_chk_or_wrapper(cf))
             {
@@ -737,7 +737,7 @@ void capchk::dump_f2ci()
         for (auto *ci: *cis.second)
         {
             CallInst* cs = dyn_cast<CallInst>(ci);
-            Function* cf = cs->getCalledFunction();
+            Function* cf = get_callee_function_direct(cs);
             int cap_no = -1;
             if (is_function_chk_or_wrapper(cf))
             {
