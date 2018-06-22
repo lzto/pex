@@ -350,18 +350,6 @@ bool contains_interesting_kwd(const std::string& str)
 /*
  * interesting type which contains functions pointers to deal with user request
  */
-static const char* interesting_type_word [] = 
-{
-    "struct.file_operations",
-    "struct.net_proto_family",
-    "struct.sysfs_ops",
-    "struct.device_attribute",
-    "struct.bus_attribute",
-    "struct.driver_attribute",
-    "struct.class_attribute",
-    "struct.bin_attribute",
-};
-
 bool is_interesting_type(Type* ty)
 {
     if (!ty->isStructTy())

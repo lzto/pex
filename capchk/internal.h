@@ -184,6 +184,63 @@ static const char* interesting_keyword [] =
     "ioctl",
 };
 
+/*
+ * sysfs stuff
+ */
+
+static const char* interesting_type_word [] = 
+{
+    "struct.file_operations",
+    "struct.net_proto_family",
+    "struct.sysfs_ops",
+    "struct.device_attribute",
+    "struct.bus_attribute",
+    "struct.driver_attribute",
+    "struct.class_attribute",
+    "struct.bin_attribute",
+    "struct.efivar_attribute",
+    "struct.kobj_attribute",
+    "struct.brport_attribute",
+    "struct.slave_attribute",
+    "struct.batadv_attribute",
+    "struct.configfs_attribute",
+    "struct.configfs_bin_attribute",
+    "struct.ctl_info_attribute",
+    "struct.edac_dev_sysfs_attribute",
+    "struct.edac_dev_sysfs_block_attribute",
+    "struct.edac_pci_dev_attribute",
+    "struct.edd_attribute",
+    "struct.instance_attribute",
+    "struct.module_attribute",
+    "struct.pci_slot_attribute",
+    "struct.psmouse_attribute",
+    "struct.sde_attribute",
+    "struct.display_attribute",
+    "struct.dmi_sysfs_mapped_attribute",
+    "struct.dump_attribute",
+    "struct.elog_attribute",
+    "struct.ep_attribute",
+    "struct.esre_attribute",
+    "struct.fw_cfg_sysfs_attribute",
+    "struct.gb_audio_manager_module_attribute",
+    "struct.hw_stats_attribute",
+    "struct.instance_attribute",
+    "struct.iommu_group_attribute",
+    "struct.manager_attribute",
+    "struct.map_attribute",
+    "struct.mdev_type_attribute",
+    "struct.memmap_attribute",
+    "struct.netdev_queue_attribute",
+    "struct.overlay_attribute",
+    "struct.pdcspath_attribute",
+    "struct.port_attribute",
+    "struct.qpn_attribute",
+    "struct.rx_queue_attribute",
+    "struct.slab_attribute",
+    "struct.vmbus_chan_attribute",
+    "struct.widget_attribute",
+};
+
 
 #endif//_CAPCHK_INTERNAL_H_
 
