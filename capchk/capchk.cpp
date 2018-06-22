@@ -1052,19 +1052,12 @@ void capchk::collect_chkps(Module& module)
             BasicBlock* bb = dyn_cast<BasicBlock>(fi);
             for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
             {
-                CallInst* ci = dyn_cast<CallInst>(ii);
-                if (!ci)
-                    continue;
-                if (Function* _f = ci->getCalledFunction())
-                {
-                    if (is_function_chk_or_wrapper(_f))
-                        chks->insert(ci);
-                    continue;
-                }
-                Value* cv = ci->getCalledValue();
-                Function* _cf = dyn_cast<Function>(cv->stripPointerCasts());
-                if(_cf && is_function_chk_or_wrapper(_cf))
-                    chks->insert(ci);
+                if (CallInst* ci = dyn_cast<CallInst>(ii))
+                    if (Function* _f = get_callee_function_direct(ci))
+                    {
+                        if (is_function_chk_or_wrapper(_f))
+                            chks->insert(ci);
+                    }
             }
         }
     }
@@ -1839,21 +1832,14 @@ add:
             {
                 //critical function
                 CallInst* cs = dyn_cast<CallInst>(ii);
-                Function* csf = cs->getCalledFunction();
                 //ignore inline asm
                 if (cs->isInlineAsm())
                     continue;
-                //simple type cast?
-                if (csf==NULL)
-                        csf = dyn_cast<Function>(cs->getCalledValue()
-                                                    ->stripPointerCasts());
-
-                if (csf!=NULL)
+                if (Function *csf = get_callee_function_direct(cs))
                 {
                     if (csf->isIntrinsic()
                             ||is_skip_function(csf->getName())
-                            ||is_function_chk_or_wrapper(csf)
-                            )
+                            ||is_function_chk_or_wrapper(csf))
                         continue;
                     current_crit_funcs.insert(csf);
 
@@ -1889,9 +1875,8 @@ add:
                     CPResolv++;
                     Function* csf = *fs.begin();
 #if 1
-                    StringRef fname = csf->getName();
                     if (csf->isIntrinsic()
-                            ||is_skip_function(fname)
+                            ||is_skip_function(csf->getName())
                             ||is_function_chk_or_wrapper(csf))
                         continue;
 
