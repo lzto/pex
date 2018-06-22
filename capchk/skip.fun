@@ -68,6 +68,7 @@ dqput
 dquot_initialize
 drm_printk
 dump_stack
+event_function_call
 __ext4_error
 __ext4_warning
 __fdget
@@ -147,6 +148,7 @@ kstrtouint
 kstrtoul_from_user
 kstrtoull
 kthread_should_stop
+ktime_get
 ktime_get_with_offset
 kvfree
 kvmalloc_node
@@ -258,10 +260,12 @@ schedule_timeout
 schedule_timeout_interruptible
 schedule_timeout_killable
 schedule_timeout_uninterruptible
+__scm_destroy
 scnprintf
 seq_printf
 seq_putc
 seq_puts
+__set_current_blocked
 set_current_groups
 setup_sigcontext
 signal_setup_done
@@ -282,6 +286,7 @@ snprintf
 sock_init_data
 sock_kfree_s
 sock_kmalloc
+sock_prot_inuse_add
 sort
 sprintf
 sscanf

@@ -178,9 +178,9 @@ class capchk : public ModulePass
             return "capchk";
         }
 
-        void print(raw_ostream &OS, const Module *M)
+        virtual void print(raw_ostream &OS, const Module *M)
         {
-            OS<<"\n";
+            OS<<"Analysis Result\n";
         }
 
         void getAnalysisUsage(AnalysisUsage &au) const override

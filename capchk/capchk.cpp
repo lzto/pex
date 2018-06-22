@@ -214,6 +214,27 @@ StringRef get_callee_function_name(Instruction* i)
     return "";
 }
 
+bool function_has_gv_initcall_use(Function* f)
+{
+    static FunctionSet fs_initcall;
+    static FunctionSet fs_noninitcall;
+    if (fs_initcall.count(f)!=0)
+        return true;
+    if (fs_noninitcall.count(f)!=0)
+        return false;
+    for (auto u: f->users())
+        if (GlobalValue *gv = dyn_cast<GlobalValue>(u))
+        {
+            if (!gv->hasName())
+                continue;
+            gv->getName().startswith("__initcall_");
+            fs_initcall.insert(f);
+            return true;
+        }
+    fs_noninitcall.insert(f);
+    return false;
+}
+
 /*
  * all critical functions and variables
  * should be permission checked before use
@@ -744,25 +765,16 @@ int capchk::use_parent_func_arg(Value* v, Function* f)
  */
 bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
 {
-    std::string name = f->getName();
     if (kernel_init_functions.count(f)!=0)
         return true;
     if (non_kernel_init_functions.count(f)!=0)
         return false;
 
     //init functions with initcall prefix belongs to kernel init sequence
-    std::string std_gv_spec = "__initcall_" + name;
-    for (GlobalVariable &gvi: m->globals())
+    if (function_has_gv_initcall_use(f))
     {
-        GlobalValue* gi = &gvi;
-        if (Value* gv = dyn_cast<Value>(gi))
-        {
-            if (gv->getName().startswith(std_gv_spec))
-            {
-                kernel_init_functions.insert(f);
-                return true;
-            }
-        }
+        kernel_init_functions.insert(f);
+        return true;
     }
 
     //not found in cache?
@@ -811,7 +823,7 @@ void capchk::collect_kernel_init_functions(Module& module)
     //kernel init functions
     FunctionSet kinit_funcs;
     //Step 1: find kernel entry point
-    errs()<<"Finding Kernel Entry Point\n";
+    errs()<<"Finding Kernel Entry Point and all __initcall_\n";
     STOP_WATCH_START(WID_KINIT);
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
@@ -835,62 +847,72 @@ void capchk::collect_kernel_init_functions(Module& module)
             kernel_init_functions.insert(func);
             kinit_funcs.insert(func);
             //everything calling start_kernel should be considered init
-            for (auto *U: func->users())
-                if (Instruction *I = dyn_cast<Instruction>(U))
-                    kinit_funcs.insert(I->getFunction());
+            //for (auto *U: func->users())
+            //    if (Instruction *I = dyn_cast<Instruction>(U))
+            //        kinit_funcs.insert(I->getFunction());
+        }else
+        {
+            if (function_has_gv_initcall_use(func))
+                kernel_init_functions.insert(func);
         }
-        if (kernel_init_functions.size()==2)
-            break;
     }
     //should always find kstart
     assert(kstart!=NULL);
     STOP_WATCH_STOP(WID_KINIT);
     STOP_WATCH_REPORT(WID_KINIT);
 
+    errs()<<"Initial Kernel Init Function Count:"<<kernel_init_functions.size()<<"\n";
+
     //Step 2: over approximate kernel init functions
     errs()<<"Over Approximate Kernel Init Functions\n";
     STOP_WATCH_START(WID_KINIT);
     FunctionSet func_visited;
-    FunctionList func_work_list;
-    func_work_list.push_back(kstart);
+    FunctionSet func_work_set;
+    for (auto f: kernel_init_functions)
+        func_work_set.insert(f);
 
-    while (func_work_list.size())
+    while (func_work_set.size())
     {
-        Function* cfunc = func_work_list.front();
-        func_work_list.pop_front();
+        Function* cfunc = *func_work_set.begin();
+        func_work_set.erase(cfunc);
 
-        if (cfunc->isDeclaration() || cfunc->isIntrinsic())
+        if (cfunc->isDeclaration() || cfunc->isIntrinsic() || is_syscall(cfunc))
             continue;
         
         kinit_funcs.insert(cfunc);
         func_visited.insert(cfunc);
         kernel_init_functions.insert(cfunc);
 
-        //for current function
+        //explore call graph starting from this function
         for(Function::iterator fi = cfunc->begin(), fe = cfunc->end(); fi != fe; ++fi)
         {
             BasicBlock* bb = dyn_cast<BasicBlock>(fi);
             for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
             {
                 CallInst* ci = dyn_cast<CallInst>(ii);
-                if (!ci)
+                if ((!ci) || (ci->isInlineAsm()))
                     continue;
-                if (ci->isInlineAsm())
-                    continue;
-                if (Function* nf = ci->getCalledFunction())
+                if (Function* nf = get_callee_function_direct(ci))
                 {
-                    if (nf->isDeclaration() || 
-                        nf->isIntrinsic() ||
-                        func_visited.count(nf))
+                    if (nf->isDeclaration() || nf->isIntrinsic() ||
+                        func_visited.count(nf) || is_syscall(nf))
                         continue;
-                    func_work_list.push_back(nf);
-                }else if (Value* nv = ci->getCalledValue())
+                    func_work_set.insert(nf);
+                }else
                 {
-                    //function pointer?
+#if 0
+                    //indirect call?
                     FunctionSet fs = resolve_indirect_callee(ci);
+                    errs()<<"Indirect Call in kernel init seq: @ ";
+                    ci->getDebugLoc().print(errs());
+                    errs()<<"\n";
                     for (auto callee: fs)
+                    {
+                        errs()<<"    "<<callee->getName()<<"\n";
                         if (!func_visited.count(callee))
-                            func_work_list.push_back(callee);
+                            func_work_set.insert(callee);
+                    }
+#endif
                 }
             }
         }
@@ -913,14 +935,13 @@ void capchk::collect_kernel_init_functions(Module& module)
     int last_count = 0;
 
 again:
-    for (auto I: kinit_funcs)
+    for (auto f: kinit_funcs)
     {
-        if ((I->getName()=="start_kernel") ||
-            (I->getName()=="x86_64_start_kernel"))
-        {
+        if ((f->getName()=="start_kernel") ||
+            (f->getName()=="x86_64_start_kernel") ||
+            function_has_gv_initcall_use(f))
             continue;
-        }
-        for (auto *U: I->users())
+        for (auto *U: f->users())
         {
             if (!isa<Instruction>(U))
                 continue;
@@ -928,31 +949,35 @@ again:
             {
                 //means that we have a user does not belong to kernel init functions
                 //we need to remove it
-                non_kernel_init_functions.insert(I);
+                non_kernel_init_functions.insert(f);
                 break;
             }
         }
     }
-
-    for (auto I: non_kernel_init_functions)
+    for (auto f: non_kernel_init_functions)
     {
-        kernel_init_functions.erase(I);
+        kernel_init_functions.erase(f);
+        kinit_funcs.erase(f);
     }
+
     if (last_count!=non_kernel_init_functions.size())
     {
         last_count = non_kernel_init_functions.size();
         static int refine_pass = 0;
-        errs()<<"refine pass "<<refine_pass<<"\n";
+        errs()<<"refine pass "<<refine_pass<<" "<<kernel_init_functions.size()<<" left\n";
         refine_pass++;
         goto again;
     }
+
+    errs()<<" Refine result : count="<<kernel_init_functions.size()<<"\n";
     STOP_WATCH_STOP(WID_KINIT);
     STOP_WATCH_REPORT(WID_KINIT);
 
+
 #if 1
 //this is imprecise, clear it
-    errs()<<"clear NON-kernel-init functions\n";
-    non_kernel_init_functions.clear();
+    //errs()<<"clear NON-kernel-init functions\n";
+    //non_kernel_init_functions.clear();
 #endif
     dump_kinit();
 }
