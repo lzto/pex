@@ -1,5 +1,6 @@
 abort_creds
 add_taint
+add_timer
 alloc_counters
 alloc_file
 alloc_pages_current
@@ -21,6 +22,7 @@ __bitmap_weight
 blkdev_get
 blkdev_put
 __brelse
+call_rcu_bh
 call_rcu_sched
 cleanup_entry
 clear_user
@@ -38,6 +40,7 @@ cpumask_next_and
 create_basic_memory_bitmaps
 current_time
 dec_ucount
+del_timer
 dentry_open
 dev_err
 __dev_get_by_flags
@@ -95,6 +98,9 @@ free_pipe_info
 free_uid
 freeze_processes
 freezing_slow_path
+from_kgid
+from_kuid
+from_kuid_munged
 __get_free_pages
 get_info
 getname
@@ -157,6 +163,9 @@ load_module
 lockref_get
 lock_sock_nested
 machine_kexec_prepare
+make_kgid
+make_kprojid
+make_kuid
 memchr
 memchr_inv
 memcmp
@@ -221,6 +230,7 @@ __put_page
 put_pid
 __put_task_struct
 put_unused_fd
+__put_user_ns
 queue_delayed_work_on
 queue_work_on
 radix_tree_lookup
