@@ -146,6 +146,7 @@ kmem_cache_alloc
 kmem_cache_free
 kmemdup
 kobject_put
+kobject_uevent
 krealloc
 kstrdup
 kstrtobool
