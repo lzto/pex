@@ -124,6 +124,7 @@ inc_ucount
 in_group_p
 init_idle
 init_swap_address_space
+init_timer_key
 init_wait_entry
 __init_waitqueue_head
 inode_dio_wait
