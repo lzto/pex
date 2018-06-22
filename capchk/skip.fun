@@ -5,6 +5,7 @@ alloc_file
 alloc_pages_current
 __alloc_pages_nodemask
 __alloc_percpu
+__alloc_percpu_gfp
 __alloc_skb
 alloc_swapdev_block
 alloc_uid
@@ -108,6 +109,8 @@ hrtimer_init
 ia32_setup_frame
 ia32_setup_rt_frame
 ida_simple_remove
+idr_destroy
+idr_for_each
 idr_get_next
 import_iovec
 in_group_p
@@ -145,11 +148,13 @@ kthread_should_stop
 ktime_get_with_offset
 kvfree
 kvmalloc_node
+lc_destroy
 load_module
 lockref_get
 lock_sock_nested
 machine_kexec_prepare
 memchr
+memchr_inv
 memcmp
 __memcpy
 memdup_user
@@ -288,6 +293,7 @@ strncmp
 strncpy
 strncpy_from_user
 strnlen
+strsep
 synchronize_sched
 __sysfs_match_string
 thaw_bdev
@@ -305,10 +311,10 @@ vmalloc
 __vmalloc
 vmalloc_to_page
 vzalloc
+wait_for_completion
 wait_for_completion_killable
 __wake_up
 wake_up_bit
 wake_up_new_task
 wake_up_process
 __warn_printk
-wait_for_completion
