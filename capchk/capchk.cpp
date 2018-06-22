@@ -1294,9 +1294,7 @@ void capchk::collect_pp(Module& module)
         fl->insert(func);
         
         if (is_syscall_prefix(func->getName()))
-        {
             syscall_list.insert(func);
-        }
 
         for(Function::iterator fi = func->begin(), fe = func->end();
                 fi != fe; ++fi)
@@ -1859,6 +1857,7 @@ void capchk::check_critical_variable_usage(Module& module)
 
 /*
  * IPA: figure out all global variable usage and function calls
+ * TODO: slice the program, use SVF to figure out mod/ref set
  */
 void capchk::forward_all_interesting_usage(Instruction* I, int depth,
         bool checked, InstructionList& callgraph,
@@ -1920,13 +1919,8 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
             {
                 //only interested in call site
                 CallInst *ci = dyn_cast<CallInst>(ii);
-                Function* csfunc = ci->getCalledFunction();
-                if (csfunc && csfunc->hasName())
+                if (Function* csfunc = get_callee_function_direct(ci))
                 {
-                    if (csfunc->isIntrinsic()
-                            ||is_skip_function(csfunc->getName()))
-                        continue;
-
                     if (is_function_chk_or_wrapper(csfunc))
                     {
                         is_function_permission_checked = true;
@@ -1993,6 +1987,7 @@ rescan_and_add_all:
 add:
             if (isa<CallInst>(ii))
             {
+                //critical function
                 CallInst* cs = dyn_cast<CallInst>(ii);
                 Function* csf = cs->getCalledFunction();
                 //ignore inline asm
@@ -2312,6 +2307,7 @@ interesting:
 
 void capchk::my_debug(Module& module)
 {
+#if 0
     Function* f;
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
@@ -2337,7 +2333,24 @@ void capchk::my_debug(Module& module)
             errs()<<xf->getName()<<"\n";
         }
     }
-
+#else
+    for(GlobalVariable &gvi: module.globals())
+    {
+        GlobalVariable* gi = &gvi;
+        if (gi->isDeclaration())
+            continue;
+        if (!isa<Value>(gi))
+            continue;
+        Value* gv = dyn_cast<Value>(gi);
+        StringRef gvname = gv->getName();
+        if (gvname.startswith("llvm."))
+            continue;
+        bool gv_use_func = false;
+        if (!gi->hasInitializer())
+            continue;
+        errs()<<"GV:"<<gvname<<"\n";
+    }
+#endif
     exit(0);
 }
 
