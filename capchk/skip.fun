@@ -113,6 +113,7 @@ idr_destroy
 idr_for_each
 idr_get_next
 import_iovec
+inc_ucount
 in_group_p
 init_idle
 init_swap_address_space
@@ -139,6 +140,7 @@ kmem_cache_free
 kmemdup
 kobject_put
 krealloc
+kstrdup
 kstrtobool
 kstrtoint
 kstrtouint
