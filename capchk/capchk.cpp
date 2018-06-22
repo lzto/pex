@@ -270,6 +270,19 @@ bool is_check_function(const std::string& str)
     return false;                                  
 }
 
+/*
+ * record capability parameter position passed to capability check function
+ * all discovered wrapper function to check functions will also have one entry
+ *
+ * This data is available after calling collect_wrappers()
+ */
+FunctionData chk_func_cap_position;
+
+bool is_function_chk_or_wrapper(Function* f)
+{
+    return chk_func_cap_position.find(f)!=chk_func_cap_position.end();
+}
+
 //skip variables
 bool use_internal_skip_var_list = false;
 StringSet skip_var;
@@ -398,18 +411,6 @@ static const char* kernel_start_functions [] =
 
 FunctionSet kernel_init_functions;
 FunctionSet non_kernel_init_functions;
-
-/*
- * record capability parameter position passed to capability check function
- * all discovered wrapper function to check functions will also have one entry
- */
-FunctionData chk_func_cap_position;
-
-bool is_function_chk_or_wrapper(Function* f)
-{
-    return chk_func_cap_position.find(f)!=chk_func_cap_position.end();
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 /*
  * debug function, track process progress internally
@@ -1053,7 +1054,7 @@ void capchk::collect_chkps(Module& module)
 
 void capchk::collect_wrappers(Module& module)
 {
-    //add capable and ns_capable
+    //add capable and ns_capable to chk_func_cap_position so that we can use them
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
@@ -1070,14 +1071,18 @@ void capchk::collect_wrappers(Module& module)
             break;//we are done here
     }
 
-    for (Module::iterator fi = module.begin(), f_end = module.end();
-            fi != f_end; ++fi)
+    //last time discovered functions
+    FunctionData pass_data;
+    //functions that will be used for discovery next time
+    FunctionData pass_data_next;
+
+    for (auto fpair: chk_func_cap_position)
+        pass_data[fpair.first] = fpair.second;
+again:
+    for (auto fpair: pass_data)
     {
-        Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration() || func->isIntrinsic()
-                ||!is_function_chk_or_wrapper(func))
-            continue;
-        int cap_pos = chk_func_cap_position[func];
+        Function * func = fpair.first;
+        int cap_pos = fpair.second;
         assert(cap_pos>=0);
         //we got a capability check function or a wrapper function,
         //find all use without Constant Value and add them to wrapper
@@ -1096,15 +1101,31 @@ void capchk::collect_wrappers(Module& module)
             if (pos>=0)
             {
                 //type 1 wrapper, cap is from parent function argument
-                chk_func_cap_position[parent_func] = pos;
+                pass_data_next[parent_func] = pos;
             }else
             {
                 //type 2 wrapper, cap is from inside this function
                 //what to do with this?
+                llvm_unreachable("What??");
             }
         }
     }
-
+    //put pass_data_next in pass_data and chk_func_cap_position
+    pass_data.clear();
+    for (auto fpair: pass_data_next)
+    {
+        Function *f = fpair.first;
+        int pos = fpair.second;
+        if (chk_func_cap_position.count(f)==0)
+        {
+            pass_data[f] = pos;
+            chk_func_cap_position[f] = pos;
+        }
+    }
+    //do this until we discovered everything
+    if (pass_data.size())
+        goto again;
+    
     dump_chk_and_wrap();
 }
 
