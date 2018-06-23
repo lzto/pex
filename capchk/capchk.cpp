@@ -176,6 +176,11 @@ cl::opt<bool> knob_dump_ignore_path("prt-ign",
         cl::desc("print ignored path - disabled by default"),
         cl::init(false));
 
+cl::opt<bool> knob_warn_capchk_during_kinit("wcapchk-kinit",
+        cl::desc("warn capability check during kernel boot process - disabled by default"),
+        cl::init(false));
+
+
 /*
  * helper function
  */
@@ -1136,8 +1141,15 @@ void capchk::collect_pp(Module& module)
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration() || func->isIntrinsic())
+        if (func->isDeclaration())
+        {
+            ExternalFuncCounter++;
             continue;
+        }
+        if (func->isIntrinsic())
+            continue;
+
+        FuncCounter++;
 
         all_functions.insert(func);
         Type* type = func->getFunctionType();
@@ -1189,15 +1201,10 @@ void capchk::collect_crits(Module& module)
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration())
-        {
-            ExternalFuncCounter++;
-            continue;
-        }
-        if (func->isIntrinsic() || is_function_chk_or_wrapper(func))
+        if (func->isDeclaration() || func->isIntrinsic()
+                || is_function_chk_or_wrapper(func))
             continue;
 
-        FuncCounter++;
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
         InstructionList callgraph;
         InstructionList chks;
@@ -1707,9 +1714,152 @@ void capchk::check_critical_variable_usage(Module& module)
     }
 }
 
+void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
+        InstructionList& chks)
+{
+    //ignore inline asm
+    if (cs->isInlineAsm())
+        return;
+    if (Function *csf = get_callee_function_direct(cs))
+    {
+        if (csf->isIntrinsic()
+                ||is_skip_function(csf->getName())
+                ||is_function_chk_or_wrapper(csf))
+            return;
+        current_crit_funcs.insert(csf);
+
+        if (knob_capchk_ccfv)
+        {
+            errs()<<"Add call<direct> "<<csf->getName()<<" use @ ";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n cause:";
+            dump_dbgstk();
+        }
+
+        InstructionSet* ill = f2ci[csf];
+        if (ill==NULL)
+        {
+            ill = new InstructionSet;
+            f2ci[csf] = ill;
+        }
+        for (auto chki: chks)
+            ill->insert(chki);
+
+    }else if (Value* csv = cs->getCalledValue())
+    {
+        errs()<<"Want to resolve indirect call @ ";
+        cs->getDebugLoc().print(errs());
+        errs()<<"\n";
+
+        FunctionSet fs = resolve_indirect_callee(cs);
+        if (!fs.size())
+        {
+            CPUnResolv++;
+            return;
+        }
+        CPResolv++;
+        Function* csf = *fs.begin();
+#if 1
+        if (csf->isIntrinsic()
+                ||is_skip_function(csf->getName())
+                ||is_function_chk_or_wrapper(csf))
+            return;
+
+        current_crit_funcs.insert(csf);
+        if (knob_capchk_ccfv)
+        {
+            errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n cause:";
+            dump_dbgstk();
+        }
+        InstructionSet* ill = f2ci[csf];
+        if (ill==NULL)
+        {
+            ill = new InstructionSet;
+            f2ci[csf] = ill;
+        }
+        //insert all chks?
+        for (auto chki: chks)
+            ill->insert(chki);
+#endif
+    }
+}
+
+void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_variables,
+        InstructionList& chks)
+{
+    /*
+     * load/store from/to global variable will be considered
+     * critical variable
+     */
+    if (isa<LoadInst>(ii))
+    {
+        LoadInst *li = dyn_cast<LoadInst>(ii);
+        Value* lval = li->getOperand(0);
+        Value* gv = get_global_def(lval);
+        if (gv && (!is_skip_var(gv->getName())))
+        {
+            if (knob_capchk_ccvv)
+            {
+                errs()<<"Add Load "<<gv->getName()<<" use @ ";
+                li->getDebugLoc().print(errs());
+                errs()<<"\n cause:";
+                dump_dbgstk();
+            }
+            current_critical_variables.push_back(lval);
+            InstructionSet* ill = v2ci[gv];
+            if (ill==NULL)
+            {
+                ill = new InstructionSet;
+                v2ci[lval] = ill;
+            }
+            for (auto chki: chks)
+                ill->insert(chki);
+        }
+    }else if (isa<StoreInst>(ii))
+    {
+        StoreInst *si = dyn_cast<StoreInst>(ii);
+        Value* sval = si->getOperand(1);
+        Value* gv = get_global_def(sval);
+        if (gv && (!is_skip_var(gv->getName())))
+        {
+            if (knob_capchk_ccvv)
+            {
+                errs()<<"Add Store "<<gv->getName()<<" use @ ";
+                si->getDebugLoc().print(errs());
+                errs()<<"\n cause:";
+                dump_dbgstk();
+            }
+            current_critical_variables.push_back(sval);
+            InstructionSet* ill = v2ci[gv];
+            if (ill==NULL)
+            {
+                ill = new InstructionSet;
+                v2ci[sval] = ill;
+            }
+            for (auto chki: chks)
+                ill->insert(chki);
+        }
+    }
+
+}
+
 /*
  * IPA: figure out all global variable usage and function calls
- * TODO: slice the program, use SVF to figure out mod/ref set
+ * FIXME: SVF, global var, should build whold call graph first,
+ * TODO : (after collecting all critical functions),
+ *        partation the kernel and run svf then do alias analysis
+ *        to figure mod/ref set
+ * 
+ * @I: from where are we starting, all following instructions should be dominated
+ *     by I, if checked=true
+ * @depth: are we going to deep?
+ * @checked: is this function already checked? means that `I' will dominate all,
+ *     means that the caller of current function have already been dominated by
+ *     a check
+ * @callgraph: how to we get here
+ * @chks: which checks are protecting us?
  */
 void capchk::forward_all_interesting_usage(Instruction* I, int depth,
         bool checked, InstructionList& callgraph,
@@ -1739,7 +1889,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
     }
 
     BasicBlockSet bb_visited;
-    std::queue<BasicBlock*> bb_work_list;
+    BasicBlockList bb_work_list;
 
     /*
      * a list of instruction where check functions are used,
@@ -1754,11 +1904,11 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
     if (is_function_permission_checked)
         goto rescan_and_add_all;
 
-    bb_work_list.push(I->getParent());
+    bb_work_list.push_back(I->getParent());
     while(bb_work_list.size())
     {
         BasicBlock* bb = bb_work_list.front();
-        bb_work_list.pop();
+        bb_work_list.pop_front();
         if(bb_visited.count(bb))
             continue;
         bb_visited.insert(bb);
@@ -1779,19 +1929,17 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
                         chk_instruction_list.push_back(ci);
                         chks.push_back(ci);
                     }
-                }else
+                }else if (!ci->isInlineAsm())
                 {
-                    //this is in-direct call, collect it
                     //don't really care inline asm
-                    if (!ci->isInlineAsm())
-                    {
-                    }
+                    //FIXME:this is in-direct call, could there be a check inside
+                    //indirect call we are missing?
                 }
             }
         }
         //insert all successor of current basic block to work list
         for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
-            bb_work_list.push(cast<BasicBlock>(*si));
+            bb_work_list.push_back(cast<BasicBlock>(*si));
     }
 
     if (!is_function_permission_checked)
@@ -1802,16 +1950,10 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
  * which one can be dominated by those check instructions(protected)
  */
 rescan_and_add_all:
-    bb_work_list.push(I->getParent());
-    bb_visited.clear();
-    while(bb_work_list.size())
-    {
-        BasicBlock* bb = bb_work_list.front();
-        bb_work_list.pop();
-        if(bb_visited.count(bb))
-            continue;
-        bb_visited.insert(bb);
 
+    for(Function::iterator fi = func->begin(), fe = func->end(); fi != fe; ++fi)
+    {
+        BasicBlock* bb = dyn_cast<BasicBlock>(fi);
         for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
         {
             Instruction* si = dyn_cast<Instruction>(ii);
@@ -1826,10 +1968,9 @@ rescan_and_add_all:
                 //should dominate use
                 if (dt.dominates(I,si))
                     goto add;
-                //or should have newly discovered check..
             }
-
-            //otherwise, there should be at least one check dominate the use
+            //or should have newly discovered check.. and 
+            //there should be at least one check dominate the use
             for (auto* _ci : chk_instruction_list)
                 if (dt.dominates(_ci,si))
                     goto add;
@@ -1837,134 +1978,13 @@ rescan_and_add_all:
             continue;
 
 add:
-            if (isa<CallInst>(ii))
+            if (CallInst* cs = dyn_cast<CallInst>(ii))
             {
-                //critical function
-                CallInst* cs = dyn_cast<CallInst>(ii);
-                //ignore inline asm
-                if (cs->isInlineAsm())
-                    continue;
-                if (Function *csf = get_callee_function_direct(cs))
-                {
-                    if (csf->isIntrinsic()
-                            ||is_skip_function(csf->getName())
-                            ||is_function_chk_or_wrapper(csf))
-                        continue;
-                    current_crit_funcs.insert(csf);
-
-                    if (knob_capchk_ccfv)
-                    {
-                        errs()<<"Add call<direct> "<<csf->getName()<<" use @ ";
-                        cs->getDebugLoc().print(errs());
-                        errs()<<"\n cause:";
-                        dump_dbgstk();
-                    }
-
-                    InstructionSet* ill = f2ci[csf];
-                    if (ill==NULL)
-                    {
-                        ill = new InstructionSet;
-                        f2ci[csf] = ill;
-                    }
-                    for (auto chki: chks)
-                        ill->insert(chki);
-
-                }else if (Value* csv = cs->getCalledValue())
-                {
-                    errs()<<"Want to resolve indirect call @ ";
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n";
-
-                    FunctionSet fs = resolve_indirect_callee(cs);
-                    if (!fs.size())
-                    {
-                        CPUnResolv++;
-                        continue;
-                    }
-                    CPResolv++;
-                    Function* csf = *fs.begin();
-#if 1
-                    if (csf->isIntrinsic()
-                            ||is_skip_function(csf->getName())
-                            ||is_function_chk_or_wrapper(csf))
-                        continue;
-
-                    current_crit_funcs.insert(csf);
-                    if (knob_capchk_ccfv)
-                    {
-                        errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
-                        cs->getDebugLoc().print(errs());
-                        errs()<<"\n cause:";
-                        dump_dbgstk();
-                    }
-                    InstructionSet* ill = f2ci[csf];
-                    if (ill==NULL)
-                    {
-                        ill = new InstructionSet;
-                        f2ci[csf] = ill;
-                    }
-                    //insert all chks?
-                    for (auto chki: chks)
-                        ill->insert(chki);
-#endif
-                }
+                crit_func_collect(cs, current_crit_funcs, chks);
+                continue;
             }
-            /*
-             * load/store from/to global variable will be considered
-             * critical variable
-             */
-            else if (isa<LoadInst>(ii))
-            {
-                LoadInst *li = dyn_cast<LoadInst>(ii);
-                Value* lval = li->getOperand(0);
-                Value* gv = get_global_def(lval);
-                if (gv && (!is_skip_var(gv->getName())))
-                {
-                    if (knob_capchk_ccvv)
-                    {
-                        errs()<<"Add Load "<<gv->getName()<<" use @ ";
-                        li->getDebugLoc().print(errs());
-                        errs()<<"\n cause:";
-                        dump_dbgstk();
-                    }
-                    current_critical_variables.push_back(lval);
-                    InstructionSet* ill = v2ci[gv];
-                    if (ill==NULL)
-                    {
-                        ill = new InstructionSet;
-                        v2ci[lval] = ill;
-                    }
-                    for (auto chki: chks)
-                        ill->insert(chki);
-                }
-            }else if (isa<StoreInst>(ii))
-            {
-                StoreInst *si = dyn_cast<StoreInst>(ii);
-                Value* sval = si->getOperand(1);
-                Value* gv = get_global_def(sval);
-                if (gv && (!is_skip_var(gv->getName())))
-                {
-                    if (knob_capchk_ccvv)
-                    {
-                        errs()<<"Add Store "<<gv->getName()<<" use @ ";
-                        si->getDebugLoc().print(errs());
-                        errs()<<"\n cause:";
-                        dump_dbgstk();
-                    }
-                    current_critical_variables.push_back(sval);
-                    InstructionSet* ill = v2ci[gv];
-                    if (ill==NULL)
-                    {
-                        ill = new InstructionSet;
-                        v2ci[sval] = ill;
-                    }
-                    for (auto chki: chks)
-                        ill->insert(chki);
-                }
-            }
+            crit_vars_collect(si, current_critical_variables, chks);
         }
-        for (succ_iterator si = succ_begin(bb), se = succ_end(bb); si!=se; ++si)
-            bb_work_list.push(cast<BasicBlock>(*si));
     }
     /**********
      * merge 
@@ -1976,13 +1996,8 @@ add:
             critical_functions.insert(i);
         for(auto v: current_critical_variables)
             critical_variables.insert(v);
-        //if (current_critical_variables.size()==0)
-        //{
-        //    errs()<<"No global critical variables found for function?:"
-        //        <<func->getName()<<"\n";
-        //}
 
-        //if functions is permission checked, consider this as a wrapper
+        //if functions is permission checked, we need to 
         //and we need to check all use of this function
         for (auto *U: func->users())
         {
@@ -1993,12 +2008,15 @@ add:
                     continue;
                 if (is_kernel_init_functions(pfunc))
                 {
-                    dbgstk.push_back(cs);
-                    errs()<<ANSI_COLOR_YELLOW
-                        <<"capability check used during kernel initialization\n"
-                        <<ANSI_COLOR_RESET;
-                    dump_dbgstk();
-                    dbgstk.pop_back();
+                    if (knob_warn_capchk_during_kinit)
+                    {
+                        dbgstk.push_back(cs);
+                        errs()<<ANSI_COLOR_YELLOW
+                            <<"capability check used during kernel initialization\n"
+                            <<ANSI_COLOR_RESET;
+                        dump_dbgstk();
+                        dbgstk.pop_back();
+                    }
                     continue;
                 }
 

@@ -144,6 +144,10 @@ class capchk : public ModulePass
         bool is_kernel_init_functions(Function* f, FunctionSet& visited);
 
         int use_parent_func_arg(Value*, Function*);
+        
+        //used by forward_all_interesting_usage to collect critical resources
+        void crit_func_collect(CallInst*, FunctionSet&, InstructionList& chks);
+        void crit_vars_collect(Instruction*, ValueList&, InstructionList& chks);
 
         /*
          * context for current module

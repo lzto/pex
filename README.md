@@ -39,4 +39,4 @@ Linux Kernel Capability Checker
 * prt-good - print good path, default 0
 * prt-bad - print bad path, default 1
 * prt-ign - print ignored path, default 0
-
+* wcapchk-kinit - warn capability check during kernel boot process, default 0
