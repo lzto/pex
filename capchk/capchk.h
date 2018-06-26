@@ -78,7 +78,7 @@ const char* X##_desc = Y;
 class capchk : public ModulePass
 {
     private:
-        bool runOnModule(Module &);
+        virtual bool runOnModule(Module &) override;
         bool capchkPass(Module &);
 
         //capability checker

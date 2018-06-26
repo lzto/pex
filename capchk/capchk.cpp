@@ -232,9 +232,11 @@ bool function_has_gv_initcall_use(Function* f)
         {
             if (!gv->hasName())
                 continue;
-            gv->getName().startswith("__initcall_");
-            fs_initcall.insert(f);
-            return true;
+            if (gv->getName().startswith("__initcall_"))
+            {
+                fs_initcall.insert(f);
+                return true;
+            }
         }
     fs_noninitcall.insert(f);
     return false;
@@ -710,14 +712,17 @@ Value* capchk::get_global_def(Value* val, ValueSet& visited)
     visited.insert(val);
     if (isa<GlobalValue>(val))
         return val;
-    Instruction* vali = dyn_cast<Instruction>(val);
-    if (!vali)
-        return NULL;
-    for (auto *U : vali->users())
+    if (Instruction* vali = dyn_cast<Instruction>(val))
     {
-        Value* v = get_global_def(U, visited);
-        if (v)
-            return v;
+        for (auto &U : vali->operands())
+        {
+            Value* v = get_global_def(U, visited);
+            if (v)
+                return v;
+        }
+    }else if (Value* valv = dyn_cast<Value>(val))
+    {
+        //llvm_unreachable("how can this be ?");
     }
     return NULL;
 }
@@ -981,18 +986,16 @@ again:
 FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
 {
     FunctionSet fs;
-    Function* callee = NULL;
     if (ci->isInlineAsm())
         return fs;
-    if (callee = ci->getCalledFunction())
+    if (Function* callee = ci->getCalledFunction())
     {
         //not indirect call
         fs.insert(callee);
         return fs;
     }
     Value* cv = ci->getCalledValue();
-    callee = dyn_cast<Function>(cv->stripPointerCasts());
-    if (callee)
+    if (Function* callee = dyn_cast<Function>(cv->stripPointerCasts()))
     {
         fs.insert(callee);
         return fs;
@@ -1793,6 +1796,32 @@ void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_vari
      * load/store from/to global variable will be considered
      * critical variable
      */
+#if 1
+    //errs()<<"* ";
+    //ii->print(errs());
+    //errs()<<"\n";
+
+    Value* gv = get_global_def(ii);
+    if (gv && (!isa<Function>(gv)) && (!is_skip_var(gv->getName())))
+    {
+        if (knob_capchk_ccvv)
+        {
+            errs()<<"Add "<<gv->getName()<<" use @ ";
+            ii->getDebugLoc().print(errs());
+            errs()<<"\n cause:";
+            dump_dbgstk();
+        }
+        current_critical_variables.push_back(gv);
+        InstructionSet* ill = v2ci[gv];
+        if (ill==NULL)
+        {
+            ill = new InstructionSet;
+            v2ci[gv] = ill;
+        }
+        for (auto chki: chks)
+            ill->insert(chki);
+    }
+#else
     if (isa<LoadInst>(ii))
     {
         LoadInst *li = dyn_cast<LoadInst>(ii);
@@ -1807,12 +1836,12 @@ void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_vari
                 errs()<<"\n cause:";
                 dump_dbgstk();
             }
-            current_critical_variables.push_back(lval);
+            current_critical_variables.push_back(gv);
             InstructionSet* ill = v2ci[gv];
             if (ill==NULL)
             {
                 ill = new InstructionSet;
-                v2ci[lval] = ill;
+                v2ci[gv] = ill;
             }
             for (auto chki: chks)
                 ill->insert(chki);
@@ -1831,18 +1860,18 @@ void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_vari
                 errs()<<"\n cause:";
                 dump_dbgstk();
             }
-            current_critical_variables.push_back(sval);
+            current_critical_variables.push_back(gv);
             InstructionSet* ill = v2ci[gv];
             if (ill==NULL)
             {
                 ill = new InstructionSet;
-                v2ci[sval] = ill;
+                v2ci[gv] = ill;
             }
             for (auto chki: chks)
                 ill->insert(chki);
         }
     }
-
+#endif
 }
 
 /*
@@ -1981,7 +2010,8 @@ add:
             if (CallInst* cs = dyn_cast<CallInst>(ii))
             {
                 crit_func_collect(cs, current_crit_funcs, chks);
-                continue;
+                //continue;
+                //need to look at argument
             }
             crit_vars_collect(si, current_critical_variables, chks);
         }
