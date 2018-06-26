@@ -4,3 +4,11 @@ nr_irqs
 nr_threads
 vmemmap_base
 page_offset_base
+shift_state
+tasklist_lock
+__preempt_count
+__per_cpu_offset
+cpu_number
+pm_mutex
+check_syslog_permissions.__print_once
+swapon_mutex

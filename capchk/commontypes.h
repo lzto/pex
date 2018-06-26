@@ -33,6 +33,7 @@ typedef std::list<Function*> FunctionList;
 
 typedef std::set<std::string> StringSet;
 typedef std::set<Value*> ValueSet;
+typedef std::set<Type*> TypeSet;
 typedef std::set<Instruction*> InstructionSet;
 typedef std::set<BasicBlock*> BasicBlockSet;
 typedef std::set<Function*> FunctionSet;

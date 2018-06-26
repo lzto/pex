@@ -86,6 +86,9 @@ FunctionSet all_functions;
 //all syscall is listed here
 FunctionSet syscall_list;
 
+//all discovered interesting type(have struct member points to function with check)
+TypeSet discovered_interesting_type;
+
 #ifdef CUSTOM_STATISTICS
 void capchk::dump_statistics()
 {
@@ -260,11 +263,6 @@ bool is_critical_function(Function* f)
  * those function are used to perform permission check before
  * using critical resources
  */
-static const char* check_functions [] = 
-{
-    "capable",
-    "ns_capable",
-};
 
 bool is_check_function(const std::string& str)
 {
@@ -297,8 +295,8 @@ StringSet skip_var;
 bool is_skip_var(const std::string& str)
 {
     if (use_internal_skip_var_list)
-        return std::find(std::begin(_skip_var), std::end(_skip_var), str)
-            != std::end(_skip_var);
+        return std::find(std::begin(_builtin_skip_var), std::end(_builtin_skip_var), str)
+            != std::end(_builtin_skip_var);
     return skip_var.count(str)!=0;
 }
 
@@ -325,8 +323,8 @@ StringSet skip_functions;
 bool is_skip_function(const std::string& str)
 {
     if (use_internal_skip_func_list)
-        return std::find(std::begin(_skip_functions), std::end(_skip_functions), str)
-            != std::end(_skip_functions);
+        return std::find(std::begin(_builtin_skip_functions), std::end(_builtin_skip_functions), str)
+            != std::end(_builtin_skip_functions);
     return skip_functions.count(str)!=0;
 }
 
@@ -377,21 +375,15 @@ bool is_interesting_type(Type* ty)
     if (!dyn_cast<StructType>(ty)->hasName())
         return false;
     StringRef tyn = ty->getStructName();
-    for (int i=0;i<1;i++)
+    for (int i=0;i<BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE;i++)
     {
-        if (tyn.startswith(interesting_type_word[i]))
+        if (tyn.startswith(_builtin_interesting_type_word[i]))
             return true;
     }
+    if (discovered_interesting_type.count(ty)!=0)
+        return true;
     return false;
 }
-
-static const char* syscall_prefix [] =
-{
-    "compat_SyS_",
-    "compat_sys_",
-    "SyS_",
-    "sys_"
-};
 
 bool is_syscall_prefix(StringRef str)
 {
@@ -409,12 +401,6 @@ bool is_syscall(Function *f)
 {
     return syscall_list.count(f)!=0;
 }
-
-static const char* kernel_start_functions [] = 
-{
-    "start_kernel",
-    "x86_64_start_kernel",
-};
 
 FunctionSet kernel_init_functions;
 FunctionSet non_kernel_init_functions;
@@ -1060,6 +1046,55 @@ void capchk::collect_chkps(Module& module)
     }
 }
 
+/*
+ * track user of functions which have checks, and see whether it is tied
+ * to any interesting type(struct)
+ */
+Value* find_struct_use(Value* f, ValueSet& visited)
+{
+    if (visited.count(f))
+        return NULL;
+    visited.insert(f);
+    for (auto* u: f->users())
+    {
+        if (u->getType()->isStructTy())
+            return u;
+        if (Value*_u = find_struct_use(u, visited))
+            return _u;
+    }
+}
+
+
+void capchk::identify_interesting_struct(Module& module)
+{
+    for(auto& pair: f2chks)
+    {
+        ValueSet visited;
+        Function* f = pair.first;
+        InstructionSet* chkins = pair.second;
+        if (chkins->size()==0)
+            continue;
+        if (Value* u = find_struct_use(f, visited))
+        {
+            Type* type = u->getType();
+            //should always skip this
+            if (type->getStructName().startswith("struct.kernel_symbol"))
+                continue;
+            bool already_exists = is_interesting_type(type);
+            errs()<<"Function: "<<f->getName()
+                <<" used by ";
+            if (!already_exists)
+                errs()<<ANSI_COLOR_GREEN<<" new discover:";
+            if (type->getStructName().size()==0)
+                errs()<<ANSI_COLOR_RED<<"Annonymouse Type";
+            else
+                errs()<<type->getStructName();
+            errs()<<ANSI_COLOR_RESET<<"\n";
+            discovered_interesting_type.insert(type);
+        }
+    }
+}
+
 void capchk::collect_wrappers(Module& module)
 {
     //add capable and ns_capable to chk_func_cap_position so that we can use them
@@ -1678,14 +1713,17 @@ void capchk::check_critical_variable_usage(Module& module)
         {
             Instruction *ui = dyn_cast<Instruction>(U);
             if (!ui)//not an instruction????
+            {
+                //llvm_unreachable("not an instruction?");
                 continue;
-            Function* f = dyn_cast<Instruction>(U)->getFunction();
-
+            }
+            Function* f = ui->getFunction();
             //make sure this is not a kernel init function
             if (is_kernel_init_functions(f))
                 continue;
-            if (!isa<StoreInst>(ui))
-                continue;
+            //TODO, figure out all def-use chain from this point 
+            //and check them one by one
+            //InstructionList vuses;
             if (isa<LoadInst>(ui))
             {
                 errs()<<"LOAD: ";
@@ -2272,6 +2310,12 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Collect Checkpoints\n";
     STOP_WATCH_START(WID_0);
     collect_chkps(module);
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
+
+    errs()<<"Identify interesting struct\n";
+    STOP_WATCH_START(WID_0);
+    identify_interesting_struct(module);
     STOP_WATCH_STOP(WID_0);
     STOP_WATCH_REPORT(WID_0);
 

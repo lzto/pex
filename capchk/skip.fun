@@ -22,6 +22,7 @@ __bitmap_parse
 __bitmap_weight
 blkdev_get
 blkdev_put
+blocking_notifier_call_chain
 __brelse
 call_rcu_bh
 call_rcu_sched
@@ -262,6 +263,7 @@ rb_erase
 rb_first
 rb_next
 read_cache_page
+refcount_dec_not_one
 __refrigerator
 __release_sock
 release_sock

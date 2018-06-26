@@ -93,6 +93,7 @@ class capchk : public ModulePass
         void collect_crits(Module& module);
         void collect_pp(Module& module);
         void collect_chkps(Module&);
+        void identify_interesting_struct(Module&);
         void resolve_all_indirect_callee(Module& module);
 
         void forward_all_interesting_usage(Instruction* I, int depth,

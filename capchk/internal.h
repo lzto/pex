@@ -6,9 +6,41 @@
 #define _CAPCHK_INTERNAL_H_
 
 /*
+ * check functions
+ */
+
+static const char* check_functions [] = 
+{
+    "capable",
+    "ns_capable",
+};
+
+/*
+ * kernel start function
+ */
+static const char* kernel_start_functions [] = 
+{
+    "start_kernel",
+    "x86_64_start_kernel",
+};
+
+
+/*
+ * syscall prefix
+ */
+static const char* syscall_prefix [] =
+{
+    "compat_SyS_",
+    "compat_sys_",
+    "SyS_",
+    "sys_"
+};
+
+
+/*
  * builtin list of skip variables
  */
-static const char* _skip_var [] = 
+static const char* _builtin_skip_var [] = 
 {
     "jiffies",
     "nr_cpu_ids",
@@ -21,7 +53,7 @@ static const char* _skip_var [] =
 /*
  * builtin list of skip functions
  */
-static const char* _skip_functions [] = 
+static const char* _builtin_skip_functions [] = 
 {
     //may operate on wrong source?
     "add_taint",
@@ -187,8 +219,8 @@ static const char* interesting_keyword [] =
 /*
  * sysfs stuff
  */
-
-static const char* interesting_type_word [] = 
+#define BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE 50
+static const char* _builtin_interesting_type_word [] = 
 {
     "struct.file_operations",
     "struct.net_proto_family",
@@ -239,6 +271,7 @@ static const char* interesting_type_word [] =
     "struct.slab_attribute",
     "struct.vmbus_chan_attribute",
     "struct.widget_attribute",
+    "struct.proc_ns_operations"
 };
 
 
