@@ -152,5 +152,17 @@ Call Stack:
 -------------
 Good: 22 Bad: 1 Ignored: 105
 
+--------------------------------------------------------------------------------
+
+Inspect Use of Function:acpi_evalf
+acpi_evalf is used to manipulate thermal sensor/keyboard hot key/bluetooth/wan/
+brightness/fan etc. it is exported through sysfs, any access to those files
+should be checked.
+
+--------------------------------------------------------------------------------
+
+
+
+
 
 
