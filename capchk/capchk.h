@@ -82,7 +82,6 @@ class capchk : public ModulePass
         bool capchkPass(Module &);
 
         //capability checker
-        void process_intras(Module& module);
         void process_cpgf(Module& module);
 
         /*

@@ -9,7 +9,7 @@
  * check functions
  */
 
-static const char* check_functions [] = 
+static const char* _builtin_check_functions [] = 
 {
     "capable",
     "ns_capable",
@@ -18,7 +18,7 @@ static const char* check_functions [] =
 /*
  * kernel start function
  */
-static const char* kernel_start_functions [] = 
+static const char* _builtin_kernel_start_functions [] = 
 {
     "start_kernel",
     "x86_64_start_kernel",
@@ -28,7 +28,7 @@ static const char* kernel_start_functions [] =
 /*
  * syscall prefix
  */
-static const char* syscall_prefix [] =
+static const char* _builtin_syscall_prefix [] =
 {
     "compat_SyS_",
     "compat_sys_",
