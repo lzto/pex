@@ -274,6 +274,26 @@ static const char* _builtin_interesting_type_word [] =
     "struct.proc_ns_operations"
 };
 
+/*
+ * some common struct type to skip
+ */
+#define BUILDIN_STRUCT_TO_SKIP 6
+static const char* _builtin_struct_to_skip [] = 
+{
+    "struct.list_head",
+    "struct.raw_spinlock",
+    "struct.hlist_node",
+    "struct.wait_queue_head",
+    "struct.tracepoint_func",
+    "struct.address_space",
+    "struct.dentry",
+    "struct.inode",
+    "struct.file",
+    "struct.super_block",
+    "struct.seq_file",
+    "struct.mount",
+    "struct.mountpoint",
+};
 
 #endif//_CAPCHK_INTERNAL_H_
 

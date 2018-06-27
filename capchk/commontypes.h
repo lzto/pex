@@ -30,6 +30,7 @@ typedef std::list<Value*> ValueList;
 typedef std::list<Instruction*> InstructionList;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
+typedef std::list<Type*> TypeList;
 
 typedef std::set<std::string> StringSet;
 typedef std::set<Value*> ValueSet;
@@ -45,6 +46,7 @@ typedef std::map<Type*, std::set<int>> Type2Fields;
 typedef std::map<Function*, InstructionSet*> Function2ChkInst;
 typedef std::map<Function*, InstructionSet*> Function2CSInst;
 typedef std::map<Value*, InstructionSet*> Value2ChkInst;
+typedef std::map<Type*, InstructionSet*> Type2ChkInst;
 typedef std::map<Function*, int> FunctionData;
 typedef std::map<Instruction*, FunctionSet*> Inst2Func;
 typedef std::map<const Instruction*, FunctionSet*> ConstInst2Func;

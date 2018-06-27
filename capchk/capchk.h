@@ -94,6 +94,8 @@ class capchk : public ModulePass
         void collect_chkps(Module&);
         void identify_interesting_struct(Module&);
         void resolve_all_indirect_callee(Module& module);
+        void figure_out_gep_using_type_field(InstructionSet&,
+                const std::pair<Type*,std::set<int>>&, Module&);
 
         void forward_all_interesting_usage(Instruction* I, int depth,
                 bool checked, InstructionList &callgraph,
@@ -109,6 +111,7 @@ class capchk : public ModulePass
          */
         void check_critical_function_usage(Module& module);
         void check_critical_variable_usage(Module& module);
+        void check_critical_type_field_usage(Module& module);
 
         void backward_slice_build_callgraph(InstructionList &callgraph,
                 Instruction* I, FunctionToCheckResult& fvisited,
@@ -133,6 +136,8 @@ class capchk : public ModulePass
 
         InstructionSet& discover_chks(Function* f);
         InstructionSet& discover_chks(Function* f, FunctionSet& visited);
+    
+
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
@@ -152,6 +157,7 @@ class capchk : public ModulePass
         //used by forward_all_interesting_usage to collect critical resources
         void crit_func_collect(CallInst*, FunctionSet&, InstructionList& chks);
         void crit_vars_collect(Instruction*, ValueList&, InstructionList& chks);
+        void crit_type_field_collect(Instruction*, Type2Fields&, InstructionList& chks);
 
         /*
          * context for current module
@@ -169,8 +175,10 @@ class capchk : public ModulePass
         void dump_callstack(InstructionList& callstk);
 
         void dump_chk_and_wrap();
+        void dump_cis(InstructionSet*);
         void dump_f2ci();
         void dump_v2ci();
+        void dump_tf2ci();
         void dump_kinit();
         void dump_non_kinit();
         void dump_scope(FunctionSet&);

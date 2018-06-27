@@ -56,6 +56,7 @@ STATISTIC(CapChkInFPTR, "found capability check inside call using function ptr\n
 //map function to its check instruction
 Function2ChkInst f2ci;
 Value2ChkInst v2ci;
+Type2ChkInst t2ci;
 
 //t2fs is used to fuzzy matching calling using function pointer
 TypeToFunctions t2fs;
@@ -127,6 +128,10 @@ cl::opt<bool> knob_capchk_critical_fun("ccf",
         cl::desc("check critical function usage - enabled by default"),
         cl::init(true));
 
+cl::opt<bool> knob_capchk_critical_type_field("cct",
+        cl::desc("check critical type field usage - disable by default"),
+        cl::init(false));
+
 cl::opt<bool> knob_capchk_ccfv("ccfv",
         cl::desc("print path to critical function(collect phase) - disabled by default"),
         cl::init(false));
@@ -135,12 +140,20 @@ cl::opt<bool> knob_capchk_ccvv("ccvv",
         cl::desc("print path to critical variable(collect phase) - disabled by default"),
         cl::init(false));
 
+cl::opt<bool> knob_capchk_cctv("cctv",
+        cl::desc("print path to critical type field(collect phase) - disabled by default"),
+        cl::init(false));
+
 cl::opt<bool> knob_capchk_f2c("f2c",
         cl::desc("print critical function to capability mapping - enabled by default"),
         cl::init(true));
 
 cl::opt<bool> knob_capchk_v2c("v2c",
         cl::desc("print critical variable to capability mapping - enabled by default"),
+        cl::init(true));
+
+cl::opt<bool> knob_capchk_t2c("t2c",
+        cl::desc("print critical type field to capability mapping - enable by default"),
         cl::init(true));
 
 cl::opt<bool> knob_capchk_caw("caw",
@@ -251,12 +264,12 @@ bool function_has_gv_initcall_use(Function* f)
  *
  * critical_functions: direct call's callee
  * critical_variables: global variables
- * critical_ftype: which type is the function pointer stored in,
- *      used by indirect call
+ * critical_ftype: interesting type(struct) and fields that should be checked before use
+ *      type, field sensitive
  */
 FunctionSet critical_functions;
 ValueSet critical_variables;
-Type2Fields critical_ftypefields;
+Type2Fields critical_typefields;
 
 bool is_critical_function(Function* f)
 {
@@ -373,18 +386,22 @@ bool is_interesting_type(Type* ty)
 bool is_syscall_prefix(StringRef str)
 {
     for (int i=0;i<4;i++)
-    {
         if (str.startswith(_builtin_syscall_prefix[i]))
-        {
             return true;
-        }
-    }
     return false;
 }
 
 bool is_syscall(Function *f)
 {
     return syscall_list.count(f)!=0;
+}
+
+bool is_skip_struct(StringRef str)
+{
+    for (int i=0;i<BUILDIN_STRUCT_TO_SKIP;i++)
+        if (str.startswith(_builtin_struct_to_skip[i]))
+            return true;
+    return false;
 }
 
 FunctionSet kernel_init_functions;
@@ -466,6 +483,52 @@ void capchk::dump_as_ignored(InstructionList& callstk)
     dump_callstack(callstk);
 }
 
+void capchk::dump_cis(InstructionSet* cis)
+{
+    int last_cap_no = -1;
+    bool mismatched_chk_func = false;
+    Function* last_cap_chk_func = NULL;
+    for (auto *ci: *cis)
+    {
+        CallInst* cs = dyn_cast<CallInst>(ci);
+        Function* cf = get_callee_function_direct(cs);
+        int cap_no = -1;
+        if (is_function_chk_or_wrapper(cf))
+        {
+            cap_no = chk_func_cap_position[cf];
+            Value* capv = cs->getArgOperand(cap_no);
+            if (!isa<ConstantInt>(capv))
+            {
+                cs->getDebugLoc().print(errs());
+                errs()<<"\n";
+                cs->print(errs());
+                errs()<<"\n";
+                //llvm_unreachable("expect ConstantInt in capable");
+                errs()<<"Dynamic Load CAP\n";
+                cs->getDebugLoc().print(errs());
+                errs()<<"\n";
+                continue;
+            }
+            cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
+            if (last_cap_no==-1)
+            {
+                last_cap_no=cap_no;
+                last_cap_chk_func = cf;
+            }
+            if (last_cap_no!=cap_no)
+                last_cap_no = -2;
+            if (last_cap_chk_func!=cf)
+                mismatched_chk_func = true;
+        }
+        assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
+        errs()<<"    "<<cap2string[cap_no]<<" @ "<<cf->getName()<<" ";
+        cs->getDebugLoc().print(errs());
+        errs()<<"\n";
+    }
+    if ((last_cap_no==-2) || (mismatched_chk_func))
+        errs()<<ANSI_COLOR_RED<<"inconsistent check"
+                <<ANSI_COLOR_RESET<<"\n";
+}
 
 void capchk::dump_v2ci()
 {
@@ -478,49 +541,7 @@ void capchk::dump_v2ci()
     {
         Value* v = cis.first;
         errs()<<ANSI_COLOR_GREEN<<v->getName()<<ANSI_COLOR_RESET<<"\n";
-        int last_cap_no = -1;
-        bool mismatched_chk_func = false;
-        Function* last_cap_chk_func = NULL;
-        for (auto *ci: *cis.second)
-        {
-            CallInst* cs = dyn_cast<CallInst>(ci);
-            Function* cf = get_callee_function_direct(cs);
-            int cap_no = -1;
-            if (is_function_chk_or_wrapper(cf))
-            {
-                cap_no = chk_func_cap_position[cf];
-                Value* capv = cs->getArgOperand(cap_no);
-                if (!isa<ConstantInt>(capv))
-                {
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n";
-                    cs->print(errs());
-                    errs()<<"\n";
-                    //llvm_unreachable("expect ConstantInt in capable");
-                    errs()<<"Dynamic Load CAP\n";
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n";
-                    continue;
-                }
-                cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
-                if (last_cap_no==-1)
-                {
-                    last_cap_no=cap_no;
-                    last_cap_chk_func = cf;
-                }
-                if (last_cap_no!=cap_no)
-                    last_cap_no = -2;
-                if (last_cap_chk_func!=cf)
-                    mismatched_chk_func = true;
-            }
-            assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
-            errs()<<"    "<<cap2string[cap_no]<<" @ "<<cf->getName()<<" ";
-            cs->getDebugLoc().print(errs());
-            errs()<<"\n";
-        }
-        if ((last_cap_no==-2) || (mismatched_chk_func))
-            errs()<<ANSI_COLOR_RED<<"inconsistent check"
-                    <<ANSI_COLOR_RESET<<"\n";
+        dump_cis(cis.second);
     }
 }
 
@@ -535,50 +556,51 @@ void capchk::dump_f2ci()
     {
         Function* func = cis.first;
         errs()<<ANSI_COLOR_GREEN<<func->getName()<<ANSI_COLOR_RESET<<"\n";
-        int last_cap_no = -1;
-        bool mismatched_chk_func = false;
-        Function* last_cap_chk_func = NULL;
-        for (auto *ci: *cis.second)
-        {
-            CallInst* cs = dyn_cast<CallInst>(ci);
-            Function* cf = get_callee_function_direct(cs);
-            int cap_no = -1;
-            if (is_function_chk_or_wrapper(cf))
-            {
-                cap_no = chk_func_cap_position[cf];
-                Value* capv = cs->getArgOperand(cap_no);
-                if (!isa<ConstantInt>(capv))
-                {
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n";
-                    cs->print(errs());
-                    errs()<<"\n";
-                    //llvm_unreachable("expect ConstantInt in capable");
-                    errs()<<"Dynamic Load CAP\n";
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n";
-                    continue;
-                }
-                cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
-                if (last_cap_no==-1)
-                {
-                    last_cap_no=cap_no;
-                    last_cap_chk_func = cf;
-                }
-                if (last_cap_no!=cap_no)
-                    last_cap_no = -2;
-                if (last_cap_chk_func!=cf)
-                    mismatched_chk_func = true;
-            }
-            assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
-            errs()<<"    "<<cap2string[cap_no]<<" @ "<<cf->getName()<<" ";
-            cs->getDebugLoc().print(errs());
-            errs()<<"\n";
-        }
-        if ((last_cap_no==-2) || (mismatched_chk_func))
-            errs()<<ANSI_COLOR_RED<<"inconsistent check"
-                    <<ANSI_COLOR_RESET<<"\n";
+        dump_cis(cis.second);
     }
+}
+
+/*
+ * dump interesting type field and guarding checks
+ */
+void capchk::dump_tf2ci()
+{
+    if (!knob_capchk_t2c)
+        return;
+
+    errs()<<ANSI_COLOR(BG_CYAN, FG_WHITE)
+        <<"--- Interesting Type fields and checks ---"
+        <<ANSI_COLOR_RESET<<"\n";
+#if 0
+    for (auto v: critical_typefields)
+    {
+        StructType* t = dyn_cast<StructType>(v.first);
+        std::set<int>& fields = v.second;
+        if (t->hasName())
+            errs()<<t->getName();
+        else
+            errs()<<"AnnonymouseType";
+        errs()<<":";
+        for (auto i: fields)
+            errs()<<i<<",";
+        errs()<<"\n";
+    }
+#else
+    for(auto& cis: t2ci)
+    {
+        StructType* t = dyn_cast<StructType>(cis.first);
+        if (t->hasName())
+            errs()<<ANSI_COLOR_GREEN<<t->getName();
+        else
+            errs()<<ANSI_COLOR_RED<<"AnnonymouseType";
+        errs()<<":";
+        std::set<int>& fields = critical_typefields[t];
+        for (auto i: fields)
+            errs()<<i<<",";
+        errs()<<"\n";
+        dump_cis(cis.second);
+    }
+#endif
 }
 
 void capchk::dump_kinit()
@@ -1851,6 +1873,84 @@ void capchk::check_critical_variable_usage(Module& module)
     }
 }
 
+void capchk::figure_out_gep_using_type_field(InstructionSet& workset,
+        const std::pair<Type*,std::set<int>>& v, Module& module)
+{
+    for (Module::iterator f = module.begin(), f_end = module.end();
+        f != f_end; ++f)
+    {
+        for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
+        {
+            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
+            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+            {
+                if (!isa<GetElementPtrInst>(ii))
+                    continue;
+                GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(ii);
+                Type* gep_operand_type
+                    = dyn_cast<PointerType>(gep->getPointerOperandType())
+                        ->getElementType();
+                //check type
+                if (gep_operand_type==v.first)
+                {
+                    //check field
+                    assert(gep->hasIndices());
+                    ConstantInt* cint = dyn_cast<ConstantInt>(gep->idx_begin());
+                    if (!cint)
+                        continue;
+                    int idx = cint->getSExtValue();
+                    if (v.second.count(idx))
+                        workset.insert(gep);
+                }
+            }
+        }
+    }
+}
+
+void capchk::check_critical_type_field_usage(Module& module)
+{
+    for (auto V: critical_typefields)
+    {
+        StructType* t = dyn_cast<StructType>(V.first);
+        std::set<int>& fields = V.second;
+
+#if DEBUG_ANALYZE
+        errs()<<ANSI_COLOR_YELLOW
+            <<"Inspect Use of Type:"
+            <<t->getStructName()
+            <<ANSI_COLOR_RESET<<"\n";
+#endif
+
+        //figure out all use-def, put them info workset
+        InstructionSet workset;
+        //figure out where the type is used, and add all of them in workset
+        //mainly gep
+        figure_out_gep_using_type_field(workset, V, module);
+
+        for (auto* U: workset)
+        {
+            Function*f = U->getFunction();
+            errs()<<" @ "<<f->getName()<<" ";
+            U->getDebugLoc().print(errs());
+            errs()<<"\n";
+
+            //is this instruction reachable from non-checked path?
+            int good=0, bad=0, ignored=0;
+            _backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U), good, bad, ignored);
+            if (bad!=0)
+            {
+                errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
+                      <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
+                      <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
+                      <<ANSI_COLOR_RESET<<"\n";
+            }
+            BadPath+=bad;
+            GoodPath+=good;
+        }
+    }
+   
+}
+
 /*
  * collect critical function calls,
  * callee of direct call is collected directly,
@@ -1955,6 +2055,130 @@ void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_vari
 }
 
 /*
+ * figure whether this instruction is reading/writing any struct field
+ * inter-procedural
+ */
+void capchk::crit_type_field_collect(Instruction* i, Type2Fields& current_t2fmaps,
+        InstructionList& chks)
+{
+    StructType *t = NULL;
+    if (LoadInst* li = dyn_cast<LoadInst>(i))
+    {
+        /*
+         * we are expecting that we load a pointer from a struct type
+         * which will be like:
+         *
+         * addr = (may bit cast) gep(struct addr, field)
+         * ptr = load(addr)
+         */
+        //only interested in pointer type
+        if (!li->getType()->isPointerTy())
+            return;
+        Value* addr = li->getPointerOperand()->stripPointerCasts();
+        //now we are expecting a gep
+        if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
+        {
+            //great we got a gep
+            Value* gep_operand = gep->getPointerOperand();
+            Type* gep_operand_type
+                = dyn_cast<PointerType>(gep->getPointerOperandType())
+                    ->getElementType();
+            if (!isa<StructType>(gep_operand_type))
+                return;
+            //FIXME: only handle the first field as of now
+            assert(gep->hasIndices());
+            if (!(dyn_cast<ConstantInt>(gep->idx_begin())))
+            {
+                /*errs()<<"gep has no indices @ position 0 ";
+                gep->getDebugLoc().print(errs());
+                errs()<<"\n";
+                gep->print(errs());
+                errs()<<"\n";*/
+                return;
+            }
+            //what is the first indice?
+            StructType* stype = dyn_cast<StructType>(gep_operand_type);
+            if (is_skip_struct(stype->getStructName()))
+                return;
+            int idx = dyn_cast<ConstantInt>(gep->idx_begin())->getSExtValue();
+            current_t2fmaps[gep_operand_type].insert(idx);
+            t = stype;
+            goto goodret;
+        }else
+        {
+            //what else? maybe phi?
+        }
+    }else if (StoreInst* si = dyn_cast<StoreInst>(i))
+    {
+        /*
+         * we are expecting that we store a pointer into a struct type
+         * which will be like:
+         *
+         * addr = (may bit cast) gep(struct addr, field)
+         * store(interesting_ptr, addr);
+         */
+        if (!si->getValueOperand()->getType()->isPointerTy())
+            return;
+        Value* addr = si->getPointerOperand()->stripPointerCasts();
+        if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
+        {
+            //great we got a gep
+            Value* gep_operand = gep->getPointerOperand();
+            Type* gep_operand_type
+                = dyn_cast<PointerType>(gep->getPointerOperandType())
+                    ->getElementType();
+            if (!isa<StructType>(gep_operand_type))
+                return;
+            //FIXME: only handle the first field as of now
+            assert(gep->hasIndices());
+            if (!(dyn_cast<ConstantInt>(gep->idx_begin())))
+            {
+                /*errs()<<"gep has no indices @ position 0 ";
+                gep->getDebugLoc().print(errs());
+                errs()<<"\n";
+                gep->print(errs());
+                errs()<<"\n";*/
+                return;
+            }
+            //what is the first indice?
+            StructType* stype = dyn_cast<StructType>(gep_operand_type);
+            if (is_skip_struct(stype->getStructName()))
+                return;
+
+            int idx = dyn_cast<ConstantInt>(gep->idx_begin())->getSExtValue();
+            current_t2fmaps[gep_operand_type].insert(idx);
+            t = stype;
+            goto goodret;
+        }else
+        {
+            //what else? maybe phi?
+        }
+    }else
+    {
+        //what else can it be?
+    }
+    return;
+goodret:
+    InstructionSet* ill = t2ci[t];
+    if (ill==NULL)
+    {
+        ill = new InstructionSet;
+        t2ci[t] = ill;
+    }
+    for (auto i: chks)
+        ill->insert(i);
+    if (knob_capchk_cctv)
+    {
+        errs()<<"Add struct "<<t->getStructName()<<" use @ ";
+        i->getDebugLoc().print(errs());
+        errs()<<"\n cause:";
+        dump_dbgstk();
+    }
+
+    return;
+}
+
+/*
  * IPA: figure out all global variable usage and function calls
  * FIXME: SVF, global var, should build whold call graph first,
  * TODO : (after collecting all critical functions),
@@ -1983,6 +2207,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
      */
     FunctionSet current_crit_funcs;
     ValueList current_critical_variables;
+    Type2Fields current_critical_type_fields;
 
     //don't allow recursive
     if (std::find(callgraph.begin(), callgraph.end(), I)!=callgraph.end())
@@ -2094,6 +2319,7 @@ add:
                 //need to look at argument
             }
             crit_vars_collect(si, current_critical_variables, chks);
+            crit_type_field_collect(si, current_critical_type_fields, chks);
         }
     }
     /**********
@@ -2101,11 +2327,19 @@ add:
      */
     if (is_function_permission_checked)
     {
-        //merge forwar slicing result
+        //merge forward slicing result
         for (auto i: current_crit_funcs)
             critical_functions.insert(i);
-        for(auto v: current_critical_variables)
+        for (auto v: current_critical_variables)
             critical_variables.insert(v);
+        for (auto v: current_critical_type_fields)
+        {
+            Type* t = v.first;
+            std::set<int>& sset = v.second;
+            std::set<int>& dset = critical_typefields[t];
+            for (auto x: sset)
+                dset.insert(x);
+        }
 
         //if functions is permission checked, we need to 
         //and we need to check all use of this function
@@ -2246,9 +2480,11 @@ void capchk::process_cpgf(Module& module)
     collect_crits(module);
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
+    errs()<<"Collected "<<critical_typefields.size()<<" critical type/fields\n";
 
     dump_v2ci();
     dump_f2ci();
+    dump_tf2ci();
 
     errs()<<"Run Analysis\n";
 
@@ -2265,6 +2501,14 @@ void capchk::process_cpgf(Module& module)
         errs()<<"Critical functions\n";
         STOP_WATCH_START(WID_0);
         check_critical_function_usage(module);
+        STOP_WATCH_STOP(WID_0);
+        STOP_WATCH_REPORT(WID_0);
+    }
+    if (knob_capchk_critical_type_field)
+    {
+        errs()<<"Critical Type Field\n";
+        STOP_WATCH_START(WID_0);
+        check_critical_type_field_usage(module);
         STOP_WATCH_STOP(WID_0);
         STOP_WATCH_REPORT(WID_0);
     }
