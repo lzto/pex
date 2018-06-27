@@ -161,8 +161,125 @@ should be checked.
 
 --------------------------------------------------------------------------------
 
+Inspect Use of Function:__blkdev_driver_ioctl
+Use:drivers/md/dm.c:483:7
+=NO CHECK ON PATH=
+Call Stack:
+0 dm_blk_ioctl drivers/md/dm.c:483:7
+-------------
+Good: 0 Bad: 1 Ignored: 0
+
+r can ==0 when dm_grab_bdev_for_ioctl returns 0, and by pass capability check
+
+--------------------------------------------------------------------------------
+
+Inspect Use of Function:sg_scsi_ioctl
+Use:block/scsi_ioctl.c:674:10
+=NO CHECK ON PATH=
+Call Stack:
+0 scsi_cmd_ioctl block/scsi_ioctl.c:674:10
+1 bsg_ioctl block/bsg.c:905:10
+-------------
+
+--------------------------------------------------------------------------------
+Inspect Use of Function:mxser_change_speed
+Use:drivers/tty/mxser.c:1944:2
+=NO CHECK ON PATH=
+Call Stack:
+0 mxser_set_termios drivers/tty/mxser.c:1944:2
+-------------
+Use:drivers/tty/mxser.c:943:2
+=NO CHECK ON PATH=
+Call Stack:
+0 mxser_activate drivers/tty/mxser.c:943:2
+-------------
+Good: 2 Bad: 2 Ignored: 0
+
+may change tty speed without check(in ioctl)
+
+--------------------------------------------------------------------------------
+Inspect Use of Function:configure_r_port
+Use:drivers/tty/rocket.c:937:3
+=NO CHECK ON PATH=
+Call Stack:
+0 rp_open drivers/tty/rocket.c:937:3
+-------------
+Use:drivers/tty/rocket.c:1059:2
+=NO CHECK ON PATH=
+Call Stack:
+0 rp_set_termios drivers/tty/rocket.c:1059:2
+-------------
+Good: 1 Bad: 2 Ignored: 0
+--------------------------------------------------------------------------------
+
+Inspect Use of Function:program_hw
+Use:drivers/tty/synclink_gt.c:2598:2
+=NO CHECK ON PATH=
+Call Stack:
+0 change_params drivers/tty/synclink_gt.c:2598:2
+1 startup drivers/tty/synclink_gt.c:2438:2
+2 hdlcdev_open drivers/tty/synclink_gt.c:1542:12
+-------------
+Use:drivers/tty/synclink_gt.c:1551:2
+=NO CHECK ON PATH=
+Call Stack:
+0 hdlcdev_open drivers/tty/synclink_gt.c:1551:2
+-------------
+Good: 1 Bad: 2 Ignored: 3
+Inspect Use of Function:program_hw.30282
+Use:drivers/tty/synclinkmp.c:2836:2
+=NO CHECK ON PATH=
+Call Stack:
+0 change_params.30297 drivers/tty/synclinkmp.c:2836:2
+1 startup.30294 drivers/tty/synclinkmp.c:2657:2
+2 hdlcdev_open.30283 drivers/tty/synclinkmp.c:1659:12
+-------------
+Use:drivers/tty/synclinkmp.c:1668:2
+=NO CHECK ON PATH=
+Call Stack:
+0 hdlcdev_open.30283 drivers/tty/synclinkmp.c:1668:2
+-------------
+Good: 1 Bad: 2 Ignored: 3
+--------------------------------------------------------------------------------
+
+Inspect Use of Function:pkt_setup_dev
+Use:drivers/block/pktcdvd.c:384:3
+=NO CHECK ON PATH=
+Call Stack:
+0 add_store drivers/block/pktcdvd.c:384:3
+-------------
+Good: 1 Bad: 1 Ignored: 0
+Inspect Use of Function:pkt_remove_dev
+Use:drivers/block/pktcdvd.c:400:3
+=NO CHECK ON PATH=
+Call Stack:
+0 remove_store.53822 drivers/block/pktcdvd.c:400:3
+-------------
+Good: 1 Bad: 1 Ignored: 0
 
 
+setup/teardown through sysfs bypass ioctl check
+
+--------------------------------------------------------------------------------
+
+
+Inspect Use of Function:tun_attach
+Use:drivers/net/tun.c:2234:9 @[ drivers/net/tun.c:2533:9 @[ drivers/net/tun.c:2782:9 ] ]
+=NO CHECK ON PATH=
+Call Stack:
+0 tun_chr_ioctl drivers/net/tun.c:2234:9 @[ drivers/net/tun.c:2533:9 @[ drivers/net/tun.c:2782:9 ] ]
+-------------
+Use:drivers/net/tun.c:2476:9 @[ drivers/net/tun.c:2520:10 @[ drivers/net/tun.c:2782:9 ] ]
+=NO CHECK ON PATH=
+Call Stack:
+0 tun_chr_ioctl drivers/net/tun.c:2476:9 @[ drivers/net/tun.c:2520:10 @[ drivers/net/tun.c:2782:9 ] ]
+-------------
+Good: 1 Bad: 2 Ignored: 0
+
+
+tun device can do attach by calling into tun_set_queue instead of TUN_SET_IFF?
+
+--------------------------------------------------------------------------------
 
 
 
