@@ -11,7 +11,7 @@
 #include "color.h"
 #include "stopwatch.h"
 
-#define TOTOAL_NUMBER_OF_STOP_WATCHES 1
+#define TOTOAL_NUMBER_OF_STOP_WATCHES 2
 #define WID_INIT 0
 #define WID_ANAL 1
 

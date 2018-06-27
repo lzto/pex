@@ -1048,6 +1048,7 @@ Value* find_struct_use(Value* f, ValueSet& visited)
         if (Value*_u = find_struct_use(u, visited))
             return _u;
     }
+    return NULL;
 }
 
 
