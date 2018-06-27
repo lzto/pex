@@ -553,7 +553,7 @@ void CHGraph::analyzeVTables(const Module &M) {
 
             node->setVTable(globalvalue);
 
-            for (int ei = 0; ei < vtblStruct->getNumOperands(); ++ei) {
+            for (int ei = 0; ei < (int)vtblStruct->getNumOperands(); ++ei) {
                 const ConstantArray *vtbl =
                     dyn_cast<ConstantArray>(vtblStruct->getOperand(ei));
                 assert(vtbl && "Element of initializer not an array?");

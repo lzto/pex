@@ -276,7 +276,7 @@ std::string analysisUtil::getSourceLocOfFunction(const llvm::Function *F)
          * Looks like the DICompileUnt->getSubprogram was moved into Function::
          */
         for (unsigned i = 0, e = CU_Nodes->getNumOperands(); i != e; ++i) {
-            DICompileUnit *CUNode = cast<DICompileUnit>(CU_Nodes->getOperand(i));
+            //DICompileUnit *CUNode = cast<DICompileUnit>(CU_Nodes->getOperand(i));
             /*
              * https://reviews.llvm.org/D18074?id=50385
              * looks like the relevant
@@ -523,7 +523,7 @@ void analysisUtil::processArguments(int argc, char **argv, int &arg_num, char **
     bool first_ir_file = true;
     for (s32_t i = 0; i < argc; ++i) {
         std::string argument(argv[i]);
-        size_t arg_len = argument.size();
+        //size_t arg_len = argument.size();
         if (analysisUtil::isIRFile(argument)) {
             if (find(moduleNameVec.begin(), moduleNameVec.end(), argument)
                     == moduleNameVec.end())

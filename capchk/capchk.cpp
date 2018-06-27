@@ -647,7 +647,7 @@ bool capchk::is_complex_type(Type* t)
     FunctionType *ft = dyn_cast<FunctionType>(t);
     //params
     int number_of_complex_type = 0;
-    for (int i = 0; i<ft->getNumParams(); i++)
+    for (int i = 0; i<(int)ft->getNumParams(); i++)
     {
         Type* argt = ft->getParamType(i);
 strip_pointer:
@@ -701,10 +701,10 @@ Value* capchk::get_global_def(Value* val, ValueSet& visited)
             if (v)
                 return v;
         }
-    }else if (Value* valv = dyn_cast<Value>(val))
+    }/*else if (Value* valv = dyn_cast<Value>(val))
     {
         //llvm_unreachable("how can this be ?");
-    }
+    }*/
     return NULL;
 }
 
@@ -940,7 +940,7 @@ again:
         kinit_funcs.erase(f);
     }
 
-    if (last_count!=non_kernel_init_functions.size())
+    if (last_count!=(int)non_kernel_init_functions.size())
     {
         last_count = non_kernel_init_functions.size();
         static int refine_pass = 0;
