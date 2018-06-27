@@ -99,6 +99,11 @@ class capchk : public ModulePass
                 bool checked, InstructionList &callgraph,
                 InstructionList& chks);
 
+        void collect_scope(Instruction*, FunctionSet&);
+        void collect_backward_scope(Instruction* i, FunctionSet& scope,
+            InstructionList& callgraph, FunctionSet& visited);
+        void augment_scope(FunctionSet& scope);
+
         /*
          * analyze
          */
@@ -125,7 +130,6 @@ class capchk : public ModulePass
                 int& good, int& bad, int& ignored);
 
         FunctionSet resolve_indirect_callee(CallInst*);
-
 
         InstructionSet& discover_chks(Function* f);
         InstructionSet& discover_chks(Function* f, FunctionSet& visited);
@@ -169,6 +173,7 @@ class capchk : public ModulePass
         void dump_v2ci();
         void dump_kinit();
         void dump_non_kinit();
+        void dump_scope(FunctionSet&);
     
 
         void my_debug(Module& module);

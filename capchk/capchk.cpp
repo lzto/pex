@@ -44,8 +44,8 @@ STATISTIC(CRITVAR, "Critical Variables");
 STATISTIC(CRITFUNC, "Critical Functions");
 STATISTIC(FwdAnalysisMaxHit, "# of times max depth for forward analysis hit");
 STATISTIC(BwdAnalysisMaxHit, "# of times max depth for backward analysis hit");
-STATISTIC(CPUnResolv, "Critical Function Pointer Unable to Resolve");
-STATISTIC(CPResolv, "Critical Function Pointer Resolved");
+STATISTIC(CPUnResolv, "Critical Function Pointer Unable to Resolve, Collect Pass");
+STATISTIC(CPResolv, "Critical Function Pointer Resolved, Collect Pass");
 STATISTIC(CFuncUsedByNonCallInst, "Critical Functions used by non CallInst");
 STATISTIC(CFuncUsedByStaticAssign, "Critical Functions used by static assignment");
 STATISTIC(MatchCallCriticalFuncPtr, "# of times indirect call site matched with critical functions");
@@ -246,12 +246,17 @@ bool function_has_gv_initcall_use(Function* f)
 }
 
 /*
- * all critical functions and variables
- * should be permission checked before use
+ * all critical functions and variables should be permission checked before use
  * generate critical functions on-the-fly
+ *
+ * critical_functions: direct call's callee
+ * critical_variables: global variables
+ * critical_ftype: which type is the function pointer stored in,
+ *      used by indirect call
  */
 FunctionSet critical_functions;
 ValueSet critical_variables;
+Type2Fields critical_ftypefields;
 
 bool is_critical_function(Function* f)
 {
@@ -620,6 +625,16 @@ void capchk::dump_chk_and_wrap()
     errs()<<"=o=\n";
 }
 
+void capchk::dump_scope(FunctionSet& scope)
+{
+    errs()<<" scope("<<scope.size()<<"): ";
+    for(auto *f: scope)
+    {
+        errs()<<f->getName()<<",";
+    }
+    errs()<<"\n";
+}
+
 /*
  * is this function type contains non-trivial(non-primary) type?
  */
@@ -948,21 +963,15 @@ again:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
+//resolve indirect callee
 FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
 {
     FunctionSet fs;
     if (ci->isInlineAsm())
         return fs;
-    if (Function* callee = ci->getCalledFunction())
+    if (Function* callee = get_callee_function_direct(ci))
     {
         //not indirect call
-        fs.insert(callee);
-        return fs;
-    }
-    Value* cv = ci->getCalledValue();
-    if (Function* callee = dyn_cast<Function>(cv->stripPointerCasts()))
-    {
         fs.insert(callee);
         return fs;
     }
@@ -971,18 +980,15 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
     //only allow precise match when collecting protected functions
     if (!knob_capchk_cvf)
     {
+        Value* cv = ci->getCalledValue();
         Type *ft = cv->getType()->getPointerElementType();
         if (!is_complex_type(ft))
-        {
             return fs;
-        }
-        std::set<Function*> *fl = t2fs[ft];
-        if (fl==NULL)
+        if (t2fs.find(ft)==t2fs.end())
             return fs;
+        FunctionSet *fl = t2fs[ft];
         for (auto* f: *fl)
-        {
             fs.insert(f);
-        }
     }else
     {
     //method 2: use svf to figure out
@@ -1667,7 +1673,110 @@ void capchk::check_critical_function_usage(Module& module)
     }
 }
 
+/*
+ * collect our scope for value flow analysis
+ * first go backward to see if we can reach to interesting point
+ * (interesting struct, or syscall)
+ * then go forward to collect all def-use chain from current I
+ * - I: from where we start working
+ * - scope: the result, empty scope means that it is not interesting
+ */
+void capchk::collect_backward_scope(Instruction* i, FunctionSet& scope,
+        InstructionList& callgraph, FunctionSet& visited)
+{
+    if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
+        return;
+    Function *f = i->getFunction();
+    if (visited.count(f))
+        return;
+    visited.insert(f);
+    //dont care kinit functions
+    if (is_kernel_init_functions(f))
+        return;
+    //reached interesting point
+    if (is_syscall(f))
+    {
+        errs()<<"Add scope because reached syscall\n";
+        dump_callstack(callgraph);
+        for (auto *I: callgraph)
+            scope.insert(I->getFunction());
+        return;
+    }
+    //have other use of this function in callsite?
+    for (auto* u: f->users())
+    {
+        if (CallInst* ci = dyn_cast<CallInst>(u))
+        {
+            //should call this function
+            if (ci->getCalledFunction()!=f)
+                continue;
+            callgraph.push_back(ci);
+            collect_backward_scope(ci, scope, callgraph, visited);
+            callgraph.pop_back();
+        }else
+        {
+            if (!isa<Instruction>(u))
+                if (is_interesting_type(u->getType()))
+                {
+                    errs()<<"Add scope because reached interesting use\n";
+                    dump_callstack(callgraph);
+                    for (auto*I:callgraph)
+                        scope.insert(I->getFunction());
+                }
+        }
+    }
+}
 
+void capchk::augment_scope(FunctionSet& scope)
+{
+    FunctionSet workscope;
+    FunctionSet newscope;
+    for (auto *f: scope)
+        workscope.insert(f);
+again:
+    for(auto* f: workscope)
+    {
+        for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
+        {
+            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
+            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+            {
+                if (!isa<CallInst>(ii))
+                    continue;
+                CallInst* ci = dyn_cast<CallInst>(ii);
+                Function* f = get_callee_function_direct(ci);
+                if (!f)
+                {
+                    //this is a indirect call, need to resolve this 
+                    continue;
+                }
+                if (!scope.count(f))
+                    newscope.insert(f);
+            }
+        }
+    }
+    workscope.clear();
+    for (auto *f: newscope)
+    {
+        workscope.insert(f);
+        scope.insert(f);
+    }
+    if (workscope.size())
+    {
+        newscope.clear();
+        goto again;
+    }
+}
+
+void capchk::collect_scope(Instruction* i, FunctionSet& scope)
+{
+    InstructionList callgraph;
+    FunctionSet visited;
+    callgraph.push_back(i);
+    collect_backward_scope(i, scope, callgraph, visited);
+    callgraph.pop_back();
+    //augment_scope(scope);
+}
 
 /*
  * run inter-procedural backward analysis to figure out whether the use of
@@ -1699,7 +1808,22 @@ void capchk::check_critical_variable_usage(Module& module)
             //make sure this is not inside a kernel init function
             if (is_kernel_init_functions(f))
                 continue;
-            //value flow 
+#if 0
+            //TODO: value flow
+            //collect our scope, which function can be reached from here
+            //go forward and backward
+            FunctionSet scope;
+            collect_scope(ui, scope);
+            //use unable to reach interesting point is discarded
+            if (scope.size()==0)
+                continue;
+            //InstructionList* IL = run_complex_value_flow(scope);
+            //for(auto* i:IL)
+            //{
+            //  workset.insert(i);
+            //}
+            dump_scope(scope);
+#endif
             workset.insert(ui);
         }
         for (auto* U: workset)
@@ -1726,6 +1850,11 @@ void capchk::check_critical_variable_usage(Module& module)
     }
 }
 
+/*
+ * collect critical function calls,
+ * callee of direct call is collected directly,
+ * callee of indirect call is reasoned by its type or struct
+ */
 void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         InstructionList& chks)
 {
@@ -1759,42 +1888,43 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
 
     }else if (Value* csv = cs->getCalledValue())
     {
-        errs()<<"Want to resolve indirect call @ ";
+        errs()<<"Resolve indirect call @ ";
         cs->getDebugLoc().print(errs());
         errs()<<"\n";
-
+        //TODO:solve as gep function pointer of struct 
         FunctionSet fs = resolve_indirect_callee(cs);
         if (!fs.size())
         {
+            errs()<<ANSI_COLOR_RED<<"[NO MATCH]"<<ANSI_COLOR_RESET<<"\n";
             CPUnResolv++;
             return;
         }
+        errs()<<ANSI_COLOR_GREEN<<"[FOUND "<<fs.size()<<" MATCH]"<<ANSI_COLOR_RESET<<"\n";
         CPResolv++;
-        Function* csf = *fs.begin();
-#if 1
-        if (csf->isIntrinsic()
-                ||is_skip_function(csf->getName())
-                ||is_function_chk_or_wrapper(csf))
-            return;
+        for (auto* csf: fs)
+        {
+            if (csf->isIntrinsic() || is_skip_function(csf->getName())
+                    ||is_function_chk_or_wrapper(csf))
+                return;
 
-        current_crit_funcs.insert(csf);
-        if (knob_capchk_ccfv)
-        {
-            errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
-            cs->getDebugLoc().print(errs());
-            errs()<<"\n cause:";
-            dump_dbgstk();
+            current_crit_funcs.insert(csf);
+            if (knob_capchk_ccfv)
+            {
+                errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
+                cs->getDebugLoc().print(errs());
+                errs()<<"\n cause:";
+                dump_dbgstk();
+            }
+            InstructionSet* ill = f2ci[csf];
+            if (ill==NULL)
+            {
+                ill = new InstructionSet;
+                f2ci[csf] = ill;
+            }
+            //insert all chks?
+            for (auto chki: chks)
+                ill->insert(chki);
         }
-        InstructionSet* ill = f2ci[csf];
-        if (ill==NULL)
-        {
-            ill = new InstructionSet;
-            f2ci[csf] = ill;
-        }
-        //insert all chks?
-        for (auto chki: chks)
-            ill->insert(chki);
-#endif
     }
 }
 
