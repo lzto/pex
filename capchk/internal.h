@@ -294,7 +294,8 @@ static const char* _builtin_struct_to_skip [] =
     "struct.mount",
     "struct.mountpoint",
     "struct.page",
-    "struct.sk_buff"
+    "struct.sk_buff",
+    "struct.kernel_symbol",
 };
 
 #endif//_CAPCHK_INTERNAL_H_
