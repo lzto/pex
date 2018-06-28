@@ -277,7 +277,7 @@ static const char* _builtin_interesting_type_word [] =
 /*
  * some common struct type to skip
  */
-#define BUILDIN_STRUCT_TO_SKIP 13
+#define BUILDIN_STRUCT_TO_SKIP 16
 static const char* _builtin_struct_to_skip [] = 
 {
     "struct.list_head",
