@@ -314,10 +314,7 @@ public:
     virtual void resolveIndCalls(llvm::CallSite cs, const PointsTo& target, CallEdgeMap& newEdges,llvm::CallGraph* callgraph = NULL);
     /// Match arguments for callsite at caller and callee
     inline bool matchArgs(llvm::CallSite cs, const llvm::Function* callee) {
-        if(ThreadAPI::getThreadAPI()->isTDFork(cs))
-            return true;
-        else
-            return cs.arg_size() == callee->arg_size();
+        return cs.arg_size() == callee->arg_size();
     }
 
     /// CallGraph SCC related methods

@@ -976,52 +976,6 @@ void PAGBuilder::handleExtCall(CallSite cs, const Function *callee) {
             }
         }
 
-        /// create inter-procedural PAG edges for thread forks
-        if(isThreadForkCall(inst)) {
-            if(const Function* forkedFun = getLLVMFunction(getForkedFun(inst)) ) {
-                forkedFun = getDefFunForMultipleModule(forkedFun);
-                const Value* actualParm = getActualParmAtForkSite(inst);
-                /// pthread_create has 1 arg.
-                /// apr_thread_create has 2 arg.
-                assert((forkedFun->arg_size() <= 2) && "Size of formal parameter of start routine should be one");
-                if(forkedFun->arg_size() <= 2 && forkedFun->arg_size() >= 1) {
-                    const Argument* formalParm = &(*forkedFun->arg_begin());
-                    /// Connect actual parameter to formal parameter of the start routine
-                    if(isa<PointerType>(actualParm->getType()) && isa<PointerType>(formalParm->getType()) )
-                        pag->addThreadForkEdge(pag->getValueNode(actualParm), pag->getValueNode(formalParm),inst);
-                }
-            }
-            else {
-                /// handle indirect calls at pthread create APIs e.g., pthread_create(&t1, NULL, fp, ...);
-                ///const llvm::Value* fun = ThreadAPI::getThreadAPI()->getForkedFun(inst);
-                ///if(!isa<Function>(fun))
-                ///    pag->addIndirectCallsites(cs,pag->getValueNode(fun));
-            }
-            /// If forkedFun does not pass to spawnee as function type but as void pointer
-            /// remember to update inter-procedural callgraph/PAG/SVFG etc. when indirect call targets are resolved
-            /// We don't connect the callgraph here, further investigation is need to hanle mod-ref during SVFG construction.
-        }
-
-        /// create inter-procedural PAG edges for hare_parallel_for calls
-        else if(isHareParForCall(inst)) {
-            if(const Function* taskFunc = getLLVMFunction(getTaskFuncAtHareParForSite(inst)) ) {
-                /// The task function of hare_parallel_for has 3 args.
-                assert((taskFunc->arg_size() == 3) && "Size of formal parameter of hare_parallel_for's task routine should be 3");
-                const Value* actualParm = getTaskDataAtHareParForSite(inst);
-                const Argument* formalParm = &(*taskFunc->arg_begin());
-                /// Connect actual parameter to formal parameter of the start routine
-                if(isa<PointerType>(actualParm->getType()) && isa<PointerType>(formalParm->getType()) )
-                    pag->addThreadForkEdge(pag->getValueNode(actualParm), pag->getValueNode(formalParm),inst);
-            }
-            else {
-                /// handle indirect calls at hare_parallel_for (e.g., hare_parallel_for(..., fp, ...);
-                ///const llvm::Value* fun = ThreadAPI::getThreadAPI()->getForkedFun(inst);
-                ///if(!isa<Function>(fun))
-                ///    pag->addIndirectCallsites(cs,pag->getValueNode(fun));
-            }
-        }
-
-        /// TODO: inter-procedural PAG edges for thread joins
     }
 }
 

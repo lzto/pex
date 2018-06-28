@@ -32,7 +32,6 @@
 #include "Util/GraphUtil.h"
 #include "Util/AnalysisUtil.h"
 #include "Util/PTAStat.h"
-#include "Util/ThreadCallGraph.h"
 #include "Util/CPPUtil.h"
 #include "Util/SVFModule.h"
 #include "MemoryModel/CHA.h"
@@ -80,8 +79,6 @@ static cl::opt<bool> UsePreCompFieldSensitive("preFieldSensitive", cl::init(true
 static cl::opt<bool> EnableAliasCheck("alias-check", cl::init(true),
                                       cl::desc("Enable alias check functions"));
 
-static cl::opt<bool> EnableThreadCallGraph("enable-tcg", cl::init(true),
-        cl::desc("Enable pointer analysis to use thread call graph"));
 
 static cl::opt<bool> INCDFPTData("incdata", cl::init(true),
                                  cl::desc("Enable incremental DFPTData for flow-sensitive analysis"));
@@ -166,10 +163,7 @@ void PointerAnalysis::initialize(SVFModule svfModule) {
     svfMod = svfModule;
 
     /// initialise pta call graph
-    if(EnableThreadCallGraph)
-        ptaCallGraph = new ThreadCallGraph(svfModule);
-    else
-        ptaCallGraph = new PTACallGraph(svfModule);
+    ptaCallGraph = new PTACallGraph(svfModule);
     callGraphSCCDetection();
 }
 

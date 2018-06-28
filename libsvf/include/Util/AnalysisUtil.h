@@ -32,7 +32,6 @@
 
 #include "Util/SVFModule.h"
 #include "Util/ExtAPI.h"
-#include "Util/ThreadAPI.h"
 #include "Util/BasicTypes.h"
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/Function.h>
@@ -261,116 +260,6 @@ inline const llvm::PointerType *getRefTypeOfHeapAllocOrStatic(const llvm::CallSi
 inline const llvm::PointerType *getRefTypeOfHeapAllocOrStatic(const llvm::Instruction *inst) {
     llvm::CallSite cs(const_cast<llvm::Instruction*>(inst));
     return getRefTypeOfHeapAllocOrStatic(cs);
-}
-//@}
-
-/// Return true if this is a thread creation call
-///@{
-inline bool isThreadForkCall(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->isTDFork(cs);
-}
-inline bool isThreadForkCall(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->isTDFork(inst);
-}
-//@}
-
-/// Return true if this is a hare_parallel_for call
-///@{
-inline bool isHareParForCall(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->isHareParFor(cs);
-}
-inline bool isHareParForCall(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->isHareParFor(inst);
-}
-//@}
-
-/// Return true if this is a thread join call
-///@{
-inline bool isThreadJoinCall(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->isTDJoin(cs);
-}
-inline bool isThreadJoinCall(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->isTDJoin(inst);
-}
-//@}
-
-/// Return true if this is a thread exit call
-///@{
-inline bool isThreadExitCall(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->isTDExit(cs);
-}
-inline bool isThreadExitCall(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->isTDExit(inst);
-}
-//@}
-
-/// Return true if this is a lock acquire call
-///@{
-inline bool isLockAquireCall(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->isTDAcquire(cs);
-}
-inline bool isLockAquireCall(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->isTDAcquire(inst);
-}
-//@}
-
-/// Return true if this is a lock acquire call
-///@{
-inline bool isLockReleaseCall(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->isTDRelease(cs);
-}
-inline bool isLockReleaseCall(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->isTDRelease(inst);
-}
-//@}
-
-/// Return true if this is a barrier wait call
-//@{
-inline bool isBarrierWaitCall(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->isTDBarWait(cs);
-}
-inline bool isBarrierWaitCall(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->isTDBarWait(inst);
-}
-//@}
-
-/// Return thread fork function
-//@{
-inline const llvm::Value* getForkedFun(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->getForkedFun(cs);
-}
-inline const llvm::Value* getForkedFun(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->getForkedFun(inst);
-}
-//@}
-
-/// Return sole argument of the thread rountine
-//@{
-inline const llvm::Value* getActualParmAtForkSite(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->getActualParmAtForkSite(cs);
-}
-inline const llvm::Value* getActualParmAtForkSite(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->getActualParmAtForkSite(inst);
-}
-//@}
-
-/// Return the task function of the parallel_for rountine
-//@{
-inline const llvm::Value* getTaskFuncAtHareParForSite(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->getTaskFuncAtHareParForSite(cs);
-}
-inline const llvm::Value* getTaskFuncAtHareParForSite(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->getTaskFuncAtHareParForSite(inst);
-}
-//@}
-
-/// Return the task data argument of the parallel_for rountine
-//@{
-inline const llvm::Value* getTaskDataAtHareParForSite(const llvm::CallSite cs) {
-    return ThreadAPI::getThreadAPI()->getTaskDataAtHareParForSite(cs);
-}
-inline const llvm::Value* getTaskDataAtHareParForSite(const llvm::Instruction *inst) {
-    return ThreadAPI::getThreadAPI()->getTaskDataAtHareParForSite(inst);
 }
 //@}
 

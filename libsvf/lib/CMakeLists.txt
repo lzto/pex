@@ -8,14 +8,11 @@ set(SOURCES
     Util/CPPUtil.cpp
     Util/DataFlowUtil.cpp
     Util/PTACallGraph.cpp
-    Util/RaceAnnotator.cpp
-    Util/ThreadCallGraph.cpp
     Util/BreakConstantExpr.cpp
     Util/Conditions.cpp
     Util/ExtAPI.cpp
     Util/PathCondAllocator.cpp
     Util/PTAStat.cpp
-    Util/ThreadAPI.cpp
     Util/SVFModule.cpp
     MemoryModel/ConsG.cpp
     MemoryModel/LocationSet.cpp
