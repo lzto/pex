@@ -597,7 +597,7 @@ void capchk::dump_tf2ci()
         std::set<int>& fields = critical_typefields[t];
         for (auto i: fields)
             errs()<<i<<",";
-        errs()<<"\n";
+        errs()<<ANSI_COLOR_RESET<<"\n";
         dump_cis(cis.second);
     }
 #endif
@@ -1879,6 +1879,8 @@ void capchk::figure_out_gep_using_type_field(InstructionSet& workset,
     for (Module::iterator f = module.begin(), f_end = module.end();
         f != f_end; ++f)
     {
+        if (is_skip_function(dyn_cast<Function>(f)->getName()))
+            continue;
         for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
         {
             BasicBlock* bb = dyn_cast<BasicBlock>(fi);
@@ -1887,6 +1889,8 @@ void capchk::figure_out_gep_using_type_field(InstructionSet& workset,
                 if (!isa<GetElementPtrInst>(ii))
                     continue;
                 GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(ii);
+                /*if (!gep_used_by_call_or_store(gep))
+                    continue;*/
                 Type* gep_operand_type
                     = dyn_cast<PointerType>(gep->getPointerOperandType())
                         ->getElementType();

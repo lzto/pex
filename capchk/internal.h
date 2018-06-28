@@ -293,6 +293,8 @@ static const char* _builtin_struct_to_skip [] =
     "struct.seq_file",
     "struct.mount",
     "struct.mountpoint",
+    "struct.page",
+    "struct.sk_buff"
 };
 
 #endif//_CAPCHK_INTERNAL_H_
