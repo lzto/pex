@@ -278,7 +278,7 @@ void PTAStat::printStat() {
 
 
 void PTAStat::bitcastInstStat() {
-    SVFModule module = pta->getModule();
+    SVFModule &module = pta->getModule();
     u32_t numberOfBitCast = 0;
     for (SVFModule::const_iterator funIter = module.begin(), funEiter = module.end();
             funIter != funEiter; ++funIter) {

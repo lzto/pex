@@ -65,7 +65,7 @@ static cl::opt<string> ReadAnder("read-ander",  cl::init(""),
 /*!
  * Andersen analysis
  */
-void Andersen::analyze(SVFModule svfModule) {
+void Andersen::analyze(SVFModule& svfModule) {
     /// Initialization for the Solver
     initialize(svfModule);
 

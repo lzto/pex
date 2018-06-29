@@ -127,7 +127,7 @@ void PointerAnalysis::destroy()
 /*!
  * Initialization of pointer analysis
  */
-void PointerAnalysis::initialize(SVFModule svfModule) {
+void PointerAnalysis::initialize(SVFModule& svfModule) {
 
     /// whether we have already built PAG
     if(pag == NULL) {
@@ -160,7 +160,7 @@ void PointerAnalysis::initialize(SVFModule svfModule) {
 
     typeSystem = new TypeSystem(pag);
 
-    svfMod = svfModule;
+    svfMod = &svfModule;
 
     /// initialise pta call graph
     ptaCallGraph = new PTACallGraph(svfModule);
@@ -699,8 +699,8 @@ void PointerAnalysis::connectVCallToVFns(CallSite cs,
     for (set<const Function*>::const_iterator fit = vfns.begin(),
             feit = vfns.end(); fit != feit; ++fit) {
         const Function* callee = *fit;
-        if (callee->isDeclaration() && svfMod.hasDefinition(callee))
-            callee = svfMod.getDefinition(callee);
+        if (callee->isDeclaration() && svfMod->hasDefinition(callee))
+            callee = svfMod->getDefinition(callee);
         if (getIndCallMap()[cs].count(callee) > 0)
             continue;
         if(cs.arg_size() == callee->arg_size() ||
@@ -735,8 +735,8 @@ void PointerAnalysis::resolveCPPIndCalls(CallSite cs,
 void PointerAnalysis::validateSuccessTests(const char* fun) {
 
     // check for must alias cases, whether our alias analysis produce the correct results
-    for (u32_t i = 0; i < svfMod.getModuleNum(); ++i) {
-        Module *module = svfMod.getModule(i);
+    for (u32_t i = 0; i < svfMod->getModuleNum(); ++i) {
+        Module *module = svfMod->getModule(i);
         if (Function* checkFun = module->getFunction(fun)) {
             if(!checkFun->use_empty())
                 outs() << "[" << this->PTAName() << "] Checking " << fun << "\n";
@@ -791,7 +791,7 @@ void PointerAnalysis::validateSuccessTests(const char* fun) {
  */
 void PointerAnalysis::validateExpectedFailureTests(const char* fun) {
 
-    if (Function* checkFun = getModule().getFunction(fun)) {
+    if (Function* checkFun = svfMod->getFunction(fun)) {
         if(!checkFun->use_empty())
             outs() << "[" << this->PTAName() << "] Checking " << fun << "\n";
 

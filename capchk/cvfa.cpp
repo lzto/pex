@@ -34,7 +34,8 @@ void CVFA::initialize(Module& module)
     errs()<<"Run Pointer Analysis\n";
     STOP_WATCH_START(WID_INIT);
     m = &module;
-    pta->analyze(SVFModule(module));
+    SVFModule svfmod(module);
+    pta->analyze(svfmod);
     STOP_WATCH_STOP(WID_INIT);
     STOP_WATCH_REPORT(WID_INIT);
     errs()<<"Build SVFG\n";

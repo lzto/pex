@@ -88,10 +88,10 @@ public:
     }
 
     /// Andersen analysis
-    void analyze(SVFModule svfModule);
+    void analyze(SVFModule& svfModule);
 
     /// Initialize analysis
-    virtual inline void initialize(SVFModule svfModule) {
+    virtual inline void initialize(SVFModule& svfModule) {
         resetData();
         /// Build PAG
         PointerAnalysis::initialize(svfModule);
@@ -255,7 +255,7 @@ public:
     AndersenWave(PTATY type = AndersenWave_WPA) : Andersen(type) {}
 
     /// Create an singleton instance directly instead of invoking llvm pass manager
-    static AndersenWave* createAndersenWave(SVFModule svfModule) {
+    static AndersenWave* createAndersenWave(SVFModule& svfModule) {
         if(waveAndersen==NULL) {
             waveAndersen = new AndersenWave();
             waveAndersen->analyze(svfModule);
