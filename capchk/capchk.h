@@ -93,7 +93,7 @@ class capchk : public ModulePass
         void collect_pp(Module& module);
         void collect_chkps(Module&);
         void identify_interesting_struct(Module&);
-        void resolve_all_indirect_callee(Module& module);
+        void cvf_resolve_all_indirect_callee(Module& module);
         void figure_out_gep_using_type_field(InstructionSet&,
                 const std::pair<Type*,std::set<int>>&, Module&);
 

@@ -29,11 +29,6 @@ set(SOURCES
     MSSA/SVFG.cpp 
     MSSA/SVFGOPT.cpp
     MSSA/SVFGStat.cpp
-    SABER/SaberAnnotator.cpp
-    SABER/SaberSVFGBuilder.cpp
-    SABER/ProgSlice.cpp
-    SABER/SaberCheckerAPI.cpp
-    SABER/SrcSnkDDA.cpp
     WPA/Andersen.cpp
     WPA/AndersenLCD.cpp
     WPA/AndersenStat.cpp

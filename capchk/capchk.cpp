@@ -1576,7 +1576,7 @@ bool capchk::bs_using_indcs(Function* func,
  * candidate function so that we can make check simpler
  *
  */
-void capchk::resolve_all_indirect_callee(Module& module)
+void capchk::cvf_resolve_all_indirect_callee(Module& module)
 {
     //collect all function pointer assignment(fptrassign=source)
     for (Module::iterator mi = module.begin(), me = module.end(); mi != me; ++mi)
@@ -1625,7 +1625,7 @@ void capchk::resolve_all_indirect_callee(Module& module)
         errs()<<"SVF indirect call track:\n";
         for (auto f: all_functions)
         {
-            std::set<const Instruction*> css;
+            InstructionSet css;
             cvfa.get_indirect_callee_for_func(f, css);
             if (css.size()==0)
                 continue;
@@ -2468,7 +2468,7 @@ void capchk::process_cpgf(Module& module)
     {
         errs()<<"Resolving callee for indirect call.\n";
         STOP_WATCH_START(WID_0);
-        resolve_all_indirect_callee(module);
+        cvf_resolve_all_indirect_callee(module);
         STOP_WATCH_STOP(WID_0);
         STOP_WATCH_REPORT(WID_0);
     }
