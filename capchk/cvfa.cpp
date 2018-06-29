@@ -20,8 +20,9 @@ STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 using namespace llvm;
 
 CVFA::CVFA()
-    :m(NULL)
+    :m(NULL), svfg(NULL), pta(NULL)
 {
+    pta = new Andersen();
 }
 
 CVFA::~CVFA()
@@ -30,7 +31,18 @@ CVFA::~CVFA()
 
 void CVFA::initialize(Module& module)
 {
+    errs()<<"Run Pointer Analysis\n";
+    STOP_WATCH_START(WID_INIT);
     m = &module;
+    pta->analyze(SVFModule(module));
+    STOP_WATCH_STOP(WID_INIT);
+    STOP_WATCH_REPORT(WID_INIT);
+    errs()<<"Build SVFG\n";
+    STOP_WATCH_START(WID_INIT);
+    SVFGBuilder memSSA(true);
+    svfg = memSSA.buildSVFG((BVDataPTAImpl*)pta);
+    STOP_WATCH_STOP(WID_INIT);
+    STOP_WATCH_REPORT(WID_INIT);
 }
 
 void CVFA::get_indirect_callee_for_func(Function* callee, InstructionSet& css)

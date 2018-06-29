@@ -9,6 +9,7 @@
 
 #include "MSSA/SVFGOPT.h"
 #include "WPA/Andersen.h"
+#include "MemoryModel/PointerAnalysis.h"
 
 using namespace llvm;
 
@@ -16,12 +17,16 @@ class CVFA
 {
 private:
     Module* m;
+    PointerAnalysis* pta;
+    SVFG* svfg;
 
 public:
     CVFA();
     ~CVFA();
     void initialize(Module& module);
     void get_indirect_callee_for_func(Function* callee, InstructionSet& css);
+
+
 
 };
 
