@@ -316,7 +316,7 @@ private:
         }
         //make sure we are adding elements in order
         //addVarForType(id, ptaType);
-        errs()<<"\nConverting map\n"
+        llvm::errs()<<"\nConverting map\n";
         std::list<int> ids;
         for (auto I: VarToTypeSetMap)
             ids.push_back(I.first);
@@ -330,7 +330,7 @@ private:
             for (auto type: *typeset)
                 addVarForType(i, type);
         }
-        errs()<<"Done\n"
+        llvm::errs()<<"Done\n";
     }
 
 private:
