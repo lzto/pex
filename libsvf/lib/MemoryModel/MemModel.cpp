@@ -634,12 +634,14 @@ void SymbolTableInfo::buildMemModel(SVFModule svfModule) {
     symTyMap.insert(std::make_pair(totalSymNum, NullPtr));
 
     // Add symbols for all the globals .
+    errs()<<"Add symbols for all the globals\n";
     for (SVFModule::global_iterator I = svfModule.global_begin(), E =
                 svfModule.global_end(); I != E; ++I) {
         collectSym(*I);
     }
 
     // Add symbols for all the global aliases
+    errs()<<"Add symbols for all the global aliases\n";
     for (SVFModule::alias_iterator I = svfModule.alias_begin(), E =
                 svfModule.alias_end(); I != E; I++) {
         collectSym(*I);
@@ -647,8 +649,16 @@ void SymbolTableInfo::buildMemModel(SVFModule svfModule) {
     }
 
     // Add symbols for all of the functions and the instructions in them.
-    for (SVFModule::iterator F = svfModule.begin(), E = svfModule.end(); F != E; ++F) {
+    errs()<<"Add symbols for all of the functions and the instructions in them.\n";
+    int func_cnt = 0;
+    int total_functions = 0;
+    for (SVFModule::iterator F = svfModule.begin(), E = svfModule.end(); F != E; ++F)
+        total_functions++;
+    for (SVFModule::iterator F = svfModule.begin(), E = svfModule.end(); F != E; ++F)
+    {
         Function *fun = *F;
+        errs()<<"\r("<<func_cnt<<"/"<<total_functions<<")"<<fun->getName();
+        func_cnt++;
         collectSym(fun);
         collectRet(fun);
         if (fun->getFunctionType()->isVarArg())
@@ -656,69 +666,94 @@ void SymbolTableInfo::buildMemModel(SVFModule svfModule) {
 
         // Add symbols for all formal parameters.
         for (Function::arg_iterator I = fun->arg_begin(), E = fun->arg_end();
-                I != E; ++I) {
+                I != E; ++I)
             collectSym(&*I);
-        }
+
+        if (fun->isDeclaration())
+            continue;
 
         // collect and create symbols inside the function body
-        for (inst_iterator II = inst_begin(*fun), E = inst_end(*fun); II != E; ++II) {
+        for (inst_iterator II = inst_begin(*fun), E = inst_end(*fun); II != E; ++II)
+        {
             const Instruction *inst = &*II;
             collectSym(inst);
 
             // initialization for some special instructions
             //{@
-            if (const StoreInst *st = dyn_cast<StoreInst>(inst)) {
-                collectSym(st->getPointerOperand());
-                collectSym(st->getValueOperand());
-            }
-
-            else if (const LoadInst *ld = dyn_cast<LoadInst>(inst)) {
-                collectSym(ld->getPointerOperand());
-            }
-
-            else if (const PHINode *phi = dyn_cast<PHINode>(inst)) {
-                for (u32_t i = 0; i < phi->getNumIncomingValues(); ++i) {
-                    collectSym(phi->getIncomingValue(i));
+            switch (inst->getOpcode())
+            {
+                case(Instruction::Store):
+                {
+                    const StoreInst *st = dyn_cast<StoreInst>(inst);
+                    collectSym(st->getPointerOperand());
+                    collectSym(st->getValueOperand());
+                    break;
                 }
-            }
-
-            else if (const GetElementPtrInst *gep = dyn_cast<GetElementPtrInst>(
-                    inst)) {
-                collectSym(gep->getPointerOperand());
-            }
-
-            else if (const SelectInst *sel = dyn_cast<SelectInst>(inst)) {
-                collectSym(sel->getTrueValue());
-                collectSym(sel->getFalseValue());
-            }
-
-            else if (const CastInst *cast = dyn_cast<CastInst>(inst)) {
-                collectSym(cast->getOperand(0));
-            }
-            else if (const ReturnInst *ret = dyn_cast<ReturnInst>(inst)) {
-                if(ret->getReturnValue())
-                    collectSym(ret->getReturnValue());
-            }
-            else if (isCallSite(inst) && isInstrinsicDbgInst(inst)==false) {
-
-                CallSite cs = analysisUtil::getLLVMCallSite(inst);
-                callSiteSet.insert(cs);
-                for (CallSite::arg_iterator it = cs.arg_begin();
-                        it != cs.arg_end(); ++it) {
-                    collectSym(*it);
+                case(Instruction::Load):
+                {
+                    const LoadInst *ld = dyn_cast<LoadInst>(inst);
+                    collectSym(ld->getPointerOperand());
+                    break;
                 }
-                // Calls to inline asm need to be added as well because the callee isn't
-                // referenced anywhere else.
-                const Value *Callee = cs.getCalledValue();
-                collectSym(Callee);
+                case(Instruction::PHI):
+                {
+                    const PHINode *phi = dyn_cast<PHINode>(inst);
+                    for (u32_t i = 0; i < phi->getNumIncomingValues(); ++i) {
+                        collectSym(phi->getIncomingValue(i));
+                    }
+                    break;
+                }
+                case(Instruction::GetElementPtr):
+                {
+                    const GetElementPtrInst *gep = dyn_cast<GetElementPtrInst>(inst);
+                    collectSym(gep->getPointerOperand());
+                    break;
+                }
+                case(Instruction::Select):
+                {
+                    const SelectInst *sel = dyn_cast<SelectInst>(inst);
+                    collectSym(sel->getTrueValue());
+                    collectSym(sel->getFalseValue());
+                    break;
+                }
+                case(Instruction::BitCast):
+                {
+                    const CastInst *cast = dyn_cast<CastInst>(inst);
+                        collectSym(cast->getOperand(0));
+                    break;
+                }
+                case(Instruction::Ret):
+                {
+                    const ReturnInst *ret = dyn_cast<ReturnInst>(inst);
+                    if(ret->getReturnValue())
+                        collectSym(ret->getReturnValue());
+                    break;
+                }
+                case(Instruction::Call):
+                case(Instruction::Invoke):
+                {
 
-                //TODO handle inlineAsm
-                ///if (isa<InlineAsm>(Callee))
+                    if (isCallSite(inst) && isInstrinsicDbgInst(inst)==false) {
 
+                        CallSite cs = analysisUtil::getLLVMCallSite(inst);
+                        callSiteSet.insert(cs);
+                        for (CallSite::arg_iterator it = cs.arg_begin();
+                                it != cs.arg_end(); ++it) {
+                            collectSym(*it);
+                        }
+                        // Calls to inline asm need to be added as well because the callee isn't
+                        // referenced anywhere else.
+                        collectSym(cs.getCalledValue());
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
             //@}
         }
     }
+    errs()<<"Done\n";
 }
 
 /*!

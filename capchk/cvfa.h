@@ -24,9 +24,7 @@ public:
     CVFA();
     ~CVFA();
     void initialize(Module& module);
-    void get_indirect_callee_for_func(Function* callee, InstructionSet& css);
-
-
+    void get_callee_function_indirect(Function* callee, ConstInstructionSet& css);
 
 };
 

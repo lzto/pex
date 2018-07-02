@@ -34,6 +34,12 @@
 #include "PAGEdge.h"
 #include "PAGNode.h"
 #include "Util/AnalysisUtil.h"
+#include <llvm/ADT/BitVector.h>
+
+#include "stopwatch.h"
+
+#define WID_0  0
+
 
 /*!
  * Program Assignment Graph for pointer analysis
@@ -108,15 +114,33 @@ public:
     }
     /// Initialize candidate pointers
     inline void initialiseCandidatePointers() {
+        STOP_WATCH(1);
+        STOP_WATCH_START(WID_0);
+
         // collect candidate pointers for demand-driven analysis
+        int cnt = 0;
+        int total = 0;
+        for (iterator nIter = begin(); nIter != end(); ++nIter)
+            total++;
+
+        llvm::BitVector bv;
+        bv.resize(total);
         for (iterator nIter = begin(); nIter != end(); ++nIter) {
+            llvm::errs()<<"\r("<<cnt<<"/"<<total<<")";
+            cnt++;
             NodeID nodeId = nIter->first;
             // do not compute points-to for isolated node
-            if (isValidPointer(nodeId) == false)
+            if (!isValidPointer(nodeId))
                 continue;
 
-            candidatePointers.test_and_set(nodeId);
+            //candidatePointers.test_and_set(nodeId);
+            bv.set(nodeId);
         }
+        for (auto i = bv.set_bits_begin(), e = bv.set_bits_end(); i!=e; i++)
+            candidatePointers.set(*i);
+
+        STOP_WATCH_STOP(WID_0);
+        STOP_WATCH_REPORT(WID_0);
     }
 
     /// Singleton design here to make sure we only have one instance during any analysis
@@ -641,7 +665,16 @@ public:
 
     /// Whether a node is a valid pointer
     //@{
-    bool isValidPointer(NodeID nodeId) const;
+    /*
+     * If this is a dummy node or node does not have incoming edges we assume it is not a pointer here
+     */
+    inline bool isValidPointer(NodeID nodeId) const
+    {
+        PAGNode* node = pag->getPAGNode(nodeId);
+        if ((node->getInEdges().empty() && node->getOutEdges().empty()))
+            return false;
+        return node->isPointer();
+    };
 
     bool isValidTopLevelPtr(const PAGNode* node) {
         if (node->isTopLevelPtr()) {

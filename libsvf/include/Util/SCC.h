@@ -62,6 +62,7 @@ private:
 
 public:
     typedef llvm::SparseBitVector<> NodeBS;
+    
     typedef std::stack<NodeID> GNodeStack;
 
     class GNodeSCCInfo {

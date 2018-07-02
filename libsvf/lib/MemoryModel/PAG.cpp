@@ -536,16 +536,6 @@ void PAG::print() {
 
 }
 
-/*
- * If this is a dummy node or node does not have incoming edges we assume it is not a pointer here
- */
-bool PAG::isValidPointer(NodeID nodeId) const {
-    PAGNode* node = pag->getPAGNode(nodeId);
-    if ((node->getInEdges().empty() && node->getOutEdges().empty()))
-        return false;
-    return node->isPointer();
-}
-
 /*!
  * PAGEdge constructor
  */

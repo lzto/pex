@@ -39,25 +39,11 @@ set(SOURCES
     WPA/FlowSensitiveStat.cpp
 )
 
-set(WHOLW_PROGRAM_ANALYSIS_PASS_SOURCE
-    ${SOURCES}
-    WPA/WPAPass.cpp
-)
-
-add_llvm_loadable_module(Svf ${WHOLW_PROGRAM_ANALYSIS_PASS_SOURCE})
 add_llvm_Library(LLVMSvf ${SOURCES})
 
 link_directories( ${CMAKE_BINARY_DIR}/libsvf/lib/Cudd )
 
-target_link_libraries(LLVMSvf ${llvm_libs})
-if ( CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    target_link_libraries(Svf LLVMCudd ${llvm_libs})
-else()
-    target_link_libraries(Svf ${llvm_libs})
-endif()
-
 if(DEFINED IN_SOURCE_BUILD)
-    add_dependencies(Svf intrinsics_gen)
     add_dependencies(LLVMSvf intrinsics_gen)
 endif()
 

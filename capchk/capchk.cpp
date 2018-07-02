@@ -69,7 +69,8 @@ Function2ChkInst f2chks;
 Function2ChkInst f2chks_disc;
 
 //all function pointer assignment,(part of function use)
-InstructionSet fptrassign;
+//InstructionSet fptrassign;
+
 //stores all indirect call sites
 InDirectCallSites idcs;
 //function to callsite instruction
@@ -1578,6 +1579,7 @@ bool capchk::bs_using_indcs(Function* func,
  */
 void capchk::cvf_resolve_all_indirect_callee(Module& module)
 {
+#if 0
     //collect all function pointer assignment(fptrassign=source)
     for (Module::iterator mi = module.begin(), me = module.end(); mi != me; ++mi)
     {
@@ -1594,6 +1596,7 @@ void capchk::cvf_resolve_all_indirect_callee(Module& module)
                 fptrassign.insert(i);
         }
     }
+#endif
 
     //create svf instance
     CVFA cvfa;
@@ -1601,53 +1604,52 @@ void capchk::cvf_resolve_all_indirect_callee(Module& module)
     cvfa.initialize(module);
 
     //do analysis(idcs=sink)
-    //method 1, simple type cast
+    //method 1, simple type cast, they are actually direct call
     for (auto* idc: idcs)
     {
-        Value* cv = idc->getCalledValue();
-
-        FunctionSet* funcs = idcs2callee[idc];
-        if (funcs==NULL)
+        if (Function* func = get_callee_function_direct(idc))
         {
-            funcs = new FunctionSet;
-            idcs2callee[idc] = funcs;
-        }
-        if (Function* func = dyn_cast<Function>(cv->stripPointerCasts()))
-        {
+            FunctionSet* funcs = idcs2callee[idc];
+            if (funcs==NULL)
+            {
+                funcs = new FunctionSet;
+                idcs2callee[idc] = funcs;
+            }
             funcs->insert(func);
-            continue;
         }
     }
-    //method 2, value flow, track down def-use-chain till we found
-    //function pointer assignment
-    if (knob_capchk_cvf)
+    //method 2, value flow
+    //find out all possible value of indirect callee
+    errs()<<ANSI_COLOR(BG_WHITE, FG_BLUE)
+        <<"SVF indirect call track:"
+        <<ANSI_COLOR_RESET<<"\n";
+    for (auto f: all_functions)
     {
-        errs()<<"SVF indirect call track:\n";
-        for (auto f: all_functions)
+        ConstInstructionSet css;
+        cvfa.get_callee_function_indirect(f, css);
+        if (css.size()==0)
+            continue;
+        errs()<<ANSI_COLOR(BG_CYAN, FG_WHITE)
+            <<"FUNC:"<<f->getName()
+            <<", found "<<css.size()
+            <<ANSI_COLOR_RESET<<"\n";
+        for (auto* _ci: css)
         {
-            InstructionSet css;
-            cvfa.get_indirect_callee_for_func(f, css);
-            if (css.size()==0)
-                continue;
-            errs()<<"FUNC:"<<f->getName()<<", found "<<css.size()<<"\n";
-            for (auto* _ci: css)
+            const CallInst* ci = dyn_cast<CallInst>(_ci);
+            FunctionSet* funcs = idcs2callee[ci];
+            if (funcs==NULL)
             {
-                const CallInst* ci = dyn_cast<CallInst>(_ci);
-                FunctionSet* funcs = idcs2callee[ci];
-                if (funcs==NULL)
-                {
-                    funcs = new FunctionSet;
-                    idcs2callee[ci] = funcs;
-                }
-                funcs->insert(f);
-#if 1
-                errs()<<"CallSite: ";
-                ci->getDebugLoc().print(errs());
-                errs()<<"\n";
-                ci->print(errs());
-                errs()<<"\n";
-#endif
+                funcs = new FunctionSet;
+                idcs2callee[ci] = funcs;
             }
+            funcs->insert(f);
+#if 1
+            errs()<<"CallSite: ";
+            ci->getDebugLoc().print(errs());
+            errs()<<"\n";
+            ci->print(errs());
+            errs()<<"\n";
+#endif
         }
     }
 }

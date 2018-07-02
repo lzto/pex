@@ -18,6 +18,7 @@ static const char* _builtin_check_functions [] =
 /*
  * kernel start function
  */
+[[maybe_unused]]
 static const char* _builtin_kernel_start_functions [] = 
 {
     "start_kernel",
@@ -203,6 +204,7 @@ static const char* _builtin_skip_functions [] =
 /*
  * builtin list of interesting keywords
  */
+[[maybe_unused]]
 static const char* interesting_keyword [] = 
 {
     "SyS",

@@ -164,8 +164,7 @@ private:
 class TypeSystem {
 public:
 
-    typedef std::map<NodeID, TypeSet*> VarToTypeSetMapTy;
-
+    typedef llvm::DenseMap<NodeID, TypeSet*> VarToTypeSetMapTy;
     typedef std::map<PTAType, NodeBS> TypeToVarsMapTy;
 
     typedef typename VarToTypeSetMapTy::iterator iterator;
@@ -281,28 +280,57 @@ private:
      * VarArgPN
      */
     void translateLLVMTypeToPTAType(const PAG *pag) {
-        for (PAG::const_iterator it = pag->begin(); it != pag->end(); ++it) {
+        llvm::errs()<<"translateLLVMTypeToPTAType\n";
+        int total = 0;
+        int cnt = 0;
+        for (PAG::const_iterator it = pag->begin(); it != pag->end(); ++it)
+            total++;
+        for (PAG::const_iterator it = pag->begin(); it != pag->end(); ++it)
+        {
+            llvm::errs()<<"\r("<<cnt<<"/"<<total<<")";
+            cnt++;
             const PAGNode *pagNode = it->second;
-            if (pagNode->hasValue() == false)
-                continue;
-
             const llvm::Value *value = pagNode->getValue();
+            if (!value)
+                continue;
             const llvm::Type *valType = value->getType();
-
             const llvm::Type *nodeType = valType;
 
-            if (const GepValPN *gepvalnode = llvm::dyn_cast<GepValPN>(pagNode)) {
+            if (const GepValPN *gepvalnode = llvm::dyn_cast<GepValPN>(pagNode))
+            {
                 nodeType = gepvalnode->getType();
-            } else if (llvm::isa<RetPN>(pagNode)) {
-                const llvm::PointerType *ptrTy = llvm::dyn_cast<llvm::PointerType>(valType);
-                const llvm::FunctionType *funTy = llvm::dyn_cast<llvm::FunctionType>(ptrTy->getElementType());
+            } else if (llvm::isa<RetPN>(pagNode))
+            {
+                const llvm::PointerType *ptrTy = 
+                    llvm::dyn_cast<llvm::PointerType>(valType);
+                const llvm::FunctionType *funTy = 
+                    llvm::dyn_cast<llvm::FunctionType>(ptrTy->getElementType());
                 nodeType = funTy->getReturnType();
             }
 
             PTAType ptaType(nodeType);
-            if (addTypeForVar(pagNode->getId(), ptaType))
-                addVarForType(pagNode->getId(), ptaType);
+            int id = pagNode->getId();
+            addTypeForVar(id, ptaType);
+            //if (addTypeForVar(id, ptaType))
+            //    addVarForType(id, ptaType);
         }
+        //make sure we are adding elements in order
+        //addVarForType(id, ptaType);
+        errs()<<"\nConverting map\n"
+        std::list<int> ids;
+        for (auto I: VarToTypeSetMap)
+            ids.push_back(I.first);
+        ids.sort();
+        cnt = 0;
+        for (auto i: ids)
+        {
+            llvm::errs()<<"\r("<<cnt<<"/"<<total<<")";
+            cnt++;
+            TypeSet * typeset = VarToTypeSetMap[i];
+            for (auto type: *typeset)
+                addVarForType(i, type);
+        }
+        errs()<<"Done\n"
     }
 
 private:

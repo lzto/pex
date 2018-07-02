@@ -31,10 +31,11 @@ CVFA::~CVFA()
 
 void CVFA::initialize(Module& module)
 {
-    errs()<<"Run Pointer Analysis\n";
     STOP_WATCH_START(WID_INIT);
     m = &module;
+    errs()<<"Create SVFModule\n";
     SVFModule svfmod(module);
+    errs()<<"Run Pointer Analysis\n";
     pta->analyze(svfmod);
     STOP_WATCH_STOP(WID_INIT);
     STOP_WATCH_REPORT(WID_INIT);
@@ -46,9 +47,9 @@ void CVFA::initialize(Module& module)
     STOP_WATCH_REPORT(WID_INIT);
 }
 
-void CVFA::get_indirect_callee_for_func(Function* callee, InstructionSet& css)
+void CVFA::get_callee_function_indirect(Function* callee, ConstInstructionSet& css)
 {
-    //getPTACallGraph()->getIndCallSitesInvokingCallee(callee, css);
+    pta->getPTACallGraph()->getIndCallSitesInvokingCallee(callee, css);
     //getPTACallGraph()->getAllCallSitesInvokingCallee(callee, css);
 }
 

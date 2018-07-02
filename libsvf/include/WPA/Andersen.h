@@ -94,13 +94,14 @@ public:
     virtual inline void initialize(SVFModule& svfModule) {
         resetData();
         /// Build PAG
+        llvm::errs()<<"Build PAG\n";
         PointerAnalysis::initialize(svfModule);
         /// Build Constraint Graph
+        llvm::errs()<<"Build ConstraintGraph\n";
         consCG = new ConstraintGraph(pag);
         setGraph(consCG);
         /// Create statistic class
         stat = new AndersenStat(this);
-
     }
 
     //}

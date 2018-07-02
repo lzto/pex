@@ -450,7 +450,8 @@ void MemSSA::destroy() {
 /*!
  * Perform statistics
  */
-void MemSSA::performStat() {
+void MemSSA::performStat()
+{
     if(pta->printStat())
         stat->performStat();
 }

@@ -55,7 +55,7 @@ static cl::opt<bool> PTSPrint("print-pts", cl::init(false),
 static cl::opt<bool> PTSAllPrint("print-all-pts", cl::init(false),
                                  cl::desc("Print all points-to set of both top-level and address-taken variables"));
 
-static cl::opt<bool> PStat("stat", cl::init(true),
+static cl::opt<bool> PStat("stat", cl::init(false),
                            cl::desc("Statistic for Pointer analysis"));
 
 static cl::opt<unsigned> statBudget("statlimit",  cl::init(20),
@@ -132,20 +132,20 @@ void PointerAnalysis::initialize(SVFModule& svfModule) {
     /// whether we have already built PAG
     if(pag == NULL) {
 
-        DBOUT(DGENERAL, outs() << pasMsg("Building Symbol table ...\n"));
+        errs() << pasMsg("Building Symbol table ...\n");
         SymbolTableInfo* symTable = SymbolTableInfo::Symbolnfo();
         symTable->buildMemModel(svfModule);
 
-        DBOUT(DGENERAL, outs() << pasMsg("Building PAG ...\n"));
-        if (!Graphtxt.getValue().empty()) {
+        errs() << pasMsg("Building PAG ...\n");
+        if (!Graphtxt.getValue().empty())
+        {
             PAGBuilderFromFile fileBuilder(Graphtxt.getValue());
             pag = fileBuilder.build();
-
         } else {
             PAGBuilder builder;
             pag = builder.build(svfModule);
         }
-
+        errs()<<"Build CHGraph\n";
         chgraph = new CHGraph();
         chgraph->buildCHG(svfModule);
 
@@ -157,13 +157,15 @@ void PointerAnalysis::initialize(SVFModule& svfModule) {
         if (PAGPrint)
             pag->print();
     }
-
+    errs()<<"Create TypeSystem\n";
     typeSystem = new TypeSystem(pag);
 
     svfMod = &svfModule;
 
     /// initialise pta call graph
+    errs()<<"Create PTACallGraph\n";
     ptaCallGraph = new PTACallGraph(svfModule);
+    errs()<<"run SCC Detection on CallGraph\n";
     callGraphSCCDetection();
 }
 
@@ -206,8 +208,8 @@ bool PointerAnalysis::dumpGraph() {
  * Dump statistics
  */
 
-void PointerAnalysis::dumpStat() {
-
+void PointerAnalysis::dumpStat()
+{
     if(print_stat && stat)
         stat->performStat();
 }

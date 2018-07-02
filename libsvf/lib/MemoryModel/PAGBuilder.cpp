@@ -55,9 +55,13 @@ PAG* PAGBuilder::build(SVFModule svfModule) {
     visitGlobal(svfModule);
     ///// collect exception vals in the program
     /// handle functions
+    int cnt = 0;
     for (SVFModule::iterator fit = svfModule.begin(), efit = svfModule.end();
-            fit != efit; ++fit) {
+            fit != efit; ++fit)
+    {
         llvm::Function& fun = **fit;
+        errs()<<"\r("<<cnt<<")"<<fun.getName();
+        cnt++;
         /// collect return node of function fun
         if(!analysisUtil::isExtCall(&fun)) {
             /// Return PAG node will not be created for function which can not
@@ -94,8 +98,10 @@ PAG* PAGBuilder::build(SVFModule svfModule) {
             }
         }
     }
+    errs()<<"\nRun sanity check\n";
     sanityCheck();
 
+    errs()<<"initialize candidatepointers\n";
     pag->initialiseCandidatePointers();
 
     return pag;

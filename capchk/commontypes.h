@@ -36,6 +36,7 @@ typedef std::set<std::string> StringSet;
 typedef std::set<Value*> ValueSet;
 typedef std::set<Type*> TypeSet;
 typedef std::set<Instruction*> InstructionSet;
+typedef std::set<const Instruction*> ConstInstructionSet;
 typedef std::set<BasicBlock*> BasicBlockSet;
 typedef std::set<Function*> FunctionSet;
 typedef std::set<CallInst*> InDirectCallSites;

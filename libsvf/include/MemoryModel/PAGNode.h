@@ -77,11 +77,21 @@ public:
 
     ///  Get/has methods of the components
     //@{
-    inline const llvm::Value* getValue() const {
-        assert((this->getNodeKind() != DummyValNode && this->getNodeKind() != DummyObjNode) && "dummy node do not have value!");
-        assert((SymbolTableInfo::isBlkObjOrConstantObj(this->getId())==false) && "blackhole and constant obj do not have value");
+    inline const llvm::Value* getValue() const
+    {
+#if 0
+        assert((this->getNodeKind() != DummyValNode && this->getNodeKind() != DummyObjNode) 
+                && "dummy node do not have value!");
+        assert((SymbolTableInfo::isBlkObjOrConstantObj(this->getId())==false)
+                && "blackhole and constant obj do not have value");
         assert(value && "value is null!!");
         return value;
+#else
+        if (hasValue())
+            return value;
+        else
+            return NULL;
+#endif
     }
 
     inline bool hasValue() const {

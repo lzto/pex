@@ -49,8 +49,8 @@ SVFGOPT* SVFGBuilder::globalSvfg = NULL;
 void SVFGBuilder::createSVFG(MemSSA* mssa, SVFG* graph) {
     svfg = graph;
     svfg->buildSVFG(mssa);
-    if(mssa->getPTA()->printStat())
-        svfg->performStat();
+    //if(mssa->getPTA()->printStat())
+    //    svfg->performStat();
     svfg->dump("FS_SVFG");
 }
 
@@ -107,8 +107,8 @@ bool SVFGBuilder::build(SVFG* graph,BVDataPTAImpl* pta) {
         mssa->buildMemSSA(*fun, &df, &dt);
     }
 
-    mssa->performStat();
-    mssa->dumpMSSA();
+    //mssa->performStat();
+    //mssa->dumpMSSA();
 
     DBOUT(DGENERAL, outs() << pasMsg("Build Sparse Value-Flow Graph \n"));
 
