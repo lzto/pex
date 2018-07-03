@@ -58,7 +58,7 @@ private:
     typedef typename GTraits::NodeRef          GNODE;
     typedef typename GTraits::nodes_iterator node_iterator;
     typedef typename GTraits::ChildIteratorType child_iterator;
-    typedef unsigned NodeID ;
+    typedef unsigned NodeID;
 
 public:
     typedef llvm::SparseBitVector<> NodeBS;
@@ -103,8 +103,8 @@ public:
         NodeBS _subNodes; /// nodes in the scc represented by this node
     };
 
-    typedef std::unordered_map<NodeID,GNodeSCCInfo > GNODESCCInfoMap;
-    typedef std::unordered_map<NodeID,NodeID > NodeToNodeMap;
+    typedef llvm::DenseMap<NodeID,GNodeSCCInfo> GNODESCCInfoMap;
+    typedef llvm::DenseMap<NodeID,NodeID> NodeToNodeMap;
 
     SCCDetection(const GraphType &GT)
         : _graph(GT),

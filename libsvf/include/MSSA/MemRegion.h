@@ -123,10 +123,10 @@ public:
     //@}
     ///Define mem region set
     typedef std::set<const MemRegion*, MemRegion::equalMemRegion> MRSet;
-    typedef std::map<const PAGEdge*, const llvm::Function*> PAGEdgeToFunMap;
+    typedef llvm::DenseMap<const PAGEdge*, const llvm::Function*> PAGEdgeToFunMap;
     typedef std::set<PointsTo, MemRegion::equalPointsTo> PointsToList;
-    typedef std::map<const llvm::Function*, PointsToList > FunToPointsToMap;
-    typedef std::map<PointsTo, PointsTo, MemRegion::equalPointsTo > PtsToRepPtsSetMap;
+    typedef llvm::DenseMap<const llvm::Function*, PointsToList > FunToPointsToMap;
+    typedef std::map<PointsTo, PointsTo, MemRegion::equalPointsTo> PtsToRepPtsSetMap;
 
     /// Map a function to its region set
     typedef llvm::DenseMap<const llvm::Function*, MRSet> FunToMRsMap;
