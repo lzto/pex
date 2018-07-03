@@ -1920,7 +1920,7 @@ void capchk::check_critical_type_field_usage(Module& module)
     for (auto V: critical_typefields)
     {
         StructType* t = dyn_cast<StructType>(V.first);
-        std::set<int>& fields = V.second;
+        //std::set<int>& fields = V.second;
 
 #if DEBUG_ANALYZE
         errs()<<ANSI_COLOR_YELLOW
@@ -1995,7 +1995,8 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         for (auto chki: chks)
             ill->insert(chki);
 
-    }else if (Value* csv = cs->getCalledValue())
+    }//else if (Value* csv = cs->getCalledValue())
+    else if (cs->getCalledValue()!=NULL)
     {
         errs()<<"Resolve indirect call @ ";
         cs->getDebugLoc().print(errs());
@@ -2087,7 +2088,7 @@ void capchk::crit_type_field_collect(Instruction* i, Type2Fields& current_t2fmap
         if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
         {
             //great we got a gep
-            Value* gep_operand = gep->getPointerOperand();
+            //Value* gep_operand = gep->getPointerOperand();
             Type* gep_operand_type
                 = dyn_cast<PointerType>(gep->getPointerOperandType())
                     ->getElementType();
@@ -2131,7 +2132,7 @@ void capchk::crit_type_field_collect(Instruction* i, Type2Fields& current_t2fmap
         if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
         {
             //great we got a gep
-            Value* gep_operand = gep->getPointerOperand();
+            //Value* gep_operand = gep->getPointerOperand();
             Type* gep_operand_type
                 = dyn_cast<PointerType>(gep->getPointerOperandType())
                     ->getElementType();
@@ -2423,7 +2424,7 @@ void capchk::my_debug(Module& module)
         StringRef gvname = gv->getName();
         if (gvname.startswith("llvm."))
             continue;
-        bool gv_use_func = false;
+        //bool gv_use_func = false;
         if (!gi->hasInitializer())
             continue;
         errs()<<"GV:"<<gvname<<"\n";

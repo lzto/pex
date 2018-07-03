@@ -190,7 +190,7 @@ class capchk : public ModulePass
         static char ID;
         capchk() : ModulePass(ID){};
 
-        const char* getPassName()
+        virtual StringRef getPassName() const
         {
             return "capchk";
         }
