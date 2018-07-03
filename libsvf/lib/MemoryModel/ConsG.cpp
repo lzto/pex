@@ -43,12 +43,14 @@ static cl::opt<bool> ConsCGDotGraph("dump-consG", cl::init(false),
  */
 void ConstraintGraph::buildCG() {
 
+    errs()<<"initialize nodes\n";
     // initialize nodes
     for(PAG::iterator it = pag->begin(), eit = pag->end(); it!=eit; ++it) {
         addConstraintNode(new ConstraintNode(it->first),it->first);
     }
 
     // initialize edges
+    errs()<<"initialize edges:";
     PAGEdge::PAGEdgeSetTy& addrs = pag->getEdgeSet(PAGEdge::Addr);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = addrs.begin(), eiter =
                 addrs.end(); iter != eiter; ++iter) {
@@ -56,6 +58,7 @@ void ConstraintGraph::buildCG() {
         addAddrCGEdge(edge->getSrcID(),edge->getDstID());
     }
 
+    errs()<<"Copy,";
     PAGEdge::PAGEdgeSetTy& copys = pag->getEdgeSet(PAGEdge::Copy);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = copys.begin(), eiter =
                 copys.end(); iter != eiter; ++iter) {
@@ -63,6 +66,7 @@ void ConstraintGraph::buildCG() {
         addCopyCGEdge(edge->getSrcID(),edge->getDstID());
     }
 
+    errs()<<"Call,";
     PAGEdge::PAGEdgeSetTy& calls = pag->getEdgeSet(PAGEdge::Call);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = calls.begin(), eiter =
                 calls.end(); iter != eiter; ++iter) {
@@ -70,6 +74,7 @@ void ConstraintGraph::buildCG() {
         addCopyCGEdge(edge->getSrcID(),edge->getDstID());
     }
 
+    errs()<<"Ret,";
     PAGEdge::PAGEdgeSetTy& rets = pag->getEdgeSet(PAGEdge::Ret);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = rets.begin(), eiter =
                 rets.end(); iter != eiter; ++iter) {
@@ -77,13 +82,14 @@ void ConstraintGraph::buildCG() {
         addCopyCGEdge(edge->getSrcID(),edge->getDstID());
     }
 
+    errs()<<"ThreadFork,";
     PAGEdge::PAGEdgeSetTy& tdfks = pag->getEdgeSet(PAGEdge::ThreadFork);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = tdfks.begin(), eiter =
                 tdfks.end(); iter != eiter; ++iter) {
         PAGEdge* edge = *iter;
         addCopyCGEdge(edge->getSrcID(),edge->getDstID());
     }
-
+    errs()<<"ThreadJoin,";
     PAGEdge::PAGEdgeSetTy& tdjns = pag->getEdgeSet(PAGEdge::ThreadJoin);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = tdjns.begin(), eiter =
                 tdjns.end(); iter != eiter; ++iter) {
@@ -91,6 +97,7 @@ void ConstraintGraph::buildCG() {
         addCopyCGEdge(edge->getSrcID(),edge->getDstID());
     }
 
+    errs()<<"NormalGep,";
     PAGEdge::PAGEdgeSetTy& ngeps = pag->getEdgeSet(PAGEdge::NormalGep);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = ngeps.begin(), eiter =
                 ngeps.end(); iter != eiter; ++iter) {
@@ -98,6 +105,7 @@ void ConstraintGraph::buildCG() {
         addNormalGepCGEdge(edge->getSrcID(),edge->getDstID(),edge->getLocationSet());
     }
 
+    errs()<<"VariantGep,";
     PAGEdge::PAGEdgeSetTy& vgeps = pag->getEdgeSet(PAGEdge::VariantGep);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = vgeps.begin(), eiter =
                 vgeps.end(); iter != eiter; ++iter) {
@@ -105,6 +113,7 @@ void ConstraintGraph::buildCG() {
         addVariantGepCGEdge(edge->getSrcID(),edge->getDstID());
     }
 
+    errs()<<"Load,";
     PAGEdge::PAGEdgeSetTy& stores = pag->getEdgeSet(PAGEdge::Load);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = stores.begin(), eiter =
                 stores.end(); iter != eiter; ++iter) {
@@ -112,12 +121,14 @@ void ConstraintGraph::buildCG() {
         addLoadCGEdge(edge->getSrcID(),edge->getDstID());
     }
 
+    errs()<<"Store,";
     PAGEdge::PAGEdgeSetTy& loads = pag->getEdgeSet(PAGEdge::Store);
     for (PAGEdge::PAGEdgeSetTy::iterator iter = loads.begin(), eiter =
                 loads.end(); iter != eiter; ++iter) {
         PAGEdge* edge = *iter;
         addStoreCGEdge(edge->getSrcID(),edge->getDstID());
     }
+    errs()<<"\n";
 }
 
 

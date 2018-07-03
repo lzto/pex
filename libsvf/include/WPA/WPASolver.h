@@ -34,6 +34,9 @@
 #include "Util/WorkList.h"
 #include <llvm/ADT/GraphTraits.h>
 
+#include "stopwatch.h"
+
+
 /*
  * Generic graph solver for whole program pointer analysis
  */
@@ -88,6 +91,9 @@ protected:
     /// Constraint Solving
     virtual void solve() {
 
+        llvm::errs()<<"Solve: prepare\n";
+        STOP_WATCH(1);
+        STOP_WATCH_START(0);
         /// SCC detection
         /// Nodes in nodeStack are in topological order by default.
         /// This order can be changed by overwritten SCCDetect() in sub-classes
@@ -95,19 +101,33 @@ protected:
 
         /// initial worklist
         /// process nodes in nodeStack.
+        int total_node_cnt = nodeStack.size();
+        int cnt =0;
         while (!nodeStack.empty()) {
+            cnt++;
+            llvm::errs()<<"\r("<<cnt
+                <<"/"<<total_node_cnt<<")";
             NodeID nodeId = nodeStack.top();
             nodeStack.pop();
             processNode(nodeId);
         }
+        STOP_WATCH_STOP(0);
+        STOP_WATCH_REPORT(0);
 
         /// start solving
         /// New nodes may be inserted into work list during processing.
         /// Keep solving until it's empty.
+        llvm::errs()<<"Solve: start\n";
+        STOP_WATCH_START(0);
         while (!isWorklistEmpty()) {
+            llvm::errs()<<"\r("<<worklist.processed_count()
+                <<"/"<<worklist.total_size()<<")";
             NodeID nodeId = popFromWorklist();
             postProcessNode(nodeId);
         }
+        worklist.clear();
+        STOP_WATCH_STOP(0);
+        STOP_WATCH_REPORT(0);
 
     }
 

@@ -38,12 +38,18 @@ void CVFA::initialize(Module& module)
     errs()<<"Run Pointer Analysis\n";
     pta->analyze(svfmod);
     STOP_WATCH_STOP(WID_INIT);
+    errs()<<ANSI_COLOR(BG_GREEN, FG_WHITE)
+            <<"CVFA::initialize cost(0):"
+            <<ANSI_COLOR_RESET;
     STOP_WATCH_REPORT(WID_INIT);
     errs()<<"Build SVFG\n";
     STOP_WATCH_START(WID_INIT);
     SVFGBuilder memSSA(true);
     svfg = memSSA.buildSVFG((BVDataPTAImpl*)pta);
     STOP_WATCH_STOP(WID_INIT);
+    errs()<<ANSI_COLOR(BG_GREEN, FG_WHITE)
+        <<"CVFA::initialize cost(1):"
+        <<ANSI_COLOR_RESET;
     STOP_WATCH_REPORT(WID_INIT);
 }
 

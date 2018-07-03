@@ -31,6 +31,14 @@
 #include "WPA/Andersen.h"
 #include "Util/AnalysisUtil.h"
 
+#include "stopwatch.h"
+
+#define TOTOAL_NUMBER_OF_STOP_WATCHES 1
+#define WID_0 0
+
+STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
+
+
 #include <llvm/Support/CommandLine.h> // for tool output file
 
 using namespace llvm;
@@ -81,7 +89,7 @@ void Andersen::analyze(SVFModule& svfModule) {
 
         do {
             numOfIteration++;
-            errs()<<"\rIter: "<<numOfIteration<<"\n";
+            errs()<<"Andersen::analyze Iter: "<<numOfIteration<<"\n";
 
             if(0 == numOfIteration % OnTheFlyIterBudgetForStat) {
                 dumpStat();
@@ -90,8 +98,9 @@ void Andersen::analyze(SVFModule& svfModule) {
             reanalyze = false;
 
             /// Start solving constraints
+            errs()<<"Solve\n";
             solve();
-
+            errs()<<"updateCallGraph\n";
             double cgUpdateStart = stat->getClk();
             if (updateCallGraph(getIndirectCallsites()))
                 reanalyze = true;
@@ -456,21 +465,39 @@ NodeStack& Andersen::SCCDetect() {
 /// Update call graph for the input indirect callsites
 bool Andersen::updateCallGraph(const CallSiteToFunPtrMap& callsites) {
     CallEdgeMap newEdges;
+    errs()<<"onTheFlyCallGraphSolve\n";
+    STOP_WATCH_START(WID_0);
     onTheFlyCallGraphSolve(callsites,newEdges);
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
+
+    errs()<<"Big Iter\n";
+    STOP_WATCH_START(WID_0);
     NodePairSet cpySrcNodes;	/// nodes as a src of a generated new copy edge
-    for(CallEdgeMap::iterator it = newEdges.begin(), eit = newEdges.end(); it!=eit; ++it ) {
+    for(CallEdgeMap::iterator it = newEdges.begin(), eit = newEdges.end();
+            it!=eit; ++it )
+    {
         llvm::CallSite cs = it->first;
-        for(FunctionSet::iterator cit = it->second.begin(), ecit = it->second.end(); cit!=ecit; ++cit) {
+        for(FunctionSet::iterator cit = it->second.begin(), ecit = it->second.end();
+                cit!=ecit; ++cit)
+        {
             consCG->connectCaller2CalleeParams(cs,*cit,cpySrcNodes);
         }
     }
-    for(NodePairSet::iterator it = cpySrcNodes.begin(), eit = cpySrcNodes.end(); it!=eit; ++it) {
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
+
+    errs()<<"After Iter push to worklist\n";
+    STOP_WATCH_START(WID_0);
+    for(NodePairSet::iterator it = cpySrcNodes.begin(), eit = cpySrcNodes.end();
+            it!=eit; ++it)
+    {
         pushIntoWorklist(it->first);
     }
+    STOP_WATCH_STOP(WID_0);
+    STOP_WATCH_REPORT(WID_0);
 
-    if(!newEdges.empty())
-        return true;
-    return false;
+    return !newEdges.empty();
 }
 
 /*

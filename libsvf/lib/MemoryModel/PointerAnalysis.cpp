@@ -602,10 +602,15 @@ void PointerAnalysis::printIndCSTargets()
  * callsites is candidate indirect callsites need to be analyzed based on points-to results
  * newEdges is the new indirect call edges discovered
  */
-void BVDataPTAImpl::onTheFlyCallGraphSolve(const CallSiteToFunPtrMap& callsites, CallEdgeMap& newEdges,CallGraph* callgraph) {
-    for(CallSiteToFunPtrMap::const_iterator iter = callsites.begin(), eiter = callsites.end(); iter!=eiter; ++iter) {
+void BVDataPTAImpl::onTheFlyCallGraphSolve(const CallSiteToFunPtrMap& callsites,
+        CallEdgeMap& newEdges,CallGraph* callgraph)
+{
+    for(CallSiteToFunPtrMap::const_iterator iter = callsites.begin(),
+            eiter = callsites.end(); iter!=eiter; ++iter)
+    {
         CallSite cs = iter->first;
-        if (isVirtualCallSite(cs)) {
+        if (isVirtualCallSite(cs))
+        {
             const Value *vtbl = getVCallVtblPtr(cs);
             assert(pag->hasValueNode(vtbl));
             NodeID vtblId = pag->getValueNode(vtbl);

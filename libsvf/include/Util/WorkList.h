@@ -124,7 +124,7 @@ class FIFOWorkList {
     typedef std::set<Data> DataSet;
     typedef std::deque<Data> DataDeque;
 public:
-    FIFOWorkList() {}
+    FIFOWorkList(): total_item_added(0), total_item_processed(0) {}
 
     ~FIFOWorkList() {}
 
@@ -143,6 +143,7 @@ public:
         if (data_set.find(data) == data_set.end()) {
             data_list.push_back(data);
             data_set.insert(data);
+            total_item_added++;
             return true;
         }
         else
@@ -156,7 +157,9 @@ public:
         assert(!empty() && "work list is empty");
         Data data = data_list.front();
         data_list.pop_front();
-        data_set.erase(data);
+        //BUG?
+        //data_set.erase(data);
+        total_item_processed++;
         return data;
     }
 
@@ -166,11 +169,30 @@ public:
     inline void clear() {
         data_list.clear();
         data_set.clear();
+        total_item_added = 0;
+        total_item_processed = 0;
+    }
+
+    //processed item + item to process
+    int total_size()
+    {
+        return total_item_added;
+    }
+    //how many items to process
+    int count()
+    {
+        return total_item_added - total_item_processed;
+    }
+    int processed_count()
+    {
+        return total_item_processed;
     }
 
 private:
     DataSet data_set;	///< store all data in the work list.
     DataDeque data_list;	///< work list using std::vector.
+    int total_item_added;
+    int total_item_processed;
 };
 
 /**
