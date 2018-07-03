@@ -102,8 +102,9 @@ void AndersenWave::postProcessNode(NodeID nodeId)
 void AndersenWave::handleCopyGep(ConstraintNode* node)
 {
     NodeID nodeId = node->getId();
-    for (ConstraintNode::const_iterator it = node->directOutEdgeBegin(), eit = node->directOutEdgeEnd(); it != eit;
-            ++it) {
+    for (ConstraintNode::const_iterator it = node->directOutEdgeBegin(),
+            eit = node->directOutEdgeEnd(); it != eit; ++it) 
+    {
         if(CopyCGEdge* copyEdge = dyn_cast<CopyCGEdge>(*it))
             processCopy(nodeId,copyEdge);
         else if(GepCGEdge* gepEdge = dyn_cast<GepCGEdge>(*it))
@@ -118,10 +119,10 @@ bool AndersenWave::handleLoad(NodeID nodeId, const ConstraintEdge* edge)
 {
     bool changed = false;
     for (PointsTo::iterator piter = getPts(nodeId).begin(), epiter = getPts(nodeId).end();
-            piter != epiter; ++piter) {
-        if (processLoad(*piter, edge)) {
+            piter != epiter; ++piter)
+    {
+        if (processLoad(*piter, edge))
             changed = true;
-        }
     }
     return changed;
 }
@@ -133,10 +134,10 @@ bool AndersenWave::handleStore(NodeID nodeId, const ConstraintEdge* edge)
 {
     bool changed = false;
     for (PointsTo::iterator piter = getPts(nodeId).begin(), epiter = getPts(nodeId).end();
-            piter != epiter; ++piter) {
-        if (processStore(*piter, edge)) {
+            piter != epiter; ++piter)
+    {
+        if (processStore(*piter, edge))
             changed = true;
-        }
     }
     return changed;
 }
