@@ -35,6 +35,8 @@
 #include "MemoryModel/ConditionalPT.h"
 #include "Util/AnalysisUtil.h"
 
+#include <unordered_map>
+
 /// Overloading operator << for dumping conditional variable
 //@{
 template<class Cond>
@@ -56,7 +58,7 @@ llvm::raw_ostream& operator<< (llvm::raw_ostream &o, const CondVar<Cond> &cvar) 
 template<class Key, class Data>
 class PTData {
 public:
-    typedef std::map<const Key, Data> PtsMap;
+    typedef std::unordered_map<Key, Data> PtsMap;
     typedef typename PtsMap::iterator PtsMapIter;
     typedef typename PtsMap::const_iterator PtsMapConstIter;
     typedef typename Data::iterator iterator;
@@ -133,7 +135,8 @@ private:
     inline void addSingleRevPts(Data &revData, const Key& tgr) {
         addPts(revData,tgr);
     }
-    inline void addRevPts(const Data &ptsData, const Key& tgr) {
+    inline void addRevPts(const Data &ptsData, const Key& tgr)
+    {
         for(iterator it = ptsData.begin(), eit = ptsData.end(); it!=eit; ++it)
             addSingleRevPts(getRevPts(*it),tgr);
     }
