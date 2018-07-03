@@ -1086,7 +1086,9 @@ void capchk::identify_interesting_struct(Module& module)
             continue;
         if (Value* u = find_struct_use(f, visited))
         {
-            Type* type = u->getType();
+            StructType* type = dyn_cast<StructType>(u->getType());
+            if (!type->hasName())
+                continue;
             //should always skip this
             if (type->getStructName().startswith("struct.kernel_symbol"))
                 continue;
