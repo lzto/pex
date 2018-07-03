@@ -32,8 +32,9 @@
 
 #include <llvm/IR/Type.h>
 #include <llvm/Support/raw_ostream.h>
+#include <unordered_map>
 #include <set>
-#include <map>
+#include <functional>
 #include "Util/BasicTypes.h"
 
 class PAGNode;
@@ -76,6 +77,18 @@ public:
 private:
     const llvm::Type *type;
 };
+
+namespace std
+{
+    template <>
+    struct hash<PTAType>
+    {
+        std::size_t operator()(const PTAType& k) const
+        {
+            return std::hash<unsigned long>{}((unsigned long)(void*)k.getLLVMType());
+        }
+    };
+}
 
 class TypeSet {
 public:
@@ -165,7 +178,7 @@ class TypeSystem {
 public:
 
     typedef llvm::DenseMap<NodeID, TypeSet*> VarToTypeSetMapTy;
-    typedef std::map<PTAType, NodeBS> TypeToVarsMapTy;
+    typedef std::unordered_map<PTAType, NodeBS> TypeToVarsMapTy;
 
     typedef typename VarToTypeSetMapTy::iterator iterator;
     typedef typename VarToTypeSetMapTy::const_iterator const_iterator;
@@ -189,6 +202,9 @@ public:
     /// Constructor
     TypeSystem(const PAG *pag) {
         translateLLVMTypeToPTAType(pag);
+    }
+    ~TypeSystem()
+    {
     }
 
     /// Has typeset or not
@@ -227,7 +243,7 @@ public:
     }
 
     void addVarForType(NodeID var, const PTAType &type) {
-        TypeToVarsMapTy::iterator it = typeToVarsMap.find(type);
+        auto it = typeToVarsMap.find(type);
         if (it == typeToVarsMap.end()) {
             NodeBS nodes;
             nodes.set(var);
@@ -244,12 +260,12 @@ public:
     }
 
     inline bool hasVarsForType(const PTAType &type) const {
-        TypeToVarsMapTy::const_iterator it = typeToVarsMap.find(type);
+        auto it = typeToVarsMap.find(type);
         return it != typeToVarsMap.end();
     }
 
     inline NodeBS &getVarsForType(const PTAType &type) {
-        TypeToVarsMapTy::iterator it = typeToVarsMap.find(type);
+        auto it = typeToVarsMap.find(type);
         assert(it != typeToVarsMap.end() && "Can not find vars for type");
         return it->second;
     }

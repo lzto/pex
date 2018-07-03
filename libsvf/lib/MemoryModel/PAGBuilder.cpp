@@ -62,36 +62,39 @@ PAG* PAGBuilder::build(SVFModule svfModule) {
         llvm::Function& fun = **fit;
         errs()<<"\r("<<cnt<<")"<<fun.getName();
         cnt++;
+
+        if(analysisUtil::isExtCall(&fun))
+            continue;
+
         /// collect return node of function fun
-        if(!analysisUtil::isExtCall(&fun)) {
-            /// Return PAG node will not be created for function which can not
-            /// reach the return instruction due to call to abort(), exit(),
-            /// etc. In 176.gcc of SPEC 2000, function build_objc_string() from
-            /// c-lang.c shows an example when fun.doesNotReturn() evaluates
-            /// to TRUE because of abort().
-            if(fun.doesNotReturn() == false && fun.getReturnType()->isPointerTy())
-                pag->addFunRet(&fun,pag->getPAGNode(pag->getReturnNode(&fun)));
-        }
+        /// Return PAG node will not be created for function which can not
+        /// reach the return instruction due to call to abort(), exit(),
+        /// etc. In 176.gcc of SPEC 2000, function build_objc_string() from
+        /// c-lang.c shows an example when fun.doesNotReturn() evaluates
+        /// to TRUE because of abort().
+        if(fun.doesNotReturn() == false && fun.getReturnType()->isPointerTy())
+            pag->addFunRet(&fun,pag->getPAGNode(pag->getReturnNode(&fun)));
+
         for (llvm::Function::arg_iterator I = fun.arg_begin(), E = fun.arg_end();
                 I != E; ++I) {
-            /// To be noted, we do not record arguments which are in declared function without body
-            if(!analysisUtil::isExtCall(&fun)) {
-                pag->setCurrentLocation(&*I,&fun.getEntryBlock());
-                NodeID argValNodeId = pag->getValueNode(&*I);
-                // if this is the function does not have caller (e.g. main)
-                // or a dead function, we may create a black hole address edge for it
-                if(analysisUtil::ArgInNoCallerFunction(&*I)) {
-                    if(I->getType()->isPointerTy())
-                        pag->addBlackHoleAddrEdge(argValNodeId);
-                }
-                pag->addFunArgs(&fun,pag->getPAGNode(argValNodeId));
+        /// To be noted, we do not record arguments which are in declared function without body
+            pag->setCurrentLocation(&*I,&fun.getEntryBlock());
+            NodeID argValNodeId = pag->getValueNode(&*I);
+            // if this is the function does not have caller (e.g. main)
+            // or a dead function, we may create a black hole address edge for it
+            if(analysisUtil::ArgInNoCallerFunction(&*I)) {
+                if(I->getType()->isPointerTy())
+                    pag->addBlackHoleAddrEdge(argValNodeId);
             }
+            pag->addFunArgs(&fun,pag->getPAGNode(argValNodeId));
         }
         for (llvm::Function::iterator bit = fun.begin(), ebit = fun.end();
-                bit != ebit; ++bit) {
+                bit != ebit; ++bit)
+        {
             llvm::BasicBlock& bb = *bit;
             for (llvm::BasicBlock::iterator it = bb.begin(), eit = bb.end();
-                    it != eit; ++it) {
+                    it != eit; ++it)
+            {
                 llvm::Instruction& inst = *it;
                 pag->setCurrentLocation(&inst,&bb);
                 visit(inst);

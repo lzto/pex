@@ -30,6 +30,7 @@
 #ifndef POINTERANALYSIS_H_
 #define POINTERANALYSIS_H_
 
+
 #include "MemoryModel/PAG.h"
 #include "MemoryModel/ConditionalPT.h"
 #include "MemoryModel/PointsToDS.h"
@@ -48,6 +49,7 @@ class TypeSystem;
 class SVFModule;
 
 class PTAStat;
+
 /*
  * Pointer Analysis Base Class
  */
@@ -88,7 +90,7 @@ public:
     typedef std::set<llvm::CallSite> CallSiteSet;
     typedef PAG::CallSiteToFunPtrMap CallSiteToFunPtrMap;
     typedef	std::set<const llvm::Function*> FunctionSet;
-    typedef std::map<llvm::CallSite, FunctionSet> CallEdgeMap;
+    typedef llvm::DenseMap<llvm::CallSite, FunctionSet> CallEdgeMap;
     typedef SCCDetection<PTACallGraph*> CallGraphSCC;
     //@}
 

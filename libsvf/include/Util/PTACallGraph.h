@@ -40,8 +40,6 @@
 
 #include <set>
 
-
-
 class PTACallGraphNode;
 class SVFModule;
 
@@ -179,7 +177,7 @@ public:
     typedef std::map<CallSitePair, CallSiteID> CallSiteToIdMap;
     typedef std::map<CallSiteID, CallSitePair> IdToCallSiteMap;
     typedef	std::set<const llvm::Function*> FunctionSet;
-    typedef std::map<llvm::CallSite, FunctionSet> CallEdgeMap;
+    typedef llvm::DenseMap<llvm::CallSite, FunctionSet> CallEdgeMap;
     typedef CallGraphEdgeSet::iterator CallGraphNodeIter;
 
 private:

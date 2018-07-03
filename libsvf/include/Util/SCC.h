@@ -44,7 +44,7 @@
 #include <llvm/ADT/SparseBitVector.h>	// for NodeBS
 #include <limits.h>
 #include <stack>
-#include <map>
+#include <unordered_map>
 
 
 class GNodeSCCInfo;
@@ -103,14 +103,18 @@ public:
         NodeBS _subNodes; /// nodes in the scc represented by this node
     };
 
-    typedef std::map<NodeID,GNodeSCCInfo > GNODESCCInfoMap;
-    typedef std::map<NodeID,NodeID > NodeToNodeMap;
+    typedef std::unordered_map<NodeID,GNodeSCCInfo > GNODESCCInfoMap;
+    typedef std::unordered_map<NodeID,NodeID > NodeToNodeMap;
 
     SCCDetection(const GraphType &GT)
         : _graph(GT),
           _I(0)
-    {}
+    {
+    }
 
+    ~SCCDetection()
+    {
+    }
 
     // Return a handle to the stack of nodes in topological
     // order.  This will be used to seed the initial solution
@@ -169,7 +173,7 @@ public:
     }
 private:
 
-    GNODESCCInfoMap  _NodeSCCAuxInfo;
+    GNODESCCInfoMap _NodeSCCAuxInfo;
 
     const GraphType &           _graph;
     NodeID                   _I;
