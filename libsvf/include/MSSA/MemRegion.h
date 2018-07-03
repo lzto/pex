@@ -135,14 +135,14 @@ public:
     //@{
     typedef llvm::DenseMap<const LoadPE*, MRSet> LoadsToMRsMap;
     typedef llvm::DenseMap<const StorePE*, MRSet> StoresToMRsMap;
-    typedef std::map<llvm::CallSite, MRSet> CallSiteToMRsMap;
+    typedef llvm::DenseMap<llvm::CallSite, MRSet> CallSiteToMRsMap;
     //@}
 
     /// Map loads/stores/callsites to their cpts set
     //@{
     typedef llvm::DenseMap<const LoadPE*, PointsTo> LoadsToPointsToMap;
     typedef llvm::DenseMap<const StorePE*, PointsTo> StoresToPointsToMap;
-    typedef std::map<llvm::CallSite, PointsTo> CallSiteToPointsToMap;
+    typedef llvm::DenseMap<llvm::CallSite, PointsTo> CallSiteToPointsToMap;
     //@}
 
     /// Maps Mod-Ref analysis
@@ -150,10 +150,10 @@ public:
     /// Map a function to its indirect refs/mods of memory objects
     typedef llvm::DenseMap<const llvm::Function*, NodeBS> FunToNodeBSMap;
     /// Map a callsite to its indirect refs/mods of memory objects
-    typedef std::map<llvm::CallSite, NodeBS> CallSiteToNodeBSMap;
+    typedef llvm::DenseMap<llvm::CallSite, NodeBS> CallSiteToNodeBSMap;
     //@}
 
-    typedef std::map<NodeID, NodeBS> NodeToPTSSMap;
+    typedef std::unordered_map<NodeID, NodeBS> NodeToPTSSMap;
 
     /// PAG edge list
     typedef PAG::PAGEdgeList PAGEdgeList;
