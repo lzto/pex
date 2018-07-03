@@ -133,7 +133,8 @@ private:
         return d.test_and_set(e);
     }
     inline void addSingleRevPts(Data &revData, const Key& tgr) {
-        addPts(revData,tgr);
+        revData.set(tgr);
+        //addPts(revData,tgr);
     }
     inline void addRevPts(const Data &ptsData, const Key& tgr)
     {

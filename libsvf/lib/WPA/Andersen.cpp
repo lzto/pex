@@ -404,7 +404,9 @@ bool Andersen::collapseField(NodeID nodeId)
     NodeID baseId = consCG->getFIObjNode(nodeId);
     NodeID baseRepNodeId = consCG->sccRepNode(baseId);
     NodeBS & allFields = consCG->getAllFieldsObjNode(baseId);
-    for (NodeBS::iterator fieldIt = allFields.begin(), fieldEit = allFields.end(); fieldIt != fieldEit; fieldIt++) {
+    for (NodeBS::iterator fieldIt = allFields.begin(), fieldEit = allFields.end();
+            fieldIt != fieldEit; fieldIt++)
+    {
         NodeID fieldId = *fieldIt;
         if (fieldId != baseId) {
             // use the reverse pts of this field node to find all pointers point to it
