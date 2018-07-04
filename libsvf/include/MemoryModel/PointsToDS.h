@@ -248,12 +248,12 @@ public:
 
     /// Get cached points-to
     inline Data& getCachePts(CacheKey& cache) {
-        return CacheMap[cache];
+        return *CacheMap[cache];
     }
 
     /// Add cached points-to
     inline void addCachePts(CacheKey& cache, Data& data) {
-        CacheMap[cache] |= data;
+        *CacheMap[cache] |= data;
     }
 
     /// Methods for support type inquiry through isa, cast, and dyn_cast:

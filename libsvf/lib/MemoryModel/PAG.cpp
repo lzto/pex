@@ -242,6 +242,7 @@ NodeID PAG::getGepValNode(const llvm::Value* val, const LocationSet& ls, const T
          */
         assert((isa<Instruction>(curVal) || isa<GlobalVariable>(curVal)) && "curVal not an instruction or a globalvariable?");
         const std::vector<FieldInfo> &fieldinfo = symInfo->getFlattenFieldInfoVec(baseType);
+        //assert(fieldidx<fieldinfo.size());
         const Type *type = fieldinfo[fieldidx].getFlattenElemTy();
         NodeID gepNode= addGepValNode(val,ls,nodeNum,type,fieldidx);
         addGepEdge(base, gepNode, ls, true);
