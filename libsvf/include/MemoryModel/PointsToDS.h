@@ -58,7 +58,10 @@ llvm::raw_ostream& operator<< (llvm::raw_ostream &o, const CondVar<Cond> &cvar) 
 template<class Key, class Data>
 class PTData {
 public:
-    typedef std::unordered_map<Key, Data> PtsMap;
+    //typedef std::unordered_map<Key, Data> PtsMap;
+    //FIXME: using memory reference will cause problem since DenseMap/std::map will resize
+    // and remove all valid reference
+    typedef llvm::DenseMap<Key, Data*> PtsMap;
     typedef typename PtsMap::iterator PtsMapIter;
     typedef typename PtsMap::const_iterator PtsMapConstIter;
     typedef typename Data::iterator iterator;
@@ -79,8 +82,13 @@ public:
     }
 
     /// Clear maps
-    virtual void clear() {
+    virtual void clear()
+    {
+        for (auto i: ptsMap)
+            delete i.second;
         ptsMap.clear();
+        for (auto i:revPtsMap)
+            delete i.second;
         revPtsMap.clear();
     }
 
@@ -95,13 +103,24 @@ public:
     }
 
     // Get conditional points-to set of the pointer
-    inline Data& getPts(const Key& var) {
-        return ptsMap[var];
+    inline Data& getPts(const Key& var)
+    {
+        //create new one if it does not exists
+        if (ptsMap.find(var)!=ptsMap.end())
+            return *ptsMap[var];
+        Data* r = new Data;
+        ptsMap[var] = r;
+        return *r;
     }
 
     // Get conditional reverse points-to set of the pointer
-    inline Data& getRevPts(const Key& var) {
-        return revPtsMap[var];
+    inline Data& getRevPts(const Key& var)
+    {
+        if (revPtsMap.find(var)!=revPtsMap.end())
+            return *revPtsMap[var];
+        Data* r = new Data;
+        revPtsMap[var] = r;
+        return *r;
     }
 
     /// Union/add points-to, used internally
@@ -151,7 +170,7 @@ public:
     virtual inline void dumpPts(const PtsMap & ptsSet,llvm::raw_ostream & O = llvm::outs()) const {
         for (PtsMapConstIter nodeIt = ptsSet.begin(); nodeIt != ptsSet.end(); nodeIt++) {
             const Key& var = nodeIt->first;
-            const Data & pts = nodeIt->second;
+            const Data& pts = *nodeIt->second;
             if (pts.empty())
                 continue;
             O << var << " ==> { ";
@@ -189,11 +208,11 @@ public:
 
     /// Get diff points to.
     inline Data & getDiffPts(Key& var) {
-        return diffPtsMap[var];
+        return *diffPtsMap[var];
     }
     /// Get propagated points to.
     inline Data & getPropaPts(Key& var) {
-        return propaPtsMap[var];
+        return *propaPtsMap[var];
     }
 
     /**

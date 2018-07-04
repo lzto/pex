@@ -45,6 +45,7 @@ public:
     typedef NodeID LocID;
     typedef typename PTData<Key,Data>::PtsMap PtsMap;
     typedef typename PTData<Key,Data>::PtsMapConstIter PtsMapConstIter;
+    //FIXME: return memory reference to std::map in such way will cause UAF
     typedef std::map<LocID, PtsMap> DFPtsMap;	///< Data-flow point-to map
     typedef typename DFPtsMap::iterator DFPtsMapIter;
     typedef typename DFPtsMap::const_iterator DFPtsMapconstIter;
@@ -99,11 +100,11 @@ public:
     ///@{
     inline Data& getDFInPtsSet(LocID loc, const Key& var) {
         PtsMap& inSet = dfInPtsMap[loc];
-        return inSet[var];
+        return *inSet[var];
     }
     inline Data& getDFOutPtsSet(LocID loc, const Key& var) {
         PtsMap& outSet = dfOutPtsMap[loc];
-        return outSet[var];
+        return *outSet[var];
     }
     ///@}
 
@@ -238,7 +239,7 @@ public:
     virtual inline void dumpPts(const PtsMap & ptsSet,llvm::raw_ostream & O = llvm::outs()) const {
         for (PtsMapConstIter nodeIt = ptsSet.begin(); nodeIt != ptsSet.end(); nodeIt++) {
             const Key& var = nodeIt->first;
-            const Data & pts = nodeIt->second;
+            const Data & pts = *nodeIt->second;
             if (pts.empty())
                 continue;
             O << "<" << var << ",{";
