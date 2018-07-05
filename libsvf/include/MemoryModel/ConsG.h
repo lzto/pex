@@ -33,6 +33,8 @@
 #include "MemoryModel/ConsGEdge.h"
 #include "MemoryModel/ConsGNode.h"
 
+#include <unordered_map>
+
 /*!
  * Constraint graph for Andersen's analysis
  * ConstraintNodes are same as PAGNodes
@@ -41,10 +43,10 @@
 class ConstraintGraph :  public GenericGraph<ConstraintNode,ConstraintEdge> {
 
 public:
-    typedef llvm::DenseMap<NodeID, ConstraintNode *> ConstraintNodeIDToNodeMapTy;
+    typedef std::unordered_map<NodeID, ConstraintNode *> ConstraintNodeIDToNodeMapTy;
     typedef ConstraintEdge::ConstraintEdgeSetTy::iterator ConstraintNodeIter;
-    typedef llvm::DenseMap<NodeID, NodeID> NodeToRepMap;
-    typedef llvm::DenseMap<NodeID, NodeBS> NodeToSubsMap;
+    typedef std::unordered_map<NodeID, NodeID> NodeToRepMap;
+    typedef std::unordered_map<NodeID, NodeBS> NodeToSubsMap;
     typedef FIFOWorkList<NodeID> WorkList;
 private:
     PAG*pag;

@@ -103,8 +103,8 @@ public:
         NodeBS _subNodes; /// nodes in the scc represented by this node
     };
 
-    typedef llvm::DenseMap<NodeID,GNodeSCCInfo> GNODESCCInfoMap;
-    typedef llvm::DenseMap<NodeID,NodeID> NodeToNodeMap;
+    typedef std::unordered_map<NodeID,GNodeSCCInfo> GNODESCCInfoMap;
+    typedef std::unordered_map<NodeID,NodeID> NodeToNodeMap;
 
     SCCDetection(const GraphType &GT)
         : _graph(GT),

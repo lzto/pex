@@ -78,7 +78,7 @@ SymbolTableInfo* SymbolTableInfo::Symbolnfo() {
  * Collect a LLVM type info
  */
 void SymbolTableInfo::collectTypeInfo(const llvm::Type* ty) {
-    assert(typeToFieldInfo.find_as(ty) == typeToFieldInfo.end() && "this type has been collected before");
+    assert(typeToFieldInfo.find(ty) == typeToFieldInfo.end() && "this type has been collected before");
 
     if (const ArrayType* aty = dyn_cast<ArrayType>(ty))
         collectArrayInfo(aty);
@@ -650,15 +650,9 @@ void SymbolTableInfo::buildMemModel(SVFModule svfModule) {
 
     // Add symbols for all of the functions and the instructions in them.
     errs()<<"Add symbols for all of the functions and the instructions in them.\n";
-    int func_cnt = 0;
-    int total_functions = 0;
-    for (SVFModule::iterator F = svfModule.begin(), E = svfModule.end(); F != E; ++F)
-        total_functions++;
     for (SVFModule::iterator F = svfModule.begin(), E = svfModule.end(); F != E; ++F)
     {
         Function *fun = *F;
-        errs()<<"\r("<<func_cnt<<"/"<<total_functions<<")"<<fun->getName();
-        func_cnt++;
         collectSym(fun);
         collectRet(fun);
         if (fun->getFunctionType()->isVarArg())

@@ -89,8 +89,8 @@ protected:
     }
 
     /// Constraint Solving
-    virtual void solve() {
-
+    virtual void solve()
+    {
         llvm::errs()<<"Solve: prepare\n";
         STOP_WATCH(1);
         STOP_WATCH_START(0);
@@ -101,12 +101,8 @@ protected:
 
         /// initial worklist
         /// process nodes in nodeStack.
-        int total_node_cnt = nodeStack.size();
-        int cnt =0;
-        while (!nodeStack.empty()) {
-            cnt++;
-            llvm::errs()<<"\r("<<cnt
-                <<"/"<<total_node_cnt<<")";
+        while (!nodeStack.empty())
+        {
             NodeID nodeId = nodeStack.top();
             nodeStack.pop();
             processNode(nodeId);
@@ -119,9 +115,8 @@ protected:
         /// Keep solving until it's empty.
         llvm::errs()<<"Solve: start\n";
         STOP_WATCH_START(0);
-        while (!isWorklistEmpty()) {
-            llvm::errs()<<"\r("<<worklist.processed_count()
-                <<"/"<<worklist.total_size()<<")";
+        while (!isWorklistEmpty())
+        {
             NodeID nodeId = popFromWorklist();
             postProcessNode(nodeId);
         }

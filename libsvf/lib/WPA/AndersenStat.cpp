@@ -164,7 +164,7 @@ void AndersenStat::performStat() {
     }
 
     u32_t cgNodeNumber = 0;
-    for (ConstraintGraph::ConstraintNodeIDToNodeMapTy::iterator nodeIt = consCG->begin(), nodeEit = consCG->end();
+    for (auto nodeIt = consCG->begin(), nodeEit = consCG->end();
             nodeIt != nodeEit; nodeIt++) {
         cgNodeNumber++;
     }

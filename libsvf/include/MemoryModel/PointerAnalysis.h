@@ -87,10 +87,10 @@ public:
     /// Indirect call edges type, map a callsite to a set of callees
     //@{
     typedef llvm::AliasAnalysis AliasAnalysis;
-    typedef std::set<llvm::CallSite> CallSiteSet;
+    typedef std::unordered_set<llvm::CallSite> CallSiteSet;
     typedef PAG::CallSiteToFunPtrMap CallSiteToFunPtrMap;
-    typedef	std::set<const llvm::Function*> FunctionSet;
-    typedef llvm::DenseMap<llvm::CallSite, FunctionSet> CallEdgeMap;
+    typedef	std::unordered_set<const llvm::Function*> FunctionSet;
+    typedef std::unordered_map<llvm::CallSite, FunctionSet> CallEdgeMap;
     typedef SCCDetection<PTACallGraph*> CallGraphSCC;
     //@}
 

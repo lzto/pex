@@ -38,7 +38,8 @@
 #include <llvm/ADT/GraphTraits.h>	// graph traits
 #include <llvm/ADT/DenseMap.h>	// llvm dense map
 
-#include <set>
+#include <unordered_set>
+#include <unordered_map>
 
 class PTACallGraphNode;
 class SVFModule;
@@ -52,7 +53,7 @@ typedef GenericEdge<PTACallGraphNode> GenericCallGraphEdgeTy;
 class PTACallGraphEdge : public GenericCallGraphEdgeTy {
 
 public:
-    typedef std::set<const llvm::Instruction*> CallInstSet;
+    typedef std::unordered_set<const llvm::Instruction*> CallInstSet;
     enum CEDGEK {
         CallRetEdge,TDForkEdge,TDJoinEdge,HareParForEdge
     };
@@ -103,17 +104,17 @@ public:
 
     /// Iterators for direct and indirect callsites
     //@{
-    inline CallInstSet::iterator directCallsBegin() const {
+    inline CallInstSet::iterator directCallsBegin(){
         return directCalls.begin();
     }
-    inline CallInstSet::iterator directCallsEnd() const {
+    inline CallInstSet::iterator directCallsEnd(){
         return directCalls.end();
     }
 
-    inline CallInstSet::iterator indirectCallsBegin() const {
+    inline CallInstSet::iterator indirectCallsBegin(){
         return indirectCalls.begin();
     }
-    inline CallInstSet::iterator indirectCallsEnd() const {
+    inline CallInstSet::iterator indirectCallsEnd(){
         return indirectCalls.end();
     }
     //@}
@@ -163,6 +164,30 @@ public:
     bool isReachableFromProgEntry() const;
 };
 
+namespace std
+{
+    template <>
+    struct hash<std::pair<llvm::CallSite, const llvm::Function*>>
+    {
+        std::size_t operator()(const std::pair<llvm::CallSite, const llvm::Function*> &k) const
+        {
+            return std::hash<unsigned long>{}
+                (((unsigned long)k.first.getInstruction()) + ((unsigned long)k.second));
+        }
+    };
+    template<>
+    struct hash<llvm::CallSite>
+    {
+        std::size_t operator()(const llvm::CallSite&k) const
+        {
+            return std::hash<unsigned long>{}
+                (((unsigned long)k.getInstruction()));
+        }
+    };
+
+
+}
+
 /*!
  * Pointer Analysis Call Graph used internally for various pointer analysis
  */
@@ -171,13 +196,13 @@ class PTACallGraph : public GenericCallGraphTy {
 
 public:
     typedef PTACallGraphEdge::CallGraphEdgeSet CallGraphEdgeSet;
-    typedef llvm::DenseMap<const llvm::Function*, PTACallGraphNode *> FunToCallGraphNodeMap;
-    typedef llvm::DenseMap<const llvm::Instruction*, CallGraphEdgeSet> CallInstToCallGraphEdgesMap;
+    typedef std::unordered_map<const llvm::Function*, PTACallGraphNode *> FunToCallGraphNodeMap;
+    typedef std::unordered_map<const llvm::Instruction*, CallGraphEdgeSet> CallInstToCallGraphEdgesMap;
     typedef std::pair<llvm::CallSite, const llvm::Function*> CallSitePair;
-    typedef std::map<CallSitePair, CallSiteID> CallSiteToIdMap;
-    typedef std::map<CallSiteID, CallSitePair> IdToCallSiteMap;
-    typedef	std::set<const llvm::Function*> FunctionSet;
-    typedef llvm::DenseMap<llvm::CallSite, FunctionSet> CallEdgeMap;
+    typedef std::unordered_map<CallSitePair, CallSiteID> CallSiteToIdMap;
+    typedef std::unordered_map<CallSiteID, CallSitePair> IdToCallSiteMap;
+    typedef	std::unordered_set<const llvm::Function*> FunctionSet;
+    typedef std::unordered_map<llvm::CallSite, FunctionSet> CallEdgeMap;
     typedef CallGraphEdgeSet::iterator CallGraphNodeIter;
 
 private:
@@ -261,7 +286,7 @@ public:
     //@{
     inline void addCallSite(llvm::CallSite cs, const llvm::Function* callee) {
         std::pair<llvm::CallSite, const llvm::Function*> newCS(std::make_pair(cs, callee));
-        CallSiteToIdMap::const_iterator it = csToIdMap.find(newCS);
+        auto it = csToIdMap.find(newCS);
         //assert(it == csToIdMap.end() && "cannot add a callsite twice");
         if(it == csToIdMap.end()) {
             CallSiteID id = totalCallSiteNum++;
@@ -271,17 +296,17 @@ public:
     }
     inline CallSiteID getCallSiteID(llvm::CallSite cs, const llvm::Function* callee) const {
         CallSitePair newCS(std::make_pair(cs, callee));
-        CallSiteToIdMap::const_iterator it = csToIdMap.find(newCS);
+        auto it = csToIdMap.find(newCS);
         assert(it != csToIdMap.end() && "callsite id not found! This maybe a partially resolved callgraph, please check the indCallEdge limit");
         return it->second;
     }
     inline bool hasCallSiteID(llvm::CallSite cs, const llvm::Function* callee) const {
         CallSitePair newCS(std::make_pair(cs, callee));
-        CallSiteToIdMap::const_iterator it = csToIdMap.find(newCS);
+        auto it = csToIdMap.find(newCS);
         return it != csToIdMap.end();
     }
     inline const CallSitePair& getCallSitePair(CallSiteID id) const {
-        IdToCallSiteMap::const_iterator it = idToCSMap.find(id);
+        auto it = idToCSMap.find(id);
         assert(it != idToCSMap.end() && "cannot find call site for this CallSiteID");
         return (it->second);
     }

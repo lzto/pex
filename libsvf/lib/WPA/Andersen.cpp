@@ -30,14 +30,7 @@
 #include "MemoryModel/PAG.h"
 #include "WPA/Andersen.h"
 #include "Util/AnalysisUtil.h"
-
-#include "stopwatch.h"
-
-#define TOTOAL_NUMBER_OF_STOP_WATCHES 1
-#define WID_0 0
-
-STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
-
+#include "color.h"
 
 #include <llvm/Support/CommandLine.h> // for tool output file
 
@@ -68,7 +61,8 @@ static cl::opt<string> WriteAnder("write-ander",  cl::init(""),
 static cl::opt<string> ReadAnder("read-ander",  cl::init(""),
                                  cl::desc("Read Andersen's analysis results from a file"));
 
-
+static cl::opt<int> SvfBudget("svfbudget", cl::init(5),
+                                cl::desc("# of iterations for graph update, default 5"));
 
 /*!
  * Andersen analysis
@@ -106,7 +100,13 @@ void Andersen::analyze(SVFModule& svfModule) {
                 reanalyze = true;
             double cgUpdateEnd = stat->getClk();
             timeOfUpdateCallGraph += (cgUpdateEnd - cgUpdateStart) / TIMEINTERVAL;
-
+            if (numOfIteration>=SvfBudget)
+            {
+                errs()<<ANSI_COLOR_RED
+                    <<"Budget reached, stop analysis"
+                    <<ANSI_COLOR_RESET<<"\n";
+                break;
+            }
         } while (reanalyze);
 
         DBOUT(DGENERAL, llvm::outs() << analysisUtil::pasMsg("Finish Solving Constraints\n"));
@@ -467,14 +467,11 @@ NodeStack& Andersen::SCCDetect() {
 /// Update call graph for the input indirect callsites
 bool Andersen::updateCallGraph(const CallSiteToFunPtrMap& callsites) {
     CallEdgeMap newEdges;
-    errs()<<"onTheFlyCallGraphSolve\n";
-    STOP_WATCH_START(WID_0);
     onTheFlyCallGraphSolve(callsites,newEdges);
-    STOP_WATCH_STOP(WID_0);
-    STOP_WATCH_REPORT(WID_0);
 
-    errs()<<"Big Iter\n";
-    STOP_WATCH_START(WID_0);
+    if (newEdges.empty())
+        return false;
+
     NodePairSet cpySrcNodes;	/// nodes as a src of a generated new copy edge
     for(CallEdgeMap::iterator it = newEdges.begin(), eit = newEdges.end();
             it!=eit; ++it )
@@ -482,24 +479,12 @@ bool Andersen::updateCallGraph(const CallSiteToFunPtrMap& callsites) {
         llvm::CallSite cs = it->first;
         for(FunctionSet::iterator cit = it->second.begin(), ecit = it->second.end();
                 cit!=ecit; ++cit)
-        {
             consCG->connectCaller2CalleeParams(cs,*cit,cpySrcNodes);
-        }
     }
-    STOP_WATCH_STOP(WID_0);
-    STOP_WATCH_REPORT(WID_0);
-
-    errs()<<"After Iter push to worklist\n";
-    STOP_WATCH_START(WID_0);
     for(NodePairSet::iterator it = cpySrcNodes.begin(), eit = cpySrcNodes.end();
             it!=eit; ++it)
-    {
         pushIntoWorklist(it->first);
-    }
-    STOP_WATCH_STOP(WID_0);
-    STOP_WATCH_REPORT(WID_0);
-
-    return !newEdges.empty();
+    return true;
 }
 
 /*

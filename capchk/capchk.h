@@ -95,7 +95,7 @@ class capchk : public ModulePass
         void identify_interesting_struct(Module&);
         void cvf_resolve_all_indirect_callee(Module& module);
         void figure_out_gep_using_type_field(InstructionSet&,
-                const std::pair<Type*,std::set<int>>&, Module&);
+                const std::pair<Type*,std::unordered_set<int>>&, Module&);
 
         void forward_all_interesting_usage(Instruction* I, int depth,
                 bool checked, InstructionList &callgraph,
@@ -129,6 +129,9 @@ class capchk : public ModulePass
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored);
         bool match_cs_using_fptr_method_1(Function*,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored);
+        bool match_cs_using_cvf(Function*,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored);
 

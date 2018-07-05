@@ -55,13 +55,10 @@ PAG* PAGBuilder::build(SVFModule svfModule) {
     visitGlobal(svfModule);
     ///// collect exception vals in the program
     /// handle functions
-    int cnt = 0;
     for (SVFModule::iterator fit = svfModule.begin(), efit = svfModule.end();
             fit != efit; ++fit)
     {
         llvm::Function& fun = **fit;
-        errs()<<"\r("<<cnt<<")"<<fun.getName();
-        cnt++;
 
         if(analysisUtil::isExtCall(&fun))
             continue;
@@ -101,7 +98,6 @@ PAG* PAGBuilder::build(SVFModule svfModule) {
             }
         }
     }
-    errs()<<"\nRun sanity check\n";
     sanityCheck();
 
     errs()<<"initialize candidatepointers\n";

@@ -41,6 +41,8 @@
 #include <llvm/IR/Constants.h>	// for constant
 #include <llvm/IR/DataLayout.h>	// for llvm target data llvm-3.3
 
+#include <unordered_map>
+
 /// Symbol types
 enum SYMTYPE {
     BlackHole,
@@ -363,18 +365,18 @@ public:
     //{@
     /// llvm value to sym id map
     /// local (%) and global (@) identifiers are pointer types which have a value node id.
-    typedef llvm::DenseMap<const llvm::Value *, SymID> ValueToIDMapTy;
+    typedef std::unordered_map<const llvm::Value *, SymID> ValueToIDMapTy;
     /// sym id to memory object map
-    typedef llvm::DenseMap<SymID,MemObj*> IDToMemMapTy;
+    typedef std::unordered_map<SymID,MemObj*> IDToMemMapTy;
     /// function to sym id map
-    typedef llvm::DenseMap<const llvm::Function *, SymID> FunToIDMapTy;
+    typedef std::unordered_map<const llvm::Function*, SymID> FunToIDMapTy;
     /// sym id to sym type map
-    typedef llvm::DenseMap<SymID,SYMTYPE> IDToSymTyMapTy;
+    typedef std::unordered_map<SymID,SYMTYPE> IDToSymTyMapTy;
     /// struct type to struct info map
-    typedef llvm::DenseMap<const llvm::Type*, StInfo*> TypeToFieldInfoMap;
+    typedef std::unordered_map<const llvm::Type*, StInfo*> TypeToFieldInfoMap;
     typedef std::set<llvm::CallSite> CallSiteSet;
-    typedef llvm::DenseMap<const llvm::Instruction*,CallSiteID> CallSiteToIDMapTy;
-    typedef llvm::DenseMap<CallSiteID,const llvm::Instruction*> IDToCallSiteMapTy;
+    typedef std::unordered_map<const llvm::Instruction*,CallSiteID> CallSiteToIDMapTy;
+    typedef std::unordered_map<CallSiteID,const llvm::Instruction*> IDToCallSiteMapTy;
 
     //@}
 

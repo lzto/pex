@@ -7,9 +7,11 @@
 
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <stack>
 #include <queue>
 #include <set>
+#include <unordered_set>
 
 #include <llvm/IR/Function.h>
 
@@ -32,25 +34,25 @@ typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
 typedef std::list<Type*> TypeList;
 
-typedef std::set<std::string> StringSet;
-typedef std::set<Value*> ValueSet;
-typedef std::set<Type*> TypeSet;
-typedef std::set<Instruction*> InstructionSet;
-typedef std::set<const Instruction*> ConstInstructionSet;
-typedef std::set<BasicBlock*> BasicBlockSet;
-typedef std::set<Function*> FunctionSet;
-typedef std::set<CallInst*> InDirectCallSites;
+typedef std::unordered_set<std::string> StringSet;
+typedef std::unordered_set<Value*> ValueSet;
+typedef std::unordered_set<Type*> TypeSet;
+typedef std::unordered_set<Instruction*> InstructionSet;
+typedef std::unordered_set<const Instruction*> ConstInstructionSet;
+typedef std::unordered_set<BasicBlock*> BasicBlockSet;
+typedef std::unordered_set<Function*> FunctionSet;
+typedef std::unordered_set<CallInst*> InDirectCallSites;
 
-typedef std::map<Function*,_REACHABLE> FunctionToCheckResult;
-typedef std::map<Type*, std::set<Function*>*> TypeToFunctions;
-typedef std::map<Type*, std::set<int>> Type2Fields;
-typedef std::map<Function*, InstructionSet*> Function2ChkInst;
-typedef std::map<Function*, InstructionSet*> Function2CSInst;
-typedef std::map<Value*, InstructionSet*> Value2ChkInst;
-typedef std::map<Type*, InstructionSet*> Type2ChkInst;
-typedef std::map<Function*, int> FunctionData;
-typedef std::map<Instruction*, FunctionSet*> Inst2Func;
-typedef std::map<const Instruction*, FunctionSet*> ConstInst2Func;
+typedef std::unordered_map<Function*,_REACHABLE> FunctionToCheckResult;
+typedef std::unordered_map<Type*, std::unordered_set<Function*>*> TypeToFunctions;
+typedef std::unordered_map<Type*, std::unordered_set<int>> Type2Fields;
+typedef std::unordered_map<Function*, InstructionSet*> Function2ChkInst;
+typedef std::unordered_map<Function*, InstructionSet*> Function2CSInst;
+typedef std::unordered_map<Value*, InstructionSet*> Value2ChkInst;
+typedef std::unordered_map<Type*, InstructionSet*> Type2ChkInst;
+typedef std::unordered_map<Function*, int> FunctionData;
+typedef std::unordered_map<Instruction*, FunctionSet*> Inst2Func;
+typedef std::unordered_map<const Instruction*, FunctionSet*> ConstInst2Func;
 
 
 

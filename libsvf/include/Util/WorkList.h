@@ -40,7 +40,7 @@
 #include <cstdlib>
 #include <vector>
 #include <deque>
-#include <set>
+#include <unordered_set>
 
 /**
  * Worlist with "first come first go" order.
@@ -62,7 +62,7 @@ class List {
         ListNode* next;
     };
 
-    typedef std::set<Data> DataSet;
+    typedef std::unordered_set<Data> DataSet;
     typedef ListNode Node;
 
 public:
@@ -121,7 +121,7 @@ private:
  */
 template<class Data>
 class FIFOWorkList {
-    typedef std::set<Data> DataSet;
+    typedef std::unordered_set<Data> DataSet;
     typedef std::deque<Data> DataDeque;
 public:
     FIFOWorkList(): total_item_added(0), total_item_processed(0) {}
@@ -202,7 +202,7 @@ private:
  */
 template<class Data>
 class FILOWorkList {
-    typedef std::set<Data> DataSet;
+    typedef std::unordered_set<Data> DataSet;
     typedef std::vector<Data> DataVector;
 public:
     FILOWorkList() {}

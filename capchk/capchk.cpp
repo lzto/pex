@@ -595,7 +595,7 @@ void capchk::dump_tf2ci()
         else
             errs()<<ANSI_COLOR_RED<<"AnnonymouseType";
         errs()<<":";
-        std::set<int>& fields = critical_typefields[t];
+        std::unordered_set<int>& fields = critical_typefields[t];
         for (auto i: fields)
             errs()<<i<<",";
         errs()<<ANSI_COLOR_RESET<<"\n";
@@ -865,7 +865,7 @@ void capchk::collect_kernel_init_functions(Module& module)
     if (kstart==NULL)
     {
         errs()<<ANSI_COLOR_RED
-            <<"kstart function not found, may affect precission, continuing anyway\n"
+            <<"kstart function not found, may affect precission, continue anyway\n"
             <<ANSI_COLOR_RESET;
     }
     STOP_WATCH_STOP(WID_KINIT);
@@ -1564,27 +1564,56 @@ end:
     return cnt!=0;
 }
 
+/*
+ * get result from value flow analysis result
+ */
+bool capchk::match_cs_using_cvf(Function* func,
+                InstructionList& callgraph, FunctionToCheckResult& visited,
+                int& good, int& bad, int& ignored)
+{
+    //TODO: optimize this
+    int cnt = 0;
+    for (auto* idc: idcs)
+    {
+        FunctionSet* fs = idcs2callee[idc];
+        if(fs==NULL)
+            continue;
+        for (auto* f: *fs)
+        {
+            if (f!=func)
+                continue;
+            cnt++;
+            backward_slice_build_callgraph(callgraph, idc, visited, good, bad, ignored);
+            break;
+        }
+    }
+    MatchCallCriticalFuncPtr+=cnt;
+    if (cnt==0)
+        UnMatchCallCriticalFuncPtr++;
+    return cnt!=0;
+}
 
 bool capchk::bs_using_indcs(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored)
 {
     bool ret;
-    ret = match_cs_using_fptr_method_0(func, callgraph, visited, good, bad, ignored);
-    //exact match don't need to look further
-    if (ret)
+
+    if (!knob_capchk_cvf)
+    {
+        ret = match_cs_using_fptr_method_0(func, callgraph, visited, good, bad, ignored);
+        //exact match don't need to look further
+        if (ret)
+            return ret;
+        ret = match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
         return ret;
-    ret = match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
-    return ret;
+    }
+    return match_cs_using_cvf(func, callgraph, visited, good, bad, ignored);
 }
 
 /*
  * Complex Value Flow Analysis
  * figure out candidate for indirect callee using value flow analysis
- *
- * TODO: refactor method0~2, using following routine to pre-calculate
- * candidate function so that we can make check simpler
- *
  */
 void capchk::cvf_resolve_all_indirect_callee(Module& module)
 {
@@ -1655,8 +1684,6 @@ void capchk::cvf_resolve_all_indirect_callee(Module& module)
 #if 1
             errs()<<"CallSite: ";
             ci->getDebugLoc().print(errs());
-            errs()<<"\n";
-            ci->print(errs());
             errs()<<"\n";
 #endif
         }
@@ -1885,7 +1912,7 @@ void capchk::check_critical_variable_usage(Module& module)
 }
 
 void capchk::figure_out_gep_using_type_field(InstructionSet& workset,
-        const std::pair<Type*,std::set<int>>& v, Module& module)
+        const std::pair<Type*,std::unordered_set<int>>& v, Module& module)
 {
     for (Module::iterator f = module.begin(), f_end = module.end();
         f != f_end; ++f)
@@ -2351,8 +2378,8 @@ add:
         for (auto v: current_critical_type_fields)
         {
             Type* t = v.first;
-            std::set<int>& sset = v.second;
-            std::set<int>& dset = critical_typefields[t];
+            std::unordered_set<int>& sset = v.second;
+            std::unordered_set<int>& dset = critical_typefields[t];
             for (auto x: sset)
                 dset.insert(x);
         }

@@ -20,7 +20,7 @@ STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 using namespace llvm;
 
 CVFA::CVFA()
-    :pta(new AndersenWaveDiff)
+    :pta(new AndersenWave)
 {
     m = NULL;
     svfg = NULL;

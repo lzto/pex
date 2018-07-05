@@ -71,25 +71,25 @@ void SVFG::buildSVFG(MemSSA* m) {
     mssa = m;
     pta = m->getPTA();
     stat->startClk();
-    DBOUT(DGENERAL, outs() << pasMsg("\tCreate SVFG Top Level Node\n"));
+    llvm::errs() << pasMsg("\tCreate SVFG Top Level Node\n");
 
     stat->TLVFNodeStart();
     addSVFGNodesForTopLevelPtrs();
     stat->TLVFNodeEnd();
 
-    DBOUT(DGENERAL, outs() << pasMsg("\tCreate SVFG Addr-taken Node\n"));
+    llvm::errs() << pasMsg("\tCreate SVFG Addr-taken Node\n");
 
     stat->ATVFNodeStart();
     addSVFGNodesForAddrTakenVars();
     stat->ATVFNodeEnd();
 
-    DBOUT(DGENERAL, outs() << pasMsg("\tCreate SVFG Direct Edge\n"));
+    llvm::errs() << pasMsg("\tCreate SVFG Direct Edge\n");
 
     stat->dirVFEdgeStart();
     connectDirectSVFGEdges();
     stat->dirVFEdgeEnd();
 
-    DBOUT(DGENERAL, outs() << pasMsg("\tCreate SVFG Indirect Edge\n"));
+    llvm::errs() << pasMsg("\tCreate SVFG Indirect Edge\n");
 
     stat->indVFEdgeStart();
     connectIndirectSVFGEdges();

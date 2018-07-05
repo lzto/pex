@@ -36,11 +36,6 @@
 #include "Util/AnalysisUtil.h"
 #include <llvm/ADT/BitVector.h>
 
-#include "stopwatch.h"
-
-#define WID_0  0
-
-
 /*!
  * Program Assignment Graph for pointer analysis
  * SymID and NodeID are equal here (same numbering).
@@ -113,21 +108,15 @@ public:
         return candidatePointers;
     }
     /// Initialize candidate pointers
-    inline void initialiseCandidatePointers() {
-        STOP_WATCH(1);
-        STOP_WATCH_START(WID_0);
-
+    inline void initialiseCandidatePointers()
+    {
         // collect candidate pointers for demand-driven analysis
-        int cnt = 0;
-        int total = 0;
-        for (iterator nIter = begin(); nIter != end(); ++nIter)
-            total++;
-
+        //NOTE: SparseBitVector performs poorly
+        //      when not accessed in sequencial order
         llvm::BitVector bv;
-        bv.resize(total);
-        for (iterator nIter = begin(); nIter != end(); ++nIter) {
-            llvm::errs()<<"\r("<<cnt<<"/"<<total<<")";
-            cnt++;
+        bv.resize(getTotalNodeNum());
+        for (iterator nIter = begin(); nIter != end(); ++nIter)
+        {
             NodeID nodeId = nIter->first;
             // do not compute points-to for isolated node
             if (!isValidPointer(nodeId))
@@ -138,9 +127,6 @@ public:
         }
         for (auto i = bv.set_bits_begin(), e = bv.set_bits_end(); i!=e; i++)
             candidatePointers.set(*i);
-
-        STOP_WATCH_STOP(WID_0);
-        STOP_WATCH_REPORT(WID_0);
     }
 
     /// Singleton design here to make sure we only have one instance during any analysis

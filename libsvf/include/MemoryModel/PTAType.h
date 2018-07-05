@@ -32,9 +32,10 @@
 
 #include <llvm/IR/Type.h>
 #include <llvm/Support/raw_ostream.h>
+
 #include <unordered_map>
 #include <set>
-#include <functional>
+
 #include "Util/BasicTypes.h"
 
 class PAGNode;
@@ -177,7 +178,7 @@ private:
 class TypeSystem {
 public:
 
-    typedef llvm::DenseMap<NodeID, TypeSet*> VarToTypeSetMapTy;
+    typedef std::unordered_map<NodeID, TypeSet*> VarToTypeSetMapTy;
     typedef std::unordered_map<PTAType, NodeBS> TypeToVarsMapTy;
 
     typedef typename VarToTypeSetMapTy::iterator iterator;
@@ -295,16 +296,11 @@ private:
      * RetPN
      * VarArgPN
      */
-    void translateLLVMTypeToPTAType(const PAG *pag) {
+    void translateLLVMTypeToPTAType(const PAG *pag)
+    {
         llvm::errs()<<"translateLLVMTypeToPTAType\n";
-        int total = 0;
-        int cnt = 0;
-        for (PAG::const_iterator it = pag->begin(); it != pag->end(); ++it)
-            total++;
-        for (PAG::const_iterator it = pag->begin(); it != pag->end(); ++it)
+        for (PAG::const_iterator it = pag->begin(), ite = pag->end(); it != ite; ++it)
         {
-            llvm::errs()<<"\r("<<cnt<<"/"<<total<<")";
-            cnt++;
             const PAGNode *pagNode = it->second;
             const llvm::Value *value = pagNode->getValue();
             if (!value)
@@ -330,23 +326,18 @@ private:
             //if (addTypeForVar(id, ptaType))
             //    addVarForType(id, ptaType);
         }
-        //make sure we are adding elements in order
+        //NOTE: SparseBitVector: make sure we are adding elements in order
         //addVarForType(id, ptaType);
-        llvm::errs()<<"\nConverting map\n";
         std::list<int> ids;
         for (auto I: VarToTypeSetMap)
             ids.push_back(I.first);
         ids.sort();
-        cnt = 0;
         for (auto i: ids)
         {
-            llvm::errs()<<"\r("<<cnt<<"/"<<total<<")";
-            cnt++;
             TypeSet * typeset = VarToTypeSetMap[i];
             for (auto type: *typeset)
                 addVarForType(i, type);
         }
-        llvm::errs()<<"Done\n";
     }
 
 private:

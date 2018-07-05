@@ -88,7 +88,7 @@ bool SVFGBuilder::build(SVFG* graph,BVDataPTAImpl* pta) {
 
     MemSSA* mssa = new MemSSA(pta);
 
-    DBOUT(DGENERAL, outs() << pasMsg("Build Memory SSA \n"));
+    llvm::errs() << pasMsg("Build Memory SSA \n");
 
     DominatorTree dt;
     MemSSADF df;
@@ -110,7 +110,7 @@ bool SVFGBuilder::build(SVFG* graph,BVDataPTAImpl* pta) {
     //mssa->performStat();
     //mssa->dumpMSSA();
 
-    DBOUT(DGENERAL, outs() << pasMsg("Build Sparse Value-Flow Graph \n"));
+    llvm::errs() << pasMsg("Build Sparse Value-Flow Graph \n");
 
     createSVFG(mssa, graph);
 
