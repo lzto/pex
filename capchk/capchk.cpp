@@ -849,6 +849,8 @@ void capchk::collect_kernel_init_functions(Module& module)
             //matter what
             kernel_init_functions.insert(func);
             kinit_funcs.insert(func);
+            if (kstart==NULL)
+                kstart = func;
             //everything calling start_kernel should be considered init
             //for (auto *U: func->users())
             //    if (Instruction *I = dyn_cast<Instruction>(U))
@@ -860,7 +862,12 @@ void capchk::collect_kernel_init_functions(Module& module)
         }
     }
     //should always find kstart
-    assert(kstart!=NULL);
+    if (kstart==NULL)
+    {
+        errs()<<ANSI_COLOR_RED
+            <<"kstart function not found, may affect precission, continuing anyway\n"
+            <<ANSI_COLOR_RESET;
+    }
     STOP_WATCH_STOP(WID_KINIT);
     STOP_WATCH_REPORT(WID_KINIT);
 
@@ -1507,7 +1514,7 @@ bool capchk::match_cs_using_fptr_method_0(Function* func,
         goto end;
     }
     ret = true;
-    MatchCallCriticalFuncPtr = csis->size();
+    MatchCallCriticalFuncPtr += csis->size();
     for (auto* csi: *csis)
         backward_slice_build_callgraph(callgraph, csi, visited, good, bad, ignored);
 

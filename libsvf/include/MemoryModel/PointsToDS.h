@@ -35,8 +35,6 @@
 #include "MemoryModel/ConditionalPT.h"
 #include "Util/AnalysisUtil.h"
 
-#include <unordered_map>
-
 /// Overloading operator << for dumping conditional variable
 //@{
 template<class Cond>
@@ -59,7 +57,7 @@ template<class Key, class Data>
 class PTData {
 public:
     //typedef std::unordered_map<Key, Data> PtsMap;
-    //FIXME: using memory reference will cause problem since DenseMap/std::map will resize
+    //NOTE: using memory reference will cause problem since DenseMap/std::map will resize
     // and remove all valid reference
     typedef llvm::DenseMap<Key, Data*> PtsMap;
     typedef typename PtsMap::iterator PtsMapIter;
@@ -79,6 +77,7 @@ public:
 
     /// Destructor
     virtual ~PTData() {
+        clear();
     }
 
     /// Clear maps
@@ -204,15 +203,38 @@ public:
     }
 
     /// Destructor
-    ~DiffPTData() {}
+    ~DiffPTData()
+    {
+        clear();
+    }
+    virtual void clear()
+    {
+        for (auto i: diffPtsMap)
+            delete i.second;
+        diffPtsMap.clear();
+        for (auto i: propaPtsMap)
+            delete i.second;
+        propaPtsMap.clear();
+        for (auto i: CacheMap)
+            delete i.second;
+        CacheMap.clear();
+    }
 
     /// Get diff points to.
     inline Data & getDiffPts(Key& var) {
-        return *diffPtsMap[var];
+        if (diffPtsMap.find(var)!=diffPtsMap.end())
+            return *diffPtsMap[var];
+        Data* r = new Data;
+        diffPtsMap[var] = r;
+        return *r;
     }
     /// Get propagated points to.
     inline Data & getPropaPts(Key& var) {
-        return *propaPtsMap[var];
+        if (propaPtsMap.find(var)!=propaPtsMap.end())
+            return *propaPtsMap[var];
+        Data* r = new Data;
+        propaPtsMap[var] = r;
+        return *r;
     }
 
     /**
@@ -248,7 +270,11 @@ public:
 
     /// Get cached points-to
     inline Data& getCachePts(CacheKey& cache) {
-        return *CacheMap[cache];
+        if (CacheMap.find(cache)!=CacheMap.end())
+            return *CacheMap[cache];
+        Data* r = new Data;
+        CacheMap[cache] = r;
+        return *r;
     }
 
     /// Add cached points-to

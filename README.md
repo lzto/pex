@@ -17,8 +17,8 @@ capable() check.
     -analyze \
     -load=build/capchk/libcapchk.so \
     -capchk \
-    -ccv=0 -ccf=1 \
-    -ccvv=0 -ccfv=0 \
+    -ccv=0 -ccf=1 -cct=0\
+    -ccvv=0 -ccfv=0 -cctv=0\
     -cvf=0 \
     -skipfun=skip.fun \
     -skipvar=skip.var \
