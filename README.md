@@ -6,6 +6,11 @@ global variable use, interesting struct type and field use) by looking at existi
 capable() check, then check which path that uses those resources is not guarded by
 capable() check.
 
+#prerequisites
+
+* LLVM-6/7
+* compiler with C++11 support
+
 #build
 
 ./build.sh
@@ -13,7 +18,7 @@ capable() check.
 #usage
 
 ```
-/opt/toolchain/llvm-git/bin/opt \
+opt \
     -analyze \
     -load=build/capchk/libcapchk.so \
     -capchk \
