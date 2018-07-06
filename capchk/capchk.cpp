@@ -384,6 +384,37 @@ bool is_interesting_type(Type* ty)
     return false;
 }
 
+bool _is_used_by_static_assign_to_interesting_type(Value* v,
+        std::unordered_set<Value*>& duchain)
+{
+    if (duchain.count(v))
+        return false;
+    duchain.insert(v);
+    if (is_interesting_type(v->getType()))
+    {
+        duchain.erase(v);
+        return true;
+    }
+    for (auto *u: v->users())
+    {
+        if (isa<Instruction>(u))
+            continue;
+        if (_is_used_by_static_assign_to_interesting_type(u, duchain))
+        {
+            duchain.erase(v);
+            return true;
+        }
+    }
+    duchain.erase(v);
+    return false;
+}
+
+bool is_used_by_static_assign_to_interesting_type(Value* v)
+{
+    std::unordered_set<Value*> duchain;
+    return _is_used_by_static_assign_to_interesting_type(v, duchain);
+}
+
 bool is_syscall_prefix(StringRef str)
 {
     for (int i=0;i<4;i++)
@@ -1443,7 +1474,7 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             {
                 CFuncUsedByStaticAssign++;
                 //must be non-instruction
-                if (is_interesting_type(U->getType()))
+                if (is_used_by_static_assign_to_interesting_type(U))
                 {
                     //used as kernel entry point and no check
                     bad++;
@@ -1720,6 +1751,18 @@ void capchk::check_critical_function_usage(Module& module)
             if (!cs)
                 continue;
             backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
+        }
+        //indirect call
+        for (auto& callees: idcs2callee)
+        {
+            CallInst *cs = const_cast<CallInst*>
+                            (static_cast<const CallInst*>(callees.first));
+            for (auto* f: *callees.second)
+            {
+                if (f!=func)
+                    continue;
+                backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
+            }
         }
         //summary
         if (bad!=0)

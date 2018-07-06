@@ -15,27 +15,31 @@ int capable(int i)
 void (*fun_ptr)(int);
 void (*xxx_ptr)(struct non_trivial_struct*);
 
+//critical function
 void fun(int i)
 {
 	printf("this is protected function(used as fptr) %d\n", i);
 }
 
+//critical function
 void xxx(struct non_trivial_struct *p)
 {
 	printf("this is protected xxx(used as fptr) %p\n", p);
 }
 
+//non-critical function
 void yyy(struct non_trivial_struct *p)
 {
-	printf("this is protected xxx(used as fptr) %p\n", p);
+	printf("this is protected yyy(used as fptr) %p\n", p);
 }
 
-
+//un-used function
 void device_function()
 {
 	printf("this is device function\n");
 }
 
+//critical function
 void bar()
 {
 	printf("This is protected function\n");
@@ -68,7 +72,7 @@ void bar_ioctl()
 		xxx(&a);
 		return;
 	}
-	zoo();
+	zoo();//external symbol
 }
 
 void bar_open()
@@ -88,4 +92,14 @@ void dummy()
     xxx_ptr = &xxx;
     xxx_ptr(&b);
 }
+
+struct file_operations {
+   void (*ioctl) ();
+   void (*open)();
+} bar_file = 
+{
+    .ioctl = bar_ioctl,
+    .open = bar_open
+};
+
 
