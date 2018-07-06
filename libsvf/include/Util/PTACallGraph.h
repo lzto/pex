@@ -41,6 +41,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#include "std_ext.h"
+
 class PTACallGraphNode;
 class SVFModule;
 
@@ -163,30 +165,6 @@ public:
     /// Return TRUE if this function can be reached from main.
     bool isReachableFromProgEntry() const;
 };
-
-namespace std
-{
-    template <>
-    struct hash<std::pair<llvm::CallSite, const llvm::Function*>>
-    {
-        std::size_t operator()(const std::pair<llvm::CallSite, const llvm::Function*> &k) const
-        {
-            return std::hash<unsigned long>{}
-                (((unsigned long)k.first.getInstruction()) + ((unsigned long)k.second));
-        }
-    };
-    template<>
-    struct hash<llvm::CallSite>
-    {
-        std::size_t operator()(const llvm::CallSite&k) const
-        {
-            return std::hash<unsigned long>{}
-                (((unsigned long)k.getInstruction()));
-        }
-    };
-
-
-}
 
 /*!
  * Pointer Analysis Call Graph used internally for various pointer analysis

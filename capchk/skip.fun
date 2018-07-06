@@ -176,6 +176,7 @@ memchr_inv
 memcmp
 __memcpy
 memdup_user
+memset
 microcode_open
 __mm_populate
 mmput

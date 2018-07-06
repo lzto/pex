@@ -112,23 +112,23 @@ void MRGenerator::collectGlobals() {
  */
 void MRGenerator::generateMRs() {
 
-    DBOUT(DGENERAL, outs() << pasMsg("Generate Memory Regions \n"));
+    errs() << pasMsg("Generate Memory Regions \n");
 
     collectGlobals();
 
     callGraphSCC->find();
 
-    DBOUT(DGENERAL, outs() << pasMsg("\tCollect ModRef For Load/Store \n"));
+    errs() << pasMsg("\tCollect ModRef For Load/Store \n");
 
     /// collect mod-ref for loads/stores
     collectModRefForLoadStore();
 
-    DBOUT(DGENERAL, outs() << pasMsg("\tCollect ModRef For CallSite\n"));
+    errs() << pasMsg("\tCollect ModRef For CallSite\n");
 
     /// collect mod-ref for calls
     collectModRefForCall();
 
-    DBOUT(DGENERAL, outs() << pasMsg("\tPartition Memory Regions \n"));
+    errs() << pasMsg("\tPartition Memory Regions \n");
     /// Partition memory regions
     partitionMRs();
     /// attach memory regions for loads/stores/calls

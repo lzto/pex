@@ -64,6 +64,9 @@ double MemSSA::timeOfSSARenaming  = 0;	///< Time for SSA rename
  * Constructor
  */
 MemSSA::MemSSA(BVDataPTAImpl* p) : df(NULL),dt(NULL) {
+
+    errs()<<"MemSSA::MemSSA\n";
+
     pta = p;
     assert((pta->getAnalysisTy()!=PointerAnalysis::Default_PTA)
            && "please specify a pointer analysis");
@@ -85,6 +88,7 @@ MemSSA::MemSSA(BVDataPTAImpl* p) : df(NULL),dt(NULL) {
 
     stat = new MemSSAStat(this);
 
+    errs()<<"Generate whole program memory regions\n";
     /// Generate whole program memory regions
     double mrStart = stat->getClk();
     mrGen->generateMRs();

@@ -123,7 +123,7 @@ public:
     //@}
     ///Define mem region set
     typedef std::set<const MemRegion*, MemRegion::equalMemRegion> MRSet;
-    typedef llvm::DenseMap<const PAGEdge*, const llvm::Function*> PAGEdgeToFunMap;
+    typedef std::unordered_map<const PAGEdge*, const llvm::Function*> PAGEdgeToFunMap;
     typedef std::set<PointsTo, MemRegion::equalPointsTo> PointsToList;
     typedef llvm::DenseMap<const llvm::Function*, PointsToList > FunToPointsToMap;
     typedef std::map<PointsTo, PointsTo, MemRegion::equalPointsTo> PtsToRepPtsSetMap;
@@ -142,7 +142,7 @@ public:
     //@{
     typedef llvm::DenseMap<const LoadPE*, PointsTo> LoadsToPointsToMap;
     typedef llvm::DenseMap<const StorePE*, PointsTo> StoresToPointsToMap;
-    typedef llvm::DenseMap<llvm::CallSite, PointsTo> CallSiteToPointsToMap;
+    typedef std::unordered_map<llvm::CallSite, PointsTo> CallSiteToPointsToMap;
     //@}
 
     /// Maps Mod-Ref analysis
@@ -150,7 +150,7 @@ public:
     /// Map a function to its indirect refs/mods of memory objects
     typedef llvm::DenseMap<const llvm::Function*, NodeBS> FunToNodeBSMap;
     /// Map a callsite to its indirect refs/mods of memory objects
-    typedef llvm::DenseMap<llvm::CallSite, NodeBS> CallSiteToNodeBSMap;
+    typedef std::unordered_map<llvm::CallSite, NodeBS> CallSiteToNodeBSMap;
     //@}
 
     typedef std::unordered_map<NodeID, NodeBS> NodeToPTSSMap;

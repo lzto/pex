@@ -84,12 +84,12 @@ void SVFGBuilder::releaseMemory(SVFG* vfg) {
 /*!
  * We start the pass here
  */
-bool SVFGBuilder::build(SVFG* graph,BVDataPTAImpl* pta) {
-
+bool SVFGBuilder::build(SVFG* graph,BVDataPTAImpl* pta)
+{
+    llvm::errs() << pasMsg("Create new MSSA \n");
     MemSSA* mssa = new MemSSA(pta);
 
     llvm::errs() << pasMsg("Build Memory SSA \n");
-
     DominatorTree dt;
     MemSSADF df;
 

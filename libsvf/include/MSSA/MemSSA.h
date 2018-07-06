@@ -61,9 +61,9 @@ public:
     typedef MSSAPHI<Condition> PHI;
     typedef MSSADEF MDEF;
 
-    typedef std::set<MU*> MUSet;
-    typedef std::set<CHI*> CHISet;
-    typedef std::set<PHI*> PHISet;
+    typedef std::unordered_set<MU*> MUSet;
+    typedef std::unordered_set<CHI*> CHISet;
+    typedef std::unordered_set<PHI*> PHISet;
 
     ///Define mem region set
     typedef MRGenerator::MRSet MRSet;
@@ -73,8 +73,8 @@ public:
     //@{
     typedef llvm::DenseMap<const LoadPE*, MUSet> LoadToMUSetMap;
     typedef llvm::DenseMap<const StorePE*, CHISet> StoreToChiSetMap;
-    typedef std::map<llvm::CallSite, MUSet> CallSiteToMUSetMap;
-    typedef std::map<llvm::CallSite, CHISet> CallSiteToCHISetMap;
+    typedef std::unordered_map<llvm::CallSite, MUSet> CallSiteToMUSetMap;
+    typedef std::unordered_map<llvm::CallSite, CHISet> CallSiteToCHISetMap;
     typedef llvm::DenseMap<const llvm::BasicBlock*, PHISet> BBToPhiSetMap;
     //@}
 
@@ -225,7 +225,7 @@ private:
     //@{
     /// Rename mu set
     inline void RenameMuSet(const MUSet& muSet) {
-        for (MUSet::iterator mit = muSet.begin(), emit = muSet.end();
+        for (auto mit = muSet.begin(), emit = muSet.end();
                 mit != emit; ++mit) {
             MU* mu = (*mit);
             mu->setVer(getTopStackVer(mu->getMR()));
@@ -234,7 +234,7 @@ private:
 
     /// Rename chi set
     inline void RenameChiSet(const CHISet& chiSet, MRVector& memRegs) {
-        for (CHISet::iterator cit = chiSet.begin(), ecit = chiSet.end();
+        for (auto cit = chiSet.begin(), ecit = chiSet.end();
                 cit != ecit; ++cit) {
             CHI* chi = (*cit);
             chi->setOpVer(getTopStackVer(chi->getMR()));
@@ -245,7 +245,7 @@ private:
 
     /// Rename result (LHS) of phis
     inline void RenamePhiRes(const PHISet& phiSet, MRVector& memRegs) {
-        for (PHISet::iterator iter = phiSet.begin(), eiter = phiSet.end();
+        for (auto iter = phiSet.begin(), eiter = phiSet.end();
                 iter != eiter; ++iter) {
             PHI* phi = *iter;
             phi->setResVer(newSSAName(phi->getMR(),phi));
@@ -255,7 +255,7 @@ private:
 
     /// Rename operands (RHS) of phis
     inline void RenamePhiOps(const PHISet& phiSet, u32_t pos, MRVector& memRegs) {
-        for (PHISet::iterator iter = phiSet.begin(), eiter = phiSet.end();
+        for (auto iter = phiSet.begin(), eiter = phiSet.end();
                 iter != eiter; ++iter) {
             PHI* phi = *iter;
             phi->setOpVer(getTopStackVer(phi->getMR()), pos);
