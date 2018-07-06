@@ -29,8 +29,11 @@
 
 #include "Util/AnalysisUtil.h"
 
+#if (LLVM_VERSION_MAJOR>=7)
 #include <llvm/Analysis/Utils/Local.h>	// for FindDbgAddrUses
+#endif
 #include <llvm/Transforms/Utils/Local.h>	// for FindDbgAddrUses
+
 #include <llvm/IR/GlobalVariable.h>	// for GlobalVariable
 #include <llvm/IR/Module.h>	// for Module
 #include <llvm/IR/InstrTypes.h>	// for TerminatorInst
