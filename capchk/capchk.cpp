@@ -1053,9 +1053,12 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
     }else
     {
     //method 2: use svf to figure out
-        if (FunctionSet* _fs = idcs2callee[ci])
-            for (auto* f: *_fs)
+        auto _fs = idcs2callee.find(ci);
+        if (_fs != idcs2callee.end())
+        {
+            for (auto* f: *(_fs->second))
                 fs.insert(f);
+        }
     }
     return fs;
 }
@@ -1606,10 +1609,10 @@ bool capchk::match_cs_using_cvf(Function* func,
     int cnt = 0;
     for (auto* idc: idcs)
     {
-        FunctionSet* fs = idcs2callee[idc];
-        if(fs==NULL)
+        auto fs = idcs2callee.find(idc);
+        if(fs==idcs2callee.end())
             continue;
-        for (auto* f: *fs)
+        for (auto* f: *(fs->second))
         {
             if (f!=func)
                 continue;
