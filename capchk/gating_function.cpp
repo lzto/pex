@@ -7,6 +7,7 @@
 #include "color.h"
 
 #include "llvm/IR/CallSite.h"
+#include "llvm/Support/raw_ostream.h"
 
 #include "utility.h"
 ////////////////////////////////////////////////////////////////////////////////
