@@ -343,3 +343,5 @@ wake_up_bit
 wake_up_new_task
 wake_up_process
 __warn_printk
+warn_slowpath_fmt
+warn_slowpath_null

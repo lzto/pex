@@ -10,6 +10,9 @@
 #include "llvm/Support/raw_ostream.h"
 
 #include "utility.h"
+
+#include <fstream>
+
 ////////////////////////////////////////////////////////////////////////////////
 //GatingCap
 
@@ -171,5 +174,79 @@ void GatingCap::dump_interesting(InstructionSet* cis)
     if ((last_cap_no==-2) || (mismatched_chk_func))
         errs()<<ANSI_COLOR_RED<<"inconsistent check"
                 <<ANSI_COLOR_RESET<<"\n";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//LSM
+
+void GatingLSM::load_lsm_hook_list(std::string& file)
+{
+    std::ifstream input(file);
+    if (!input.is_open())
+        return;
+    std::string line;
+    while(std::getline(input,line))
+        lsm_hook_names.insert(line);
+    input.close();
+    errs()<<"Load LSM hook list, total:"<<lsm_hook_names.size()<<"\n";
+}
+
+bool GatingLSM::is_lsm_hook(StringRef& str)
+{
+    if (lsm_hook_names.size())
+    {
+        return lsm_hook_names.find(str)!=lsm_hook_names.end();
+    }
+    //use builtin name
+    if (str.startswith("security_"))
+        return true;
+    return false;
+}
+
+GatingLSM::GatingLSM(Module& module, std::string& lsmfile)
+    : GatingFunctionBase(module)
+{
+    load_lsm_hook_list(lsmfile);
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        StringRef fname = func->getName();
+        if (is_lsm_hook(fname))
+        {
+            lsm_hook_functions.insert(func);
+        }
+    }
+}
+
+bool GatingLSM::is_gating_function(Function* f)
+{
+    return lsm_hook_functions.find(f)!=lsm_hook_functions.end();
+}
+
+bool GatingLSM::is_gating_function(std::string& str)
+{
+    for (auto f: lsm_hook_functions)
+    {
+        if (f->getName()==str)
+            return true;
+    }
+    return false;
+}
+
+void GatingLSM::dump()
+{
+    errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
+        <<"=LSM hook functions="
+        <<ANSI_COLOR_RESET<<"\n";
+    for (auto f: lsm_hook_functions)
+    {
+        errs()<<". "<<f->getName()<<"\n";
+    }
+    errs()<<"=o=\n";
+}
+
+void GatingLSM::dump_interesting(InstructionSet* cis)
+{
 }
 

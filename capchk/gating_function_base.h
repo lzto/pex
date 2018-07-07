@@ -65,17 +65,19 @@ class GatingCap : public GatingFunctionBase
 class GatingLSM : public GatingFunctionBase
 {
     protected:
-
+        FunctionSet lsm_hook_functions;
+        StringSet lsm_hook_names;
     private:
-        bool is_builtin_lsm_hook(const std::string&){ return false; };
+        void load_lsm_hook_list(std::string&);
+        bool is_lsm_hook(StringRef&);
 
     public:
-        GatingLSM(Module& _m): GatingFunctionBase(_m){};
+        GatingLSM(Module&, std::string&);
         ~GatingLSM(){};
-        virtual bool is_gating_function(Function*){ return false; };
-        virtual bool is_gating_function(std::string&){ return false; };
-        virtual void dump(){};
-        virtual void dump_interesting(InstructionSet*){};
+        virtual bool is_gating_function(Function*);
+        virtual bool is_gating_function(std::string&);
+        virtual void dump();
+        virtual void dump_interesting(InstructionSet*);
 };
 #endif //_GATING_FUNCTION_BASE_
 

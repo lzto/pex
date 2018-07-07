@@ -22,11 +22,13 @@ opt \
     -analyze \
     -load=build/capchk/libcapchk.so \
     -capchk \
+    -gating=cap \
     -ccv=0 -ccf=1 -cct=0\
     -ccvv=0 -ccfv=0 -cctv=0\
     -cvf=0 \
     -skipfun=skip.fun \
     -skipvar=skip.var \
+    -lsmhook=lsm.hook \
     -prt-good=0 -prt-bad=1 -prt-ign=0 \
     -stats \
     vmlinux.bc \
@@ -34,6 +36,7 @@ opt \
 ```
 
 #options
+* gating - gating function: cap/lsm, default: cap
 * ccv - check critical variables, default: 0
 * ccf - check critical functions, default: 1
 * cct - check critical type fields, default 0
@@ -49,6 +52,7 @@ opt \
 * cvf - complex value flow, default 0
 * skipfun - list of functions don't care
 * skipvar - list of variables don't care
+* lsmhook - list of LSM hook
 * prt-good - print good path, default 0
 * prt-bad - print bad path, default 1
 * prt-ign - print ignored path, default 0

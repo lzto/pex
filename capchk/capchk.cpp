@@ -121,6 +121,10 @@ void capchk::dump_statistics()
 /*
  * command line options
  */
+cl::opt<std::string> knob_gating_type("gating",
+        cl::desc("gating function: cap/lsm - default: cap"),
+        cl::init("cap"));
+
 cl::opt<bool> knob_capchk_critical_var("ccv",
         cl::desc("check critical variable usage - disabled by default"),
         cl::init(false));
@@ -146,15 +150,15 @@ cl::opt<bool> knob_capchk_cctv("cctv",
         cl::init(false));
 
 cl::opt<bool> knob_capchk_f2c("f2c",
-        cl::desc("print critical function to capability mapping - enabled by default"),
+        cl::desc("print critical function to gating function mapping - enabled by default"),
         cl::init(true));
 
 cl::opt<bool> knob_capchk_v2c("v2c",
-        cl::desc("print critical variable to capability mapping - enabled by default"),
+        cl::desc("print critical variable to gating function mapping - enabled by default"),
         cl::init(true));
 
 cl::opt<bool> knob_capchk_t2c("t2c",
-        cl::desc("print critical type field to capability mapping - enable by default"),
+        cl::desc("print critical type field to gating function mapping - enable by default"),
         cl::init(true));
 
 cl::opt<bool> knob_capchk_caw("caw",
@@ -180,6 +184,10 @@ cl::opt<string> knob_skip_func_list("skipfun",
 cl::opt<string> knob_skip_var_list("skipvar",
         cl::desc("non-critical variable name list"),
         cl::init("skip.var"));
+
+cl::opt<string> knob_lsm_function_list("lsmhook",
+        cl::desc("lsm hook function name list"),
+        cl::init("lsm.hook"));
 
 cl::opt<bool> knob_dump_good_path("prt-good",
         cl::desc("print good path - disabled by default"),
@@ -451,7 +459,7 @@ void capchk::dump_v2ci()
     if (!knob_capchk_v2c)
         return;
     errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
-        <<"--- Variables Protected By Capability---"
+        <<"--- Variables Protected By Gating Function---"
         <<ANSI_COLOR_RESET<<"\n";
     for (auto& cis: v2ci)
     {
@@ -466,7 +474,7 @@ void capchk::dump_f2ci()
     if (!knob_capchk_f2c)
         return;
     errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
-        <<"--- Function Protected By Capability---"
+        <<"--- Function Protected By Gating Function---"
         <<ANSI_COLOR_RESET<<"\n";
     for (auto& cis: f2ci)
     {
@@ -2311,9 +2319,14 @@ void capchk::process_cpgf(Module& module)
     STOP_WATCH_STOP(WID_0);
     STOP_WATCH_REPORT(WID_0);
 
-    errs()<<"Identify wrappers\n";
+    errs()<<"Process Gating Functions\n";
     STOP_WATCH_START(WID_0);
-    gating = new GatingCap(module);
+    if (knob_gating_type=="cap")
+        gating = new GatingCap(module);
+    else if (knob_gating_type=="lsm")
+        gating = new GatingLSM(module, knob_lsm_function_list);
+    else
+        llvm_unreachable("invalid setting!");
     STOP_WATCH_STOP(WID_0);
     STOP_WATCH_REPORT(WID_0);
     dump_gating();

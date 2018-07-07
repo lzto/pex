@@ -53,7 +53,6 @@ security_ib_pkey_sid
 security_inet_conn_established
 security_inet_conn_request
 security_inet_csk_clone
-security_init
 security_inode_alloc
 security_inode_copy_up
 security_inode_copy_up_xattr
