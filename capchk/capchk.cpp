@@ -8,10 +8,10 @@
 
 #include "cvfa.h"
 //my aux headers
-#include "internal.h"
 #include "color.h"
-#include "aux.h"
+#include "internal.h"
 #include "stopwatch.h"
+#include "utility.h"
 
 #define TOTOAL_NUMBER_OF_STOP_WATCHES 2
 #define WID_0 0
@@ -197,45 +197,6 @@ cl::opt<bool> knob_warn_capchk_during_kinit("wcapchk-kinit",
         cl::desc("warn capability check during kernel boot process - disabled by default"),
         cl::init(false));
 
-
-/*
- * helper function
- */
-Instruction* GetNextInstruction(Instruction* I)
-{
-    if (isa<TerminatorInst>(I))
-        return I;
-    BasicBlock::iterator BBI(I);
-    return dyn_cast<Instruction>(++BBI);
-}
-
-Instruction* GetNextNonPHIInstruction(Instruction* I)
-{
-    if (isa<TerminatorInst>(I))
-        return I;
-    BasicBlock::iterator BBI(I);
-    while(isa<PHINode>(BBI))
-        ++BBI;
-    return dyn_cast<Instruction>(BBI);
-}
-
-Function* get_callee_function_direct(Instruction* i)
-{
-    CallInst* ci = dyn_cast<CallInst>(i);
-    if (Function* f = ci->getCalledFunction())
-        return f;
-    Value* cv = ci->getCalledValue();
-    Function* f = dyn_cast<Function>(cv->stripPointerCasts());
-    return f;
-}
-
-StringRef get_callee_function_name(Instruction* i)
-{
-    if (Function* f = get_callee_function_direct(i))
-        return f->getName();
-    return "";
-}
-
 bool function_has_gv_initcall_use(Function* f)
 {
     static FunctionSet fs_initcall;
@@ -275,36 +236,6 @@ Type2Fields critical_typefields;
 bool is_critical_function(Function* f)
 {
     return critical_functions.count(f)!=0;
-}
-
-/*
- * permission check functions,
- * those function are used to perform permission check before
- * using critical resources
- */
-
-bool is_check_function(const std::string& str)
-{
-    if (std::find(std::begin(_builtin_check_functions),
-                std::end(_builtin_check_functions),
-                str) != std::end(_builtin_check_functions))
-    {
-        return true;
-    }
-    return false;                                  
-}
-
-/*
- * record capability parameter position passed to capability check function
- * all discovered wrapper function to check functions will also have one entry
- *
- * This data is available after calling collect_wrappers()
- */
-FunctionData chk_func_cap_position;
-
-bool is_function_chk_or_wrapper(Function* f)
-{
-    return chk_func_cap_position.find(f)!=chk_func_cap_position.end();
 }
 
 //skip variables
@@ -515,53 +446,6 @@ void capchk::dump_as_ignored(InstructionList& callstk)
     dump_callstack(callstk);
 }
 
-void capchk::dump_cis(InstructionSet* cis)
-{
-    int last_cap_no = -1;
-    bool mismatched_chk_func = false;
-    Function* last_cap_chk_func = NULL;
-    for (auto *ci: *cis)
-    {
-        CallInst* cs = dyn_cast<CallInst>(ci);
-        Function* cf = get_callee_function_direct(cs);
-        int cap_no = -1;
-        if (is_function_chk_or_wrapper(cf))
-        {
-            cap_no = chk_func_cap_position[cf];
-            Value* capv = cs->getArgOperand(cap_no);
-            if (!isa<ConstantInt>(capv))
-            {
-                cs->getDebugLoc().print(errs());
-                errs()<<"\n";
-                cs->print(errs());
-                errs()<<"\n";
-                //llvm_unreachable("expect ConstantInt in capable");
-                errs()<<"Dynamic Load CAP\n";
-                cs->getDebugLoc().print(errs());
-                errs()<<"\n";
-                continue;
-            }
-            cap_no = dyn_cast<ConstantInt>(capv)->getSExtValue();
-            if (last_cap_no==-1)
-            {
-                last_cap_no=cap_no;
-                last_cap_chk_func = cf;
-            }
-            if (last_cap_no!=cap_no)
-                last_cap_no = -2;
-            if (last_cap_chk_func!=cf)
-                mismatched_chk_func = true;
-        }
-        assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
-        errs()<<"    "<<cap2string[cap_no]<<" @ "<<cf->getName()<<" ";
-        cs->getDebugLoc().print(errs());
-        errs()<<"\n";
-    }
-    if ((last_cap_no==-2) || (mismatched_chk_func))
-        errs()<<ANSI_COLOR_RED<<"inconsistent check"
-                <<ANSI_COLOR_RESET<<"\n";
-}
-
 void capchk::dump_v2ci()
 {
     if (!knob_capchk_v2c)
@@ -573,7 +457,7 @@ void capchk::dump_v2ci()
     {
         Value* v = cis.first;
         errs()<<ANSI_COLOR_GREEN<<v->getName()<<ANSI_COLOR_RESET<<"\n";
-        dump_cis(cis.second);
+        gating->dump_interesting(cis.second);
     }
 }
 
@@ -588,7 +472,7 @@ void capchk::dump_f2ci()
     {
         Function* func = cis.first;
         errs()<<ANSI_COLOR_GREEN<<func->getName()<<ANSI_COLOR_RESET<<"\n";
-        dump_cis(cis.second);
+        gating->dump_interesting(cis.second);
     }
 }
 
@@ -630,7 +514,7 @@ void capchk::dump_tf2ci()
         for (auto i: fields)
             errs()<<i<<",";
         errs()<<ANSI_COLOR_RESET<<"\n";
-        dump_cis(cis.second);
+        gating->dump_interesting(cis.second);
     }
 #endif
 }
@@ -663,20 +547,11 @@ void capchk::dump_non_kinit()
     errs()<<"=o=\n";
 }
 
-void capchk::dump_chk_and_wrap()
+void capchk::dump_gating()
 {
     if (!knob_capchk_caw)
         return;
-    errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
-        <<"=chk functions and wrappers="
-        <<ANSI_COLOR_RESET<<"\n";
-    for (auto &f2p: chk_func_cap_position)
-    {
-        errs()<<". "<<f2p.first->getName()
-            <<"  @ "<<f2p.second
-            <<"\n";
-    }
-    errs()<<"=o=\n";
+    gating->dump();
 }
 
 void capchk::dump_scope(FunctionSet& scope)
@@ -774,24 +649,6 @@ bool capchk::is_rw_global(Value* val)
     return get_global_def(val, visited)!=NULL;
 }
 
-
-/*
- * user can trace back to function argument?
- * only support simple wrapper
- * return the cap parameter position in parameter list
- * return -1 for not found
- */
-int capchk::use_parent_func_arg(Value* v, Function* f)
-{
-    int cnt = 0;
-    for (auto a = f->arg_begin(), b = f->arg_end(); a!=b; ++a)
-    {
-        if (dyn_cast<Value>(a)==v)
-            return cnt;
-        cnt++;
-    }
-    return -1;
-}
 /*
  * is this functions part of the kernel init sequence?
  * if function f has single user which goes to start_kernel(),
@@ -1070,7 +927,7 @@ void capchk::collect_chkps(Module& module)
     {
         Function *func = dyn_cast<Function>(fi);
         if (func->isDeclaration() || func->isIntrinsic()
-                ||is_function_chk_or_wrapper(func))
+                ||gating->is_gating_function(func))
             continue;
         
         InstructionSet *chks = f2chks[func];
@@ -1088,7 +945,7 @@ void capchk::collect_chkps(Module& module)
                 if (CallInst* ci = dyn_cast<CallInst>(ii))
                     if (Function* _f = get_callee_function_direct(ci))
                     {
-                        if (is_function_chk_or_wrapper(_f))
+                        if (gating->is_gating_function(_f))
                             chks->insert(ci);
                     }
             }
@@ -1146,83 +1003,6 @@ void capchk::identify_interesting_struct(Module& module)
             discovered_interesting_type.insert(type);
         }
     }
-}
-
-void capchk::collect_wrappers(Module& module)
-{
-    //add capable and ns_capable to chk_func_cap_position so that we can use them
-    for (Module::iterator fi = module.begin(), f_end = module.end();
-            fi != f_end; ++fi)
-    {
-        Function *func = dyn_cast<Function>(fi);
-        StringRef fname = func->getName();
-        if (fname=="capable")
-        {
-            chk_func_cap_position[func] = 0;
-        }else if (fname=="ns_capable")
-        {
-            chk_func_cap_position[func] = 1;
-        }
-        if (chk_func_cap_position.size()==2)
-            break;//we are done here
-    }
-
-    //last time discovered functions
-    FunctionData pass_data;
-    //functions that will be used for discovery next time
-    FunctionData pass_data_next;
-
-    for (auto fpair: chk_func_cap_position)
-        pass_data[fpair.first] = fpair.second;
-again:
-    for (auto fpair: pass_data)
-    {
-        Function * func = fpair.first;
-        int cap_pos = fpair.second;
-        assert(cap_pos>=0);
-        //we got a capability check function or a wrapper function,
-        //find all use without Constant Value and add them to wrapper
-        for (auto U: func->users())
-        {
-            CallInst* cs = dyn_cast<CallInst>(U);
-            if (cs==NULL)
-                continue;//how come?
-            assert(cs->getCalledFunction()==func);
-            Value* capv = cs->getArgOperand(cap_pos);
-            if (isa<ConstantInt>(capv))
-                continue;
-            Function* parent_func = cs->getFunction();
-            //we have a wrapper,
-            int pos = use_parent_func_arg(capv, parent_func);
-            if (pos>=0)
-            {
-                //type 1 wrapper, cap is from parent function argument
-                pass_data_next[parent_func] = pos;
-            }else
-            {
-                //type 2 wrapper, cap is from inside this function
-                //what to do with this?
-                //llvm_unreachable("What??");
-            }
-        }
-    }
-    //put pass_data_next in pass_data and chk_func_cap_position
-    pass_data.clear();
-    for (auto fpair: pass_data_next)
-    {
-        Function *f = fpair.first;
-        int pos = fpair.second;
-        if (chk_func_cap_position.count(f)==0)
-        {
-            pass_data[f] = pos;
-            chk_func_cap_position[f] = pos;
-        }
-    }
-    //do this until we discovered everything
-    if (pass_data.size())
-        goto again;
-    
-    dump_chk_and_wrap();
 }
 
 void capchk::collect_pp(Module& module)
@@ -1293,7 +1073,7 @@ void capchk::collect_crits(Module& module)
     {
         Function *func = dyn_cast<Function>(fi);
         if (func->isDeclaration() || func->isIntrinsic()
-                || is_function_chk_or_wrapper(func))
+                || gating->is_gating_function(func))
             continue;
 
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
@@ -2054,7 +1834,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
     {
         if (csf->isIntrinsic()
                 ||is_skip_function(csf->getName())
-                ||is_function_chk_or_wrapper(csf))
+                ||gating->is_gating_function(csf))
             return;
         current_crit_funcs.insert(csf);
 
@@ -2094,7 +1874,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         for (auto* csf: fs)
         {
             if (csf->isIntrinsic() || is_skip_function(csf->getName())
-                    ||is_function_chk_or_wrapper(csf))
+                    ||gating->is_gating_function(csf))
                 return;
 
             current_crit_funcs.insert(csf);
@@ -2346,7 +2126,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
                 CallInst *ci = dyn_cast<CallInst>(ii);
                 if (Function* csfunc = get_callee_function_direct(ci))
                 {
-                    if (is_function_chk_or_wrapper(csfunc))
+                    if (gating->is_gating_function(csfunc))
                     {
                         is_function_permission_checked = true;
                         chk_instruction_list.push_back(ci);
@@ -2533,9 +2313,10 @@ void capchk::process_cpgf(Module& module)
 
     errs()<<"Identify wrappers\n";
     STOP_WATCH_START(WID_0);
-    collect_wrappers(module);
+    gating = new GatingCap(module);
     STOP_WATCH_STOP(WID_0);
     STOP_WATCH_REPORT(WID_0);
+    dump_gating();
 
     errs()<<"Collect Checkpoints\n";
     STOP_WATCH_START(WID_0);
@@ -2602,6 +2383,7 @@ void capchk::process_cpgf(Module& module)
         STOP_WATCH_REPORT(WID_0);
     }
     dump_non_kinit();
+    delete gating;
 }
 
 bool capchk::runOnModule(Module &module)

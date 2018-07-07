@@ -44,6 +44,8 @@
 
 #include "commontypes.h"
 
+#include "gating_function_base.h"
+
 #define DEBUG_TYPE "capchk"
 
 #if defined(DEBUG)
@@ -155,8 +157,6 @@ class capchk : public ModulePass
         bool is_kernel_init_functions(Function* f);
         bool is_kernel_init_functions(Function* f, FunctionSet& visited);
 
-        int use_parent_func_arg(Value*, Function*);
-        
         //used by forward_all_interesting_usage to collect critical resources
         void crit_func_collect(CallInst*, FunctionSet&, InstructionList& chks);
         void crit_vars_collect(Instruction*, ValueList&, InstructionList& chks);
@@ -177,8 +177,7 @@ class capchk : public ModulePass
         void dump_as_ignored(InstructionList& callstk);
         void dump_callstack(InstructionList& callstk);
 
-        void dump_chk_and_wrap();
-        void dump_cis(InstructionSet*);
+        void dump_gating();
         void dump_f2ci();
         void dump_v2ci();
         void dump_tf2ci();
@@ -188,6 +187,9 @@ class capchk : public ModulePass
     
 
         void my_debug(Module& module);
+
+//private object
+        GatingFunctionBase *gating;
 
     public:
         static char ID;

@@ -41,6 +41,7 @@
 #define CAP_AUDIT_READ       37
 #define CAP_LAST_CAP         CAP_AUDIT_READ
 
+[[maybe_unused]]
 static char cap2string[][32] = 
 {
 "CAP_CHOWN",

@@ -9,6 +9,7 @@
  * check functions
  */
 
+[[maybe_unused]]
 static const char* _builtin_check_functions [] = 
 {
     "capable",
@@ -29,6 +30,7 @@ static const char* _builtin_kernel_start_functions [] =
 /*
  * syscall prefix
  */
+[[maybe_unused]]
 static const char* _builtin_syscall_prefix [] =
 {
     "compat_SyS_",
@@ -41,6 +43,7 @@ static const char* _builtin_syscall_prefix [] =
 /*
  * builtin list of skip variables
  */
+[[maybe_unused]]
 static const char* _builtin_skip_var [] = 
 {
     "jiffies",
@@ -54,6 +57,7 @@ static const char* _builtin_skip_var [] =
 /*
  * builtin list of skip functions
  */
+[[maybe_unused]]
 static const char* _builtin_skip_functions [] = 
 {
     //may operate on wrong source?
@@ -222,6 +226,7 @@ static const char* interesting_keyword [] =
  * sysfs stuff
  */
 #define BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE 50
+[[maybe_unused]]
 static const char* _builtin_interesting_type_word [] = 
 {
     "struct.file_operations",
@@ -280,6 +285,7 @@ static const char* _builtin_interesting_type_word [] =
  * some common struct type to skip
  */
 #define BUILDIN_STRUCT_TO_SKIP 16
+[[maybe_unused]]
 static const char* _builtin_struct_to_skip [] = 
 {
     "struct.list_head",
