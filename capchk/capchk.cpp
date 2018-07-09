@@ -1539,10 +1539,10 @@ void capchk::check_critical_function_usage(Module& module)
         int good=0, bad=0, ignored=0;
         for (auto *U: func->users())
         {
-            CallInst *cs = dyn_cast<CallInst>(U);
-            if (!cs)
-                continue;
-            backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
+            CallInstList cil;
+            get_callsite_inst(U, cil);
+            for (auto cs: cil)
+                backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
         }
         //indirect call
         for (auto& callees: idcs2callee)
@@ -1550,11 +1550,8 @@ void capchk::check_critical_function_usage(Module& module)
             CallInst *cs = const_cast<CallInst*>
                             (static_cast<const CallInst*>(callees.first));
             for (auto* f: *callees.second)
-            {
-                if (f!=func)
-                    continue;
-                backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
-            }
+                if (f==func)
+                    backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
         }
         //summary
         if (bad!=0)

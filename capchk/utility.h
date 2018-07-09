@@ -15,6 +15,8 @@
 #include "llvm/IR/Instruction.h"
 #include "llvm/IR/Instructions.h"
 
+#include "commontypes.h"
+
 using namespace llvm;
 
 int use_parent_func_arg(Value* v, Function* f);
@@ -22,6 +24,7 @@ Instruction* GetNextInstruction(Instruction* i);
 Instruction* GetNextNonPHIInstruction(Instruction* i);
 Function* get_callee_function_direct(Instruction* i);
 StringRef get_callee_function_name(Instruction* i);
+void get_callsite_inst(Value*, CallInstList&);
 
 #endif //_GATLING_UTILITY_
 

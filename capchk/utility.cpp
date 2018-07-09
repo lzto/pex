@@ -58,3 +58,18 @@ StringRef get_callee_function_name(Instruction* i)
     return "";
 }
 
+void get_callsite_inst(Value*u, CallInstList& cil)
+{
+    Value* v = u;
+    CallInst *cs;
+    cs = dyn_cast<CallInst>(v);
+    if (cs)
+    {
+        cil.push_back(cs);
+        return;
+    }
+    //otherwise...
+    for (auto *u: v->users())
+        get_callsite_inst(u, cil);
+}
+

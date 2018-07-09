@@ -30,6 +30,7 @@ enum _REACHABLE
 typedef std::list<std::string> StringList;
 typedef std::list<Value*> ValueList;
 typedef std::list<Instruction*> InstructionList;
+typedef std::list<CallInst*> CallInstList;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
 typedef std::list<Type*> TypeList;

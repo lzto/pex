@@ -26,6 +26,7 @@ blocking_notifier_call_chain
 __brelse
 call_rcu_bh
 call_rcu_sched
+capable
 cleanup_entry
 clear_user
 clock_t_to_jiffies
@@ -142,6 +143,7 @@ key_user_lookup
 key_user_put
 kfree
 kfree_call_rcu
+kfree_const
 kfree_skb
 kill_pgrp
 kimage_free_page_list
@@ -178,8 +180,10 @@ __memcpy
 memdup_user
 memset
 microcode_open
+__mmdrop
 __mm_populate
 mmput
+__mmput
 mnt_drop_write
 mnt_drop_write_file
 mntget
