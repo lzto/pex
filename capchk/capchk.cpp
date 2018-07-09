@@ -1539,7 +1539,7 @@ void capchk::check_critical_function_usage(Module& module)
         int good=0, bad=0, ignored=0;
         for (auto *U: func->users())
         {
-            CallInstList cil;
+            CallInstSet cil;
             get_callsite_inst(U, cil);
             for (auto cs: cil)
                 backward_slice_reachable_to_chk_function(cs, good, bad, ignored);

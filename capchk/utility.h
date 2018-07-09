@@ -24,7 +24,7 @@ Instruction* GetNextInstruction(Instruction* i);
 Instruction* GetNextNonPHIInstruction(Instruction* i);
 Function* get_callee_function_direct(Instruction* i);
 StringRef get_callee_function_name(Instruction* i);
-void get_callsite_inst(Value*, CallInstList&);
+void get_callsite_inst(Value*, CallInstSet&);
 
 #endif //_GATLING_UTILITY_
 

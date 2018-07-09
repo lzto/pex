@@ -39,6 +39,7 @@ typedef std::unordered_set<std::string> StringSet;
 typedef std::unordered_set<Value*> ValueSet;
 typedef std::unordered_set<Type*> TypeSet;
 typedef std::unordered_set<Instruction*> InstructionSet;
+typedef std::unordered_set<CallInst*> CallInstSet;
 typedef std::unordered_set<const Instruction*> ConstInstructionSet;
 typedef std::unordered_set<BasicBlock*> BasicBlockSet;
 typedef std::unordered_set<Function*> FunctionSet;

@@ -349,3 +349,4 @@ wake_up_process
 __warn_printk
 warn_slowpath_fmt
 warn_slowpath_null
+__task_pid_nr_ns
