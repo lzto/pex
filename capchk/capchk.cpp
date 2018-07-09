@@ -21,13 +21,6 @@
 
 STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 
-#define DEBUG_PREPARE 0
-#define DEBUG_ANALYZE 1
-
-#define MAX_PATH 1000
-#define MAX_BACKWD_SLICE_DEPTH 100
-#define MAX_FWD_SLICE_DEPTH 100
-
 using namespace llvm;
 
 char capchk::ID;
@@ -204,6 +197,14 @@ cl::opt<bool> knob_dump_ignore_path("prt-ign",
 cl::opt<bool> knob_warn_capchk_during_kinit("wcapchk-kinit",
         cl::desc("warn capability check during kernel boot process - disabled by default"),
         cl::init(false));
+
+cl::opt<unsigned int> knob_fwd_depth("fwd-depth",
+        cl::desc("forward search max depth - default 100"),
+        cl::init(100));
+
+cl::opt<unsigned int> knob_bwd_depth("bwd-depth",
+        cl::desc("backward search max depth - default 100"),
+        cl::init(100));
 
 bool function_has_gv_initcall_use(Function* f)
 {
@@ -1155,7 +1156,7 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
             Instruction* I, FunctionToCheckResult& fvisited, int& good, int& bad, int& ignored)
 {
     //we've reached the limit
-    if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
+    if (callgraph.size()>knob_bwd_depth)
     {
         BwdAnalysisMaxHit++;
         return;
@@ -1579,7 +1580,7 @@ void capchk::check_critical_function_usage(Module& module)
 void capchk::collect_backward_scope(Instruction* i, FunctionSet& scope,
         InstructionList& callgraph, FunctionSet& visited)
 {
-    if (callgraph.size()>MAX_BACKWD_SLICE_DEPTH)
+    if (callgraph.size()>knob_bwd_depth)
         return;
     Function *f = i->getFunction();
     if (visited.count(f))
@@ -1682,12 +1683,10 @@ void capchk::check_critical_variable_usage(Module& module)
     for (auto *V: critical_variables)
     {
         FunctionList flist;//known functions
-#if DEBUG_ANALYZE
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Variable:"
             <<V->getName()
             <<ANSI_COLOR_RESET<<"\n";
-#endif
 
         //figure out all use-def, put them info workset
         InstructionSet workset;
@@ -1790,12 +1789,10 @@ void capchk::check_critical_type_field_usage(Module& module)
         StructType* t = dyn_cast<StructType>(V.first);
         //std::set<int>& fields = V.second;
 
-#if DEBUG_ANALYZE
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Type:"
             <<t->getStructName()
             <<ANSI_COLOR_RESET<<"\n";
-#endif
 
         //figure out all use-def, put them info workset
         InstructionSet workset;
@@ -1866,18 +1863,23 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
     }//else if (Value* csv = cs->getCalledValue())
     else if (cs->getCalledValue()!=NULL)
     {
-        errs()<<"Resolve indirect call @ ";
-        cs->getDebugLoc().print(errs());
-        errs()<<"\n";
+        if (knob_capchk_ccfv)
+        {
+            errs()<<"Resolve indirect call @ ";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n";
+        }
         //TODO:solve as gep function pointer of struct 
         FunctionSet fs = resolve_indirect_callee(cs);
         if (!fs.size())
         {
-            errs()<<ANSI_COLOR_RED<<"[NO MATCH]"<<ANSI_COLOR_RESET<<"\n";
+            if (knob_capchk_ccfv)
+                errs()<<ANSI_COLOR_RED<<"[NO MATCH]"<<ANSI_COLOR_RESET<<"\n";
             CPUnResolv++;
             return;
         }
-        errs()<<ANSI_COLOR_GREEN<<"[FOUND "<<fs.size()<<" MATCH]"<<ANSI_COLOR_RESET<<"\n";
+        if (knob_capchk_ccfv)
+            errs()<<ANSI_COLOR_GREEN<<"[FOUND "<<fs.size()<<" MATCH]"<<ANSI_COLOR_RESET<<"\n";
         CPResolv++;
         for (auto* csf: fs)
         {
@@ -2057,10 +2059,6 @@ goodret:
 
 /*
  * IPA: figure out all global variable usage and function calls
- * FIXME: SVF, global var, should build whold call graph first,
- * TODO : (after collecting all critical functions),
- *        partation the kernel and run svf then do alias analysis
- *        to figure mod/ref set
  * 
  * @I: from where are we starting, all following instructions should be dominated
  *     by I, if checked=true
@@ -2068,10 +2066,10 @@ goodret:
  * @checked: is this function already checked? means that `I' will dominate all,
  *     means that the caller of current function have already been dominated by
  *     a check
- * @callgraph: how to we get here
+ * @callgraph: how do we get here
  * @chks: which checks are protecting us?
  */
-void capchk::forward_all_interesting_usage(Instruction* I, int depth,
+void capchk::forward_all_interesting_usage(Instruction* I, unsigned int depth,
         bool checked, InstructionList& callgraph,
         InstructionList& chks)
 {
@@ -2092,7 +2090,7 @@ void capchk::forward_all_interesting_usage(Instruction* I, int depth,
 
     callgraph.push_back(I);
 
-    if (depth>MAX_FWD_SLICE_DEPTH)
+    if (depth>knob_fwd_depth)
     {
         callgraph.pop_back();
         FwdAnalysisMaxHit++;

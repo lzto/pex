@@ -99,7 +99,7 @@ class capchk : public ModulePass
         void figure_out_gep_using_type_field(InstructionSet&,
                 const std::pair<Type*,std::unordered_set<int>>&, Module&);
 
-        void forward_all_interesting_usage(Instruction* I, int depth,
+        void forward_all_interesting_usage(Instruction* I, unsigned int depth,
                 bool checked, InstructionList &callgraph,
                 InstructionList& chks);
 

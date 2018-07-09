@@ -57,4 +57,7 @@ opt \
 * prt-bad - print bad path, default 1
 * prt-ign - print ignored path, default 0
 * wcapchk-kinit - warn capability check during kernel boot process, default 0
+* fwd-depth - forward search max depth, default 100
+* bwd-depth - backward search max depth, default 100
+* svfbudget - # of iterations for cvf graph update, default 5
 
