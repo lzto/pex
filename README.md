@@ -61,3 +61,15 @@ opt \
 * bwd-depth - backward search max depth, default 100
 * svfbudget - # of iterations for cvf graph update, default 5
 
+
+#vmlinux.bc
+
+You may need to install wllvm and then use the following command to generate
+a single bc file.
+
+```
+~/linux: make defconfig
+~/linux: make CC=wllvm
+~/linux: extract-bc vmlinux
+```
+
