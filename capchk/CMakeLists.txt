@@ -1,5 +1,6 @@
 add_llvm_loadable_module( libcapchk
     utility.cpp
+    simple_set.cpp
     gating_function.cpp
     cvfa.cpp
     capchk.cpp

@@ -44,6 +44,7 @@
 
 #include "commontypes.h"
 
+#include "simple_set.h"
 #include "gating_function_base.h"
 
 #define DEBUG_TYPE "capchk"
@@ -157,6 +158,15 @@ class capchk : public ModulePass
         bool is_kernel_init_functions(Function* f);
         bool is_kernel_init_functions(Function* f, FunctionSet& visited);
 
+        inline bool is_skip_var(const std::string& str)
+        {
+            return skip_vars->exists(str);
+        };
+        inline bool is_skip_function(const std::string& str)
+        {
+            return skip_funcs->exists(str);
+        };
+
         //used by forward_all_interesting_usage to collect critical resources
         void crit_func_collect(CallInst*, FunctionSet&, InstructionList& chks);
         void crit_vars_collect(Instruction*, ValueList&, InstructionList& chks);
@@ -190,6 +200,9 @@ class capchk : public ModulePass
 
 //private object
         GatingFunctionBase *gating;
+        SimpleSet* skip_vars;
+        SimpleSet* skip_funcs;
+        SimpleSet* crit_syms;
 
     public:
         static char ID;

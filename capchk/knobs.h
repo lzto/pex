@@ -77,6 +77,10 @@ cl::opt<string> knob_lsm_function_list("lsmhook",
         cl::desc("lsm hook function name list"),
         cl::init("lsm.hook"));
 
+cl::opt<string> knob_crit_symbol("critsym",
+        cl::desc("list of symbols to be treated as critical and ignore others"),
+        cl::init("crit.sym"));
+
 cl::opt<bool> knob_dump_good_path("prt-good",
         cl::desc("print good path - disabled by default"),
         cl::init(false));

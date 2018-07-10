@@ -149,66 +149,9 @@ FunctionSet critical_functions;
 ValueSet critical_variables;
 Type2Fields critical_typefields;
 
-bool is_critical_function(Function* f)
+inline bool is_critical_function(Function* f)
 {
     return critical_functions.count(f)!=0;
-}
-
-//skip variables
-bool use_internal_skip_var_list = false;
-StringSet skip_var;
-
-bool is_skip_var(const std::string& str)
-{
-    if (use_internal_skip_var_list)
-        return std::find(std::begin(_builtin_skip_var), std::end(_builtin_skip_var), str)
-            != std::end(_builtin_skip_var);
-    return skip_var.count(str)!=0;
-}
-
-void load_skip_var_list(std::string& fn)
-{
-    std::ifstream input(fn);
-    if (!input.is_open())
-    {
-        use_internal_skip_var_list = true;
-        return;
-    }
-    std::string line;
-    while(std::getline(input,line))
-    {
-        skip_var.insert(line);
-    }
-    input.close();
-    errs()<<"Load skip var list, total:"<<skip_var.size()<<"\n";
-}
-//skip functions
-bool use_internal_skip_func_list = false;
-StringSet skip_functions;
-
-bool is_skip_function(const std::string& str)
-{
-    if (use_internal_skip_func_list)
-        return std::find(std::begin(_builtin_skip_functions), std::end(_builtin_skip_functions), str)
-            != std::end(_builtin_skip_functions);
-    return skip_functions.count(str)!=0;
-}
-
-void load_skip_func_list(std::string& fn)
-{
-    std::ifstream input(fn);
-    if (!input.is_open())
-    {
-        use_internal_skip_func_list = true;
-        return;
-    }
-    std::string line;
-    while(std::getline(input,line))
-    {
-        skip_functions.insert(line);
-    }
-    input.close();
-    errs()<<"Load skip function list, total:"<<skip_functions.size()<<"\n";
 }
 
 /*
@@ -1435,14 +1378,12 @@ void capchk::check_critical_function_usage(Module& module)
     FunctionList processed_flist;
     //for each critical function find out all callsite(use)
     //process one critical function at a time
-    for (Module::iterator f_begin = module.begin(), f_end = module.end();
-            f_begin != f_end; ++f_begin)
+    for (Function* func:critical_functions)
     {
-        Function *func = dyn_cast<Function>(f_begin);
-        if (!is_critical_function(func))
-            continue;
-        if (is_skip_function(func->getName()))
-            continue;
+        if (!crit_syms->use_builtin())//means that not knob specified
+            if (!crit_syms->exists(func->getName()))//means that symbol not matched
+                continue;
+
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Function:"
             <<func->getName()
@@ -2221,8 +2162,24 @@ void capchk::process_cpgf(Module& module)
      * generate resource/functions from syscall entry function
      */
     errs()<<"Pre-processing...\n";
-    load_skip_func_list(knob_skip_func_list);
-    load_skip_var_list(knob_skip_var_list);
+
+    StringList builtin_skip_functions(std::begin(_builtin_skip_functions),
+            std::end(_builtin_skip_functions));
+    skip_funcs = new SimpleSet(knob_skip_func_list, builtin_skip_functions);
+    if (!skip_funcs->use_builtin())
+        errs()<<"Load skip function list, total:"<<skip_funcs->size()<<"\n";
+
+    StringList builtin_skip_var(std::begin(_builtin_skip_var),
+            std::end(_builtin_skip_var));
+    skip_vars = new SimpleSet(knob_skip_var_list, builtin_skip_var);
+    if (!skip_vars->use_builtin())
+        errs()<<"Load skip var list, total:"<<skip_vars->size()<<"\n";
+
+    StringList builtin_crit_symbol;
+    crit_syms = new SimpleSet(knob_crit_symbol, builtin_crit_symbol);
+    if (!crit_syms->use_builtin())
+        errs()<<"Load critical symbols, total:"<<crit_syms->size()<<"\n";
+
     STOP_WATCH_START(WID_0);
     collect_pp(module);
     STOP_WATCH_STOP(WID_0);
@@ -2305,6 +2262,8 @@ void capchk::process_cpgf(Module& module)
         STOP_WATCH_REPORT(WID_0);
     }
     dump_non_kinit();
+    delete skip_funcs;
+    delete skip_vars;
     delete gating;
 }
 
