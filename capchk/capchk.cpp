@@ -2059,7 +2059,7 @@ goodret:
  * 
  * @I: from where are we starting, all following instructions should be dominated
  *     by I, if checked=true
- * @depth: are we going to deep?
+ * @depth: are we going too deep?
  * @checked: is this function already checked? means that `I' will dominate all,
  *     means that the caller of current function have already been dominated by
  *     a check
