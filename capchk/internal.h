@@ -225,7 +225,7 @@ static const char* interesting_keyword [] =
 /*
  * sysfs stuff
  */
-#define BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE 50
+#define BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE 53
 [[maybe_unused]]
 static const char* _builtin_interesting_type_word [] = 
 {
@@ -278,7 +278,10 @@ static const char* _builtin_interesting_type_word [] =
     "struct.slab_attribute",
     "struct.vmbus_chan_attribute",
     "struct.widget_attribute",
-    "struct.proc_ns_operations"
+    "struct.proc_ns_operations",
+    "struct.inode_operations",
+    "struct.nfs_rpc_ops",
+    "struct.xattr_handler",
 };
 
 /*
