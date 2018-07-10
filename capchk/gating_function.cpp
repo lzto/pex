@@ -248,5 +248,16 @@ void GatingLSM::dump()
 
 void GatingLSM::dump_interesting(InstructionSet* cis)
 {
+    for (auto *ci: *cis)
+    {
+        CallInst* cs = dyn_cast<CallInst>(ci);
+        Function* cf = get_callee_function_direct(cs);
+        if (is_gating_function(cf))
+        {
+            errs()<<"    "<<cf->getName()<<" @ ";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n";
+        }
+    }
 }
 
