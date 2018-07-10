@@ -23,6 +23,8 @@ STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 
 using namespace llvm;
 
+#include "knobs.h"
+
 char capchk::ID;
 
 STATISTIC(FuncCounter, "Functions greeted");
@@ -110,101 +112,6 @@ void capchk::dump_statistics()
     errs()<<"\n\n\n";
 }
 #endif
-
-/*
- * command line options
- */
-cl::opt<std::string> knob_gating_type("gating",
-        cl::desc("gating function: cap/lsm - default: cap"),
-        cl::init("cap"));
-
-cl::opt<bool> knob_capchk_critical_var("ccv",
-        cl::desc("check critical variable usage - disabled by default"),
-        cl::init(false));
-
-cl::opt<bool> knob_capchk_critical_fun("ccf",
-        cl::desc("check critical function usage - enabled by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_capchk_critical_type_field("cct",
-        cl::desc("check critical type field usage - disable by default"),
-        cl::init(false));
-
-cl::opt<bool> knob_capchk_ccfv("ccfv",
-        cl::desc("print path to critical function(collect phase) - disabled by default"),
-        cl::init(false));
-
-cl::opt<bool> knob_capchk_ccvv("ccvv",
-        cl::desc("print path to critical variable(collect phase) - disabled by default"),
-        cl::init(false));
-
-cl::opt<bool> knob_capchk_cctv("cctv",
-        cl::desc("print path to critical type field(collect phase) - disabled by default"),
-        cl::init(false));
-
-cl::opt<bool> knob_capchk_f2c("f2c",
-        cl::desc("print critical function to gating function mapping - enabled by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_capchk_v2c("v2c",
-        cl::desc("print critical variable to gating function mapping - enabled by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_capchk_t2c("t2c",
-        cl::desc("print critical type field to gating function mapping - enable by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_capchk_caw("caw",
-        cl::desc("print check functions and wrappers discovered - enabled by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_capchk_kinit("kinit",
-        cl::desc("print kernel init functions - enabled by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_capchk_nkinit("nkinit",
-        cl::desc("print kernel non init functions - enabled by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_capchk_cvf("cvf",
-        cl::desc("complex value flow analysis - disabled by default"),
-        cl::init(false));
-
-cl::opt<string> knob_skip_func_list("skipfun",
-        cl::desc("non-critical function list"),
-        cl::init("skip.fun"));
-
-cl::opt<string> knob_skip_var_list("skipvar",
-        cl::desc("non-critical variable name list"),
-        cl::init("skip.var"));
-
-cl::opt<string> knob_lsm_function_list("lsmhook",
-        cl::desc("lsm hook function name list"),
-        cl::init("lsm.hook"));
-
-cl::opt<bool> knob_dump_good_path("prt-good",
-        cl::desc("print good path - disabled by default"),
-        cl::init(false));
-
-cl::opt<bool> knob_dump_bad_path("prt-bad",
-        cl::desc("print bad path - enabled by default"),
-        cl::init(true));
-
-cl::opt<bool> knob_dump_ignore_path("prt-ign",
-        cl::desc("print ignored path - disabled by default"),
-        cl::init(false));
-
-cl::opt<bool> knob_warn_capchk_during_kinit("wcapchk-kinit",
-        cl::desc("warn capability check during kernel boot process - disabled by default"),
-        cl::init(false));
-
-cl::opt<unsigned int> knob_fwd_depth("fwd-depth",
-        cl::desc("forward search max depth - default 100"),
-        cl::init(100));
-
-cl::opt<unsigned int> knob_bwd_depth("bwd-depth",
-        cl::desc("backward search max depth - default 100"),
-        cl::init(100));
 
 bool function_has_gv_initcall_use(Function* f)
 {
@@ -572,7 +479,7 @@ void capchk::dump_scope(FunctionSet& scope)
     }
     errs()<<"\n";
 }
-
+////////////////////////////////////////////////////////////////////////////////
 /*
  * is this function type contains non-trivial(non-primary) type?
  */
@@ -850,15 +757,22 @@ again:
             continue;
         for (auto *U: f->users())
         {
-            if (!isa<Instruction>(U))
-                continue;
-            if (kinit_funcs.count(dyn_cast<Instruction>(U)->getFunction())==0)
+            CallInstSet cil;
+            get_callsite_inst(U, cil);
+            bool should_break = false;
+            for (auto cs: cil)
             {
-                //means that we have a user does not belong to kernel init functions
-                //we need to remove it
-                non_kernel_init_functions.insert(f);
-                break;
+                if (kinit_funcs.count(cs->getFunction())==0)
+                {
+                    //means that we have a user does not belong to kernel init functions
+                    //we need to remove it
+                    non_kernel_init_functions.insert(f);
+                    should_break = true;
+                    break;
+                }
             }
+            if (should_break)
+                break;
         }
     }
     for (auto f: non_kernel_init_functions)
@@ -881,10 +795,10 @@ again:
     STOP_WATCH_REPORT(WID_KINIT);
 
 
-#if 1
+#if 0
 //this is imprecise, clear it
-    //errs()<<"clear NON-kernel-init functions\n";
-    //non_kernel_init_functions.clear();
+    errs()<<"clear NON-kernel-init functions\n";
+    non_kernel_init_functions.clear();
 #endif
     dump_kinit();
 }
@@ -2059,7 +1973,7 @@ goodret:
  * 
  * @I: from where are we starting, all following instructions should be dominated
  *     by I, if checked=true
- * @depth: are we going to deep?
+ * @depth: are we going too deep?
  * @checked: is this function already checked? means that `I' will dominate all,
  *     means that the caller of current function have already been dominated by
  *     a check

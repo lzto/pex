@@ -58,6 +58,11 @@ StringRef get_callee_function_name(Instruction* i)
     return "";
 }
 
+/*
+ * get CallInst
+ * this can resolve call using bitcast
+ *  : call %() bitcast %() @foo()
+ */
 void _get_callsite_inst(Value*u, CallInstSet& cil, int depth)
 {
     if (depth>2)
