@@ -33,6 +33,7 @@ STATISTIC(DiscoveredPath, "Discovered Path");
 STATISTIC(MatchedPath, "Matched Path");
 STATISTIC(GoodPath, "Good Path");
 STATISTIC(BadPath, "Bad Path");
+STATISTIC(IgnPath, "Ignored Path");
 STATISTIC(UnResolv, "Path Unable to Resolve");
 STATISTIC(CSFPResolved, "Resolved CallSite Using Function Pointer");
 STATISTIC(CRITVAR, "Critical Variables");
@@ -96,6 +97,7 @@ void capchk::dump_statistics()
     STATISTICS_DUMP(MatchedPath);
     STATISTICS_DUMP(GoodPath);
     STATISTICS_DUMP(BadPath);
+    STATISTICS_DUMP(IgnPath);
     STATISTICS_DUMP(UnResolv);
     STATISTICS_DUMP(CSFPResolved);
     STATISTICS_DUMP(CRITFUNC);
@@ -1418,6 +1420,7 @@ void capchk::check_critical_function_usage(Module& module)
         }
         BadPath+=bad;
         GoodPath+=good;
+        IgnPath+=ignored;
     }
 }
 
@@ -1592,6 +1595,7 @@ void capchk::check_critical_variable_usage(Module& module)
             }
             BadPath+=bad;
             GoodPath+=good;
+            IgnPath+=ignored;
         }
     }
 }
@@ -1671,6 +1675,7 @@ void capchk::check_critical_type_field_usage(Module& module)
             }
             BadPath+=bad;
             GoodPath+=good;
+            IgnPath+=ignored;
         }
     }
    
