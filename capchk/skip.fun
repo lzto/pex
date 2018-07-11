@@ -109,6 +109,7 @@ __get_free_pages
 get_info
 getname
 get_pid_task
+get_task_mm
 get_task_pid
 get_unmapped_area
 get_unused_fd_flags
@@ -119,6 +120,7 @@ groups_sort
 hrtimer_init
 ia32_setup_frame
 ia32_setup_rt_frame
+I_BDEV
 ida_simple_remove
 idr_destroy
 idr_for_each
@@ -137,6 +139,7 @@ iput
 is_audit_feature_set
 is_bad_inode
 jiffies_to_msecs
+kasprintf
 kcore_update_ram
 key_put
 key_user_lookup
@@ -211,11 +214,14 @@ nla_put
 nla_strlcpy
 nonseekable_open
 open_related_ns
+__page_mapcount
 path_get
 path_noexec
 path_put
 percpu_counter_add_batch
 __percpu_counter_sum
+__percpu_down_read
+__percpu_up_read
 pid_nr_ns
 pid_task
 pid_vnr
@@ -325,6 +331,9 @@ strnlen
 strsep
 synchronize_sched
 __sysfs_match_string
+task_active_pid_ns
+__task_pid_nr_ns
+task_work_add
 thaw_bdev
 thaw_kernel_threads
 thaw_processes
@@ -349,4 +358,3 @@ wake_up_process
 __warn_printk
 warn_slowpath_fmt
 warn_slowpath_null
-__task_pid_nr_ns

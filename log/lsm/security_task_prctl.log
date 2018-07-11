@@ -1,0 +1,2902 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:355
+Load skip var list, total:22
+Collect all functions and indirect callsites
+STOP WATCH[0]: 1134.215000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 22.751000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_task_prctl
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1337.122000 ms
+Identify interesting struct
+STOP WATCH[0]: 7.190000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 105.727000 ms
+Initial Kernel Init Function Count:668
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 192.029000 ms
+Refine Result
+refine pass 0 3112 left
+refine pass 1 2059 left
+refine pass 2 1769 left
+refine pass 3 1705 left
+refine pass 4 1676 left
+refine pass 5 1671 left
+refine pass 6 1669 left
+ Refine result : count=1669
+STOP WATCH[1]: 75.186000 ms
+STOP WATCH[0]: 373.990000 ms
+Collect all permission-checked variables and functions
+Add call<direct> set_dumpable use @ kernel/sys.c:2224:3 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> __set_task_comm use @ ./include/linux/sched.h:1492:2 @[ kernel/sys.c:2257:3 @[ kernel/sys.c:2193:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> proc_comm_connector use @ kernel/sys.c:2258:3 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> __get_task_comm use @ kernel/sys.c:2261:3 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> prctl_get_seccomp use @ kernel/sys.c:2272:11 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> prctl_set_seccomp use @ kernel/sys.c:2275:11 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> get_tsc_mode use @ kernel/sys.c:2278:11 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> set_tsc_mode use @ kernel/sys.c:2281:11 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> perf_event_task_disable use @ kernel/sys.c:2284:11 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> perf_event_task_enable use @ kernel/sys.c:2287:11 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> get_mm_exe_file use @ kernel/sys.c:1795:13 @[ kernel/sys.c:2056:10 @[ kernel/sys.c:2337:11 @[ kernel/sys.c:2193:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> walk_process_tree use @ kernel/sys.c:2347:3 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+Add call<direct> down_write_killable use @ kernel/sys.c:2371:7 @[ kernel/sys.c:2193:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_prctl 
+[32m-------------[0m
+STOP WATCH[1]: 3832.346000 ms
+Collected 13 critical functions
+Collected 1 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mmmap_min_addr[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mdown_write_killable[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mget_mm_exe_file[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mperf_event_task_enable[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mset_tsc_mode[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mget_tsc_mode[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mperf_event_task_disable[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32m__set_task_comm[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mset_dumpable[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mprctl_set_seccomp[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mwalk_process_tree[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mproc_comm_connector[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32m__get_task_comm[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mprctl_get_seccomp[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.vm_area_struct.42777:0,[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+[32mstruct.task_struct.42923:0,[0m
+    security_task_prctl @ kernel/sys.c:2200:10 @[ kernel/sys.c:2193:1 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:prctl_get_seccomp[0m
+[33mInspect Use of Function:__get_task_comm[0m
+[35mUse:drivers/tty/tty_audit.c:77:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_audit_log drivers/tty/tty_audit.c:77:3
+1 tty_audit_push drivers/tty/tty_audit.c:99:2 @[ drivers/tty/tty_audit.c:164:3 ]
+2 tty_audit_tiocsti drivers/tty/tty_audit.c:142:6
+3 tty_ioctl drivers/tty/tty_io.c:2150:2 @[ drivers/tty/tty_io.c:2540:10 ]
+[32m-------------[0m
+[35mUse:drivers/tty/tty_audit.c:77:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_audit_log drivers/tty/tty_audit.c:77:3
+1 tty_audit_push drivers/tty/tty_audit.c:99:2 @[ drivers/tty/tty_audit.c:164:3 ]
+2 tty_audit_tiocsti drivers/tty/tty_audit.c:142:6
+3 tty_ioctl drivers/tty/tty_io.c:2150:2 @[ drivers/tty/tty_io.c:2540:10 ]
+[32m-------------[0m
+[35mUse:drivers/tty/tty_audit.c:77:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_audit_log drivers/tty/tty_audit.c:77:3
+1 tty_audit_exit drivers/tty/tty_audit.c:99:2 @[ drivers/tty/tty_audit.c:120:2 ]
+2 do_exit kernel/exit.c:846:3
+3 SyS_bdflush fs/buffer.c:3339:3 @[ fs/buffer.c:3323:1 ]
+[32m-------------[0m
+[35mUse:drivers/tty/tty_audit.c:77:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_audit_log drivers/tty/tty_audit.c:77:3
+1 tty_audit_exit drivers/tty/tty_audit.c:99:2 @[ drivers/tty/tty_audit.c:120:2 ]
+2 do_exit kernel/exit.c:846:3
+3 reboot_pid_ns kernel/pid_namespace.c:350:2
+4 SyS_reboot kernel/reboot.c:331:8 @[ kernel/reboot.c:307:1 ]
+[32m-------------[0m
+[35mUse:drivers/tty/tty_audit.c:77:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_audit_log drivers/tty/tty_audit.c:77:3
+1 tty_audit_exit drivers/tty/tty_audit.c:99:2 @[ drivers/tty/tty_audit.c:120:2 ]
+2 do_exit kernel/exit.c:846:3
+3 do_group_exit kernel/exit.c:968:2
+4 SYSC_exit_group kernel/exit.c:979:2
+5 SyS_exit_group kernel/exit.c:977:1
+[32m-------------[0m
+[35mUse:drivers/tty/tty_audit.c:77:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_audit_log drivers/tty/tty_audit.c:77:3
+1 tty_audit_exit drivers/tty/tty_audit.c:99:2 @[ drivers/tty/tty_audit.c:120:2 ]
+2 do_exit kernel/exit.c:846:3
+3 SYSC_exit kernel/exit.c:937:2
+4 SyS_exit kernel/exit.c:935:1
+[32m-------------[0m
+[35mUse:drivers/tty/tty_io.c:2483:3 @[ drivers/tty/tty_io.c:2618:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_ioctl drivers/tty/tty_io.c:2483:3 @[ drivers/tty/tty_io.c:2618:3 ]
+[32m-------------[0m
+[35mUse:drivers/tty/tty_io.c:2483:3 @[ drivers/tty/tty_io.c:2618:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tty_ioctl drivers/tty/tty_io.c:2483:3 @[ drivers/tty/tty_io.c:2618:3 ]
+[32m-------------[0m
+[35mUse:kernel/capability.c:50:2 @[ kernel/capability.c:91:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cap_validate_magic kernel/capability.c:50:2 @[ kernel/capability.c:91:3 ]
+1 SyS_capset kernel/capability.c:233:8 @[ kernel/capability.c:224:1 ]
+[32m-------------[0m
+[35mUse:kernel/capability.c:50:2 @[ kernel/capability.c:91:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cap_validate_magic kernel/capability.c:50:2 @[ kernel/capability.c:91:3 ]
+1 SyS_capget kernel/capability.c:157:8 @[ kernel/capability.c:150:1 ]
+[32m-------------[0m
+[35mUse:kernel/capability.c:74:2 @[ kernel/capability.c:95:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cap_validate_magic kernel/capability.c:74:2 @[ kernel/capability.c:95:3 ]
+1 SyS_capset kernel/capability.c:233:8 @[ kernel/capability.c:224:1 ]
+[32m-------------[0m
+[35mUse:kernel/capability.c:74:2 @[ kernel/capability.c:95:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cap_validate_magic kernel/capability.c:74:2 @[ kernel/capability.c:95:3 ]
+1 SyS_capget kernel/capability.c:157:8 @[ kernel/capability.c:150:1 ]
+[32m-------------[0m
+[35mUse:kernel/futex.c:1596:4 @[ kernel/futex.c:1655:11 @[ kernel/futex.c:3555:10 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_futex kernel/futex.c:1596:4 @[ kernel/futex.c:1655:11 @[ kernel/futex.c:3555:10 ] ]
+1 compat_SyS_futex kernel/futex_compat.c:201:9 @[ kernel/futex_compat.c:175:1 ]
+[32m-------------[0m
+[35mUse:kernel/futex.c:1596:4 @[ kernel/futex.c:1655:11 @[ kernel/futex.c:3555:10 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_futex kernel/futex.c:1596:4 @[ kernel/futex.c:1655:11 @[ kernel/futex.c:3555:10 ] ]
+1 SyS_futex kernel/futex.c:3605:9 @[ kernel/futex.c:3573:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 SyS_linkat fs/namei.c:1014:2 @[ fs/namei.c:4275:10 @[ fs/namei.c:4237:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_file_open_root fs/namei.c:3586:10
+5 file_open_root fs/open.c:1020:9
+6 do_handle_open fs/fhandle.c:233:9
+7 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_file_open_root fs/namei.c:3586:10
+5 file_open_root fs/open.c:1020:9
+6 do_handle_open fs/fhandle.c:233:9
+7 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 SyS_uselib fs/exec.c:136:9 @[ fs/exec.c:120:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_elf_binary.14623 fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_elf_binary fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_script fs/binfmt_script.c:101:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_misc_binary fs/binfmt_misc.c:212:17
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 bm_register_write fs/binfmt_misc.c:723:7
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 file_open_name fs/open.c:986:30
+6 SyS_swapon mm/swapfile.c:3133:14 @[ mm/swapfile.c:3094:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 file_open_name fs/open.c:986:30
+6 SyS_acct kernel/acct.c:207:9 @[ kernel/acct.c:286:11 @[ kernel/acct.c:273:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 file_open_name fs/open.c:986:30
+6 SyS_swapoff mm/swapfile.c:2555:11 @[ mm/swapfile.c:2533:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_mountpoint fs/namei.c:2679:7
+4 filename_mountpoint fs/namei.c:2708:11
+5 user_path_mountpoint_at fs/namei.c:2734:9
+6 SyS_umount fs/namespace.c:1699:11 @[ fs/namespace.c:1683:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 lookup_bdev fs/block_dev.c:2070:10
+7 SyS_quotactl fs/quota/quota.c:810:9 @[ fs/quota/quota.c:871:7 @[ fs/quota/quota.c:836:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 do_mount fs/namespace.c:2364:8 @[ fs/namespace.c:2840:12 ]
+7 compat_SyS_mount fs/compat.c:195:11 @[ fs/compat.c:160:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 do_mount fs/namespace.c:2364:8 @[ fs/namespace.c:2840:12 ]
+7 SyS_mount fs/namespace.c:3058:8 @[ fs/namespace.c:3035:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+7 perf_compat_ioctl kernel/events/core.c:4774:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_inotify_add_watch ./include/linux/namei.h:57:9 @[ fs/notify/inotify/inotify_user.c:334:10 @[ fs/notify/inotify/inotify_user.c:709:8 @[ fs/notify/inotify/inotify_user.c:668:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_name_to_handle_at ./include/linux/namei.h:57:9 @[ fs/fhandle.c:108:8 @[ fs/fhandle.c:94:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 compat_SyS_statfs64 fs/statfs.c:346:10 @[ fs/statfs.c:338:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 compat_SyS_statfs fs/statfs.c:289:14 @[ fs/statfs.c:286:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 SyS_statfs64 fs/statfs.c:191:10 @[ fs/statfs.c:185:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 SyS_statfs fs/statfs.c:179:14 @[ fs/statfs.c:176:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 compat_SyS_futimesat fs/utimes.c:272:9 @[ fs/utimes.c:256:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 compat_SyS_utimensat fs/utimes.c:253:9 @[ fs/utimes.c:241:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 compat_SyS_utime fs/utimes.c:238:9 @[ fs/utimes.c:226:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 SyS_futimesat fs/utimes.c:212:9 @[ fs/utimes.c:187:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 SyS_utimensat fs/utimes.c:184:9 @[ fs/utimes.c:168:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 SyS_utime fs/utimes.c:35:9 @[ fs/utimes.c:24:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_removexattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:702:10 ]
+7 SyS_lremovexattr fs/xattr.c:727:9 @[ fs/xattr.c:724:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_removexattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:702:10 ]
+7 SyS_removexattr fs/xattr.c:721:9 @[ fs/xattr.c:718:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_llistxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:641:10 @[ fs/xattr.c:662:9 @[ fs/xattr.c:659:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_listxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:641:10 @[ fs/xattr.c:656:9 @[ fs/xattr.c:653:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 vfs_statx ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 ]
+7 compat_SyS_newfstatat ./include/linux/fs.h:3091:9 @[ fs/stat.c:646:10 @[ fs/stat.c:639:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 vfs_statx ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 ]
+7 SyS_statx fs/stat.c:573:10 @[ fs/stat.c:560:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 vfs_statx ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 ]
+7 SyS_newfstatat ./include/linux/fs.h:3091:9 @[ fs/stat.c:364:10 @[ fs/stat.c:358:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_stat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:250:10 @[ fs/stat.c:244:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_setxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:467:10 ]
+7 SyS_lsetxattr fs/xattr.c:494:9 @[ fs/xattr.c:490:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_setxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:467:10 ]
+7 SyS_setxattr fs/xattr.c:487:9 @[ fs/xattr.c:483:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_lgetxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:565:10 @[ fs/xattr.c:586:9 @[ fs/xattr.c:583:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_fchmodat ./include/linux/namei.h:57:9 @[ fs/open.c:563:10 @[ fs/open.c:557:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_getxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:565:10 @[ fs/xattr.c:580:9 @[ fs/xattr.c:577:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_chroot ./include/linux/namei.h:57:9 @[ fs/open.c:488:10 @[ fs/open.c:482:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_newlstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:350:10 @[ fs/stat.c:344:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_fchownat ./include/linux/namei.h:57:9 @[ fs/open.c:636:10 @[ fs/open.c:622:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_truncate ./include/linux/namei.h:57:9 @[ fs/open.c:141:10 @[ fs/open.c:155:9 @[ fs/open.c:153:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 compat_SyS_truncate ./include/linux/namei.h:57:9 @[ fs/open.c:141:10 @[ fs/open.c:161:9 @[ fs/open.c:159:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_faccessat ./include/linux/namei.h:57:9 @[ fs/open.c:384:8 @[ fs/open.c:353:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_chdir ./include/linux/namei.h:57:9 @[ fs/open.c:440:10 @[ fs/open.c:434:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_lstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:263:10 @[ fs/stat.c:257:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 compat_SyS_newstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:620:10 @[ fs/stat.c:614:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_newstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:337:14 @[ fs/stat.c:333:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 compat_SyS_newlstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:632:10 @[ fs/stat.c:626:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_pivot_root ./include/linux/namei.h:72:9 @[ fs/namespace.c:3130:10 @[ fs/namespace.c:3119:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_readlinkat fs/stat.c:394:10 @[ fs/stat.c:382:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 vfs_path_lookup fs/namei.c:2444:9
+6 mount_subtree fs/namespace.c:3016:8
+7 nfs_follow_remote_path fs/nfs/nfs4super.c:231:11
+8 nfs4_try_mount fs/nfs/nfs4super.c:254:8
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 vfs_path_lookup fs/namei.c:2444:9
+6 mntns_install fs/namespace.c:3484:8
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 copy_process ./include/linux/audit.h:248:3 @[ kernel/fork.c:1965:2 ]
+4 _do_fork kernel/fork.c:2044:6
+5 SyS_clone kernel/fork.c:2154:9 @[ kernel/fork.c:2148:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 copy_process ./include/linux/audit.h:248:3 @[ kernel/fork.c:1965:2 ]
+4 _do_fork kernel/fork.c:2044:6
+5 sys_vfork kernel/fork.c:2125:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 copy_process ./include/linux/audit.h:248:3 @[ kernel/fork.c:1965:2 ]
+4 _do_fork kernel/fork.c:2044:6
+5 sys_fork kernel/fork.c:2114:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 SyS_bdflush fs/buffer.c:3339:3 @[ fs/buffer.c:3323:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 reboot_pid_ns kernel/pid_namespace.c:350:2
+5 SyS_reboot kernel/reboot.c:331:8 @[ kernel/reboot.c:307:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 do_group_exit kernel/exit.c:968:2
+5 SYSC_exit_group kernel/exit.c:979:2
+6 SyS_exit_group kernel/exit.c:977:1
+[32m-------------[0m
+[35mUse:kernel/audit.c:2248:32[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2248:32
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 SYSC_exit kernel/exit.c:937:2
+5 SyS_exit kernel/exit.c:935:1
+[32m-------------[0m
+[32mGood: 2 [31mBad: 111 [33mIgnored: 172[0m
+[33mInspect Use of Function:proc_comm_connector[0m
+[33mInspect Use of Function:walk_process_tree[0m
+[33mInspect Use of Function:prctl_set_seccomp[0m
+[33mInspect Use of Function:set_dumpable[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 install_exec_creds fs/exec.c:1436:2
+2 load_elf_binary.14623 fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 install_exec_creds fs/exec.c:1436:2
+2 load_elf_binary fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setgroups kernel/groups.c:148:9 @[ kernel/groups.c:210:11 @[ kernel/groups.c:190:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 set_current_groups kernel/groups.c:148:9
+2 SyS_setgroups16 kernel/uid16.c:196:11 @[ kernel/uid16.c:176:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_capset kernel/capability.c:278:9 @[ kernel/capability.c:224:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 join_session_keyring security/keys/process_keys.c:789:9
+2 lookup_user_key security/keys/process_keys.c:606:10
+3 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 join_session_keyring security/keys/process_keys.c:789:9
+2 lookup_user_key security/keys/process_keys.c:606:10
+3 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 join_session_keyring security/keys/process_keys.c:789:9
+2 lookup_user_key security/keys/process_keys.c:606:10
+3 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+4 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 join_session_keyring security/keys/process_keys.c:789:9
+2 lookup_user_key security/keys/process_keys.c:606:10
+3 keyctl_update_key security/keys/keyctl.c:342:12
+4 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setresgid kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setgid kernel/sys.c:425:9 @[ kernel/sys.c:400:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setregid kernel/sys.c:388:9 @[ kernel/sys.c:343:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setuid kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setresuid kernel/sys.c:652:9 @[ kernel/sys.c:594:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setfsgid kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setreuid kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ]
+[32m-------------[0m
+[35mUse:kernel/cred.c:449:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 commit_creds kernel/cred.c:449:4
+1 SyS_setfsuid kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 64 [33mIgnored: 13[0m
+[33mInspect Use of Function:get_mm_exe_file[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 SyS_linkat fs/namei.c:1014:2 @[ fs/namei.c:4275:10 @[ fs/namei.c:4237:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_file_open_root fs/namei.c:3586:10
+5 file_open_root fs/open.c:1020:9
+6 do_handle_open fs/fhandle.c:233:9
+7 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_file_open_root fs/namei.c:3586:10
+5 file_open_root fs/open.c:1020:9
+6 do_handle_open fs/fhandle.c:233:9
+7 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 SyS_uselib fs/exec.c:136:9 @[ fs/exec.c:120:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_elf_binary.14623 fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_elf_binary fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_script fs/binfmt_script.c:101:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_misc_binary fs/binfmt_misc.c:212:17
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 bm_register_write fs/binfmt_misc.c:723:7
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 file_open_name fs/open.c:986:30
+6 SyS_swapon mm/swapfile.c:3133:14 @[ mm/swapfile.c:3094:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 file_open_name fs/open.c:986:30
+6 SyS_acct kernel/acct.c:207:9 @[ kernel/acct.c:286:11 @[ kernel/acct.c:273:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 file_open_name fs/open.c:986:30
+6 SyS_swapoff mm/swapfile.c:2555:11 @[ mm/swapfile.c:2533:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_mountpoint fs/namei.c:2679:7
+4 filename_mountpoint fs/namei.c:2708:11
+5 user_path_mountpoint_at fs/namei.c:2734:9
+6 SyS_umount fs/namespace.c:1699:11 @[ fs/namespace.c:1683:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 lookup_bdev fs/block_dev.c:2070:10
+7 SyS_quotactl fs/quota/quota.c:810:9 @[ fs/quota/quota.c:871:7 @[ fs/quota/quota.c:836:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 do_mount fs/namespace.c:2364:8 @[ fs/namespace.c:2840:12 ]
+7 compat_SyS_mount fs/compat.c:195:11 @[ fs/compat.c:160:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 do_mount fs/namespace.c:2364:8 @[ fs/namespace.c:2840:12 ]
+7 SyS_mount fs/namespace.c:3058:8 @[ fs/namespace.c:3035:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+7 perf_compat_ioctl kernel/events/core.c:4774:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_inotify_add_watch ./include/linux/namei.h:57:9 @[ fs/notify/inotify/inotify_user.c:334:10 @[ fs/notify/inotify/inotify_user.c:709:8 @[ fs/notify/inotify/inotify_user.c:668:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_name_to_handle_at ./include/linux/namei.h:57:9 @[ fs/fhandle.c:108:8 @[ fs/fhandle.c:94:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 compat_SyS_statfs64 fs/statfs.c:346:10 @[ fs/statfs.c:338:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 compat_SyS_statfs fs/statfs.c:289:14 @[ fs/statfs.c:286:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 SyS_statfs64 fs/statfs.c:191:10 @[ fs/statfs.c:185:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 user_statfs ./include/linux/namei.h:57:9 @[ fs/statfs.c:87:10 ]
+7 SyS_statfs fs/statfs.c:179:14 @[ fs/statfs.c:176:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 compat_SyS_futimesat fs/utimes.c:272:9 @[ fs/utimes.c:256:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 compat_SyS_utimensat fs/utimes.c:253:9 @[ fs/utimes.c:241:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 compat_SyS_utime fs/utimes.c:238:9 @[ fs/utimes.c:226:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 SyS_futimesat fs/utimes.c:212:9 @[ fs/utimes.c:187:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 SyS_utimensat fs/utimes.c:184:9 @[ fs/utimes.c:168:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 do_utimes ./include/linux/namei.h:57:9 @[ fs/utimes.c:152:11 ]
+7 SyS_utime fs/utimes.c:35:9 @[ fs/utimes.c:24:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_removexattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:702:10 ]
+7 SyS_lremovexattr fs/xattr.c:727:9 @[ fs/xattr.c:724:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_removexattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:702:10 ]
+7 SyS_removexattr fs/xattr.c:721:9 @[ fs/xattr.c:718:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_llistxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:641:10 @[ fs/xattr.c:662:9 @[ fs/xattr.c:659:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_listxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:641:10 @[ fs/xattr.c:656:9 @[ fs/xattr.c:653:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 vfs_statx ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 ]
+7 compat_SyS_newfstatat ./include/linux/fs.h:3091:9 @[ fs/stat.c:646:10 @[ fs/stat.c:639:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 vfs_statx ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 ]
+7 SyS_statx fs/stat.c:573:10 @[ fs/stat.c:560:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 vfs_statx ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 ]
+7 SyS_newfstatat ./include/linux/fs.h:3091:9 @[ fs/stat.c:364:10 @[ fs/stat.c:358:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_stat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:250:10 @[ fs/stat.c:244:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_setxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:467:10 ]
+7 SyS_lsetxattr fs/xattr.c:494:9 @[ fs/xattr.c:490:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 path_setxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:467:10 ]
+7 SyS_setxattr fs/xattr.c:487:9 @[ fs/xattr.c:483:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_lgetxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:565:10 @[ fs/xattr.c:586:9 @[ fs/xattr.c:583:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_fchmodat ./include/linux/namei.h:57:9 @[ fs/open.c:563:10 @[ fs/open.c:557:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_getxattr ./include/linux/namei.h:57:9 @[ fs/xattr.c:565:10 @[ fs/xattr.c:580:9 @[ fs/xattr.c:577:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_chroot ./include/linux/namei.h:57:9 @[ fs/open.c:488:10 @[ fs/open.c:482:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_newlstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:350:10 @[ fs/stat.c:344:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_fchownat ./include/linux/namei.h:57:9 @[ fs/open.c:636:10 @[ fs/open.c:622:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_truncate ./include/linux/namei.h:57:9 @[ fs/open.c:141:10 @[ fs/open.c:155:9 @[ fs/open.c:153:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 compat_SyS_truncate ./include/linux/namei.h:57:9 @[ fs/open.c:141:10 @[ fs/open.c:161:9 @[ fs/open.c:159:1 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_faccessat ./include/linux/namei.h:57:9 @[ fs/open.c:384:8 @[ fs/open.c:353:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_chdir ./include/linux/namei.h:57:9 @[ fs/open.c:440:10 @[ fs/open.c:434:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_lstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:263:10 @[ fs/stat.c:257:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 compat_SyS_newstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:620:10 @[ fs/stat.c:614:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_newstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:337:14 @[ fs/stat.c:333:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 compat_SyS_newlstat ./include/linux/namei.h:57:9 @[ fs/stat.c:185:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:632:10 @[ fs/stat.c:626:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_pivot_root ./include/linux/namei.h:72:9 @[ fs/namespace.c:3130:10 @[ fs/namespace.c:3119:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 user_path_at_empty fs/namei.c:2590:9
+6 SyS_readlinkat fs/stat.c:394:10 @[ fs/stat.c:382:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 vfs_path_lookup fs/namei.c:2444:9
+6 mount_subtree fs/namespace.c:3016:8
+7 nfs_follow_remote_path fs/nfs/nfs4super.c:231:11
+8 nfs4_try_mount fs/nfs/nfs4super.c:254:8
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_link_denied kernel/audit.c:2274:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 vfs_path_lookup fs/namei.c:2444:9
+6 mntns_install fs/namespace.c:3484:8
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 copy_process ./include/linux/audit.h:248:3 @[ kernel/fork.c:1965:2 ]
+4 _do_fork kernel/fork.c:2044:6
+5 SyS_clone kernel/fork.c:2154:9 @[ kernel/fork.c:2148:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 copy_process ./include/linux/audit.h:248:3 @[ kernel/fork.c:1965:2 ]
+4 _do_fork kernel/fork.c:2044:6
+5 sys_vfork kernel/fork.c:2125:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 copy_process ./include/linux/audit.h:248:3 @[ kernel/fork.c:1965:2 ]
+4 _do_fork kernel/fork.c:2044:6
+5 sys_fork kernel/fork.c:2114:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 SyS_bdflush fs/buffer.c:3339:3 @[ fs/buffer.c:3323:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 reboot_pid_ns kernel/pid_namespace.c:350:2
+5 SyS_reboot kernel/reboot.c:331:8 @[ kernel/reboot.c:307:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 do_group_exit kernel/exit.c:968:2
+5 SYSC_exit_group kernel/exit.c:979:2
+6 SyS_exit_group kernel/exit.c:977:1
+[32m-------------[0m
+[35mUse:kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_info kernel/audit.c:2189:13 @[ kernel/audit.c:2249:2 ]
+1 audit_log_exit kernel/auditsc.c:1365:2
+2 __audit_free kernel/auditsc.c:1484:3
+3 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+4 SYSC_exit kernel/exit.c:937:2
+5 SyS_exit kernel/exit.c:935:1
+[32m-------------[0m
+[32mGood: 1 [31mBad: 95 [33mIgnored: 151[0m
+[33mInspect Use of Function:down_write_killable[0m
+[35mUse:ipc/shm.c:1390:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_shmat ipc/shm.c:1390:6
+1 compat_SyS_ipc ipc/syscall.c:171:9 @[ ipc/syscall.c:115:1 ]
+[32m-------------[0m
+[35mUse:ipc/shm.c:1390:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_shmat ipc/shm.c:1390:6
+1 compat_SyS_shmat ipc/shm.c:1457:8 @[ ipc/shm.c:1452:1 ]
+[32m-------------[0m
+[35mUse:ipc/shm.c:1390:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_shmat ipc/shm.c:1390:6
+1 SyS_shmat ipc/shm.c:1439:8 @[ ipc/shm.c:1434:1 ]
+[32m-------------[0m
+[35mUse:ipc/shm.c:1484:6 @[ ipc/shm.c:1469:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_shmdt ipc/shm.c:1484:6 @[ ipc/shm.c:1469:1 ]
+[32m-------------[0m
+[35mUse:fs/readdir.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_dir fs/readdir.c:43:9
+1 compat_SyS_getdents fs/readdir.c:478:10 @[ fs/readdir.c:459:1 ]
+[32m-------------[0m
+[35mUse:fs/readdir.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_dir fs/readdir.c:43:9
+1 compat_SyS_old_readdir fs/readdir.c:390:10 @[ fs/readdir.c:377:1 ]
+[32m-------------[0m
+[35mUse:fs/readdir.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_dir fs/readdir.c:43:9
+1 SyS_getdents64 fs/readdir.c:314:10 @[ fs/readdir.c:295:1 ]
+[32m-------------[0m
+[35mUse:fs/readdir.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_dir fs/readdir.c:43:9
+1 SyS_getdents fs/readdir.c:231:10 @[ fs/readdir.c:212:1 ]
+[32m-------------[0m
+[35mUse:fs/readdir.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_dir fs/readdir.c:43:9
+1 SyS_old_readdir fs/readdir.c:137:10 @[ fs/readdir.c:124:1 ]
+[32m-------------[0m
+[35mUse:fs/readdir.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_dir fs/readdir.c:43:9
+1 exportfs_get_name fs/exportfs/expfs.c:324:11 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/readdir.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_dir fs/readdir.c:43:9
+1 exportfs_get_name fs/exportfs/expfs.c:324:11 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[35mUse:mm/madvise.c:827:7 @[ mm/madvise.c:791:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_madvise mm/madvise.c:827:7 @[ mm/madvise.c:791:1 ]
+[32m-------------[0m
+[35mUse:mm/mremap.c:556:6 @[ mm/mremap.c:523:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_mremap mm/mremap.c:556:6 @[ mm/mremap.c:523:1 ]
+[32m-------------[0m
+[35mUse:mm/mprotect.c:420:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mprotect_pkey mm/mprotect.c:420:6
+1 SyS_pkey_mprotect mm/mprotect.c:525:9 @[ mm/mprotect.c:522:1 ]
+[32m-------------[0m
+[35mUse:mm/mprotect.c:420:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mprotect_pkey mm/mprotect.c:420:6
+1 SyS_mprotect mm/mprotect.c:517:9 @[ mm/mprotect.c:514:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 elf_map.14634 fs/binfmt_elf.c:376:4
+2 load_elf_binary.14623 fs/binfmt_elf.c:582:15 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 elf_map fs/binfmt_elf.c:376:4
+2 load_elf_binary fs/binfmt_elf.c:582:15 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 ioctx_alloc fs/aio.c:808:3
+2 compat_SyS_io_setup fs/aio.c:1392:10 @[ fs/aio.c:1375:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 ioctx_alloc fs/aio.c:808:3
+2 SyS_io_setup fs/aio.c:1361:10 @[ fs/aio.c:1344:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 SyS_io_destroy fs/aio.c:1427:9 @[ fs/aio.c:1413:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 copy_process kernel/fork.c:944:3 @[ kernel/fork.c:1950:3 ]
+5 _do_fork kernel/fork.c:2044:6
+6 SyS_clone kernel/fork.c:2154:9 @[ kernel/fork.c:2148:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 copy_process kernel/fork.c:944:3 @[ kernel/fork.c:1950:3 ]
+5 _do_fork kernel/fork.c:2044:6
+6 sys_vfork kernel/fork.c:2125:9
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 copy_process kernel/fork.c:944:3 @[ kernel/fork.c:1950:3 ]
+5 _do_fork kernel/fork.c:2044:6
+6 sys_fork kernel/fork.c:2114:9
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 environ_open fs/proc/base.c:769:8 @[ fs/proc/base.c:785:25 @[ fs/proc/base.c:905:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 auxv_open fs/proc/base.c:769:8 @[ fs/proc/base.c:785:25 @[ fs/proc/base.c:980:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 mem_open fs/proc/base.c:769:8 @[ fs/proc/base.c:785:25 @[ fs/proc/base.c:796:12 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 process_vm_rw_core mm/process_vm_access.c:210:7
+6 compat_process_vm_rw mm/process_vm_access.c:347:7
+7 compat_SyS_process_vm_writev mm/process_vm_access.c:374:9 @[ mm/process_vm_access.c:367:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 process_vm_rw_core mm/process_vm_access.c:210:7
+6 compat_process_vm_rw mm/process_vm_access.c:347:7
+7 compat_SyS_process_vm_readv mm/process_vm_access.c:363:9 @[ mm/process_vm_access.c:356:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 process_vm_rw_core mm/process_vm_access.c:210:7
+6 process_vm_rw mm/process_vm_access.c:290:7
+7 SyS_process_vm_writev mm/process_vm_access.c:312:9 @[ mm/process_vm_access.c:307:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 process_vm_rw_core mm/process_vm_access.c:210:7
+6 process_vm_rw mm/process_vm_access.c:290:7
+7 SyS_process_vm_readv mm/process_vm_access.c:304:9 @[ mm/process_vm_access.c:300:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 tid_maps_open fs/proc/task_mmu.c:234:13 @[ fs/proc/task_mmu.c:260:9 @[ fs/proc/task_mmu.c:398:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 tid_numa_maps_open fs/proc/task_mmu.c:234:13 @[ fs/proc/task_mmu.c:1844:9 @[ fs/proc/task_mmu.c:1855:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 pid_maps_open fs/proc/task_mmu.c:234:13 @[ fs/proc/task_mmu.c:260:9 @[ fs/proc/task_mmu.c:393:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 pid_numa_maps_open fs/proc/task_mmu.c:234:13 @[ fs/proc/task_mmu.c:1844:9 @[ fs/proc/task_mmu.c:1850:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 pid_smaps_open fs/proc/task_mmu.c:234:13 @[ fs/proc/task_mmu.c:260:9 @[ fs/proc/task_mmu.c:886:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 pid_smaps_rollup_open fs/proc/task_mmu.c:234:13 @[ fs/proc/task_mmu.c:260:9 @[ fs/proc/task_mmu.c:893:12 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 tid_smaps_open fs/proc/task_mmu.c:234:13 @[ fs/proc/task_mmu.c:260:9 @[ fs/proc/task_mmu.c:910:9 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mm_access kernel/fork.c:944:3 @[ kernel/fork.c:1075:3 ]
+5 proc_mem_open fs/proc/base.c:769:8
+6 pagemap_open fs/proc/task_mmu.c:1547:7
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 do_execveat_common fs/exec.c:1822:3
+6 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 do_execveat_common fs/exec.c:1822:3
+6 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 do_execveat_common fs/exec.c:1822:3
+6 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 do_execveat_common fs/exec.c:1822:3
+6 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 ptrace_access_vm kernel/ptrace.c:57:2
+6 compat_ptrace_request kernel/ptrace.c:1211:9
+7 compat_arch_ptrace arch/x86/kernel/ptrace.c:1141:10 @[ arch/x86/kernel/ptrace.c:1245:9 ]
+8 compat_SyS_ptrace kernel/ptrace.c:1301:9 @[ kernel/ptrace.c:1270:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 ptrace_access_vm kernel/ptrace.c:57:2
+6 ptrace_request kernel/ptrace.c:1183:11 @[ kernel/ptrace.c:899:10 ]
+7 arch_ptrace arch/x86/kernel/ptrace.c:877:9
+8 SyS_ptrace kernel/ptrace.c:1156:8 @[ kernel/ptrace.c:1121:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 proc_map_files_readdir fs/proc/base.c:2165:4
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 environ_read fs/proc/base.c:964:2
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 proc_coredump_filter_read fs/proc/base.c:2617:3
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 getrusage kernel/sys.c:1728:4
+6 compat_SyS_getrusage kernel/sys.c:1755:2 @[ kernel/sys.c:1747:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 getrusage kernel/sys.c:1728:4
+6 SyS_getrusage kernel/sys.c:1742:2 @[ kernel/sys.c:1734:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 getrusage kernel/sys.c:1728:4
+6 wait_consider_task kernel/exit.c:1310:3 @[ kernel/exit.c:1434:9 ]
+7 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+8 compat_SyS_waitid kernel/exit.c:1590:8 @[ kernel/exit.c:1722:13 @[ kernel/exit.c:1715:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 getrusage kernel/sys.c:1728:4
+6 wait_consider_task kernel/exit.c:1310:3 @[ kernel/exit.c:1434:9 ]
+7 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+8 kernel_wait4 kernel/exit.c:1665:8
+9 compat_SyS_wait4 kernel/exit.c:1707:13 @[ kernel/exit.c:1700:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 getrusage kernel/sys.c:1728:4
+6 wait_consider_task kernel/exit.c:1310:3 @[ kernel/exit.c:1434:9 ]
+7 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+8 kernel_wait4 kernel/exit.c:1665:8
+9 SyS_wait4 kernel/exit.c:1677:13 @[ kernel/exit.c:1673:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 getrusage kernel/sys.c:1728:4
+6 wait_consider_task kernel/exit.c:1310:3 @[ kernel/exit.c:1434:9 ]
+7 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+8 SyS_waitid kernel/exit.c:1590:8 @[ kernel/exit.c:1601:13 @[ kernel/exit.c:1596:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 access_process_vm mm/memory.c:4480:2
+6 get_cmdline mm/util.c:713:8
+7 audit_log_exit kernel/auditsc.c:1315:9 @[ kernel/auditsc.c:1454:2 ]
+8 __audit_free kernel/auditsc.c:1484:3
+9 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+10 SyS_bdflush fs/buffer.c:3339:3 @[ fs/buffer.c:3323:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 access_process_vm mm/memory.c:4480:2
+6 get_cmdline mm/util.c:713:8
+7 audit_log_exit kernel/auditsc.c:1315:9 @[ kernel/auditsc.c:1454:2 ]
+8 __audit_free kernel/auditsc.c:1484:3
+9 do_exit ./include/linux/audit.h:248:3 @[ kernel/exit.c:847:2 ]
+10 SyS_reboot kernel/reboot.c:362:3 @[ kernel/reboot.c:307:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 perf_event_addr_filters_apply kernel/events/core.c:8283:2
+6 perf_ioctl kernel/events/core.c:4569:3 @[ kernel/events/core.c:8515:2 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+7 perf_compat_ioctl kernel/events/core.c:4774:9
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 perf_event_addr_filters_apply kernel/events/core.c:8283:2
+6 perf_ioctl kernel/events/core.c:4569:3 @[ kernel/events/core.c:8515:2 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 try_to_unuse mm/swapfile.c:2251:2
+6 SyS_swapoff mm/swapfile.c:2608:8 @[ mm/swapfile.c:2533:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 proc_coredump_filter_write fs/proc/base.c:2659:2
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 proc_pid_cmdline_read fs/proc/base.c:369:2
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 SyS_migrate_pages mm/mempolicy.c:1441:2 @[ mm/mempolicy.c:1365:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 SyS_move_pages mm/migrate.c:1803:2 @[ mm/migrate.c:1749:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 clear_refs_write fs/proc/task_mmu.c:1167:3
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 pagemap_read fs/proc/task_mmu.c:1538:2
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 mem_rw fs/proc/base.c:853:2
+6 mem_read fs/proc/base.c:862:9
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_munmap mm/mmap.c:2742:6
+1 kill_ioctx fs/aio.c:854:3
+2 exit_aio fs/aio.c:898:3
+3 __mmput kernel/fork.c:920:2
+4 mmput kernel/fork.c:944:3
+5 mem_rw fs/proc/base.c:853:2
+6 mem_write fs/proc/base.c:868:9
+[32m-------------[0m
+[35mUse:mm/mmap.c:2971:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_brk_flags mm/mmap.c:2971:6
+1 load_elf_binary.14623 fs/binfmt_elf.c:649:11 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2971:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_brk_flags mm/mmap.c:2971:6
+1 load_elf_binary fs/binfmt_elf.c:649:11 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2971:6 @[ mm/mmap.c:2986:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_brk mm/mmap.c:2971:6 @[ mm/mmap.c:2986:9 ]
+1 load_elf_library.14624 fs/binfmt_elf.c:1253:11
+[32m-------------[0m
+[35mUse:mm/mmap.c:2971:6 @[ mm/mmap.c:2986:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_brk mm/mmap.c:2971:6 @[ mm/mmap.c:2986:9 ]
+1 load_elf_library fs/binfmt_elf.c:1253:11
+[32m-------------[0m
+[35mUse:mm/mmap.c:192:6 @[ mm/mmap.c:182:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_brk mm/mmap.c:192:6 @[ mm/mmap.c:182:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2787:6 @[ mm/mmap.c:2762:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_remap_file_pages mm/mmap.c:2787:6 @[ mm/mmap.c:2762:1 ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2742:6 @[ mm/mmap.c:2755:9 @[ mm/mmap.c:2752:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_munmap mm/mmap.c:2742:6 @[ mm/mmap.c:2755:9 @[ mm/mmap.c:2752:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mlock.c:680:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mlock mm/mlock.c:680:6
+1 SyS_mlock2 mm/mlock.c:724:9 @[ mm/mlock.c:714:1 ]
+[32m-------------[0m
+[35mUse:mm/mlock.c:680:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mlock mm/mlock.c:680:6
+1 SyS_mlock mm/mlock.c:711:9 @[ mm/mlock.c:709:1 ]
+[32m-------------[0m
+[35mUse:mm/mlock.c:734:6 @[ mm/mlock.c:727:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_munlock mm/mlock.c:734:6 @[ mm/mlock.c:727:1 ]
+[32m-------------[0m
+[35mUse:mm/mlock.c:820:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sys_munlockall mm/mlock.c:820:6
+[32m-------------[0m
+[35mUse:mm/mlock.c:802:6 @[ mm/mlock.c:788:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_mlockall mm/mlock.c:802:6 @[ mm/mlock.c:788:1 ]
+[32m-------------[0m
+[35mUse:fs/exec.c:734:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setup_arg_pages fs/exec.c:734:6
+1 load_elf_binary.14623 fs/binfmt_elf.c:882:11
+[32m-------------[0m
+[35mUse:fs/exec.c:734:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setup_arg_pages fs/exec.c:734:6
+1 load_elf_binary fs/binfmt_elf.c:882:11
+[32m-------------[0m
+[35mUse:fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+1 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+1 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+1 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:297:6 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+1 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/fork.c:608:6 @[ kernel/fork.c:1196:8 @[ kernel/fork.c:1250:7 @[ kernel/fork.c:1752:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 copy_process kernel/fork.c:608:6 @[ kernel/fork.c:1196:8 @[ kernel/fork.c:1250:7 @[ kernel/fork.c:1752:11 ] ] ]
+1 _do_fork kernel/fork.c:2044:6
+2 SyS_clone kernel/fork.c:2154:9 @[ kernel/fork.c:2148:1 ]
+[32m-------------[0m
+[35mUse:kernel/fork.c:608:6 @[ kernel/fork.c:1196:8 @[ kernel/fork.c:1250:7 @[ kernel/fork.c:1752:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 copy_process kernel/fork.c:608:6 @[ kernel/fork.c:1196:8 @[ kernel/fork.c:1250:7 @[ kernel/fork.c:1752:11 ] ] ]
+1 _do_fork kernel/fork.c:2044:6
+2 sys_vfork kernel/fork.c:2125:9
+[32m-------------[0m
+[35mUse:kernel/fork.c:608:6 @[ kernel/fork.c:1196:8 @[ kernel/fork.c:1250:7 @[ kernel/fork.c:1752:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 copy_process kernel/fork.c:608:6 @[ kernel/fork.c:1196:8 @[ kernel/fork.c:1250:7 @[ kernel/fork.c:1752:11 ] ] ]
+1 _do_fork kernel/fork.c:2044:6
+2 sys_fork kernel/fork.c:2114:9
+[32m-------------[0m
+[35mUse:fs/aio.c:514:6 @[ fs/aio.c:769:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ioctx_alloc fs/aio.c:514:6 @[ fs/aio.c:769:8 ]
+1 compat_SyS_io_setup fs/aio.c:1392:10 @[ fs/aio.c:1375:1 ]
+[32m-------------[0m
+[35mUse:fs/aio.c:514:6 @[ fs/aio.c:769:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ioctx_alloc fs/aio.c:514:6 @[ fs/aio.c:769:8 ]
+1 SyS_io_setup fs/aio.c:1361:10 @[ fs/aio.c:1344:1 ]
+[32m-------------[0m
+[35mUse:arch/x86/kernel/ldt.c:398:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 write_ldt arch/x86/kernel/ldt.c:398:6
+1 SyS_modify_ldt arch/x86/kernel/ldt.c:461:9 @[ arch/x86/kernel/ldt.c:445:1 ]
+[32m-------------[0m
+[35mUse:arch/x86/entry/vdso/vma.c:159:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 map_vdso arch/x86/entry/vdso/vma.c:159:6
+1 compat_arch_setup_additional_pages arch/x86/entry/vdso/vma.c:290:9 @[ arch/x86/entry/vdso/vma.c:315:9 ]
+2 load_elf_binary.14623 fs/binfmt_elf.c:1111:11
+[32m-------------[0m
+[35mUse:arch/x86/entry/vdso/vma.c:159:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 map_vdso arch/x86/entry/vdso/vma.c:159:6
+1 arch_setup_additional_pages arch/x86/entry/vdso/vma.c:255:9 @[ arch/x86/entry/vdso/vma.c:300:9 ]
+2 load_elf_binary fs/binfmt_elf.c:1111:11
+[32m-------------[0m
+[35mUse:fs/proc/task_mmu.c:1127:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 clear_refs_write fs/proc/task_mmu.c:1127:8
+[32m-------------[0m
+[35mUse:mm/util.c:331:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_mmap_pgoff mm/util.c:331:7
+1 vm_mmap mm/util.c:352:9
+2 elf_map.14634 fs/binfmt_elf.c:378:14
+3 load_elf_binary.14623 fs/binfmt_elf.c:582:15 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:mm/util.c:331:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_mmap_pgoff mm/util.c:331:7
+1 vm_mmap mm/util.c:352:9
+2 load_elf_library fs/binfmt_elf.c:1232:10
+[32m-------------[0m
+[35mUse:mm/util.c:331:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_mmap_pgoff mm/util.c:331:7
+1 vm_mmap mm/util.c:352:9
+2 elf_map fs/binfmt_elf.c:374:14
+3 load_elf_binary fs/binfmt_elf.c:582:15 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:mm/util.c:331:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_mmap_pgoff mm/util.c:331:7
+1 vm_mmap mm/util.c:352:9
+2 load_elf_library.14624 fs/binfmt_elf.c:1232:10
+[32m-------------[0m
+[35mUse:mm/util.c:331:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vm_mmap_pgoff mm/util.c:331:7
+1 SyS_mmap_pgoff mm/mmap.c:1533:11 @[ mm/mmap.c:1491:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 104 [33mIgnored: 105[0m
+[33mInspect Use of Function:set_tsc_mode[0m
+[33mInspect Use of Function:perf_event_task_enable[0m
+[33mInspect Use of Function:get_tsc_mode[0m
+[33mInspect Use of Function:__set_task_comm[0m
+[35mUse:./include/linux/sched.h:1492:2 @[ fs/proc/base.c:1548:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 comm_write ./include/linux/sched.h:1492:2 @[ fs/proc/base.c:1548:3 ]
+[32m-------------[0m
+[35mUse:fs/exec.c:1366:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setup_new_exec fs/exec.c:1366:2
+1 load_elf_binary.14623 fs/binfmt_elf.c:877:2
+[32m-------------[0m
+[35mUse:fs/exec.c:1366:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setup_new_exec fs/exec.c:1366:2
+1 load_elf_binary fs/binfmt_elf.c:877:2
+[32m-------------[0m
+[32mGood: 1 [31mBad: 3 [33mIgnored: 3[0m
+[33mInspect Use of Function:perf_event_task_disable[0m
+STOP WATCH[0]: 33492.690000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    43491 : Functions greeted
+    113 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    14 : Good Path
+    377 : Bad Path
+    444 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    13 : Critical Functions
+    1 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    50 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    21 : Critical Functions used by non CallInst
+    453 : Critical Functions used by static assignment
+    409 : # of times indirect call site matched with critical functions
+    1160 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+Printing analysis 'capchk Pass (with getAnalysisUsage implemented)':
+Pass::print not implemented for pass: 'capchk'!

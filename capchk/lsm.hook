@@ -4,7 +4,6 @@ security_binder_set_context_mgr
 security_binder_transaction
 security_binder_transfer_binder
 security_binder_transfer_file
-security_bounded_transition
 security_bprm_check
 security_bprm_committed_creds
 security_bprm_committing_creds
@@ -14,13 +13,6 @@ security_capable_noaudit
 security_capget
 security_capset
 security_change_sid
-security_compute_av
-security_compute_av_user
-security_compute_xperms_decision
-security_context_str_to_sid
-security_context_to_sid
-security_context_to_sid_default
-security_context_to_sid_force
 security_cred_alloc_blank
 security_cred_free
 security_dentry_create_files_as
@@ -39,15 +31,6 @@ security_file_send_sigiotask
 security_file_set_fowner
 security_fs_use
 security_genfs_sid
-security_get_allow_unknown
-security_get_bools
-security_get_bool_value
-security_get_classes
-security_get_initial_sid_context
-security_get_permissions
-security_getprocattr
-security_get_reject_unknown
-security_get_user_sids
 security_ib_endport_sid
 security_ib_pkey_sid
 security_inet_conn_established
@@ -153,8 +136,6 @@ security_sem_associate
 security_sem_free
 security_sem_semctl
 security_sem_semop
-security_set_bools
-security_setprocattr
 security_settime64
 security_shm_alloc
 security_shm_associate
@@ -205,8 +186,6 @@ security_task_setrlimit
 security_task_setscheduler
 security_task_to_inode
 security_transfer_creds
-security_transition_sid
-security_transition_sid_user
 security_tun_dev_alloc_security
 security_tun_dev_attach
 security_tun_dev_attach_queue
@@ -215,6 +194,4 @@ security_tun_dev_free_security
 security_tun_dev_open
 security_unix_may_send
 security_unix_stream_connect
-security_validate_transition
-security_validate_transition_user
 security_vm_enough_memory_mm

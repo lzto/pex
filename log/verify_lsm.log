@@ -1,0 +1,17 @@
+* security_task_prctl
+
+change process name using /proc/self/comm bypass prctl lsm hook
+
+* security_kernel_read_file
+
+several places called kernel_read without check including binfmt shlib firmware etc...
+
+* security_file_mprotect
+
+called mprotect_fixup in binfmt_elf without check
+
+* security_file_open
+
+nfs open file without security check?
+
+

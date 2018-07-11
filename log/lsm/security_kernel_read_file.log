@@ -1,37 +1,37 @@
 [36m--- PROCESS FUNCTIONS ---[0m
 Pre-processing...
-Load skip function list, total:352
+Load skip function list, total:355
 Load skip var list, total:22
 Collect all functions and indirect callsites
-STOP WATCH[0]: 1136.281000 ms
+STOP WATCH[0]: 1144.658000 ms
 Process Gating Functions
 Load LSM hook list, total:1
-STOP WATCH[0]: 16.894000 ms
+STOP WATCH[0]: 21.343000 ms
 [48;5;021m[38;5;255m=LSM hook functions=[0m
 . security_kernel_read_file
 =o=
 Collect Checkpoints
-STOP WATCH[0]: 1256.669000 ms
+STOP WATCH[0]: 1260.771000 ms
 Identify interesting struct
-STOP WATCH[0]: 7.271000 ms
+STOP WATCH[0]: 7.375000 ms
 Collecting Initialization Closure.
 Finding Kernel Entry Point and all __initcall_
 [32mFound x86_64_start_kernel[0m
-STOP WATCH[1]: 92.789000 ms
-Initial Kernel Init Function Count:666
+STOP WATCH[1]: 105.451000 ms
+Initial Kernel Init Function Count:668
 Over Approximate Kernel Init Functions
-STOP WATCH[1]: 191.816000 ms
+STOP WATCH[1]: 191.943000 ms
 Refine Result
-refine pass 0 3759 left
-refine pass 1 3067 left
-refine pass 2 2874 left
-refine pass 3 2829 left
-refine pass 4 2815 left
-refine pass 5 2813 left
-refine pass 6 2811 left
- Refine result : count=2811
-STOP WATCH[1]: 47.113000 ms
-STOP WATCH[0]: 332.737000 ms
+refine pass 0 3112 left
+refine pass 1 2059 left
+refine pass 2 1769 left
+refine pass 3 1705 left
+refine pass 4 1676 left
+refine pass 5 1671 left
+refine pass 6 1669 left
+ Refine result : count=1669
+STOP WATCH[1]: 74.851000 ms
+STOP WATCH[0]: 373.219000 ms
 Collect all permission-checked variables and functions
 Add call<direct> kernel_read use @ fs/exec.c:925:11
  cause:[32mProcess Stack:[0m
@@ -132,28 +132,81 @@ Add call<direct> async_synchronize_full_domain use @ drivers/base/firmware_class
 [32m-------------[0m
 Resolve indirect call @ drivers/base/firmware_class.c:1365:2
 [31m[NO MATCH][0m
-STOP WATCH[1]: 3030.915000 ms
+STOP WATCH[1]: 3409.567000 ms
 Collected 4 critical functions
 Collected 4 critical variables
 Collected 3 critical type/fields
 [48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
-[32mfw_cache_domain[0m
 [32mloading_timeout[0m
+    security_kernel_read_file @ fs/exec.c:898:8
+[32mfw_cache_domain[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [32mnames_cachep[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [32mfw_lock[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
 [32mkernel_read_file_from_path[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [32masync_synchronize_full_domain[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [32mkernel_read[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [32msecurity_kernel_post_read_file[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
 [32mstruct.firmware_buf:0,[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 [32mstruct.load_info:0,[0m
+    security_kernel_read_file @ kernel/module.c:2876:8 @[ kernel/module.c:3839:8 @[ kernel/module.c:3826:1 ] ]
 [32mstruct.work_struct:2,1,[0m
+    security_kernel_read_file @ fs/exec.c:898:8
 Run Analysis
 Critical functions
+[33mInspect Use of Function:kernel_read_file_from_path[0m
 [33mInspect Use of Function:async_synchronize_full_domain[0m
+[33mInspect Use of Function:security_kernel_post_read_file[0m
 [33mInspect Use of Function:kernel_read[0m
+[35mUse:fs/ecryptfs/read_write.c:240:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_read_lower fs/ecryptfs/read_write.c:240:9
+1 ecryptfs_read_metadata fs/ecryptfs/crypto.c:1423:7
+2 ecryptfs_setattr fs/ecryptfs/inode.c:904:8
+[32m-------------[0m
+[35mUse:fs/ecryptfs/read_write.c:240:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_read_lower fs/ecryptfs/read_write.c:240:9
+1 ecryptfs_read_metadata fs/ecryptfs/crypto.c:1423:7
+2 ecryptfs_setattr fs/ecryptfs/inode.c:904:8
+[32m-------------[0m
+[35mUse:fs/ecryptfs/read_write.c:240:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_read_lower fs/ecryptfs/read_write.c:240:9
+1 ecryptfs_read_metadata fs/ecryptfs/crypto.c:1423:7
+2 ecryptfs_setattr fs/ecryptfs/inode.c:904:8
+[32m-------------[0m
+[35mUse:fs/ecryptfs/read_write.c:240:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_read_lower fs/ecryptfs/read_write.c:240:9
+1 ecryptfs_read_and_validate_header_region fs/ecryptfs/crypto.c:1019:7
+2 ecryptfs_lookup fs/ecryptfs/inode.c:311:7 @[ fs/ecryptfs/inode.c:361:8 @[ fs/ecryptfs/inode.c:419:9 ] ]
+[32m-------------[0m
+[35mUse:fs/exec.c:1566:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 prepare_binprm fs/exec.c:1566:9
+1 load_script fs/binfmt_script.c:106:11
+[32m-------------[0m
+[35mUse:fs/exec.c:1566:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 prepare_binprm fs/exec.c:1566:9
+1 load_misc_binary fs/binfmt_misc.c:230:12
+[32m-------------[0m
 [35mUse:fs/exec.c:1566:9[0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
@@ -182,18 +235,82 @@ Critical functions
 1 do_execveat_common fs/exec.c:1783:11
 2 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
 [32m-------------[0m
-[32mGood: 1 [31mBad: 4 [33mIgnored: 33[0m
-[33mInspect Use of Function:kernel_read_file_from_path[0m
-[33mInspect Use of Function:security_kernel_post_read_file[0m
-STOP WATCH[0]: 6490.611000 ms
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:789:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:789:13
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:763:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:763:13
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:789:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14623 fs/binfmt_elf.c:789:13
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14623 fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:1218:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_library fs/binfmt_elf.c:1218:11
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:1218:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_library.14624 fs/binfmt_elf.c:1218:11
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:763:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14623 fs/binfmt_elf.c:763:13
+[32m-------------[0m
+[35mUse:fs/binfmt_misc.c:227:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_misc_binary fs/binfmt_misc.c:227:12
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14623 fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:1191:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_library fs/binfmt_elf.c:1191:11
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:1191:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_library.14624 fs/binfmt_elf.c:1191:11
+[32m-------------[0m
+[32mGood: 1 [31mBad: 23 [33mIgnored: 14[0m
+STOP WATCH[0]: 7014.949000 ms
 [36m--- DONE! ---[0m
 ------------STATISTICS---------------
-    43317 : Functions greeted
+    43491 : Functions greeted
     113 : External functions
     0 : Discovered Path
     0 : Matched Path
     15 : Good Path
-    4 : Bad Path
+    23 : Bad Path
+    75 : Ignored Path
     0 : Path Unable to Resolve
     0 : Resolved CallSite Using Function Pointer
     4 : Critical Functions
