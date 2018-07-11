@@ -281,5 +281,77 @@ tun device can do attach by calling into tun_set_queue instead of TUN_SET_IFF?
 
 --------------------------------------------------------------------------------
 
+Inspect Use of Function:aac_hba_send
+Use:drivers/scsi/aacraid/aachba.c:1658:9 @[ drivers/scsi/aacraid/aachba.c:3732:11 @[ drivers/scsi/aacraid/aachba.c:2756:12 ] ]
+=NO CHECK ON PATH=
+Call Stack:
+0 aac_scsi_cmd drivers/scsi/aacraid/aachba.c:1658:9 @[ drivers/scsi/aacraid/aachba.c:3732:11 @[ drivers/scsi/aacraid/aachba.c:2756:12 ] ]
+1 aac_queuecommand drivers/scsi/aacraid/linit.c:259:7
+-------------
+Use:drivers/scsi/aacraid/linit.c:733:12
+=NO CHECK ON PATH=
+Call Stack:
+0 aac_eh_abort drivers/scsi/aacraid/linit.c:733:12
+-------------
+Use:drivers/scsi/aacraid/linit.c:931:11
+=NO CHECK ON PATH=
+Call Stack:
+0 aac_eh_dev_reset drivers/scsi/aacraid/linit.c:931:11
+-------------
+Use:drivers/scsi/aacraid/linit.c:990:11
+=NO CHECK ON PATH=
+Call Stack:
+0 aac_eh_target_reset drivers/scsi/aacraid/linit.c:990:11
+-------------
+Good: 1 Bad: 4 Ignored: 0
+
+-------------------------------------------------------------------------------
+
+Inspect Use of Function:bond_setup
+Use:drivers/net/bonding/bond_main.c:4726:13
+=NO CHECK ON PATH=
+Call Stack:
+0 bond_create drivers/net/bonding/bond_main.c:4726:13
+1 bonding_store_bonds drivers/net/bonding/bond_sysfs.c:112:8
+-------------
+Good: 0 Bad: 1 Ignored: 1
+
+--------------------------------------------------------------------------------
+Inspect Use of Function:ppp_setup
+Use:drivers/net/ppp/ppp_generic.c:3018:8 @[ drivers/net/ppp/ppp_generic.c:866:9 @[ drivers/net/ppp/ppp_generic.c:602:9 ] ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ppp_ioctl drivers/net/ppp/ppp_generic.c:3018:8 @[ drivers/net/ppp/ppp_generic.c:866:9 @[ drivers/net/ppp/ppp_generic.c:602:9 ] ]
+-------------
+Good: 0 Bad: 1 Ignored: 3
+
+--------------------------------------------------------------------------------
+
+Inspect Use of Function:emancipate
+Use:drivers/net/wan/sbni.c:1220:4
+=NO CHECK ON PATH=
+Call Stack:
+0 sbni_close drivers/net/wan/sbni.c:1220:4
+-------------
+Use:drivers/net/wan/sbni.c:1217:3
+=NO CHECK ON PATH=
+Call Stack:
+0 sbni_close drivers/net/wan/sbni.c:1217:3
+-------------
+Good: 1 Bad: 2 Ignored: 0
+
+
+-------------------------------------------------------------------------------
+Inspect Use of Function:netdev_update_features
+lots..
+
+Inspect Use of Function:netdev_state_change
+lots...
+
+
+
+
+
+
 
 
