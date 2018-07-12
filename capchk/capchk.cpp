@@ -1104,12 +1104,15 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     //Direct CallSite
     for (auto *U: f->users())
     {
-        if (CallInst* _ci = dyn_cast<CallInst>(U))
+        CallInstSet cis;
+        get_callsite_inst(U, cis);
+        bool resolved_as_call = false;
+        for (auto* _ci: cis)
         {
             if (_ci->getCalledFunction()!=f)
             {
                 //this should match otherwise it is used as a call back function
-                //which is not our interest
+                //(function parameter)which is not our interest
                 //errs()<<"Function "<<f->getName()<< " used as a callback @ ";
                 //_ci->getDebugLoc().print(errs());
                 //errs()<<"\n";
@@ -1117,9 +1120,11 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
                 dump_as_ignored(callgraph);
                 continue;
             }
+            resolved_as_call = true;
             backward_slice_build_callgraph(callgraph,
                     dyn_cast<Instruction>(U), fvisited, good, bad, ignored);
-        }else
+        }
+        if (!resolved_as_call)
         {
             if (!isa<Instruction>(U))
             {
