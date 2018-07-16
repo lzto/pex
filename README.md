@@ -54,6 +54,7 @@ opt \
 * skipvar - list of variables don't care
 * lsmhook - list of LSM hook
 * critsym - list of symbols to be treated as critical and ignore others
+* kapi - list of kernel api
 * prt-good - print good path, default 0
 * prt-bad - print bad path, default 1
 * prt-ign - print ignored path, default 0

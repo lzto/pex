@@ -81,6 +81,10 @@ cl::opt<string> knob_crit_symbol("critsym",
         cl::desc("list of symbols to be treated as critical and ignore others"),
         cl::init("crit.sym"));
 
+cl::opt<string> knob_kernel_api("kapi",
+        cl::desc("kernel api function list"),
+        cl::init("kernel.api"));
+
 cl::opt<bool> knob_dump_good_path("prt-good",
         cl::desc("print good path - disabled by default"),
         cl::init(false));

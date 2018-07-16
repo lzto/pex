@@ -164,7 +164,7 @@ class capchk : public ModulePass
         };
         inline bool is_skip_function(const std::string& str)
         {
-            return skip_funcs->exists(str);
+            return skip_funcs->exists(str) || kernel_api->exists(str);
         };
 
         //used by forward_all_interesting_usage to collect critical resources
@@ -203,6 +203,7 @@ class capchk : public ModulePass
         SimpleSet* skip_vars;
         SimpleSet* skip_funcs;
         SimpleSet* crit_syms;
+        SimpleSet* kernel_api;
 
     public:
         static char ID;

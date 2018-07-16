@@ -941,7 +941,8 @@ void capchk::collect_crits(Module& module)
     {
         Function *func = dyn_cast<Function>(fi);
         if (func->isDeclaration() || func->isIntrinsic()
-                || gating->is_gating_function(func))
+                || gating->is_gating_function(func)
+                || is_skip_function(func->getName()))
             continue;
 
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
@@ -1021,6 +1022,10 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         return;
     }
     Function* f = I->getFunction();
+    if (is_skip_function(f->getName()))
+    {
+        return;
+    }
     if (fvisited.find(f)!=fvisited.end())
     {
         switch(fvisited[f])
@@ -1390,6 +1395,8 @@ void capchk::check_critical_function_usage(Module& module)
         if (!crit_syms->use_builtin())//means that not knob specified
             if (!crit_syms->exists(func->getName()))//means that symbol not matched
                 continue;
+        if (is_skip_function(func->getName()))
+            continue;
 
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Function:"
@@ -1747,7 +1754,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         {
             if (csf->isIntrinsic() || is_skip_function(csf->getName())
                     ||gating->is_gating_function(csf))
-                return;
+                continue;
 
             current_crit_funcs.insert(csf);
             if (knob_capchk_ccfv)
@@ -1937,6 +1944,9 @@ void capchk::forward_all_interesting_usage(Instruction* I, unsigned int depth,
 {
     Function *func = I->getFunction();
     DominatorTree dt(*func);
+
+    if (is_skip_function(func->getName()))
+        return;
 
     bool is_function_permission_checked = checked;
     /*
@@ -2190,6 +2200,11 @@ void capchk::process_cpgf(Module& module)
     if (!crit_syms->use_builtin())
         errs()<<"Load critical symbols, total:"<<crit_syms->size()<<"\n";
 
+    StringList builtin_kapi;
+    kernel_api = new SimpleSet(knob_kernel_api, builtin_kapi);
+    if (!kernel_api->use_builtin())
+        errs()<<"Load kernel api list, total:"<<kernel_api->size()<<"\n";
+
     STOP_WATCH_MON(WID_0, collect_pp(module));
 
     errs()<<"Process Gating Functions\n";
@@ -2249,6 +2264,8 @@ void capchk::process_cpgf(Module& module)
     dump_non_kinit();
     delete skip_funcs;
     delete skip_vars;
+    delete crit_syms;
+    delete kernel_api;
     delete gating;
 }
 
