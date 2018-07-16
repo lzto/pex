@@ -36,12 +36,21 @@ static struct timeval _sw_time_end[X];
     fflush(stderr);\
 }
 
+#define STOP_WATCH_MON(WATCH_ID, CODE) \
+    STOP_WATCH_START(WATCH_ID) \
+    do{CODE;}while(0); \
+    STOP_WATCH_STOP(WATCH_ID)\
+    STOP_WATCH_REPORT(WATCH_ID)
+
 #else
 
 #define STOP_WATCH(X)
 #define STOP_WATCH_START(Y)
 #define STOP_WATCH_STOP(Y)
 #define STOP_WATCH_REPORT(Z)
+#define STOP_WATCH_MON(WATCH_ID, CODE) \
+    do{CODE;}while(0);
+
 
 #endif
 

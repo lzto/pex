@@ -2190,10 +2190,7 @@ void capchk::process_cpgf(Module& module)
     if (!crit_syms->use_builtin())
         errs()<<"Load critical symbols, total:"<<crit_syms->size()<<"\n";
 
-    STOP_WATCH_START(WID_0);
-    collect_pp(module);
-    STOP_WATCH_STOP(WID_0);
-    STOP_WATCH_REPORT(WID_0);
+    STOP_WATCH_MON(WID_0, collect_pp(module));
 
     errs()<<"Process Gating Functions\n";
     STOP_WATCH_START(WID_0);
@@ -2208,35 +2205,22 @@ void capchk::process_cpgf(Module& module)
     dump_gating();
 
     errs()<<"Collect Checkpoints\n";
-    STOP_WATCH_START(WID_0);
-    collect_chkps(module);
-    STOP_WATCH_STOP(WID_0);
-    STOP_WATCH_REPORT(WID_0);
+    STOP_WATCH_MON(WID_0, collect_chkps(module));
 
     errs()<<"Identify interesting struct\n";
-    STOP_WATCH_START(WID_0);
-    identify_interesting_struct(module);
-    STOP_WATCH_STOP(WID_0);
-    STOP_WATCH_REPORT(WID_0);
+    STOP_WATCH_MON(WID_0, identify_interesting_struct(module));
 
     if (knob_capchk_cvf)
     {
         errs()<<"Resolving callee for indirect call.\n";
-        STOP_WATCH_START(WID_0);
-        cvf_resolve_all_indirect_callee(module);
-        STOP_WATCH_STOP(WID_0);
-        STOP_WATCH_REPORT(WID_0);
+        STOP_WATCH_MON(WID_0, cvf_resolve_all_indirect_callee(module));
     }
 
     errs()<<"Collecting Initialization Closure.\n";
-    STOP_WATCH_START(WID_0);
-    collect_kernel_init_functions(module);
-    STOP_WATCH_STOP(WID_0);
-    STOP_WATCH_REPORT(WID_0);
+    STOP_WATCH_MON(WID_0, collect_kernel_init_functions(module));
 
     errs()<<"Collect all permission-checked variables and functions\n";
-    STOP_WATCH_START(WID_0);
-    collect_crits(module);
+    STOP_WATCH_MON(WID_0, collect_crits(module));
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
     errs()<<"Collected "<<critical_variables.size()<<" critical variables\n";
     errs()<<"Collected "<<critical_typefields.size()<<" critical type/fields\n";
@@ -2250,26 +2234,17 @@ void capchk::process_cpgf(Module& module)
     if (knob_capchk_critical_var)
     {
         errs()<<"Critical variables\n";
-        STOP_WATCH_START(WID_0);
-        check_critical_variable_usage(module);
-        STOP_WATCH_STOP(WID_0);
-        STOP_WATCH_REPORT(WID_0);
+        STOP_WATCH_MON(WID_0, check_critical_variable_usage(module));
     }
     if (knob_capchk_critical_fun)
     {
         errs()<<"Critical functions\n";
-        STOP_WATCH_START(WID_0);
-        check_critical_function_usage(module);
-        STOP_WATCH_STOP(WID_0);
-        STOP_WATCH_REPORT(WID_0);
+        STOP_WATCH_MON(WID_0, check_critical_function_usage(module));
     }
     if (knob_capchk_critical_type_field)
     {
         errs()<<"Critical Type Field\n";
-        STOP_WATCH_START(WID_0);
-        check_critical_type_field_usage(module);
-        STOP_WATCH_STOP(WID_0);
-        STOP_WATCH_REPORT(WID_0);
+        STOP_WATCH_MON(WID_0, check_critical_type_field_usage(module));
     }
     dump_non_kinit();
     delete skip_funcs;
