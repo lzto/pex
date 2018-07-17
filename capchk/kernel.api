@@ -1066,3 +1066,4 @@ __percpu_init_rwsem
 locks_free_lock
 __init_rwsem
 cn_printf
+__kfree_skb
