@@ -81,7 +81,6 @@ security_key_alloc
 security_key_free
 security_key_getsecurity
 security_key_permission
-security_load_policy
 security_member_sid
 security_mls_enabled
 security_mmap_addr
