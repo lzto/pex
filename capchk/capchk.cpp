@@ -87,6 +87,9 @@ FunctionSet syscall_list;
 //all discovered interesting type(have struct member points to function with check)
 TypeSet discovered_interesting_type;
 
+//all module interface to corresponding module mapping
+ModuleInterface2Modules mi2m;
+
 #ifdef CUSTOM_STATISTICS
 void capchk::dump_statistics()
 {
@@ -761,11 +764,20 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
         fs.insert(callee);
         return fs;
     }
+
+    /*
+     * method 1 suffers from accuracy issue
+     * method 2 is too slow
+     * method 3 use the fact that most indirect call use function pointer loaded
+     *          from struct(mi2m, kernel interface)
+     */
+
+    if (!knob_capchk_cvf)
+    {
+#if 0
     //FUZZY MATCHING
     //method 1: signature based matching
     //only allow precise match when collecting protected functions
-    if (!knob_capchk_cvf)
-    {
         Value* cv = ci->getCalledValue();
         Type *ft = cv->getType()->getPointerElementType();
         if (!is_complex_type(ft))
@@ -775,6 +787,34 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
         FunctionSet *fl = t2fs[ft];
         for (auto* f: *fl)
             fs.insert(f);
+#else
+        //method 3, improved accuracy
+        Value* cv = ci->getCalledValue();
+        Type* cvt = get_load_from_type(cv);
+        std::list<int> indices;
+        if (!cvt || !cvt->isStructTy())
+        {
+            //not load+gep?
+            goto end;
+        }
+        GetElementPtrInst *gep = get_load_from_gep(cv);
+        get_gep_indicies(gep, indices);
+        if (indices.size()==0)//non-constant in indicies
+            goto end;
+        ModuleSet* ms;
+        if (mi2m.find(cvt)==mi2m.end())
+            goto end;
+        ms = mi2m[cvt];
+        for (auto m: *ms)
+        {
+            Value* v = get_value_from_composit(m, indices);
+            if (v==NULL)
+                continue;
+            Function *f = dyn_cast<Function>(v);
+            assert(f);
+            fs.insert(f);
+        }
+#endif
     }else
     {
     //method 2: use svf to figure out
@@ -785,6 +825,7 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
                 fs.insert(f);
         }
     }
+end:
     return fs;
 }
 
@@ -871,6 +912,65 @@ void capchk::identify_interesting_struct(Module& module)
             discovered_interesting_type.insert(type);
         }
     }
+}
+
+/*
+ * identify logical kernel module
+ * kernel module usually connect its functions to a struct that can be called 
+ * by upper layer
+ * collect all global struct variable who have function pointer field
+ */
+void capchk::identify_logical_module(Module& module)
+{
+    //Module::GlobalListType &globals = module.getGlobalList();
+    //not an interesting type
+    TypeSet nomo;
+    for(GlobalVariable &gvi: module.globals())
+    {
+        GlobalVariable* gi = &gvi;
+        if (gi->isDeclaration())
+            continue;
+        assert(isa<Value>(gi));
+        Type* mod_interface = gi->getType();
+        if (mod_interface->isPointerTy())
+            mod_interface = mod_interface->getPointerElementType();
+
+        if (!mod_interface->isStructTy())
+            continue;
+        if (nomo.find(mod_interface)!=nomo.end())
+            continue;
+        //function pointer inside struct?
+        if (!has_function_pointer_type(mod_interface))
+        {
+            nomo.insert(mod_interface);
+            continue;
+        }
+        //add
+        ModuleSet *ms;
+        if (mi2m.find(mod_interface) != mi2m.end())
+        {
+            ms = mi2m[mod_interface];
+        }else
+        {
+            ms = new ModuleSet;
+            mi2m[mod_interface] = ms;
+        }
+        ms->insert(gi);
+    }
+    //debug
+    errs()<<"Kernel Module Interfaces:\n";
+    for (auto msi: mi2m)
+    {
+        errs()<<(*msi.first).getStructName()<<"\n";
+        for (auto m: (*msi.second))
+        {
+            if (m->hasName())
+                errs()<<"    "<<m->getName()<<"\n";
+            else
+                errs()<<"    Annoymous\n";
+        }
+    }
+    errs()<<"\n";
 }
 
 void capchk::collect_pp(Module& module)
@@ -1753,7 +1853,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         for (auto* csf: fs)
         {
             if (csf->isIntrinsic() || is_skip_function(csf->getName())
-                    ||gating->is_gating_function(csf))
+                    ||gating->is_gating_function(csf) ||(csf==cs->getFunction()))
                 continue;
 
             current_crit_funcs.insert(csf);
@@ -2224,6 +2324,9 @@ void capchk::process_cpgf(Module& module)
 
     errs()<<"Identify interesting struct\n";
     STOP_WATCH_MON(WID_0, identify_interesting_struct(module));
+
+    errs()<<"Identify Logical Modules\n";
+    STOP_WATCH_MON(WID_0, identify_logical_module(module));
 
     if (knob_capchk_cvf)
     {

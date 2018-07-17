@@ -12,6 +12,7 @@
 #include "llvm/IR/Operator.h"
 #include "llvm/IR/Value.h"
 #include "llvm/IR/Use.h"
+#include "llvm/IR/Type.h"
 #include "llvm/IR/Instruction.h"
 #include "llvm/IR/Instructions.h"
 
@@ -25,6 +26,11 @@ Instruction* GetNextNonPHIInstruction(Instruction* i);
 Function* get_callee_function_direct(Instruction* i);
 StringRef get_callee_function_name(Instruction* i);
 void get_callsite_inst(Value*, CallInstSet&);
+bool has_function_pointer_type(Type*);
+GetElementPtrInst* get_load_from_gep(Value*);
+Type* get_load_from_type(Value*);
+void get_gep_indicies(GetElementPtrInst*, std::list<int>&);
+Value* get_value_from_composit(Value*, std::list<int>&);
 
 #endif //_GATLING_UTILITY_
 

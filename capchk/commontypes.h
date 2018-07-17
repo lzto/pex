@@ -44,15 +44,17 @@ typedef std::unordered_set<const Instruction*> ConstInstructionSet;
 typedef std::unordered_set<BasicBlock*> BasicBlockSet;
 typedef std::unordered_set<Function*> FunctionSet;
 typedef std::unordered_set<CallInst*> InDirectCallSites;
+typedef ValueSet ModuleSet;
 
 typedef std::unordered_map<Function*,_REACHABLE> FunctionToCheckResult;
-typedef std::unordered_map<Type*, std::unordered_set<Function*>*> TypeToFunctions;
-typedef std::unordered_map<Type*, std::unordered_set<int>> Type2Fields;
 typedef std::unordered_map<Function*, InstructionSet*> Function2ChkInst;
 typedef std::unordered_map<Function*, InstructionSet*> Function2CSInst;
-typedef std::unordered_map<Value*, InstructionSet*> Value2ChkInst;
-typedef std::unordered_map<Type*, InstructionSet*> Type2ChkInst;
 typedef std::unordered_map<Function*, int> FunctionData;
+typedef std::unordered_map<Type*, std::unordered_set<Function*>*> TypeToFunctions;
+typedef std::unordered_map<Type*, std::unordered_set<int>> Type2Fields;
+typedef std::unordered_map<Type*, InstructionSet*> Type2ChkInst;
+typedef std::unordered_map<Type*, ModuleSet*> ModuleInterface2Modules;
+typedef std::unordered_map<Value*, InstructionSet*> Value2ChkInst;
 typedef std::unordered_map<Instruction*, FunctionSet*> Inst2Func;
 typedef std::unordered_map<const Instruction*, FunctionSet*> ConstInst2Func;
 
