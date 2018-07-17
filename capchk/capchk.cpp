@@ -958,6 +958,7 @@ void capchk::identify_logical_module(Module& module)
         ms->insert(gi);
     }
     //debug
+#if 0
     errs()<<"Kernel Module Interfaces:\n";
     for (auto msi: mi2m)
     {
@@ -971,6 +972,7 @@ void capchk::identify_logical_module(Module& module)
         }
     }
     errs()<<"\n";
+#endif
 }
 
 void capchk::collect_pp(Module& module)
