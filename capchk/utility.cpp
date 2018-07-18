@@ -5,6 +5,7 @@
 
 #include "utility.h"
 #include "color.h"
+#include "internal.h"
 
 static InstructionList dbgstk;
 static ValueList dbglst;
@@ -175,8 +176,45 @@ void get_gep_indicies(GetElementPtrInst* gep, std::list<int>& indices)
     }
 }
 
-extern Instruction* x_dbg_ins;
-extern std::list<int> x_dbg_idx;
+bool function_has_gv_initcall_use(Function* f)
+{
+    static FunctionSet fs_initcall;
+    static FunctionSet fs_noninitcall;
+    if (fs_initcall.count(f)!=0)
+        return true;
+    if (fs_noninitcall.count(f)!=0)
+        return false;
+    for (auto u: f->users())
+        if (GlobalValue *gv = dyn_cast<GlobalValue>(u))
+        {
+            if (!gv->hasName())
+                continue;
+            if (gv->getName().startswith("__initcall_"))
+            {
+                fs_initcall.insert(f);
+                return true;
+            }
+        }
+    fs_noninitcall.insert(f);
+    return false;
+}
+
+void str_truncate_dot_number(std::string& str)
+{
+    if (!isdigit(str.back()))
+        return;
+    std::size_t found = str.find_last_of('.');
+    str = str.substr(0,found);
+}
+
+bool is_skip_struct(StringRef str)
+{
+    for (int i=0;i<BUILDIN_STRUCT_TO_SKIP;i++)
+        if (str.startswith(_builtin_struct_to_skip[i]))
+            return true;
+    return false;
+}
+
 
 static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
 {
@@ -248,6 +286,22 @@ Value* get_value_from_composit(Value* cv, std::list<int>& indices)
     std::list<int> i = std::list<int>(indices);
     return _get_value_from_composit(cv, i);
 }
+////////////////////////////////////////////////////////////////////////////////
+void dump_callstack(InstructionList& callstk)
+{
+    errs()<<ANSI_COLOR_GREEN<<"Call Stack:"<<ANSI_COLOR_RESET<<"\n";
+    int cnt = 0;
+
+    for (auto* I: callstk)
+    {
+        errs()<<""<<cnt<<" "<<I->getFunction()->getName()<<" ";
+        I->getDebugLoc().print(errs());
+        errs()<<"\n";
+        cnt++;
+    }
+    errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
+}
+
 
 void dump_dbgstk(InstructionList& dbgstk)
 {

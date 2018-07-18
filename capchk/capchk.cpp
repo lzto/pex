@@ -9,7 +9,6 @@
 #include "cvfa.h"
 //my aux headers
 #include "color.h"
-#include "internal.h"
 #include "stopwatch.h"
 #include "utility.h"
 
@@ -24,231 +23,18 @@ STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 using namespace llvm;
 
 #include "knobs.h"
+#include "capstat.h"
 
 char capchk::ID;
-
-STATISTIC(FuncCounter, "Functions greeted");
-STATISTIC(ExternalFuncCounter, "External functions");
-STATISTIC(DiscoveredPath, "Discovered Path");
-STATISTIC(MatchedPath, "Matched Path");
-STATISTIC(GoodPath, "Good Path");
-STATISTIC(BadPath, "Bad Path");
-STATISTIC(IgnPath, "Ignored Path");
-STATISTIC(UnResolv, "Path Unable to Resolve");
-STATISTIC(CSFPResolved, "Resolved CallSite Using Function Pointer");
-STATISTIC(CRITVAR, "Critical Variables");
-STATISTIC(CRITFUNC, "Critical Functions");
-STATISTIC(FwdAnalysisMaxHit, "# of times max depth for forward analysis hit");
-STATISTIC(BwdAnalysisMaxHit, "# of times max depth for backward analysis hit");
-STATISTIC(CPUnResolv, "Critical Function Pointer Unable to Resolve, Collect Pass");
-STATISTIC(CPResolv, "Critical Function Pointer Resolved, Collect Pass");
-STATISTIC(CFuncUsedByNonCallInst, "Critical Functions used by non CallInst");
-STATISTIC(CFuncUsedByStaticAssign, "Critical Functions used by static assignment");
-STATISTIC(MatchCallCriticalFuncPtr, "# of times indirect call site matched with critical functions");
-STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to match with critical functions");
-STATISTIC(CapChkInFPTR, "found capability check inside call using function ptr\n");
-
-static InstructionList dbgstk;
-
 Instruction* x_dbg_ins;
 std::list<int> x_dbg_idx;
 
 ////////////////////////////////////////////////////////////////////////////////
-//map function to its check instruction
-Function2ChkInst f2ci;
-Value2ChkInst v2ci;
-Type2ChkInst t2ci;
-
-//t2fs is used to fuzzy matching calling using function pointer
-TypeToFunctions t2fs;
-
-//map function to check instructions inside that function
-//only include direct check
-Function2ChkInst f2chks;
-//discovered check inside functions, including other callee
-//which will call the check, which is the super set of f2chks
-Function2ChkInst f2chks_disc;
-
-//all function pointer assignment,(part of function use)
-//InstructionSet fptrassign;
-
-//stores all indirect call sites
-InDirectCallSites idcs;
-//function to callsite instruction
-//type0: direct call with type cast
-Function2CSInst f2csi_type0;
-//type1: indirect call
-Function2CSInst f2csi_type1;
-
-//store indirect call site to its candidates
-ConstInst2Func idcs2callee;
-
-//all functions in the kernel
-FunctionSet all_functions;
-
-//all syscall is listed here
-FunctionSet syscall_list;
-
-//all discovered interesting type(have struct member points to function with check)
-TypeSet discovered_interesting_type;
-
-//all module interface to corresponding module mapping
-ModuleInterface2Modules mi2m;
-
-#ifdef CUSTOM_STATISTICS
-void capchk::dump_statistics()
-{
-    errs()<<"------------STATISTICS---------------\n";
-    STATISTICS_DUMP(FuncCounter);
-    STATISTICS_DUMP(ExternalFuncCounter);
-    STATISTICS_DUMP(DiscoveredPath);
-    STATISTICS_DUMP(MatchedPath);
-    STATISTICS_DUMP(GoodPath);
-    STATISTICS_DUMP(BadPath);
-    STATISTICS_DUMP(IgnPath);
-    STATISTICS_DUMP(UnResolv);
-    STATISTICS_DUMP(CSFPResolved);
-    STATISTICS_DUMP(CRITFUNC);
-    STATISTICS_DUMP(CRITVAR);
-    STATISTICS_DUMP(FwdAnalysisMaxHit);
-    STATISTICS_DUMP(BwdAnalysisMaxHit);
-    STATISTICS_DUMP(CPUnResolv);
-    STATISTICS_DUMP(CPResolv);
-    STATISTICS_DUMP(CFuncUsedByNonCallInst);
-    STATISTICS_DUMP(CFuncUsedByStaticAssign);
-    STATISTICS_DUMP(MatchCallCriticalFuncPtr);
-    STATISTICS_DUMP(UnMatchCallCriticalFuncPtr);
-    STATISTICS_DUMP(CapChkInFPTR);
-    errs()<<"\n\n\n";
-}
-#endif
-
-bool function_has_gv_initcall_use(Function* f)
-{
-    static FunctionSet fs_initcall;
-    static FunctionSet fs_noninitcall;
-    if (fs_initcall.count(f)!=0)
-        return true;
-    if (fs_noninitcall.count(f)!=0)
-        return false;
-    for (auto u: f->users())
-        if (GlobalValue *gv = dyn_cast<GlobalValue>(u))
-        {
-            if (!gv->hasName())
-                continue;
-            if (gv->getName().startswith("__initcall_"))
-            {
-                fs_initcall.insert(f);
-                return true;
-            }
-        }
-    fs_noninitcall.insert(f);
-    return false;
-}
-
-/*
- * all critical functions and variables should be permission checked before use
- * generate critical functions on-the-fly
- *
- * critical_functions: direct call's callee
- * critical_variables: global variables
- * critical_ftype: interesting type(struct) and fields that should be checked before use
- *      type, field sensitive
- */
-FunctionSet critical_functions;
-ValueSet critical_variables;
-Type2Fields critical_typefields;
-
-inline bool is_critical_function(Function* f)
-{
-    return critical_functions.count(f)!=0;
-}
-
-/*
- * interesting type which contains functions pointers to deal with user request
- */
-bool is_interesting_type(Type* ty)
-{
-    if (!ty->isStructTy())
-        return false;
-    if (!dyn_cast<StructType>(ty)->hasName())
-        return false;
-    StringRef tyn = ty->getStructName();
-    for (int i=0;i<BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE;i++)
-    {
-        if (tyn.startswith(_builtin_interesting_type_word[i]))
-            return true;
-    }
-    if (discovered_interesting_type.count(ty)!=0)
-        return true;
-    return false;
-}
-
-bool _is_used_by_static_assign_to_interesting_type(Value* v,
-        std::unordered_set<Value*>& duchain)
-{
-    if (duchain.count(v))
-        return false;
-    duchain.insert(v);
-    if (is_interesting_type(v->getType()))
-    {
-        duchain.erase(v);
-        return true;
-    }
-    for (auto *u: v->users())
-    {
-        if (isa<Instruction>(u))
-            continue;
-        if (_is_used_by_static_assign_to_interesting_type(u, duchain))
-        {
-            duchain.erase(v);
-            return true;
-        }
-    }
-    duchain.erase(v);
-    return false;
-}
-
-bool is_used_by_static_assign_to_interesting_type(Value* v)
-{
-    std::unordered_set<Value*> duchain;
-    return _is_used_by_static_assign_to_interesting_type(v, duchain);
-}
-
-bool is_syscall_prefix(StringRef str)
-{
-    for (int i=0;i<4;i++)
-        if (str.startswith(_builtin_syscall_prefix[i]))
-            return true;
-    return false;
-}
-
-bool is_syscall(Function *f)
-{
-    return syscall_list.count(f)!=0;
-}
-
-bool is_skip_struct(StringRef str)
-{
-    for (int i=0;i<BUILDIN_STRUCT_TO_SKIP;i++)
-        if (str.startswith(_builtin_struct_to_skip[i]))
-            return true;
-    return false;
-}
-
 
 /*
  * deal with struct name alias
  */
-void str_truncate_dot_number(std::string& str)
-{
-    if (!isdigit(str.back()))
-        return;
-    std::size_t found = str.find_last_of('.');
-    str = str.substr(0,found);
-}
-
-void find_in_mi2m(Type* t, ModuleSet& ms)
+void capchk::find_in_mi2m(Type* t, ModuleSet& ms)
 {
     ms.clear();
     StructType *st = dyn_cast<StructType>(t);
@@ -277,35 +63,66 @@ void find_in_mi2m(Type* t, ModuleSet& ms)
         }
     }
 }
+/*
+ * interesting type which contains functions pointers to deal with user request
+ */
+bool capchk::is_interesting_type(Type* ty)
+{
+    if (!ty->isStructTy())
+        return false;
+    if (!dyn_cast<StructType>(ty)->hasName())
+        return false;
+    StringRef tyn = ty->getStructName();
+    for (int i=0;i<BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE;i++)
+    {
+        if (tyn.startswith(_builtin_interesting_type_word[i]))
+            return true;
+    }
+    if (discovered_interesting_type.count(ty)!=0)
+        return true;
+    return false;
+}
+bool capchk::_is_used_by_static_assign_to_interesting_type(Value* v,
+        std::unordered_set<Value*>& duchain)
+{
+    if (duchain.count(v))
+        return false;
+    duchain.insert(v);
+    if (is_interesting_type(v->getType()))
+    {
+        duchain.erase(v);
+        return true;
+    }
+    for (auto *u: v->users())
+    {
+        if (isa<Instruction>(u))
+            continue;
+        if (_is_used_by_static_assign_to_interesting_type(u, duchain))
+        {
+            duchain.erase(v);
+            return true;
+        }
+    }
+    duchain.erase(v);
+    return false;
+}
 
-FunctionSet kernel_init_functions;
-FunctionSet non_kernel_init_functions;
+bool capchk::is_used_by_static_assign_to_interesting_type(Value* v)
+{
+    std::unordered_set<Value*> duchain;
+    return _is_used_by_static_assign_to_interesting_type(v, duchain);
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 /*
  * debug function, track process progress internally
  */
-void capchk::dump_callstack(InstructionList& callstk)
-{
-    errs()<<ANSI_COLOR_GREEN<<"Call Stack:"<<ANSI_COLOR_RESET<<"\n";
-    int cnt = 0;
-
-    for (auto* I: callstk)
-    {
-        errs()<<""<<cnt<<" "<<I->getFunction()->getName()<<" ";
-        I->getDebugLoc().print(errs());
-        errs()<<"\n";
-        cnt++;
-    }
-    errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
-}
-
 void capchk::dump_as_good(InstructionList& callstk)
 {
     if (!knob_dump_good_path)
         return;
-
-    errs()<<ANSI_COLOR_MAGENTA
-        <<"Use:";
+    errs()<<ANSI_COLOR_MAGENTA<<"Use:";
     callstk.front()->getDebugLoc().print(errs());
     errs()<<ANSI_COLOR_RESET;
     errs()<<ANSI_COLOR_GREEN
@@ -318,8 +135,7 @@ void capchk::dump_as_bad(InstructionList& callstk)
 {
     if (!knob_dump_bad_path)
         return;
-    errs()<<ANSI_COLOR_MAGENTA
-        <<"Use:";
+    errs()<<ANSI_COLOR_MAGENTA<<"Use:";
     callstk.front()->getDebugLoc().print(errs());
     errs()<<ANSI_COLOR_RESET;
     errs()<<"\n"<<ANSI_COLOR_RED
@@ -332,8 +148,7 @@ void capchk::dump_as_ignored(InstructionList& callstk)
 {
     if (!knob_dump_ignore_path)
         return;
-    errs()<<ANSI_COLOR_MAGENTA
-        <<"Use:";
+    errs()<<ANSI_COLOR_MAGENTA<<"Use:";
     callstk.front()->getDebugLoc().print(errs());
     errs()<<ANSI_COLOR_RESET;
     errs()<<"\n"<<ANSI_COLOR_YELLOW

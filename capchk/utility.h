@@ -31,7 +31,14 @@ GetElementPtrInst* get_load_from_gep(Value*);
 Type* get_load_from_type(Value*);
 void get_gep_indicies(GetElementPtrInst*, std::list<int>&);
 Value* get_value_from_composit(Value*, std::list<int>&);
+bool function_has_gv_initcall_use(Function*);
+void str_truncate_dot_number(std::string&);
+bool is_skip_struct(StringRef);
 
+extern Instruction* x_dbg_ins;
+extern std::list<int> x_dbg_idx;
+
+void dump_callstack(InstructionList&);
 void dump_dbgstk(InstructionList&);
 void dump_gdblst(ValueList&);
 

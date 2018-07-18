@@ -46,6 +46,7 @@
 
 #include "simple_set.h"
 #include "gating_function_base.h"
+#include "internal.h"
 
 #define DEBUG_TYPE "capchk"
 
@@ -144,30 +145,10 @@ class capchk : public ModulePass
 
         InstructionSet& discover_chks(Function* f);
         InstructionSet& discover_chks(Function* f, FunctionSet& visited);
-    
-
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
 #endif
-        /*
-         * several aux helper functions
-         */
-        bool is_complex_type(Type*);
-        bool is_rw_global(Value*);
-        Value* get_global_def(Value*);
-        Value* get_global_def(Value*, ValueSet&);
-        bool is_kernel_init_functions(Function* f);
-        bool is_kernel_init_functions(Function* f, FunctionSet& visited);
-
-        inline bool is_skip_var(const std::string& str)
-        {
-            return skip_vars->exists(str);
-        };
-        inline bool is_skip_function(const std::string& str)
-        {
-            return skip_funcs->exists(str) || kernel_api->exists(str);
-        };
 
         //used by forward_all_interesting_usage to collect critical resources
         void crit_func_collect(CallInst*, FunctionSet&, InstructionList& chks);
@@ -175,18 +156,12 @@ class capchk : public ModulePass
         void crit_type_field_collect(Instruction*, Type2Fields&, InstructionList& chks);
 
         /*
-         * context for current module
-         */
-        LLVMContext *ctx;
-        Module* m;
-        /*
          * for debug purpose
          */
 
         void dump_as_good(InstructionList& callstk);
         void dump_as_bad(InstructionList& callstk);
         void dump_as_ignored(InstructionList& callstk);
-        void dump_callstack(InstructionList& callstk);
 
         void dump_gating();
         void dump_f2ci();
@@ -196,15 +171,7 @@ class capchk : public ModulePass
         void dump_non_kinit();
         void dump_scope(FunctionSet&);
     
-
         void my_debug(Module& module);
-
-//private object
-        GatingFunctionBase *gating;
-        SimpleSet* skip_vars;
-        SimpleSet* skip_funcs;
-        SimpleSet* crit_syms;
-        SimpleSet* kernel_api;
 
     public:
         static char ID;
@@ -227,6 +194,123 @@ class capchk : public ModulePass
             //au.addRequired<ScalarEvolutionWrapperPass>();
             au.setPreservesAll();
         }
+
+    private:
+//private objects
+        InstructionList dbgstk;
+        /*
+         * context for current module
+         */
+        LLVMContext *ctx;
+        Module* m;
+
+        GatingFunctionBase *gating;
+        SimpleSet* skip_vars;
+        SimpleSet* skip_funcs;
+        SimpleSet* crit_syms;
+        SimpleSet* kernel_api;
+
+        //map function to its check instruction
+        Function2ChkInst f2ci;
+        Value2ChkInst v2ci;
+        Type2ChkInst t2ci;
+
+        //t2fs is used to fuzzy matching calling using function pointer
+        TypeToFunctions t2fs;
+
+        //map function to check instructions inside that function
+        //only include direct check
+        Function2ChkInst f2chks;
+        //discovered check inside functions, including other callee
+        //which will call the check, which is the super set of f2chks
+        Function2ChkInst f2chks_disc;
+
+        //all function pointer assignment,(part of function use)
+        //InstructionSet fptrassign;
+
+        //stores all indirect call sites
+        InDirectCallSites idcs;
+        //function to callsite instruction
+        //type0: direct call with type cast
+        Function2CSInst f2csi_type0;
+        //type1: indirect call
+        Function2CSInst f2csi_type1;
+
+        //store indirect call site to its candidates
+        ConstInst2Func idcs2callee;
+
+        //all functions in the kernel
+        FunctionSet all_functions;
+
+        //all syscall is listed here
+        FunctionSet syscall_list;
+
+        //all discovered interesting type(have struct member points to function with check)
+        TypeSet discovered_interesting_type;
+
+        //all module interface to corresponding module mapping
+        ModuleInterface2Modules mi2m;
+
+        FunctionSet kernel_init_functions;
+        FunctionSet non_kernel_init_functions;
+
+/*
+ * all critical functions and variables should be permission checked before use
+ * generate critical functions on-the-fly
+ *
+ * critical_functions: direct call's callee
+ * critical_variables: global variables
+ * critical_ftype: interesting type(struct) and fields that should be checked before use
+ *      type, field sensitive
+ */
+        FunctionSet critical_functions;
+        ValueSet critical_variables;
+        Type2Fields critical_typefields;
+
+    private:
+/*
+ * aux helper functions
+ */
+        inline bool is_critical_function(Function* f)
+        {
+            return critical_functions.count(f)!=0;
+        }
+
+        void find_in_mi2m(Type* t, ModuleSet& ms);
+        bool is_interesting_type(Type*);
+        bool is_used_by_static_assign_to_interesting_type(Value* v);
+        bool _is_used_by_static_assign_to_interesting_type(Value* v,
+                std::unordered_set<Value*>& duchain);
+
+        bool is_syscall_prefix(StringRef str)
+        {
+            for (int i=0;i<4;i++)
+                if (str.startswith(_builtin_syscall_prefix[i]))
+                    return true;
+            return false;
+        }
+
+        inline bool is_syscall(Function *f)
+        {
+            return syscall_list.count(f)!=0;
+        }
+
+        bool is_kernel_init_functions(Function* f);
+        bool is_kernel_init_functions(Function* f, FunctionSet& visited);
+
+        bool is_complex_type(Type*);
+        bool is_rw_global(Value*);
+        Value* get_global_def(Value*);
+        Value* get_global_def(Value*, ValueSet&);
+
+        inline bool is_skip_var(const std::string& str)
+        {
+            return skip_vars->exists(str);
+        };
+        inline bool is_skip_function(const std::string& str)
+        {
+            return skip_funcs->exists(str) || kernel_api->exists(str);
+        };
 };
 
 #endif//_CAPCHK_H_
