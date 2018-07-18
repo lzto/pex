@@ -1,3 +1,8 @@
+/*
+ * aux.h
+ * CAP bit and to string
+ * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
+ */
 #ifndef _AUX_H_
 #define _AUX_H_
 
