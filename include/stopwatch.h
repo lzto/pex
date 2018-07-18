@@ -14,7 +14,7 @@
 
 #if USE_STOP_WATCH
 /*
- * put STOP_WATH right after including "stopwatch.h"
+ * put STOP_WATCH right after including "stopwatch.h"
  * X - number of stop watch you want to use
  * Y,Z - watch id
  */
