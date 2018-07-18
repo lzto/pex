@@ -1,0 +1,287 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 807.854000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.213000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_task_setnice
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 944.073000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.985000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.832000 ms
+STOP WATCH[0]: 6816.421000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.689000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.754000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.009000 ms
+STOP WATCH[0]: 249.117000 ms
+Collect all permission-checked variables and functions
+Add call<direct> set_user_nice use @ kernel/sys.c:184:2
+ cause:[32mProcess Stack:[0m
+0 set_one_prio kernel/sys.c:165:45
+[32m-------------[0m
+Add call<direct> set_user_nice use @ kernel/sched/core.c:3881:2 @[ kernel/sched/core.c:3861:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_nice kernel/sched/core.c:3861:1
+[32m-------------[0m
+STOP WATCH[1]: 1969.962000 ms
+STOP WATCH[0]: 1969.976000 ms
+Collected 1 critical functions
+Collected 0 critical variables
+Collected 1 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mset_user_nice[0m
+    security_task_setnice @ kernel/sched/core.c:3877:11 @[ kernel/sched/core.c:3861:1 ]
+    security_task_setnice @ kernel/sys.c:177:12
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.task_struct.43063:0,[0m
+    security_task_setnice @ kernel/sys.c:177:12
+Run Analysis
+Critical functions
+[33mInspect Use of Function:set_user_nice[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 workqueue_set_unbound_cpumask kernel/workqueue.c:4922:9 @[ kernel/workqueue.c:4973:9 ]
+4 wq_unbound_cpumask_store kernel/workqueue.c:5239:9
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 bioset_create block/bio.c:1957:25
+6 blk_alloc_queue_node block/blk-core.c:891:17
+7 blk_mq_init_queue block/blk-mq.c:2356:13
+8 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+9 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+10 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+11 __scsi_add_device drivers/scsi/scsi_scan.c:1487:3
+12 scsi_add_device drivers/scsi/scsi_scan.c:1507:3
+13 proc_scsi_write drivers/scsi/scsi_proc.c:253:11 @[ drivers/scsi/scsi_proc.c:346:9 ]
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 bioset_create block/bio.c:1957:25
+6 blk_alloc_queue_node block/blk-core.c:891:17
+7 blk_mq_init_queue block/blk-mq.c:2356:13
+8 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+9 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+10 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+11 __scsi_scan_target drivers/scsi/scsi_scan.c:1270:8 @[ drivers/scsi/scsi_scan.c:1576:4 ]
+12 scsi_scan_host_selected drivers/scsi/scsi_scan.c:1661:3 @[ drivers/scsi/scsi_scan.c:1689:4 ]
+13 store_scan drivers/scsi/scsi_sysfs.c:149:9 @[ drivers/scsi/scsi_sysfs.c:189:8 ]
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 bioset_create block/bio.c:1957:25
+6 blk_alloc_queue_node block/blk-core.c:891:17
+7 blk_mq_init_queue block/blk-mq.c:2356:13
+8 loop_add drivers/block/loop.c:1796:17
+9 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 bioset_create block/bio.c:1957:25
+6 blk_alloc_queue_node block/blk-core.c:891:17
+7 blk_mq_init_queue block/blk-mq.c:2356:13
+8 loop_add drivers/block/loop.c:1796:17
+9 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+6 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+7 scrub_workers_get fs/btrfs/scrub.c:4034:4
+8 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+9 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+10 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+11 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+12 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+6 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+7 scrub_workers_get fs/btrfs/scrub.c:4034:4
+8 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+9 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+10 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+11 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+12 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+6 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+7 scrub_workers_get fs/btrfs/scrub.c:4034:4
+8 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+9 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+10 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+11 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+6 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+7 scrub_workers_get fs/btrfs/scrub.c:4034:4
+8 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+9 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+10 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+11 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 sb_init_dio_done_wq fs/direct-io.c:602:32
+6 iomap_dio_rw fs/iomap.c:1028:9
+7 xfs_file_dio_aio_read fs/xfs/xfs_file.c:221:8
+8 xfs_file_read_iter fs/xfs/xfs_file.c:294:9
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 apply_workqueue_attrs kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:3805:8 ]
+4 __alloc_workqueue_key kernel/workqueue.c:3927:10 @[ kernel/workqueue.c:4002:6 ]
+5 sb_init_dio_done_wq fs/direct-io.c:602:32
+6 iomap_dio_rw fs/iomap.c:1028:9
+7 xfs_file_dio_aio_write fs/xfs/xfs_file.c:590:8
+8 xfs_file_write_iter fs/xfs/xfs_file.c:738:9
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 wq_nice_store kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:5116:9 ]
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 wq_cpumask_store kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:5155:9 ]
+[32m-------------[0m
+[35mUse:kernel/workqueue.c:1784:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 wq_numa_store kernel/workqueue.c:3772:8 @[ kernel/workqueue.c:5193:9 ]
+[32m-------------[0m
+[32mGood: 2 [31mBad: 14 [33mIgnored: 681[0m
+STOP WATCH[0]: 17214.835000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    2 : Good Path
+    14 : Bad Path
+    681 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    1 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    77 : Critical Functions used by non CallInst
+    318 : Critical Functions used by static assignment
+    285 : # of times indirect call site matched with critical functions
+    535 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

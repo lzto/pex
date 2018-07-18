@@ -1,0 +1,227 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 960.807000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.285000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_module_enable
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 950.173000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.892000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.909000 ms
+STOP WATCH[0]: 6838.561000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 72.430000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.360000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.236000 ms
+STOP WATCH[0]: 251.696000 ms
+Collect all permission-checked variables and functions
+Add call<direct> kmem_cache_create use @ security/selinux/hooks.c:6646:20
+ cause:[32mProcess Stack:[0m
+0 selinux_init security/selinux/hooks.c:6629:7
+[32m-------------[0m
+Add call<direct> kmem_cache_create use @ security/selinux/hooks.c:6649:24
+ cause:[32mProcess Stack:[0m
+0 selinux_init security/selinux/hooks.c:6629:7
+[32m-------------[0m
+Add call<direct> avc_init use @ security/selinux/hooks.c:6652:2
+ cause:[32mProcess Stack:[0m
+0 selinux_init security/selinux/hooks.c:6629:7
+[32m-------------[0m
+Add call<direct> security_add_hooks use @ security/selinux/hooks.c:6654:2
+ cause:[32mProcess Stack:[0m
+0 selinux_init security/selinux/hooks.c:6629:7
+[32m-------------[0m
+Add call<direct> avc_add_callback use @ security/selinux/hooks.c:6656:6
+ cause:[32mProcess Stack:[0m
+0 selinux_init security/selinux/hooks.c:6629:7
+[32m-------------[0m
+Add call<direct> avc_add_callback use @ security/selinux/hooks.c:6659:6
+ cause:[32mProcess Stack:[0m
+0 selinux_init security/selinux/hooks.c:6629:7
+[32m-------------[0m
+STOP WATCH[1]: 1949.048000 ms
+STOP WATCH[0]: 1949.061000 ms
+Collected 4 critical functions
+Collected 3 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mselinux_enforcing[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[32mselinux_enabled[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[32mdefault_noexec[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mavc_add_callback[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[32msecurity_add_hooks[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[32mkmem_cache_create[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[32mavc_init[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.cred.469128:0,[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+[32mstruct.task_struct.469667:0,[0m
+    security_module_enable @ security/selinux/hooks.c:6629:7
+Run Analysis
+Critical functions
+[33mInspect Use of Function:avc_init[0m
+[33mInspect Use of Function:kmem_cache_create[0m
+[35mUse:kernel/pid_namespace.c:57:11 @[ kernel/pid_namespace.c:122:19 @[ kernel/pid_namespace.c:175:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 copy_pid_ns kernel/pid_namespace.c:57:11 @[ kernel/pid_namespace.c:122:19 @[ kernel/pid_namespace.c:175:9 ] ]
+1 create_new_namespaces kernel/nsproxy.c:94:3
+2 SyS_setns kernel/nsproxy.c:254:16 @[ kernel/nsproxy.c:237:1 ]
+[32m-------------[0m
+[35mUse:kernel/pid_namespace.c:57:11 @[ kernel/pid_namespace.c:122:19 @[ kernel/pid_namespace.c:175:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 copy_pid_ns kernel/pid_namespace.c:57:11 @[ kernel/pid_namespace.c:122:19 @[ kernel/pid_namespace.c:175:9 ] ]
+1 create_new_namespaces kernel/nsproxy.c:94:3
+2 unshare_nsproxy_namespaces kernel/nsproxy.c:206:13
+3 SyS_unshare kernel/fork.c:2365:8 @[ kernel/fork.c:2315:1 ]
+[32m-------------[0m
+[35mUse:security/selinux/ss/hashtab.c:174:25[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 hashtab_cache_init security/selinux/ss/hashtab.c:174:25
+1 security_load_policy security/selinux/ss/services.c:2063:3
+2 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:security/selinux/ss/avtab.c:663:24[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 avtab_cache_init security/selinux/ss/avtab.c:663:24
+1 security_load_policy security/selinux/ss/services.c:2061:3
+2 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:block/bio.c:115:9 @[ block/bio.c:1938:17 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+1 blk_alloc_queue_node block/blk-core.c:891:17
+2 blk_mq_init_queue block/blk-mq.c:2356:13
+3 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+4 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+5 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+6 __scsi_add_device drivers/scsi/scsi_scan.c:1487:3
+7 scsi_add_device drivers/scsi/scsi_scan.c:1507:3
+8 proc_scsi_write drivers/scsi/scsi_proc.c:253:11 @[ drivers/scsi/scsi_proc.c:346:9 ]
+[32m-------------[0m
+[35mUse:block/bio.c:115:9 @[ block/bio.c:1938:17 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+1 blk_alloc_queue_node block/blk-core.c:891:17
+2 blk_mq_init_queue block/blk-mq.c:2356:13
+3 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+4 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+5 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+6 __scsi_scan_target drivers/scsi/scsi_scan.c:1270:8 @[ drivers/scsi/scsi_scan.c:1576:4 ]
+7 scsi_scan_host_selected drivers/scsi/scsi_scan.c:1661:3 @[ drivers/scsi/scsi_scan.c:1689:4 ]
+8 store_scan drivers/scsi/scsi_sysfs.c:149:9 @[ drivers/scsi/scsi_sysfs.c:189:8 ]
+[32m-------------[0m
+[35mUse:block/bio.c:115:9 @[ block/bio.c:1938:17 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+1 blk_alloc_queue_node block/blk-core.c:891:17
+2 blk_mq_init_queue block/blk-mq.c:2356:13
+3 loop_add drivers/block/loop.c:1796:17
+4 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:block/bio.c:115:9 @[ block/bio.c:1938:17 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+1 blk_alloc_queue_node block/blk-core.c:891:17
+2 blk_mq_init_queue block/blk-mq.c:2356:13
+3 loop_add drivers/block/loop.c:1796:17
+4 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:security/selinux/ss/ebitmap.c:528:24[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ebitmap_cache_init security/selinux/ss/ebitmap.c:528:24
+1 security_load_policy security/selinux/ss/services.c:2062:3
+2 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:drivers/usb/mon/mon_text.c:354:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mon_text_open drivers/usb/mon/mon_text.c:354:15
+[32m-------------[0m
+[35mUse:drivers/usb/mon/mon_text.c:354:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mon_text_open drivers/usb/mon/mon_text.c:354:15
+[32m-------------[0m
+[35mUse:security/selinux/ss/avtab.c:660:22[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 avtab_cache_init security/selinux/ss/avtab.c:660:22
+1 security_load_policy security/selinux/ss/services.c:2061:3
+2 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[32mGood: 0 [31mBad: 12 [33mIgnored: 458[0m
+[33mInspect Use of Function:avc_add_callback[0m
+[33mInspect Use of Function:security_add_hooks[0m
+STOP WATCH[0]: 4801.914000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    0 : Good Path
+    12 : Bad Path
+    464 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    4 : Critical Functions
+    3 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    12 : Critical Functions used by non CallInst
+    115 : Critical Functions used by static assignment
+    43 : # of times indirect call site matched with critical functions
+    211 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

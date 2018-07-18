@@ -1,0 +1,3307 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 839.262000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.266000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_inode_copy_up
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 944.469000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.927000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.438000 ms
+STOP WATCH[0]: 6784.494000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.338000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.848000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.364000 ms
+STOP WATCH[0]: 249.202000 ms
+Collect all permission-checked variables and functions
+Add call<direct> override_creds use @ fs/overlayfs/copy_up.c:410:15 @[ fs/overlayfs/copy_up.c:493:8 ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> vfs_tmpfile use @ fs/overlayfs/overlayfs.h:182:23 @[ fs/overlayfs/copy_up.c:413:10 @[ fs/overlayfs/copy_up.c:493:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_lookup_temp use @ fs/overlayfs/copy_up.c:417:10 @[ fs/overlayfs/copy_up.c:493:8 ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_create_real use @ fs/overlayfs/copy_up.c:421:9 @[ fs/overlayfs/copy_up.c:493:8 ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> revert_creds use @ fs/overlayfs/copy_up.c:432:3 @[ fs/overlayfs/copy_up.c:493:8 ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> __put_cred use @ ./include/linux/cred.h:266:3 @[ fs/overlayfs/copy_up.c:433:3 @[ fs/overlayfs/copy_up.c:493:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_path_upper use @ fs/overlayfs/copy_up.c:450:3 @[ fs/overlayfs/copy_up.c:497:8 ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_path_open use @ fs/overlayfs/copy_up.c:148:13 @[ fs/overlayfs/copy_up.c:454:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_path_open use @ fs/overlayfs/copy_up.c:152:13 @[ fs/overlayfs/copy_up.c:454:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> vfs_clone_file_range use @ fs/overlayfs/copy_up.c:159:10 @[ fs/overlayfs/copy_up.c:454:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> do_splice_direct use @ fs/overlayfs/copy_up.c:178:11 @[ fs/overlayfs/copy_up.c:454:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> vfs_fsync use @ fs/overlayfs/copy_up.c:191:11 @[ fs/overlayfs/copy_up.c:454:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_copy_xattr use @ fs/overlayfs/copy_up.c:459:8 @[ fs/overlayfs/copy_up.c:497:8 ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_set_attr use @ fs/overlayfs/copy_up.c:464:8 @[ fs/overlayfs/copy_up.c:497:8 ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_can_decode_fh use @ fs/overlayfs/copy_up.c:302:6 @[ fs/overlayfs/copy_up.c:477:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_encode_fh use @ fs/overlayfs/copy_up.c:303:8 @[ fs/overlayfs/copy_up.c:477:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_check_setxattr use @ fs/overlayfs/copy_up.c:311:8 @[ fs/overlayfs/copy_up.c:477:9 @[ fs/overlayfs/copy_up.c:497:8 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_install_temp use @ fs/overlayfs/copy_up.c:503:9
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_install_temp use @ fs/overlayfs/copy_up.c:506:9
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_inode_update use @ fs/overlayfs/copy_up.c:512:2
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_set_flag use @ fs/overlayfs/copy_up.c:514:3
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> ovl_cleanup use @ fs/overlayfs/copy_up.c:522:3
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+[32m-------------[0m
+Add call<direct> unlock_rename use @ fs/overlayfs/copy_up.c:571:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+ cause:[32mProcess Stack:[0m
+0 ovl_copy_up_locked 
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:570:10 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+[32m-------------[0m
+STOP WATCH[1]: 1969.015000 ms
+STOP WATCH[0]: 1969.029000 ms
+Collected 21 critical functions
+Collected 0 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32munlock_rename[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_cleanup[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_install_temp[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32m__put_cred[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32mrevert_creds[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_create_real[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32mvfs_fsync[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32moverride_creds[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_lookup_temp[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32mvfs_clone_file_range[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_path_open[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_path_upper[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32mdo_splice_direct[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_set_flag[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_copy_xattr[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32mvfs_tmpfile[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_set_attr[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_inode_update[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_can_decode_fh[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_encode_fh[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32movl_check_setxattr[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.path.320109:0,[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+[32mstruct.ovl_copy_up_ctx:0,[0m
+    security_inode_copy_up @ fs/overlayfs/copy_up.c:405:8 @[ fs/overlayfs/copy_up.c:493:8 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:unlock_rename[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_do_remove fs/overlayfs/dir.c:759:8
+4 ovl_unlink fs/overlayfs/dir.c:788:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_do_remove fs/overlayfs/dir.c:759:8
+4 ovl_rmdir fs/overlayfs/dir.c:793:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_setattr fs/overlayfs/inode.c:49:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 nfs4_file_open ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/nfs4file.c:30:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:594:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lock_rename_workdir fs/overlayfs/util.c:594:2
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:568:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 nfs_readdir_xdr_to_array ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/dir.c:554:21 @[ fs/nfs/dir.c:642:12 ] ] ]
+5 nfs_readdir fs/nfs/dir.c:812:11 @[ fs/nfs/dir.c:871:11 ]
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:620:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_rename fs/ecryptfs/inode.c:620:2
+[32m-------------[0m
+[32mGood: 18 [31mBad: 15 [33mIgnored: 137[0m
+[33mInspect Use of Function:ovl_check_setxattr[0m
+[33mInspect Use of Function:ovl_encode_fh[0m
+[35mUse:fs/overlayfs/namei.c:473:7 @[ fs/overlayfs/namei.c:500:8 @[ fs/overlayfs/namei.c:714:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lookup fs/overlayfs/namei.c:473:7 @[ fs/overlayfs/namei.c:500:8 @[ fs/overlayfs/namei.c:714:11 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_do_remove fs/overlayfs/dir.c:759:8
+4 ovl_unlink fs/overlayfs/dir.c:788:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_do_remove fs/overlayfs/dir.c:759:8
+4 ovl_rmdir fs/overlayfs/dir.c:793:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_create_or_link fs/overlayfs/dir.c:476:8
+4 ovl_create_object fs/overlayfs/dir.c:550:8
+5 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_setattr fs/overlayfs/inode.c:49:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 nfs4_file_open ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/nfs4file.c:30:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:473:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_index_name fs/overlayfs/namei.c:473:7
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:550:9 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 nfs_readdir_xdr_to_array ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/dir.c:554:21 @[ fs/nfs/dir.c:642:12 ] ] ]
+5 nfs_readdir fs/nfs/dir.c:812:11 @[ fs/nfs/dir.c:871:11 ]
+[32m-------------[0m
+[32mGood: 10 [31mBad: 15 [33mIgnored: 39[0m
+[33mInspect Use of Function:ovl_can_decode_fh[0m
+[33mInspect Use of Function:ovl_inode_update[0m
+[33mInspect Use of Function:vfs_fsync[0m
+[35mUse:fs/afs/write.c:747:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 afs_flush fs/afs/write.c:747:9
+[32m-------------[0m
+[35mUse:fs/afs/flock.c:588:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 afs_do_unlk fs/afs/flock.c:588:2
+1 afs_flock fs/afs/flock.c:681:10
+[32m-------------[0m
+[35mUse:fs/afs/flock.c:588:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 afs_do_unlk fs/afs/flock.c:588:2
+1 afs_lock fs/afs/flock.c:654:10
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4file.c:129:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_file_flush fs/nfs/nfs4file.c:129:9
+[32m-------------[0m
+[35mUse:fs/nfs/file.c:700:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_unlk fs/nfs/file.c:700:2
+1 nfs_lock fs/nfs/file.c:798:9
+[32m-------------[0m
+[35mUse:fs/nfs/file.c:700:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_unlk fs/nfs/file.c:700:2
+1 nfs_flock fs/nfs/file.c:834:10
+[32m-------------[0m
+[35mUse:fs/nfs/file.c:646:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_file_write fs/nfs/file.c:646:13
+[32m-------------[0m
+[35mUse:fs/coda/file.c:192:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 coda_fsync fs/coda/file.c:192:8
+[32m-------------[0m
+[32mGood: 1 [31mBad: 8 [33mIgnored: 33[0m
+[33mInspect Use of Function:ovl_create_real[0m
+[33mInspect Use of Function:revert_creds[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_do_remove fs/overlayfs/dir.c:759:8
+3 ovl_unlink fs/overlayfs/dir.c:788:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_do_remove fs/overlayfs/dir.c:759:8
+3 ovl_rmdir fs/overlayfs/dir.c:793:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_setattr fs/overlayfs/inode.c:49:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 nfs4_file_open ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/nfs4file.c:30:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:694:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:694:2
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 nfs_readdir_xdr_to_array ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/dir.c:554:21 @[ fs/nfs/dir.c:642:12 ] ] ]
+4 nfs_readdir fs/nfs/dir.c:812:11 @[ fs/nfs/dir.c:871:11 ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/readdir.c:288:2 @[ fs/overlayfs/readdir.c:314:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_dir_read fs/overlayfs/readdir.c:288:2 @[ fs/overlayfs/readdir.c:314:9 ]
+1 ovl_dir_read_merged fs/overlayfs/readdir.c:383:10
+2 ovl_iterate fs/overlayfs/readdir.c:425:8 @[ fs/overlayfs/readdir.c:700:11 ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:339:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_acl fs/overlayfs/inode.c:339:2
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:304:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_listxattr fs/overlayfs/inode.c:304:2
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:262:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_xattr_set fs/overlayfs/inode.c:262:2
+1 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:262:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_xattr_set fs/overlayfs/inode.c:262:2
+1 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:262:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_xattr_set fs/overlayfs/inode.c:262:2
+1 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:168:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_getattr fs/overlayfs/inode.c:168:2
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:202:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_permission fs/overlayfs/inode.c:202:2
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:280:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_xattr_get fs/overlayfs/inode.c:280:2
+1 ovl_posix_acl_xattr_get fs/overlayfs/super.c:756:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:280:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_xattr_get fs/overlayfs/inode.c:280:2
+1 ovl_posix_acl_xattr_get fs/overlayfs/super.c:756:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:280:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_xattr_get fs/overlayfs/inode.c:280:2
+1 ovl_other_xattr_get fs/overlayfs/super.c:836:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:747:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lookup fs/overlayfs/namei.c:747:2
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:768:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lookup fs/overlayfs/namei.c:768:2
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_getattr fs/cifs/inode.c:2021:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_mkdir_qinfo fs/cifs/inode.c:1395:8
+4 cifs_mkdir fs/cifs/inode.c:1568:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_symlink fs/cifs/link.c:724:9
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_strict_readv fs/cifs/file.c:3342:10
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+6 cifs_strict_writev fs/cifs/file.c:2866:12
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+6 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+6 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 find_writable_file fs/cifs/file.c:1888:8
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_setattr fs/cifs/inode.c:2425:8 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 find_writable_file fs/cifs/file.c:1888:8
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_unlink fs/cifs/inode.c:1363:3
+8 cifs_rename2 fs/cifs/inode.c:1802:12
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 find_writable_file fs/cifs/file.c:1888:8
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_unlink fs/cifs/inode.c:1363:3
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_open fs/cifs/file.c:252:8 @[ fs/cifs/file.c:534:8 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_lookup fs/cifs/dir.c:811:8
+4 cifs_atomic_open fs/cifs/dir.c:502:9
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:447:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:447:2
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_do_create fs/cifs/dir.c:420:8
+4 cifs_create fs/cifs/dir.c:609:7
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:305:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:305:2
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_do_open fs/nfs/nfs4proc.c:2450:2 @[ fs/nfs/nfs4proc.c:2777:8 @[ fs/nfs/nfs4proc.c:2882:11 @[ fs/nfs/nfs4proc.c:2951:12 ] ] ]
+4 nfs4_proc_create fs/nfs/nfs4proc.c:4154:10
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:305:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:305:2
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_do_open fs/nfs/nfs4proc.c:2450:2 @[ fs/nfs/nfs4proc.c:2777:8 @[ fs/nfs/nfs4proc.c:2882:11 @[ fs/nfs/nfs4proc.c:2951:12 ] ] ]
+4 nfs4_atomic_open fs/nfs/nfs4proc.c:3414:10
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:305:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:305:2
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_open_recover_helper fs/nfs/nfs4proc.c:2375:2 @[ fs/nfs/nfs4proc.c:1919:8 ]
+4 nfs4_open_delegation_recall fs/nfs/nfs4proc.c:2102:9
+5 nfs_end_delegation_return fs/nfs/delegation.c:154:9 @[ fs/nfs/delegation.c:419:9 ]
+6 nfs4_inode_return_delegation fs/nfs/delegation.c:545:9
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:305:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:305:2
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_open_recover_helper fs/nfs/nfs4proc.c:2375:2 @[ fs/nfs/nfs4proc.c:1919:8 ]
+4 nfs4_open_delegation_recall fs/nfs/nfs4proc.c:2102:9
+5 nfs_end_delegation_return fs/nfs/delegation.c:154:9 @[ fs/nfs/delegation.c:419:9 ]
+6 nfs4_inode_return_delegation fs/nfs/delegation.c:545:9
+7 nfs4_xattr_set_nfs4_acl fs/nfs/nfs4proc.c:5300:2 @[ fs/nfs/nfs4proc.c:5327:9 @[ fs/nfs/nfs4proc.c:6832:9 ] ]
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:305:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:305:2
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 decode_getfattr_attrs fs/nfs/nfs4xdr.c:3992:19 @[ fs/nfs/nfs4xdr.c:4723:11 ]
+3 nfs4_decode_dirent fs/nfs/nfs4xdr.c:7578:6
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:335:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 id_to_sid fs/cifs/cifsacl.c:335:2
+1 id_mode_to_cifs_acl fs/cifs/cifsacl.c:973:9 @[ fs/cifs/cifsacl.c:1221:7 ]
+2 cifs_setattr fs/cifs/inode.c:2382:9 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:fs/open.c:424:2 @[ fs/open.c:353:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_faccessat fs/open.c:424:2 @[ fs/open.c:353:1 ]
+[32m-------------[0m
+[32mGood: 23 [31mBad: 58 [33mIgnored: 393[0m
+[33mInspect Use of Function:__put_cred[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 nfs_idmap_get_key fs/nfs/nfs4idmap.c:280:9 @[ fs/nfs/nfs4idmap.c:304:9 ]
+4 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+5 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+6 nfs4_do_open fs/nfs/nfs4proc.c:2450:2 @[ fs/nfs/nfs4proc.c:2777:8 @[ fs/nfs/nfs4proc.c:2882:11 @[ fs/nfs/nfs4proc.c:2951:12 ] ] ]
+7 nfs4_proc_create fs/nfs/nfs4proc.c:4154:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 nfs_idmap_get_key fs/nfs/nfs4idmap.c:280:9 @[ fs/nfs/nfs4idmap.c:304:9 ]
+4 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+5 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+6 nfs4_do_open fs/nfs/nfs4proc.c:2450:2 @[ fs/nfs/nfs4proc.c:2777:8 @[ fs/nfs/nfs4proc.c:2882:11 @[ fs/nfs/nfs4proc.c:2951:12 ] ] ]
+7 nfs4_atomic_open fs/nfs/nfs4proc.c:3414:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 nfs_idmap_get_key fs/nfs/nfs4idmap.c:280:9 @[ fs/nfs/nfs4idmap.c:304:9 ]
+4 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+5 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+6 nfs4_open_recover_helper fs/nfs/nfs4proc.c:2375:2 @[ fs/nfs/nfs4proc.c:1919:8 ]
+7 nfs4_open_delegation_recall fs/nfs/nfs4proc.c:2102:9
+8 nfs_end_delegation_return fs/nfs/delegation.c:154:9 @[ fs/nfs/delegation.c:419:9 ]
+9 nfs4_inode_return_delegation fs/nfs/delegation.c:545:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 nfs_idmap_get_key fs/nfs/nfs4idmap.c:280:9 @[ fs/nfs/nfs4idmap.c:304:9 ]
+4 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+5 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+6 nfs4_open_recover_helper fs/nfs/nfs4proc.c:2375:2 @[ fs/nfs/nfs4proc.c:1919:8 ]
+7 nfs4_open_delegation_recall fs/nfs/nfs4proc.c:2102:9
+8 nfs_end_delegation_return fs/nfs/delegation.c:154:9 @[ fs/nfs/delegation.c:419:9 ]
+9 nfs4_inode_return_delegation fs/nfs/delegation.c:545:9
+10 nfs4_xattr_set_nfs4_acl fs/nfs/nfs4proc.c:5300:2 @[ fs/nfs/nfs4proc.c:5327:9 @[ fs/nfs/nfs4proc.c:6832:9 ] ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 nfs_idmap_get_key fs/nfs/nfs4idmap.c:280:9 @[ fs/nfs/nfs4idmap.c:304:9 ]
+4 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+5 decode_getfattr_attrs fs/nfs/nfs4xdr.c:3992:19 @[ fs/nfs/nfs4xdr.c:4723:11 ]
+6 nfs4_decode_dirent fs/nfs/nfs4xdr.c:7578:6
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_getattr fs/cifs/inode.c:2021:7
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_mkdir_qinfo fs/cifs/inode.c:1395:8
+7 cifs_mkdir fs/cifs/inode.c:1568:7
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_symlink fs/cifs/link.c:724:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_strict_readv fs/cifs/file.c:3342:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_strict_writev fs/cifs/file.c:2866:12
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_setattr fs/cifs/inode.c:2425:8 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_unlink fs/cifs/inode.c:1363:3
+11 cifs_rename2 fs/cifs/inode.c:1802:12
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_unlink fs/cifs/inode.c:1363:3
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_open fs/cifs/file.c:252:8 @[ fs/cifs/file.c:534:8 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_lookup fs/cifs/dir.c:811:8
+7 cifs_atomic_open fs/cifs/dir.c:502:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 sid_to_id fs/cifs/cifsacl.c:406:11
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_do_create fs/cifs/dir.c:420:8
+7 cifs_create fs/cifs/dir.c:609:7
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 fscache_objlist_open fs/fscache/object-list.c:326:8 @[ fs/fscache/object-list.c:397:2 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 f2fs_tmpfile fs/f2fs/namei.c:768:13
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 f2fs_symlink fs/f2fs/namei.c:553:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 f2fs_setattr fs/f2fs/file.c:774:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 f2fs_setattr fs/f2fs/file.c:774:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 f2fs_readdir fs/f2fs/dir.c:859:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __fscrypt_prepare_lookup fs/crypto/hooks.c:98:12
+6 ext4_lookup ./include/linux/fscrypt.h:265:10 @[ fs/ext4/namei.c:1548:8 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_expand_extra_isize fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5855:10 ]
+9 ext4_ioctl fs/ext4/ioctl.c:361:9 @[ fs/ext4/ioctl.c:1040:9 ]
+10 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_expand_extra_isize fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5855:10 ]
+9 ext4_ioctl fs/ext4/ioctl.c:361:9 @[ fs/ext4/ioctl.c:1040:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_setattr fs/ext4/inode.c:5468:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_setattr fs/ext4/inode.c:5468:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+10 ext4_add_entry fs/ext4/namei.c:2056:12
+11 ext4_link fs/ext4/namei.c:3247:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+10 ext4_add_entry fs/ext4/namei.c:2056:12
+11 ext4_mkdir fs/ext4/namei.c:2639:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+10 ext4_add_entry fs/ext4/namei.c:2056:12
+11 ext4_add_nondir fs/ext4/namei.c:2410:12
+12 ext4_create fs/ext4/namei.c:2453:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+10 ext4_add_entry fs/ext4/namei.c:2056:12
+11 ext4_add_nondir fs/ext4/namei.c:2410:12
+12 ext4_symlink fs/ext4/namei.c:3191:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+10 ext4_add_entry fs/ext4/namei.c:2056:12
+11 ext4_add_nondir fs/ext4/namei.c:2410:12
+12 ext4_mknod fs/ext4/namei.c:2485:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+10 ext4_add_entry fs/ext4/namei.c:2056:12
+11 ext4_rename2 fs/ext4/namei.c:3616:12 @[ fs/ext4/namei.c:3851:9 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_delete_inline_entry fs/ext4/inline.c:1713:9
+10 ext4_delete_entry fs/ext4/namei.c:2345:9
+11 ext4_unlink fs/ext4/namei.c:3032:11
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_delete_inline_entry fs/ext4/inline.c:1713:9
+10 ext4_delete_entry fs/ext4/namei.c:2345:9
+11 ext4_rmdir fs/ext4/namei.c:2954:11
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+10 ext4_map_blocks fs/ext4/inode.c:561:12
+11 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+12 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+13 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+14 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+15 ext4_xattr_security_get fs/ext4/xattr_security.c:20:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+10 ext4_map_blocks fs/ext4/inode.c:561:12
+11 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+12 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+13 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+14 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+15 ext4_get_acl fs/ext4/acl.c:167:12
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+10 ext4_map_blocks fs/ext4/inode.c:561:12
+11 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+12 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+13 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+14 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+15 ext4_get_acl fs/ext4/acl.c:167:12
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+10 ext4_map_blocks fs/ext4/inode.c:561:12
+11 ext4_getblk fs/ext4/inode.c:965:8
+12 ext4_bread fs/ext4/inode.c:1015:7
+13 ext4_readdir fs/ext4/dir.c:170:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_set_acl fs/ext4/acl.c:258:3
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+8 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+9 ext4_set_acl fs/ext4/acl.c:258:3
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+7 ext4_xattr_block_set fs/ext4/xattr.c:1929:10
+8 ext4_xattr_set_handle fs/ext4/xattr.c:2388:12
+9 ext4_xattr_set fs/ext4/xattr.c:2488:11
+10 ext4_xattr_security_set fs/ext4/xattr_security.c:30:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 __ext4_new_inode fs/ext4/ialloc.c:807:9
+6 ext4_tmpfile fs/ext4/namei.c:2507:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 f2fs_dir_open fs/f2fs/dir.c:923:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 __f2fs_add_link fs/f2fs/dir.c:629:8
+7 __recover_dot_dentries fs/f2fs/namei.c:337:9
+8 f2fs_lookup fs/f2fs/namei.c:406:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 __f2fs_add_link fs/f2fs/dir.c:629:8
+7 f2fs_create fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:213:8 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 __f2fs_add_link fs/f2fs/dir.c:629:8
+7 f2fs_link fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:263:8 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 __f2fs_add_link fs/f2fs/dir.c:629:8
+7 f2fs_mkdir fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:630:8 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 __f2fs_add_link fs/f2fs/dir.c:629:8
+7 f2fs_mknod fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:682:8 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 __f2fs_add_link fs/f2fs/dir.c:629:8
+7 f2fs_rename2 fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:944:9 @[ fs/f2fs/namei.c:1167:9 ] ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 f2fs_find_entry fs/f2fs/dir.c:259:8
+7 f2fs_unlink fs/f2fs/namei.c:452:7
+8 f2fs_rmdir fs/f2fs/namei.c:656:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 fscrypt_setup_filename fs/crypto/fname.c:367:8
+6 f2fs_find_entry fs/f2fs/dir.c:259:8
+7 f2fs_unlink fs/f2fs/namei.c:452:7
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 f2fs_encrypted_get_link fs/f2fs/namei.c:1185:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 validate_user_key fs/crypto/keyinfo.c:85:16
+4 fscrypt_get_encryption_info fs/crypto/keyinfo.c:308:14
+5 ext4_dir_open fs/ext4/dir.c:616:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 ecryptfs_keyring_auth_tok_for_sig fs/ecryptfs/keystore.c:1628:20
+4 ecryptfs_parse_packet_set fs/ecryptfs/keystore.c:587:8 @[ fs/ecryptfs/keystore.c:1895:8 ]
+5 ecryptfs_read_headers_virt fs/ecryptfs/crypto.c:1334:7
+6 ecryptfs_read_metadata fs/ecryptfs/crypto.c:1440:8
+7 ecryptfs_setattr fs/ecryptfs/inode.c:904:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 ecryptfs_keyring_auth_tok_for_sig fs/ecryptfs/keystore.c:1628:20
+4 ecryptfs_parse_packet_set fs/ecryptfs/keystore.c:587:8 @[ fs/ecryptfs/keystore.c:1895:8 ]
+5 ecryptfs_read_headers_virt fs/ecryptfs/crypto.c:1334:7
+6 ecryptfs_read_metadata fs/ecryptfs/crypto.c:1440:8
+7 ecryptfs_setattr fs/ecryptfs/inode.c:904:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 ecryptfs_keyring_auth_tok_for_sig fs/ecryptfs/keystore.c:1628:20
+4 ecryptfs_parse_packet_set fs/ecryptfs/keystore.c:587:8 @[ fs/ecryptfs/keystore.c:1895:8 ]
+5 ecryptfs_read_headers_virt fs/ecryptfs/crypto.c:1334:7
+6 ecryptfs_read_metadata fs/ecryptfs/crypto.c:1440:8
+7 ecryptfs_setattr fs/ecryptfs/inode.c:904:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 ecryptfs_keyring_auth_tok_for_sig fs/ecryptfs/keystore.c:1628:20
+4 ecryptfs_parse_tag_70_packet fs/ecryptfs/keystore.c:587:8 @[ fs/ecryptfs/keystore.c:975:7 ]
+5 ecryptfs_decode_and_decrypt_filename fs/ecryptfs/crypto.c:2043:8
+6 ecryptfs_getattr_link fs/ecryptfs/inode.c:640:7 @[ fs/ecryptfs/inode.c:972:12 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 ecryptfs_keyring_auth_tok_for_sig fs/ecryptfs/keystore.c:1628:20
+4 ecryptfs_parse_tag_70_packet fs/ecryptfs/keystore.c:587:8 @[ fs/ecryptfs/keystore.c:975:7 ]
+5 ecryptfs_decode_and_decrypt_filename fs/ecryptfs/crypto.c:2043:8
+6 ecryptfs_get_link fs/ecryptfs/inode.c:640:7 @[ fs/ecryptfs/inode.c:659:8 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 ecryptfs_keyring_auth_tok_for_sig fs/ecryptfs/keystore.c:1628:20
+4 ecryptfs_write_tag_70_packet fs/ecryptfs/keystore.c:587:8 @[ fs/ecryptfs/keystore.c:646:7 ]
+5 ecryptfs_encrypt_and_encode_filename fs/ecryptfs/crypto.c:1492:8 @[ fs/ecryptfs/crypto.c:1934:8 ]
+6 ecryptfs_symlink fs/ecryptfs/inode.c:479:7
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 ecryptfs_keyring_auth_tok_for_sig fs/ecryptfs/keystore.c:1628:20
+4 ecryptfs_write_tag_70_packet fs/ecryptfs/keystore.c:587:8 @[ fs/ecryptfs/keystore.c:646:7 ]
+5 ecryptfs_encrypt_and_encode_filename fs/ecryptfs/crypto.c:1492:8 @[ fs/ecryptfs/crypto.c:1934:8 ]
+6 ecryptfs_lookup fs/ecryptfs/inode.c:400:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_permission fs/afs/security.c:361:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_permission fs/afs/security.c:361:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_rename fs/afs/dir.c:1201:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_rmdir fs/afs/dir.c:864:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_mkdir fs/afs/dir.c:801:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_symlink fs/afs/dir.c:1140:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_unlink fs/afs/dir.c:953:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_link fs/afs/dir.c:1071:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_create fs/afs/dir.c:1012:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_lookup fs/afs/dir.c:533:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_open fs/afs/file.c:127:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_open fs/afs/file.c:127:8
+5 afs_dir_open fs/afs/dir.c:239:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 afs_request_key fs/afs/security.c:34:8
+4 afs_setattr fs/afs/inode.c:532:9
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_rmdir fs/cifs/inode.c:1604:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_get_link fs/cifs/link.c:638:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_get_inode_info_unix fs/cifs/inode.c:374:10
+5 cifs_mknod fs/cifs/dir.c:679:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_hardlink fs/cifs/link.c:544:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 initiate_cifs_search fs/cifs/readdir.c:279:11
+5 cifs_readdir fs/cifs/readdir.c:619:8 @[ fs/cifs/readdir.c:820:7 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_xattr_set fs/cifs/xattr.c:55:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_xattr_set fs/cifs/xattr.c:55:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_xattr_set fs/cifs/xattr.c:55:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_xattr_set fs/cifs/xattr.c:55:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_xattr_set fs/cifs/xattr.c:55:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 request_key security/keys/request_key.c:655:8
+3 cifs_sb_tlink fs/cifs/connect.c:2482:8 @[ fs/cifs/connect.c:4183:9 @[ fs/cifs/connect.c:4210:7 @[ fs/cifs/connect.c:4368:19 ] ] ]
+4 cifs_listxattr fs/cifs/xattr.c:315:10
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 request_key_auth_new ./include/linux/cred.h:266:3 @[ security/keys/request_key_auth.c:130:3 @[ security/keys/request_key_auth.c:224:2 ] ]
+1 request_key_and_link security/keys/request_key.c:220:12 @[ security/keys/request_key.c:484:9 @[ security/keys/request_key.c:593:9 ] ]
+2 SyS_request_key security/keys/keyctl.c:213:8 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1575:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_session_to_parent ./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1575:3 ]
+1 compat_SyS_keyctl security/keys/compat.c:120:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1575:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_session_to_parent ./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1575:3 ]
+1 SyS_keyctl security/keys/keyctl.c:1719:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1577:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_session_to_parent ./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1577:3 ]
+1 compat_SyS_keyctl security/keys/compat.c:120:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1577:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_session_to_parent ./include/linux/cred.h:266:3 @[ security/keys/keyctl.c:1577:3 ]
+1 SyS_keyctl security/keys/keyctl.c:1719:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:1055:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 usbdev_release ./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:1055:2 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:382:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 free_async ./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:382:3 ]
+1 proc_do_submiturb drivers/usb/core/devio.c:1788:3
+2 usbdev_do_ioctl drivers/usb/core/devio.c:2003:9 @[ drivers/usb/core/devio.c:2480:9 ]
+3 usbdev_ioctl drivers/usb/core/devio.c:2557:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:382:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 free_async ./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:382:3 ]
+1 proc_do_submiturb drivers/usb/core/devio.c:1788:3
+2 usbdev_do_ioctl drivers/usb/core/devio.c:2003:9 @[ drivers/usb/core/devio.c:2480:9 ]
+3 usbdev_compat_ioctl drivers/usb/core/devio.c:2568:8
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:382:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 free_async ./include/linux/cred.h:266:3 @[ drivers/usb/core/devio.c:382:3 ]
+1 usbdev_release drivers/usb/core/devio.c:1059:3
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ]
+1 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ]
+1 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ]
+1 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+2 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:755:2 ]
+1 keyctl_update_key security/keys/keyctl.c:342:12
+2 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ]
+1 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ]
+1 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ]
+1 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+2 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key ./include/linux/cred.h:266:3 @[ security/keys/process_keys.c:744:2 ]
+1 keyctl_update_key security/keys/keyctl.c:342:12
+2 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ fs/open.c:425:2 @[ fs/open.c:353:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_faccessat ./include/linux/cred.h:266:3 @[ fs/open.c:425:2 @[ fs/open.c:353:1 ] ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 __ptrace_detach kernel/ptrace.c:508:2
+2 ptrace_request kernel/ptrace.c:548:2 @[ kernel/ptrace.c:1023:9 ]
+3 compat_ptrace_request kernel/ptrace.c:1264:9
+4 compat_arch_ptrace arch/x86/kernel/ptrace.c:1141:10 @[ arch/x86/kernel/ptrace.c:1245:9 ]
+5 compat_SyS_ptrace kernel/ptrace.c:1301:9 @[ kernel/ptrace.c:1270:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 __ptrace_detach kernel/ptrace.c:508:2
+2 ptrace_request kernel/ptrace.c:548:2 @[ kernel/ptrace.c:1023:9 ]
+3 arch_ptrace arch/x86/kernel/ptrace.c:877:9
+4 SyS_ptrace kernel/ptrace.c:1156:8 @[ kernel/ptrace.c:1121:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 wait_consider_task ./include/linux/ptrace.h:98:3 @[ kernel/exit.c:1151:3 @[ kernel/exit.c:1388:12 ] ]
+2 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+3 compat_SyS_waitid kernel/exit.c:1590:8 @[ kernel/exit.c:1722:13 @[ kernel/exit.c:1715:1 ] ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 wait_consider_task ./include/linux/ptrace.h:98:3 @[ kernel/exit.c:1151:3 @[ kernel/exit.c:1388:12 ] ]
+2 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+3 kernel_wait4 kernel/exit.c:1665:8
+4 compat_SyS_wait4 kernel/exit.c:1707:13 @[ kernel/exit.c:1700:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 wait_consider_task ./include/linux/ptrace.h:98:3 @[ kernel/exit.c:1151:3 @[ kernel/exit.c:1388:12 ] ]
+2 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+3 kernel_wait4 kernel/exit.c:1665:8
+4 SyS_wait4 kernel/exit.c:1677:13 @[ kernel/exit.c:1673:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 wait_consider_task ./include/linux/ptrace.h:98:3 @[ kernel/exit.c:1151:3 @[ kernel/exit.c:1388:12 ] ]
+2 do_wait kernel/exit.c:1465:13 @[ kernel/exit.c:1526:12 ]
+3 SyS_waitid kernel/exit.c:1590:8 @[ kernel/exit.c:1601:13 @[ kernel/exit.c:1596:1 ] ]
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 release_task ./include/linux/ptrace.h:98:3 @[ ./include/linux/ptrace.h:233:2 @[ kernel/exit.c:198:2 ] ]
+2 flush_old_exec fs/exec.c:1169:3 @[ fs/exec.c:1256:11 ]
+3 load_elf_binary.14742 fs/binfmt_elf.c:864:11
+[32m-------------[0m
+[35mUse:./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ptrace_unlink ./include/linux/cred.h:266:3 @[ kernel/ptrace.c:124:2 ]
+1 release_task ./include/linux/ptrace.h:98:3 @[ ./include/linux/ptrace.h:233:2 @[ kernel/exit.c:198:2 ] ]
+2 flush_old_exec fs/exec.c:1169:3 @[ fs/exec.c:1256:11 ]
+3 load_elf_binary fs/binfmt_elf.c:864:11
+[32m-------------[0m
+[32mGood: 4 [31mBad: 206 [33mIgnored: 1454[0m
+[33mInspect Use of Function:ovl_cleanup[0m
+[33mInspect Use of Function:ovl_install_temp[0m
+[33mInspect Use of Function:override_creds[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_dir_read fs/overlayfs/readdir.c:273:13 @[ fs/overlayfs/readdir.c:314:9 ]
+2 ovl_dir_read_merged fs/overlayfs/readdir.c:383:10
+3 ovl_iterate fs/overlayfs/readdir.c:425:8 @[ fs/overlayfs/readdir.c:700:11 ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_xattr_set fs/overlayfs/inode.c:248:9
+4 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+3 ovl_setattr fs/overlayfs/inode.c:49:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 nfs4_file_open ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/nfs4file.c:30:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_copy_up_flags fs/overlayfs/copy_up.c:654:32
+2 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+3 ovl_d_real fs/overlayfs/super.c:99:9
+4 nfs_readdir_xdr_to_array ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/dir.c:554:21 @[ fs/nfs/dir.c:642:12 ] ] ]
+5 nfs_readdir fs/nfs/dir.c:812:11 @[ fs/nfs/dir.c:871:11 ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_get_acl fs/overlayfs/inode.c:337:13
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_listxattr fs/overlayfs/inode.c:302:13
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_permission fs/overlayfs/inode.c:194:13
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_lookup fs/overlayfs/namei.c:617:13
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_getattr fs/overlayfs/inode.c:81:13
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_xattr_get fs/overlayfs/inode.c:278:13
+2 ovl_posix_acl_xattr_get fs/overlayfs/super.c:756:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_xattr_get fs/overlayfs/inode.c:278:13
+2 ovl_posix_acl_xattr_get fs/overlayfs/super.c:756:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/util.c:43:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_override_creds fs/overlayfs/util.c:43:9
+1 ovl_xattr_get fs/overlayfs/inode.c:278:13
+2 ovl_other_xattr_get fs/overlayfs/super.c:836:9
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:303:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:303:15
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_do_open fs/nfs/nfs4proc.c:2450:2 @[ fs/nfs/nfs4proc.c:2777:8 @[ fs/nfs/nfs4proc.c:2882:11 @[ fs/nfs/nfs4proc.c:2951:12 ] ] ]
+4 nfs4_proc_create fs/nfs/nfs4proc.c:4154:10
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:303:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:303:15
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_do_open fs/nfs/nfs4proc.c:2450:2 @[ fs/nfs/nfs4proc.c:2777:8 @[ fs/nfs/nfs4proc.c:2882:11 @[ fs/nfs/nfs4proc.c:2951:12 ] ] ]
+4 nfs4_atomic_open fs/nfs/nfs4proc.c:3414:10
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:303:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:303:15
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_open_recover_helper fs/nfs/nfs4proc.c:2375:2 @[ fs/nfs/nfs4proc.c:1919:8 ]
+4 nfs4_open_delegation_recall fs/nfs/nfs4proc.c:2102:9
+5 nfs_end_delegation_return fs/nfs/delegation.c:154:9 @[ fs/nfs/delegation.c:419:9 ]
+6 nfs4_inode_return_delegation fs/nfs/delegation.c:545:9
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:303:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:303:15
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 nfs_fattr_map_and_free_names fs/nfs/nfs4idmap.c:106:6 @[ fs/nfs/nfs4idmap.c:149:6 ]
+3 nfs4_open_recover_helper fs/nfs/nfs4proc.c:2375:2 @[ fs/nfs/nfs4proc.c:1919:8 ]
+4 nfs4_open_delegation_recall fs/nfs/nfs4proc.c:2102:9
+5 nfs_end_delegation_return fs/nfs/delegation.c:154:9 @[ fs/nfs/delegation.c:419:9 ]
+6 nfs4_inode_return_delegation fs/nfs/delegation.c:545:9
+7 nfs4_xattr_set_nfs4_acl fs/nfs/nfs4proc.c:5300:2 @[ fs/nfs/nfs4proc.c:5327:9 @[ fs/nfs/nfs4proc.c:6832:9 ] ]
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4idmap.c:303:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_idmap_get_key fs/nfs/nfs4idmap.c:303:15
+1 nfs_map_name_to_uid fs/nfs/nfs4idmap.c:362:14 @[ fs/nfs/nfs4idmap.c:724:9 ]
+2 decode_getfattr_attrs fs/nfs/nfs4xdr.c:3992:19 @[ fs/nfs/nfs4xdr.c:4723:11 ]
+3 nfs4_decode_dirent fs/nfs/nfs4xdr.c:7578:6
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_getattr fs/cifs/inode.c:2021:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+4 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_mkdir_qinfo fs/cifs/inode.c:1395:8
+4 cifs_mkdir fs/cifs/inode.c:1568:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_symlink fs/cifs/link.c:724:9
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_strict_readv fs/cifs/file.c:3342:10
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_send_async_read fs/cifs/file.c:3115:14
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+6 cifs_strict_writev fs/cifs/file.c:2866:12
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+6 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 cifs_write_from_iter fs/cifs/file.c:2603:14
+5 cifs_user_writev fs/cifs/file.c:2755:7
+6 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 find_writable_file fs/cifs/file.c:1888:8
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_setattr fs/cifs/inode.c:2425:8 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 find_writable_file fs/cifs/file.c:1888:8
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_unlink fs/cifs/inode.c:1363:3
+8 cifs_rename2 fs/cifs/inode.c:1802:12
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_reopen_file fs/cifs/file.c:739:9
+4 find_writable_file fs/cifs/file.c:1888:8
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_unlink fs/cifs/inode.c:1363:3
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_open fs/cifs/file.c:252:8 @[ fs/cifs/file.c:534:8 ]
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_lookup fs/cifs/dir.c:811:8
+4 cifs_atomic_open fs/cifs/dir.c:502:9
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:405:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sid_to_id fs/cifs/cifsacl.c:405:15
+1 cifs_acl_to_fattr fs/cifs/cifsacl.c:894:7 @[ fs/cifs/cifsacl.c:1160:8 ]
+2 cifs_get_inode_info fs/cifs/inode.c:850:8
+3 cifs_do_create fs/cifs/dir.c:420:8
+4 cifs_create fs/cifs/dir.c:609:7
+[32m-------------[0m
+[35mUse:fs/cifs/cifsacl.c:300:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 id_to_sid fs/cifs/cifsacl.c:300:15
+1 id_mode_to_cifs_acl fs/cifs/cifsacl.c:973:9 @[ fs/cifs/cifsacl.c:1221:7 ]
+2 cifs_setattr fs/cifs/inode.c:2382:9 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:fs/open.c:382:13 @[ fs/open.c:353:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_faccessat fs/open.c:382:13 @[ fs/open.c:353:1 ]
+[32m-------------[0m
+[32mGood: 23 [31mBad: 48 [33mIgnored: 604[0m
+[33mInspect Use of Function:ovl_lookup_temp[0m
+[33mInspect Use of Function:vfs_clone_file_range[0m
+[35mUse:./include/linux/fs.h:2739:8 @[ fs/ioctl.c:232:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ioctl_file_clone ./include/linux/fs.h:2739:8 @[ fs/ioctl.c:232:8 ]
+1 do_vfs_ioctl fs/ioctl.c:244:9 @[ fs/ioctl.c:677:10 ]
+2 SyS_ioctl fs/ioctl.c:701:11 @[ fs/ioctl.c:692:1 ]
+[32m-------------[0m
+[35mUse:./include/linux/fs.h:2739:8 @[ fs/ioctl.c:232:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ioctl_file_clone ./include/linux/fs.h:2739:8 @[ fs/ioctl.c:232:8 ]
+1 do_vfs_ioctl fs/ioctl.c:244:9 @[ fs/ioctl.c:677:10 ]
+2 compat_SyS_ioctl fs/compat_ioctl.c:1495:10 @[ fs/compat_ioctl.c:1419:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 2 [33mIgnored: 3[0m
+[33mInspect Use of Function:ovl_path_open[0m
+[35mUse:fs/overlayfs/readdir.c:783:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_dir_fsync fs/overlayfs/readdir.c:783:15
+[32m-------------[0m
+[35mUse:fs/overlayfs/readdir.c:299:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_dir_read fs/overlayfs/readdir.c:299:13
+1 ovl_dir_read_merged fs/overlayfs/readdir.c:383:10
+2 ovl_iterate fs/overlayfs/readdir.c:425:8 @[ fs/overlayfs/readdir.c:700:11 ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/readdir.c:834:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_dir_open fs/overlayfs/readdir.c:834:13
+[32m-------------[0m
+[32mGood: 5 [31mBad: 3 [33mIgnored: 8[0m
+[33mInspect Use of Function:ovl_path_upper[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_do_remove fs/overlayfs/dir.c:759:8
+3 ovl_unlink fs/overlayfs/dir.c:788:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_do_remove fs/overlayfs/dir.c:759:8
+3 ovl_rmdir fs/overlayfs/dir.c:793:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_setattr fs/overlayfs/inode.c:49:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 nfs4_file_open ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/nfs4file.c:30:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:614:2 @[ fs/overlayfs/copy_up.c:689:9 ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 nfs_readdir_xdr_to_array ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/dir.c:554:21 @[ fs/nfs/dir.c:642:12 ] ] ]
+4 nfs_readdir fs/nfs/dir.c:812:11 @[ fs/nfs/dir.c:871:11 ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/readdir.c:782:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_dir_fsync fs/overlayfs/readdir.c:782:4
+[32m-------------[0m
+[35mUse:fs/overlayfs/readdir.c:540:2 @[ fs/overlayfs/readdir.c:589:8 @[ fs/overlayfs/readdir.c:661:15 @[ fs/overlayfs/readdir.c:692:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_iterate fs/overlayfs/readdir.c:540:2 @[ fs/overlayfs/readdir.c:589:8 @[ fs/overlayfs/readdir.c:661:15 @[ fs/overlayfs/readdir.c:692:11 ] ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:386:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_update_time fs/overlayfs/inode.c:386:2
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:563:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_path_next fs/overlayfs/namei.c:563:3
+1 ovl_dir_read_merged fs/overlayfs/readdir.c:369:10
+2 ovl_iterate fs/overlayfs/readdir.c:425:8 @[ fs/overlayfs/readdir.c:700:11 ]
+[32m-------------[0m
+[32mGood: 14 [31mBad: 18 [33mIgnored: 36[0m
+[33mInspect Use of Function:do_splice_direct[0m
+[35mUse:fs/read_write.c:1413:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sendfile fs/read_write.c:1413:11
+1 compat_SyS_sendfile64 fs/read_write.c:1513:9 @[ fs/read_write.c:1498:1 ]
+[32m-------------[0m
+[35mUse:fs/read_write.c:1413:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sendfile fs/read_write.c:1413:11
+1 compat_SyS_sendfile fs/read_write.c:1495:9 @[ fs/read_write.c:1478:1 ]
+[32m-------------[0m
+[35mUse:fs/read_write.c:1413:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sendfile fs/read_write.c:1413:11
+1 SyS_sendfile64 fs/read_write.c:1474:9 @[ fs/read_write.c:1460:1 ]
+[32m-------------[0m
+[35mUse:fs/read_write.c:1413:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sendfile fs/read_write.c:1413:11
+1 SyS_sendfile fs/read_write.c:1457:9 @[ fs/read_write.c:1441:1 ]
+[32m-------------[0m
+[35mUse:fs/read_write.c:1580:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_copy_file_range fs/read_write.c:1580:8
+1 SyS_copy_file_range fs/read_write.c:1633:8 @[ fs/read_write.c:1600:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 4[0m
+[33mInspect Use of Function:ovl_set_flag[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_do_remove fs/overlayfs/dir.c:759:8
+3 ovl_unlink fs/overlayfs/dir.c:788:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_do_remove fs/overlayfs/dir.c:759:8
+3 ovl_rmdir fs/overlayfs/dir.c:793:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_create_or_link fs/overlayfs/dir.c:476:8
+3 ovl_create_object fs/overlayfs/dir.c:550:8
+4 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_posix_acl_xattr_set fs/overlayfs/super.c:806:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_xattr_set fs/overlayfs/inode.c:248:9
+3 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+2 ovl_setattr fs/overlayfs/inode.c:49:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 nfs4_file_open ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/nfs4file.c:30:26 ] ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_copy_up_flags fs/overlayfs/copy_up.c:577:4 @[ fs/overlayfs/copy_up.c:641:10 @[ fs/overlayfs/copy_up.c:689:9 ] ]
+1 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+2 ovl_d_real fs/overlayfs/super.c:99:9
+3 nfs_readdir_xdr_to_array ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/dir.c:554:21 @[ fs/nfs/dir.c:642:12 ] ] ]
+4 nfs_readdir fs/nfs/dir.c:812:11 @[ fs/nfs/dir.c:871:11 ]
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:685:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_inode fs/overlayfs/inode.c:685:3
+1 ovl_lookup fs/overlayfs/namei.c:737:11
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:693:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_inode fs/overlayfs/inode.c:693:4
+1 ovl_lookup fs/overlayfs/namei.c:737:11
+[32m-------------[0m
+[35mUse:fs/overlayfs/namei.c:744:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_lookup fs/overlayfs/namei.c:744:4
+[32m-------------[0m
+[32mGood: 8 [31mBad: 17 [33mIgnored: 36[0m
+[33mInspect Use of Function:ovl_copy_xattr[0m
+[33mInspect Use of Function:vfs_tmpfile[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 SyS_uselib fs/exec.c:136:9 @[ fs/exec.c:120:1 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 do_execveat_common fs/exec.c:1740:9
+4 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 do_execveat_common fs/exec.c:1740:9
+4 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 do_execveat_common fs/exec.c:1740:9
+4 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 do_execveat_common fs/exec.c:1740:9
+4 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 open_exec fs/exec.c:881:7
+4 load_elf_binary.14742 fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 open_exec fs/exec.c:881:7
+4 load_elf_binary fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 open_exec fs/exec.c:881:7
+4 load_script fs/binfmt_script.c:101:9
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 open_exec fs/exec.c:881:7
+4 load_misc_binary fs/binfmt_misc.c:212:17
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_open_execat fs/exec.c:849:9
+3 open_exec fs/exec.c:881:7
+4 bm_register_write fs/binfmt_misc.c:723:7
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_sys_open fs/open.c:1059:20
+3 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_sys_open fs/open.c:1059:20
+3 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_sys_open fs/open.c:1059:20
+3 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 path_openat fs/namei.c:3451:10 @[ fs/namei.c:3503:11 ]
+1 do_filp_open fs/namei.c:3558:10
+2 do_sys_open fs/open.c:1059:20
+3 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 14 [33mIgnored: 23[0m
+[33mInspect Use of Function:ovl_set_attr[0m
+STOP WATCH[0]: 27268.983000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    152 : Good Path
+    413 : Bad Path
+    2784 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    21 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    88 : Critical Functions used by non CallInst
+    1798 : Critical Functions used by static assignment
+    1201 : # of times indirect call site matched with critical functions
+    2983 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

@@ -1,0 +1,2386 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.364000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.707000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_inode_getattr
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1098.904000 ms
+Identify interesting struct
+STOP WATCH[0]: 6.877000 ms
+Identify Logical Modules
+STOP WATCH[0]: 63.072000 ms
+STOP WATCH[0]: 6840.366000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.649000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.667000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.561000 ms
+STOP WATCH[0]: 249.522000 ms
+Collect all permission-checked variables and functions
+Resolve indirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[32m[FOUND 28 MATCH][0m
+Add call<indirect> nfs_namespace_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> cifs_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> simple_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> shmem_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> ecryptfs_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> pid_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> f2fs_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> proc_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> orangefs_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> ovl_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> ext4_file_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> btrfs_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> xfs_vn_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> ceph_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> proc_root_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> bad_inode_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> fat_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> kernfs_iop_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> ecryptfs_getattr_link use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> udf_symlink_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> proc_sys_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> nfs_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> minix_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> afs_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> gfs2_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> ext4_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> proc_tgid_net_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<indirect> sysv_getattr use @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:882:6 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 encode_entryplus_baggage fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:882:6 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:882:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 encode_entryplus_baggage fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:882:6 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:882:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 encode_entryplus_baggage fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:882:6 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:801:6 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readdirres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:801:6 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:801:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readdirres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:801:6 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:801:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readdirres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:801:6 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:790:6 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_linkres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:790:6 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:790:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_linkres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:790:6 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:790:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_linkres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:790:6 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:767:7 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_createres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:767:7 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:767:7 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_createres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:767:7 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:767:7 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_createres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:767:7 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:721:6 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:721:6 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:721:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:721:6 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:721:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:721:6 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:699:6 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readlinkres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:699:6 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:699:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readlinkres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:699:6 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:699:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_readlinkres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:699:6 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:687:6 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_accessres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:687:6 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:687:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_accessres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:687:6 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:687:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_accessres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:687:6 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:677:6 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_diropres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:677:6 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:677:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_diropres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:677:6 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:677:6 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_diropres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:677:6 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:675:7 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_diropres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:675:7 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:675:7 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_diropres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:675:7 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:675:7 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_diropres fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:675:7 ] ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:250:9 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 encode_wcc_data fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:250:9 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:250:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 encode_wcc_data fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:250:9 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:250:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 encode_wcc_data fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:250:9 ] ]
+[32m-------------[0m
+Add call<direct> encode_wcc_data use @ fs/nfsd/nfs3xdr.c:780:6
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 encode_wcc_data fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:250:9 ] ]
+2 nfs3svc_encode_renameres fs/nfsd/nfs3xdr.c:779:6
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 fill_post_wcc fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+[32m-------------[0m
+Add call<direct> nfserrno use @ fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:226:9 ] ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_post_op_attr fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:226:9 ] ]
+[32m-------------[0m
+Add call<direct> lease_get_mtime use @ fs/nfsd/nfs3xdr.c:214:4 @[ fs/nfsd/nfs3xdr.c:226:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_post_op_attr fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:226:9 ] ]
+[32m-------------[0m
+Add call<direct> encode_fattr3 use @ fs/nfsd/nfs3xdr.c:215:11 @[ fs/nfsd/nfs3xdr.c:226:9 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 nfs3svc_encode_post_op_attr fs/nfsd/vfs.h:139:18 @[ fs/nfsd/nfs3xdr.c:211:9 @[ fs/nfsd/nfs3xdr.c:226:9 ] ]
+[32m-------------[0m
+Add call<direct> cp_compat_stat use @ fs/stat.c:660:11 @[ fs/stat.c:653:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 compat_SyS_newfstat fs/stat.c:143:11 @[ ./include/linux/fs.h:3096:9 @[ fs/stat.c:657:14 @[ fs/stat.c:653:1 ] ] ]
+[32m-------------[0m
+Add call<direct> cp_compat_stat use @ fs/stat.c:635:9 @[ fs/stat.c:626:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 compat_SyS_newlstat fs/stat.c:189:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:632:10 @[ fs/stat.c:626:1 ] ] ]
+[32m-------------[0m
+Add call<direct> cp_compat_stat use @ fs/stat.c:623:9 @[ fs/stat.c:614:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 compat_SyS_newstat fs/stat.c:189:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:620:10 @[ fs/stat.c:614:1 ] ] ]
+[32m-------------[0m
+Add call<direct> cp_old_stat use @ fs/stat.c:276:11 @[ fs/stat.c:270:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 SyS_fstat fs/stat.c:143:11 @[ ./include/linux/fs.h:3096:9 @[ fs/stat.c:273:14 @[ fs/stat.c:270:1 ] ] ]
+[32m-------------[0m
+Add call<direct> cp_old_stat use @ fs/stat.c:267:9 @[ fs/stat.c:257:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 SyS_lstat fs/stat.c:189:10 @[ ./include/linux/fs.h:3085:9 @[ fs/stat.c:263:10 @[ fs/stat.c:257:1 ] ] ]
+[32m-------------[0m
+Add call<direct> cp_old_stat use @ fs/stat.c:254:9 @[ fs/stat.c:244:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 SyS_stat fs/stat.c:189:10 @[ ./include/linux/fs.h:3080:9 @[ fs/stat.c:250:10 @[ fs/stat.c:244:1 ] ] ]
+[32m-------------[0m
+Add call<direct> cp_compat_stat use @ fs/stat.c:649:9 @[ fs/stat.c:639:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 compat_SyS_newfstatat ./include/linux/fs.h:3091:9 @[ fs/stat.c:646:10 @[ fs/stat.c:639:1 ] ]
+[32m-------------[0m
+Add call<direct> cp_statx use @ fs/stat.c:577:9 @[ fs/stat.c:560:1 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 SyS_statx fs/stat.c:573:10 @[ fs/stat.c:560:1 ]
+[32m-------------[0m
+Add call<direct> SyS_rmdir use @ init/initramfs.c:320:4 @[ init/initramfs.c:394:2 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_symlink ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:394:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_unlink use @ init/initramfs.c:322:4 @[ init/initramfs.c:394:2 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_symlink ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:394:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_symlink use @ init/initramfs.c:395:2
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_symlink ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:394:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_lchown use @ init/initramfs.c:396:2
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_symlink ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:394:2 ] ]
+[32m-------------[0m
+Add call<direct> do_utimes use @ init/initramfs.c:121:9 @[ init/initramfs.c:397:2 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_symlink ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:394:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_rmdir use @ init/initramfs.c:320:4 @[ init/initramfs.c:336:2 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_unlink use @ init/initramfs.c:322:4 @[ init/initramfs.c:336:2 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> maybe_link use @ init/initramfs.c:338:12
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_open use @ init/initramfs.c:343:10
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_fchown use @ init/initramfs.c:346:5
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_fchmod use @ init/initramfs.c:347:5
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_ftruncate use @ init/initramfs.c:349:6
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_mkdir use @ init/initramfs.c:355:3
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_chown use @ init/initramfs.c:356:3
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_chmod use @ init/initramfs.c:357:3
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> maybe_link use @ init/initramfs.c:361:7
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_mknod use @ init/initramfs.c:362:4
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_chown use @ init/initramfs.c:363:4
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> SyS_chmod use @ init/initramfs.c:364:4
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> do_utimes use @ init/initramfs.c:121:9 @[ init/initramfs.c:365:4 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 do_name ./include/linux/fs.h:3085:9 @[ init/initramfs.c:318:7 @[ init/initramfs.c:336:2 ] ]
+[32m-------------[0m
+Add call<direct> cp_stat64 use @ arch/x86/ia32/sys_ia32.c:106:9
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 sys32_stat64 ./include/linux/fs.h:3080:9 @[ arch/x86/ia32/sys_ia32.c:103:12 ]
+[32m-------------[0m
+Add call<direct> cp_stat64 use @ arch/x86/ia32/sys_ia32.c:116:9
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 sys32_lstat64 ./include/linux/fs.h:3085:9 @[ arch/x86/ia32/sys_ia32.c:114:12 ]
+[32m-------------[0m
+Add call<direct> cp_stat64 use @ arch/x86/ia32/sys_ia32.c:138:9
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx fs/stat.c:189:10
+2 sys32_fstatat ./include/linux/fs.h:3091:9 @[ arch/x86/ia32/sys_ia32.c:135:10 ]
+[32m-------------[0m
+Add call<direct> cp_stat64 use @ arch/x86/ia32/sys_ia32.c:125:9
+ cause:[32mProcess Stack:[0m
+0 vfs_getattr fs/stat.c:108:36
+1 vfs_statx_fd fs/stat.c:143:11
+2 sys32_fstat64 ./include/linux/fs.h:3096:9 @[ arch/x86/ia32/sys_ia32.c:123:12 ]
+[32m-------------[0m
+STOP WATCH[1]: 2187.544000 ms
+STOP WATCH[0]: 2187.559000 ms
+Collected 50 critical functions
+Collected 17 critical variables
+Collected 5 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32moverflowgid[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mnfserrno.__warned[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mrdev[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mwfd[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mcollected[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32moverflowuid[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mnfserrno.nfs_errtbl[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mnfsd_net_id[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mnext_state[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mdir_list[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mname_len[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32muid[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mgid[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mstate[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mmtime[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mmode[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mbody_len[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mcp_stat64[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_mknod[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_chmod[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_mkdir[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_fchmod[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_open[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mmaybe_link[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mdo_utimes[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_symlink[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_unlink[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mceph_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mbtrfs_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mbad_inode_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mfat_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mext4_file_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32movl_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mproc_root_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mcp_old_stat[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mproc_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mcifs_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_fchown[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mcp_statx[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32msimple_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mf2fs_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mlease_get_mtime[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32morangefs_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mnfs_namespace_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mshmem_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mecryptfs_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_chown[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mkernfs_iop_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mecryptfs_getattr_link[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_ftruncate[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mudf_symlink_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mproc_sys_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mencode_wcc_data[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mafs_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mxfs_vn_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mgfs2_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mext4_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mproc_tgid_net_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32msysv_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mpid_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mnfserrno[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_lchown[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mnfs_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mencode_fattr3[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mminix_getattr[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mcp_compat_stat[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mSyS_rmdir[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.svc_fh.255164:0,[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mstruct.nfsd3_readdirres:0,[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mstruct.svc_rqst.250421:0,[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mstruct.path.38195:0,[0m
+    security_inode_getattr @ fs/stat.c:113:11
+[32mstruct.nfsd3_readdirargs:0,[0m
+    security_inode_getattr @ fs/stat.c:113:11
+Run Analysis
+Critical functions
+[33mInspect Use of Function:cp_stat64[0m
+[33mInspect Use of Function:SyS_fchmod[0m
+[33mInspect Use of Function:SyS_open[0m
+[35mUse:fs/open.c:1117:9 @[ fs/open.c:1115:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_creat fs/open.c:1117:9 @[ fs/open.c:1115:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 1 [33mIgnored: 4[0m
+[33mInspect Use of Function:maybe_link[0m
+[33mInspect Use of Function:SyS_mkdir[0m
+[33mInspect Use of Function:SyS_chmod[0m
+[33mInspect Use of Function:SyS_mknod[0m
+[33mInspect Use of Function:SyS_unlink[0m
+[33mInspect Use of Function:SyS_rmdir[0m
+[33mInspect Use of Function:SyS_symlink[0m
+[33mInspect Use of Function:f2fs_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:lease_get_mtime[0m
+[33mInspect Use of Function:ecryptfs_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:SyS_chown[0m
+[35mUse:kernel/uid16.c:23:9 @[ kernel/uid16.c:21:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_chown16 kernel/uid16.c:23:9 @[ kernel/uid16.c:21:1 ]
+[32m-------------[0m
+[32mGood: 2 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:kernfs_iop_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:ecryptfs_getattr_link[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:proc_sys_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:SyS_ftruncate[0m
+[33mInspect Use of Function:udf_symlink_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:simple_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:proc_tgid_net_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:sysv_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:ext4_getattr[0m
+[35mUse:fs/ext4/inode.c:5580:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ext4_file_getattr fs/ext4/inode.c:5580:2
+[32m-------------[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 6 [33mIgnored: 209[0m
+[33mInspect Use of Function:afs_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:encode_wcc_data[0m
+[33mInspect Use of Function:SyS_fchown[0m
+[35mUse:kernel/uid16.c:33:9 @[ kernel/uid16.c:31:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_fchown16 kernel/uid16.c:33:9 @[ kernel/uid16.c:31:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:cp_statx[0m
+[33mInspect Use of Function:cifs_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:proc_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:shmem_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:nfs_namespace_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:orangefs_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:ovl_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:ext4_file_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:fat_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:cp_old_stat[0m
+[33mInspect Use of Function:proc_root_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:bad_inode_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:btrfs_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:gfs2_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:xfs_vn_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:ceph_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:SyS_lchown[0m
+[35mUse:kernel/uid16.c:28:9 @[ kernel/uid16.c:26:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_lchown16 kernel/uid16.c:28:9 @[ kernel/uid16.c:26:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:nfs_getattr[0m
+[35mUse:fs/nfs/namespace.c:174:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs_namespace_getattr fs/nfs/namespace.c:174:10
+[32m-------------[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 6 [33mIgnored: 209[0m
+[33mInspect Use of Function:encode_fattr3[0m
+[33mInspect Use of Function:pid_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:nfserrno[0m
+[33mInspect Use of Function:do_utimes[0m
+[35mUse:fs/utimes.c:272:9 @[ fs/utimes.c:256:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_futimesat fs/utimes.c:272:9 @[ fs/utimes.c:256:1 ]
+[32m-------------[0m
+[35mUse:fs/utimes.c:253:9 @[ fs/utimes.c:241:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_utimensat fs/utimes.c:253:9 @[ fs/utimes.c:241:1 ]
+[32m-------------[0m
+[35mUse:fs/utimes.c:238:9 @[ fs/utimes.c:226:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_utime fs/utimes.c:238:9 @[ fs/utimes.c:226:1 ]
+[32m-------------[0m
+[35mUse:fs/utimes.c:212:9 @[ fs/utimes.c:187:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_futimesat fs/utimes.c:212:9 @[ fs/utimes.c:187:1 ]
+[32m-------------[0m
+[35mUse:fs/utimes.c:184:9 @[ fs/utimes.c:168:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_utimensat fs/utimes.c:184:9 @[ fs/utimes.c:168:1 ]
+[32m-------------[0m
+[35mUse:fs/utimes.c:35:9 @[ fs/utimes.c:24:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_utime fs/utimes.c:35:9 @[ fs/utimes.c:24:1 ]
+[32m-------------[0m
+[32mGood: 2 [31mBad: 6 [33mIgnored: 2[0m
+[33mInspect Use of Function:minix_getattr[0m
+[31mindirect call @ fs/stat.c:79:10 @[ fs/stat.c:116:9 ]
+[31mindirect call @ fs/stat.c:79:10
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 ovl_check_origin fs/overlayfs/namei.c:160:11 @[ fs/overlayfs/namei.c:297:12 ]
+5 ovl_lookup fs/overlayfs/namei.c:641:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 xfs_handlereq_to_dentry fs/xfs/xfs_ioctl.c:184:9 @[ fs/xfs/xfs_ioctl.c:194:9 ]
+5 xfs_fssetdm_by_handle fs/xfs/xfs_ioctl.c:362:11
+6 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1934:10
+7 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/stat.c:79:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_getattr_nosec fs/stat.c:79:10
+1 exportfs_get_name fs/exportfs/expfs.c:303:10 @[ fs/exportfs/expfs.c:35:10 ]
+2 reconnect_path fs/exportfs/expfs.c:141:8 @[ fs/exportfs/expfs.c:220:13 ]
+3 exportfs_decode_fh fs/exportfs/expfs.c:499:9
+4 do_handle_open fs/fhandle.c:153:17 @[ fs/fhandle.c:208:11 @[ fs/fhandle.c:224:11 ] ]
+5 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 5 [33mIgnored: 209[0m
+[33mInspect Use of Function:cp_compat_stat[0m
+STOP WATCH[0]: 9062.053000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    406 : Good Path
+    152 : Bad Path
+    7334 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    50 : Critical Functions
+    17 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    1 : Critical Function Pointer Resolved, Collect Pass
+    30 : Critical Functions used by non CallInst
+    4173 : Critical Functions used by static assignment
+    3203 : # of times indirect call site matched with critical functions
+    6238 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

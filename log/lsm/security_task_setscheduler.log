@@ -1,0 +1,167 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 809.025000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.236000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_task_setscheduler
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 943.382000 ms
+Identify interesting struct
+Function: timerslack_ns_write used by struct.file_operations.135114[0m
+Function: cpuset_can_attach used by [32m new discover:struct.cgroup_subsys[0m
+STOP WATCH[0]: 6.171000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.550000 ms
+STOP WATCH[0]: 7102.802000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 70.735000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.821000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.993000 ms
+STOP WATCH[0]: 250.214000 ms
+Collect all permission-checked variables and functions
+Add call<direct> cpuset_cpus_allowed use @ kernel/sched/core.c:4671:2
+ cause:[32mProcess Stack:[0m
+0 sched_setaffinity 
+[32m-------------[0m
+Add call<direct> __set_cpus_allowed_ptr use @ kernel/sched/core.c:4692:11
+ cause:[32mProcess Stack:[0m
+0 sched_setaffinity 
+[32m-------------[0m
+Add call<direct> cpuset_cpus_allowed use @ kernel/sched/core.c:4695:3
+ cause:[32mProcess Stack:[0m
+0 sched_setaffinity 
+[32m-------------[0m
+Add call<direct> __set_cpus_allowed_ptr use @ kernel/sched/core.c:4692:11
+ cause:[32mProcess Stack:[0m
+0 sched_setaffinity 
+[32m-------------[0m
+Add call<direct> cgroup_taskset_next use @ kernel/cgroup/cpuset.c:1477:2
+ cause:[32mProcess Stack:[0m
+0 cpuset_can_attach 
+[32m-------------[0m
+STOP WATCH[1]: 1953.089000 ms
+STOP WATCH[0]: 1953.103000 ms
+Collected 3 critical functions
+Collected 3 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mstop_sched_class[0m
+    security_task_setscheduler @ kernel/sched/core.c:4111:12
+[32mrunqueues[0m
+    security_task_setscheduler @ kernel/sched/core.c:4666:11
+[32msysctl_sched_rt_runtime[0m
+    security_task_setscheduler @ kernel/sched/core.c:4666:11
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mcgroup_taskset_next[0m
+    security_task_setscheduler @ kernel/cgroup/cpuset.c:1481:9
+[32mcpuset_cpus_allowed[0m
+    security_task_setscheduler @ kernel/sched/core.c:4666:11
+[32m__set_cpus_allowed_ptr[0m
+    security_task_setscheduler @ kernel/sched/core.c:4666:11
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.rq:0,[0m
+    security_task_setscheduler @ kernel/sched/core.c:4666:11
+[32mstruct.task_struct.38147:0,[0m
+    security_task_setscheduler @ kernel/sched/core.c:4111:12
+Run Analysis
+Critical functions
+[33mInspect Use of Function:cgroup_taskset_next[0m
+[35mUse:kernel/cgroup/cpuset.c:1540:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cpuset_attach kernel/cgroup/cpuset.c:1540:2
+[32m-------------[0m
+[35mUse:kernel/cgroup/cpuset.c:1556:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cpuset_attach kernel/cgroup/cpuset.c:1556:2
+[32m-------------[0m
+[32mGood: 1 [31mBad: 2 [33mIgnored: 3[0m
+[33mInspect Use of Function:__set_cpus_allowed_ptr[0m
+[35mUse:kernel/sched/core.c:1148:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 set_cpus_allowed_ptr kernel/sched/core.c:1148:9
+1 cpuset_fork kernel/cgroup/cpuset.c:2092:2
+[32m-------------[0m
+[35mUse:kernel/sched/core.c:1148:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 set_cpus_allowed_ptr kernel/sched/core.c:1148:9
+1 cpuset_write_resmask kernel/cgroup/cpuset.c:879:3 @[ kernel/cgroup/cpuset.c:931:3 @[ kernel/cgroup/cpuset.c:996:2 @[ kernel/cgroup/cpuset.c:1724:12 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/sched/core.c:1148:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 set_cpus_allowed_ptr kernel/sched/core.c:1148:9
+1 cpuset_write_resmask kernel/cgroup/cpuset.c:879:3 @[ kernel/cgroup/cpuset.c:931:3 @[ kernel/cgroup/cpuset.c:996:2 @[ kernel/cgroup/cpuset.c:1724:12 ] ] ]
+[32m-------------[0m
+[35mUse:kernel/sched/core.c:1148:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 set_cpus_allowed_ptr kernel/sched/core.c:1148:9
+1 kernel_halt kernel/reboot.c:230:2 @[ kernel/reboot.c:271:2 ]
+2 SyS_reboot kernel/reboot.c:356:3 @[ kernel/reboot.c:307:1 ]
+[32m-------------[0m
+[35mUse:kernel/sched/core.c:1148:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 set_cpus_allowed_ptr kernel/sched/core.c:1148:9
+1 cpuset_attach kernel/cgroup/cpuset.c:1545:3
+[32m-------------[0m
+[32mGood: 9 [31mBad: 9 [33mIgnored: 62[0m
+[33mInspect Use of Function:cpuset_cpus_allowed[0m
+STOP WATCH[0]: 987.351000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    12 : Good Path
+    11 : Bad Path
+    65 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    3 : Critical Functions
+    3 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    8 : Critical Functions used by non CallInst
+    24 : Critical Functions used by static assignment
+    24 : # of times indirect call site matched with critical functions
+    52 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

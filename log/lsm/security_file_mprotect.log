@@ -1,43 +1,48 @@
 [36m--- PROCESS FUNCTIONS ---[0m
 Pre-processing...
-Load skip function list, total:355
+Load skip function list, total:360
 Load skip var list, total:22
+Load kernel api list, total:1048
 Collect all functions and indirect callsites
-STOP WATCH[0]: 1132.106000 ms
+STOP WATCH[0]: 912.002000 ms
 Process Gating Functions
 Load LSM hook list, total:1
-STOP WATCH[0]: 19.708000 ms
+STOP WATCH[0]: 14.481000 ms
 [48;5;021m[38;5;255m=LSM hook functions=[0m
 . security_file_mprotect
 =o=
 Collect Checkpoints
-STOP WATCH[0]: 1183.144000 ms
+STOP WATCH[0]: 947.674000 ms
 Identify interesting struct
-STOP WATCH[0]: 7.105000 ms
+STOP WATCH[0]: 5.917000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.207000 ms
+STOP WATCH[0]: 6778.798000 ms
 Collecting Initialization Closure.
 Finding Kernel Entry Point and all __initcall_
 [32mFound x86_64_start_kernel[0m
-STOP WATCH[1]: 106.299000 ms
-Initial Kernel Init Function Count:668
+STOP WATCH[1]: 69.335000 ms
+Initial Kernel Init Function Count:642
 Over Approximate Kernel Init Functions
-STOP WATCH[1]: 192.101000 ms
+STOP WATCH[1]: 132.744000 ms
 Refine Result
-refine pass 0 3112 left
-refine pass 1 2059 left
-refine pass 2 1769 left
-refine pass 3 1705 left
-refine pass 4 1676 left
-refine pass 5 1671 left
-refine pass 6 1669 left
- Refine result : count=1669
-STOP WATCH[1]: 77.586000 ms
-STOP WATCH[0]: 376.896000 ms
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.523000 ms
+STOP WATCH[0]: 248.260000 ms
 Collect all permission-checked variables and functions
 Add call<direct> mprotect_fixup use @ mm/mprotect.c:492:11
  cause:[32mProcess Stack:[0m
 0 do_mprotect_pkey 
 [32m-------------[0m
-STOP WATCH[1]: 2967.768000 ms
+STOP WATCH[1]: 2008.265000 ms
+STOP WATCH[0]: 2008.279000 ms
 Collected 1 critical functions
 Collected 0 critical variables
 Collected 1 critical type/fields
@@ -46,7 +51,7 @@ Collected 1 critical type/fields
 [32mmprotect_fixup[0m
     security_file_mprotect @ mm/mprotect.c:485:11
 [48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
-[32mstruct.vm_area_struct.99223:0,[0m
+[32mstruct.vm_area_struct.99497:0,[0m
     security_file_mprotect @ mm/mprotect.c:485:11
 Run Analysis
 Critical functions
@@ -55,7 +60,7 @@ Critical functions
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
 0 setup_arg_pages fs/exec.c:751:8
-1 load_elf_binary.14623 fs/binfmt_elf.c:882:11
+1 load_elf_binary.14742 fs/binfmt_elf.c:882:11
 [32m-------------[0m
 [35mUse:fs/exec.c:751:8[0m
 [31m=NO CHECK ON PATH=[0m
@@ -63,17 +68,17 @@ Critical functions
 0 setup_arg_pages fs/exec.c:751:8
 1 load_elf_binary fs/binfmt_elf.c:882:11
 [32m-------------[0m
-[32mGood: 1 [31mBad: 2 [33mIgnored: 1[0m
-STOP WATCH[0]: 407.431000 ms
+[32mGood: 1 [31mBad: 2 [33mIgnored: 7[0m
+STOP WATCH[0]: 242.517000 ms
 [36m--- DONE! ---[0m
 ------------STATISTICS---------------
-    43491 : Functions greeted
-    113 : External functions
+    53021 : Functions greeted
+    110 : External functions
     0 : Discovered Path
     0 : Matched Path
     1 : Good Path
     2 : Bad Path
-    1 : Ignored Path
+    7 : Ignored Path
     0 : Path Unable to Resolve
     0 : Resolved CallSite Using Function Pointer
     1 : Critical Functions
@@ -91,5 +96,10 @@ STOP WATCH[0]: 407.431000 ms
 
 
 
-Printing analysis 'capchk Pass (with getAnalysisUsage implemented)':
-Pass::print not implemented for pass: 'capchk'!
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

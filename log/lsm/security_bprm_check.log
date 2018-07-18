@@ -1,0 +1,2029 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 810.402000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.249000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_bprm_check
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 947.893000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.888000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.365000 ms
+STOP WATCH[0]: 6872.779000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.503000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.893000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.459000 ms
+STOP WATCH[0]: 249.508000 ms
+Collect all permission-checked variables and functions
+Resolve indirect call @ fs/exec.c:1638:12
+[32m[FOUND 4 MATCH][0m
+Add call<indirect> load_misc_binary use @ fs/exec.c:1638:12
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+[32m-------------[0m
+Add call<indirect> load_elf_binary.14742 use @ fs/exec.c:1638:12
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+[32m-------------[0m
+Add call<indirect> load_script use @ fs/exec.c:1638:12
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+[32m-------------[0m
+Add call<indirect> load_elf_binary use @ fs/exec.c:1638:12
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+[32m-------------[0m
+Add call<direct> force_sigsegv use @ fs/exec.c:1645:4
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+[32m-------------[0m
+Add call<direct> __audit_bprm use @ ./include/linux/audit.h:371:3 @[ fs/exec.c:1682:3 @[ fs/exec.c:1802:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+[32m-------------[0m
+Resolve indirect call @ ./include/trace/events/sched.h:301:1 @[ fs/exec.c:1683:3 @[ fs/exec.c:1802:11 ] ]
+[31m[NO MATCH][0m
+Add call<direct> send_sig use @ ./include/linux/ptrace.h:156:4 @[ fs/exec.c:1684:3 @[ fs/exec.c:1802:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+[32m-------------[0m
+Add call<direct> proc_exec_connector use @ fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+[32m-------------[0m
+Add call<direct> acct_update_integrals use @ fs/exec.c:1810:2
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+[32m-------------[0m
+Add call<direct> free_bprm use @ fs/exec.c:1812:2
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+[32m-------------[0m
+Add call<direct> put_files_struct use @ fs/exec.c:1816:3
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+[32m-------------[0m
+Resolve indirect call @ kernel/umh.c:42:3 @[ kernel/umh.c:57:3 @[ kernel/umh.c:187:4 ] ]
+[31m[NO MATCH][0m
+Add call<direct> SyS_wait4 use @ kernel/umh.c:138:3 @[ kernel/umh.c:175:3 ]
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+2 do_execve fs/exec.c:1847:9
+3 call_usermodehelper_exec_async kernel/umh.c:100:11
+4 call_usermodehelper_exec_work kernel/umh.c:123:8 @[ kernel/umh.c:175:3 ]
+[32m-------------[0m
+Add call<direct> kernel_sigaction use @ kernel/umh.c:150:2 @[ kernel/umh.c:175:3 ]
+ cause:[32mProcess Stack:[0m
+0 search_binary_handler fs/exec.c:1616:48
+1 do_execveat_common fs/exec.c:1680:8 @[ fs/exec.c:1802:11 ]
+2 do_execve fs/exec.c:1847:9
+3 call_usermodehelper_exec_async kernel/umh.c:100:11
+4 call_usermodehelper_exec_work kernel/umh.c:123:8 @[ kernel/umh.c:175:3 ]
+[32m-------------[0m
+Resolve indirect call @ kernel/umh.c:42:3 @[ kernel/umh.c:57:3 @[ kernel/umh.c:152:2 @[ kernel/umh.c:175:3 ] ] ]
+[31m[NO MATCH][0m
+STOP WATCH[1]: 2287.793000 ms
+STOP WATCH[0]: 2287.808000 ms
+Collected 13 critical functions
+Collected 2 critical variables
+Collected 4 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mformats[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mbinfmt_lock[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mkernel_sigaction[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mput_files_struct[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mfree_bprm[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32macct_update_integrals[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32msend_sig[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mload_elf_binary.14742[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mload_misc_binary[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mSyS_wait4[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mload_elf_binary[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mproc_exec_connector[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mload_script[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mforce_sigsegv[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32m__audit_bprm[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.work_struct:2,[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mstruct.task_struct.38147:0,[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mstruct.linux_binfmt.37870:0,[0m
+    security_bprm_check @ fs/exec.c:1626:11
+[32mstruct.linux_binprm.37865:0,[0m
+    security_bprm_check @ fs/exec.c:1626:11
+Run Analysis
+Critical functions
+[33mInspect Use of Function:kernel_sigaction[0m
+[33mInspect Use of Function:send_sig[0m
+[35mUse:fs/splice.c:195:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 splice_to_pipe fs/splice.c:195:3
+1 relay_file_splice_read kernel/relay.c:1272:22 @[ kernel/relay.c:1298:9 ]
+[32m-------------[0m
+[35mUse:fs/splice.c:195:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 splice_to_pipe fs/splice.c:195:3
+1 tracing_splice_read_pipe kernel/trace/trace.c:5927:9
+[32m-------------[0m
+[35mUse:fs/splice.c:195:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 splice_to_pipe fs/splice.c:195:3
+1 tracing_buffers_splice_read kernel/trace/trace.c:6863:8
+[32m-------------[0m
+[35mUse:fs/splice.c:1073:4 @[ fs/splice.c:1308:8 @[ fs/splice.c:1351:12 @[ fs/splice.c:1334:1 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_vmsplice fs/splice.c:1073:4 @[ fs/splice.c:1308:8 @[ fs/splice.c:1351:12 @[ fs/splice.c:1334:1 ] ] ]
+[32m-------------[0m
+[35mUse:fs/splice.c:235:3 @[ fs/splice.c:1218:11 @[ fs/splice.c:1310:9 @[ fs/splice.c:1351:12 @[ fs/splice.c:1334:1 ] ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_vmsplice fs/splice.c:235:3 @[ fs/splice.c:1218:11 @[ fs/splice.c:1310:9 @[ fs/splice.c:1351:12 @[ fs/splice.c:1334:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:fs/splice.c:1626:4 @[ fs/splice.c:1711:11 @[ fs/splice.c:1736:14 @[ fs/splice.c:1718:1 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_tee fs/splice.c:1626:4 @[ fs/splice.c:1711:11 @[ fs/splice.c:1736:14 @[ fs/splice.c:1718:1 ] ] ]
+[32m-------------[0m
+[35mUse:fs/splice.c:235:3 @[ fs/splice.c:1218:11 @[ fs/splice.c:1310:9 @[ fs/splice.c:1351:12 @[ fs/splice.c:1334:1 ] ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_vmsplice fs/splice.c:235:3 @[ fs/splice.c:1218:11 @[ fs/splice.c:1310:9 @[ fs/splice.c:1351:12 @[ fs/splice.c:1334:1 ] ] ] ]
+[32m-------------[0m
+[35mUse:fs/splice.c:1471:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 opipe_prep fs/splice.c:1471:4
+1 SyS_tee fs/splice.c:1709:10 @[ fs/splice.c:1736:14 @[ fs/splice.c:1718:1 ] ]
+[32m-------------[0m
+[35mUse:fs/splice.c:1471:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 opipe_prep fs/splice.c:1471:4
+1 SyS_splice fs/splice.c:1509:8 @[ fs/splice.c:1121:10 @[ fs/splice.c:1402:14 @[ fs/splice.c:1382:1 ] ] ]
+[32m-------------[0m
+[35mUse:fs/splice.c:1073:4 @[ fs/splice.c:1171:9 @[ fs/splice.c:1402:14 @[ fs/splice.c:1382:1 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_splice fs/splice.c:1073:4 @[ fs/splice.c:1171:9 @[ fs/splice.c:1402:14 @[ fs/splice.c:1382:1 ] ] ]
+[32m-------------[0m
+[35mUse:fs/splice.c:1522:4 @[ fs/splice.c:1121:10 @[ fs/splice.c:1402:14 @[ fs/splice.c:1382:1 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_splice fs/splice.c:1522:4 @[ fs/splice.c:1121:10 @[ fs/splice.c:1402:14 @[ fs/splice.c:1382:1 ] ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ovl_setattr fs/overlayfs/inode.c:41:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ovl_setattr fs/overlayfs/inode.c:41:8
+2 ovl_posix_acl_xattr_set fs/overlayfs/super.c:801:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ovl_setattr fs/overlayfs/inode.c:41:8
+2 ovl_posix_acl_xattr_set fs/overlayfs/super.c:801:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 f2fs_setattr fs/f2fs/file.c:754:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 f2fs_setattr fs/f2fs/file.c:754:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_ioc_space fs/xfs/xfs_ioctl.c:727:11
+3 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1849:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_ioc_space fs/xfs/xfs_ioctl.c:727:11
+3 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1849:10
+4 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 xfs_vn_setattr_size fs/xfs/xfs_iops.c:601:9 @[ fs/xfs/xfs_iops.c:1016:10 ]
+2 xfs_file_fallocate fs/xfs/xfs_file.c:874:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 nilfs_setattr fs/nilfs2/inode.c:832:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 jfs_setattr fs/jfs/file.c:106:7
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 jfs_setattr fs/jfs/file.c:106:7
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 omfs_setattr fs/omfs/file.c:352:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ceph_setattr fs/ceph/inode.c:2123:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ceph_setattr fs/ceph/inode.c:2123:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ceph_setattr fs/ceph/inode.c:2123:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 udf_setattr fs/udf/file.c:262:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 adfs_notify_change fs/adfs/inode.c:306:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 adfs_notify_change fs/adfs/inode.c:306:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ntfs_setattr fs/ntfs/inode.c:2896:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ncp_notify_change fs/ncpfs/inode.c:881:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ncp_notify_change fs/ncpfs/inode.c:881:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 cifs_setattr fs/cifs/inode.c:2317:7 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 sysv_setattr fs/sysv/file.c:37:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ufs_setattr fs/ufs/inode.c:1219:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 sockfs_setattr net/socket.c:542:12
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_do_remove fs/overlayfs/dir.c:759:8
+6 ovl_unlink fs/overlayfs/dir.c:788:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_do_remove fs/overlayfs/dir.c:759:8
+6 ovl_rmdir fs/overlayfs/dir.c:793:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_create_or_link fs/overlayfs/dir.c:476:8
+6 ovl_link fs/overlayfs/dir.c:609:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_create_or_link fs/overlayfs/dir.c:476:8
+6 ovl_create_object fs/overlayfs/dir.c:550:8
+7 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_create_or_link fs/overlayfs/dir.c:476:8
+6 ovl_create_object fs/overlayfs/dir.c:550:8
+7 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_create_or_link fs/overlayfs/dir.c:476:8
+6 ovl_create_object fs/overlayfs/dir.c:550:8
+7 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_create_or_link fs/overlayfs/dir.c:476:8
+6 ovl_create_object fs/overlayfs/dir.c:550:8
+7 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_xattr_set fs/overlayfs/inode.c:248:9
+6 ovl_other_xattr_set fs/overlayfs/super.c:844:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_copy_up fs/overlayfs/copy_up.c:701:9
+5 ovl_rename fs/overlayfs/dir.c:940:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+5 ovl_d_real fs/overlayfs/super.c:99:9
+6 nfs4_file_open ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/nfs4file.c:61:31 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+5 ovl_d_real fs/overlayfs/super.c:99:9
+6 nfs_readdir_xdr_to_array ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/nfs/dir.c:554:21 @[ fs/nfs/dir.c:642:12 ] ] ]
+7 nfs_readdir fs/nfs/dir.c:812:11 @[ fs/nfs/dir.c:871:11 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+5 ovl_d_real fs/overlayfs/super.c:99:9
+6 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ovl_copy_up_flags fs/overlayfs/copy_up.c:207:9 @[ fs/overlayfs/copy_up.c:359:4 @[ fs/overlayfs/copy_up.c:643:10 @[ fs/overlayfs/copy_up.c:689:9 ] ] ]
+4 ovl_open_maybe_copy_up fs/overlayfs/inode.c:366:10
+5 ovl_d_real fs/overlayfs/super.c:99:9
+6 btrfs_sync_file ./include/linux/dcache.h:586:10 @[ ./include/linux/fs.h:1239:9 @[ fs/btrfs/file.c:2043:26 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 ceph_write_iter fs/ceph/file.c:1332:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+6 afs_file_write fs/afs/write.c:713:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+6 cifs_strict_writev fs/cifs/file.c:2854:14
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+6 gfs2_file_write_iter fs/gfs2/file.c:724:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+6 cifs_file_write_iter fs/cifs/cifsfs.c:806:12
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 generic_file_write_iter mm/filemap.c:3292:9
+6 cifs_file_write_iter fs/cifs/cifsfs.c:806:12
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 udf_file_write_iter fs/udf/file.c:169:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 __generic_file_write_iter mm/filemap.c:3210:8
+5 blkdev_write_iter fs/block_dev.c:1893:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 ntfs_file_write_iter fs/ntfs/file.c:385:8 @[ fs/ntfs/file.c:1949:8 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 btrfs_file_write_iter fs/btrfs/file.c:1921:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 file_remove_privs fs/inode.c:1805:9 @[ fs/inode.c:1827:11 ]
+4 xfs_file_aio_write_checks fs/xfs/xfs_file.c:428:10
+5 xfs_file_dax_write fs/xfs/xfs_file.c:621:8
+6 xfs_file_write_iter fs/xfs/xfs_file.c:730:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 chmod_common fs/open.c:532:10
+4 SyS_fchmodat fs/open.c:565:11 @[ fs/open.c:557:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 chmod_common fs/open.c:532:10
+4 SyS_fchmod fs/open.c:551:9 @[ fs/open.c:544:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 SyS_uselib fs/exec.c:136:9 @[ fs/exec.c:120:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_elf_binary.14742 fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_elf_binary fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_script fs/binfmt_script.c:101:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_misc_binary fs/binfmt_misc.c:212:17
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 bm_register_write fs/binfmt_misc.c:723:7
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 path_openat fs/namei.c:2969:11 @[ fs/namei.c:3388:11 @[ fs/namei.c:3520:12 ] ]
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 dump_truncate fs/coredump.c:848:4
+5 elf_core_dump fs/binfmt_elf.c:2374:2
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_truncate fs/open.c:63:8
+4 dump_truncate fs/coredump.c:848:4
+5 elf_core_dump.14744 fs/binfmt_elf.c:2374:2
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 vfs_truncate fs/open.c:63:8 @[ fs/open.c:120:11 ]
+4 compat_SyS_truncate fs/open.c:143:11 @[ fs/open.c:161:9 @[ fs/open.c:159:1 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 vfs_truncate fs/open.c:63:8 @[ fs/open.c:120:11 ]
+4 SyS_truncate fs/open.c:143:11 @[ fs/open.c:155:9 @[ fs/open.c:153:1 ] ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 utimes_common fs/utimes.c:91:10
+4 do_utimes fs/utimes.c:156:11
+5 compat_SyS_futimesat fs/utimes.c:272:9 @[ fs/utimes.c:256:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 utimes_common fs/utimes.c:91:10
+4 do_utimes fs/utimes.c:156:11
+5 compat_SyS_utimensat fs/utimes.c:253:9 @[ fs/utimes.c:241:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 utimes_common fs/utimes.c:91:10
+4 do_utimes fs/utimes.c:156:11
+5 compat_SyS_utime fs/utimes.c:238:9 @[ fs/utimes.c:226:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 utimes_common fs/utimes.c:91:10
+4 do_utimes fs/utimes.c:156:11
+5 SyS_futimesat fs/utimes.c:212:9 @[ fs/utimes.c:187:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 utimes_common fs/utimes.c:91:10
+4 do_utimes fs/utimes.c:156:11
+5 SyS_utimensat fs/utimes.c:184:9 @[ fs/utimes.c:168:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 utimes_common fs/utimes.c:91:10
+4 do_utimes fs/utimes.c:156:11
+5 SyS_utime fs/utimes.c:35:9 @[ fs/utimes.c:24:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ecryptfs_setattr fs/ecryptfs/inode.c:951:7
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ecryptfs_setattr fs/ecryptfs/inode.c:951:7
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 ecryptfs_setattr fs/ecryptfs/inode.c:951:7
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 chown_common fs/open.c:612:11
+4 SyS_fchown fs/open.c:677:10 @[ fs/open.c:665:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 chown_common fs/open.c:612:11
+4 SyS_fchownat fs/open.c:642:10 @[ fs/open.c:622:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_sys_ftruncate fs/open.c:63:8 @[ fs/open.c:205:11 ]
+4 compat_SyS_ftruncate fs/open.c:221:9 @[ fs/open.c:219:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 notify_change fs/attr.c:315:11
+3 do_sys_ftruncate fs/open.c:63:8 @[ fs/open.c:205:11 ]
+4 SyS_ftruncate fs/open.c:215:9 @[ fs/open.c:213:1 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 simple_setattr fs/libfs.c:404:10
+2 configfs_setattr fs/configfs/inode.c:84:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 proc_sys_setattr fs/proc/proc_sysctl.c:810:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 proc_sys_setattr fs/proc/proc_sysctl.c:810:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 minix_setattr fs/minix/file.c:30:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 shmem_setattr mm/shmem.c:999:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 shmem_setattr mm/shmem.c:999:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 shmem_setattr mm/shmem.c:999:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 kernfs_iop_setattr fs/kernfs/inode.c:122:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 kernfs_iop_setattr fs/kernfs/inode.c:122:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 kernfs_iop_setattr fs/kernfs/inode.c:122:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 proc_notify_change fs/proc/generic.c:111:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 proc_notify_change fs/proc/generic.c:111:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 reiserfs_xattr_set fs/reiserfs/xattr.c:616:10
+4 security_set fs/reiserfs/xattr_security.c:31:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_mkdir fs/reiserfs/namei.c:840:15
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_create fs/reiserfs/namei.c:664:6
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_mknod fs/reiserfs/namei.c:744:6
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_symlink fs/reiserfs/namei.c:1162:6
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_set_acl fs/reiserfs/xattr_acl.c:48:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 reiserfs_setattr fs/reiserfs/inode.c:3287:10
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_set_acl fs/reiserfs/xattr_acl.c:48:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 gfs2_setattr fs/gfs2/inode.c:1947:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 gfs2_setattr fs/gfs2/inode.c:1947:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 gfs2_setattr fs/gfs2/inode.c:1947:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 hpfs_setattr fs/hpfs/inode.c:277:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 hpfs_setattr fs/hpfs/inode.c:277:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ext2_setattr fs/ext2/inode.c:1645:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ext2_setattr fs/ext2/inode.c:1645:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 btrfs_setattr fs/btrfs/inode.c:5131:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 btrfs_setattr fs/btrfs/inode.c:5131:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 btrfs_setattr fs/btrfs/inode.c:5131:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 btrfs_setattr fs/btrfs/inode.c:5131:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 orangefs_setattr fs/orangefs/inode.c:218:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 affs_notify_change fs/affs/inode.c:226:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 affs_notify_change fs/affs/inode.c:226:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 affs_notify_change fs/affs/inode.c:226:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 fat_setattr fs/fat/file.c:454:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 fat_setattr fs/fat/file.c:454:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 fat_setattr fs/fat/file.c:454:10
+2 fat_generic_ioctl fs/fat/file.c:97:8 @[ fs/fat/file.c:133:10 ]
+3 fat_compat_dir_ioctl fs/fat/dir.c:842:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 fat_setattr fs/fat/file.c:454:10
+2 fat_generic_ioctl fs/fat/file.c:97:8 @[ fs/fat/file.c:133:10 ]
+3 fat_dir_ioctl fs/fat/dir.c:802:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ext4_setattr fs/ext4/inode.c:5376:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 ext4_setattr fs/ext4/inode.c:5376:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 hugetlbfs_setattr fs/hugetlbfs/inode.c:666:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 hugetlbfs_setattr fs/hugetlbfs/inode.c:666:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 hfsplus_setattr fs/hfsplus/inode.c:250:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 proc_setattr fs/proc/base.c:671:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 proc_setattr fs/proc/base.c:671:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 hfs_inode_setattr fs/hfs/inode.c:610:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2 @[ fs/attr.c:45:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 setattr_prepare fs/attr.c:136:2 @[ fs/attr.c:45:15 ]
+1 hfs_inode_setattr fs/hfs/inode.c:610:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 ceph_fallocate fs/ceph/file.c:1677:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 gfs2_fallocate fs/gfs2/file.c:942:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 btrfs_fallocate fs/btrfs/file.c:2853:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 xfs_file_fallocate fs/xfs/xfs_file.c:841:12
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 omfs_setattr fs/omfs/file.c:358:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 affs_notify_change fs/affs/inode.c:244:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 affs_notify_change fs/affs/inode.c:244:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 affs_notify_change fs/affs/inode.c:244:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 reiserfs_xattr_set fs/reiserfs/xattr.c:616:10
+4 security_set fs/reiserfs/xattr_security.c:31:9
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_mkdir fs/reiserfs/namei.c:840:15
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_create fs/reiserfs/namei.c:664:6
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_mknod fs/reiserfs/namei.c:744:6
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_inherit_default_acl fs/reiserfs/xattr_acl.c:339:10
+5 reiserfs_new_inode fs/reiserfs/inode.c:2101:12
+6 reiserfs_symlink fs/reiserfs/namei.c:1162:6
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_set_acl fs/reiserfs/xattr_acl.c:48:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 reiserfs_setattr fs/reiserfs/inode.c:3398:11
+2 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+3 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+4 reiserfs_set_acl fs/reiserfs/xattr_acl.c:48:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 shmem_fallocate mm/shmem.c:2878:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 gfs2_setattr_size fs/gfs2/bmap.c:1657:8
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 gfs2_setattr_size fs/gfs2/bmap.c:1657:8
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 gfs2_setattr_size fs/gfs2/bmap.c:1657:8
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 nfs_setattr fs/nfs/inode.c:591:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 nfs_setattr fs/nfs/inode.c:591:11
+2 nfs_namespace_setattr fs/nfs/namespace.c:183:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 sysv_setattr fs/sysv/file.c:43:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 generic_cont_expand_simple fs/buffer.c:2333:8
+2 hfsplus_setattr fs/hfsplus/inode.c:258:12
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 generic_cont_expand_simple fs/buffer.c:2333:8
+2 fat_cont_expand fs/fat/file.c:193:8
+3 fat_setattr fs/fat/file.c:472:12
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 generic_cont_expand_simple fs/buffer.c:2333:8
+2 fat_cont_expand fs/fat/file.c:193:8
+3 fat_setattr fs/fat/file.c:472:12
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 generic_cont_expand_simple fs/buffer.c:2333:8
+2 fat_cont_expand fs/fat/file.c:193:8
+3 fat_setattr fs/fat/file.c:472:12
+4 fat_generic_ioctl fs/fat/file.c:97:8 @[ fs/fat/file.c:133:10 ]
+5 fat_compat_dir_ioctl fs/fat/dir.c:842:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 generic_cont_expand_simple fs/buffer.c:2333:8
+2 fat_cont_expand fs/fat/file.c:193:8
+3 fat_setattr fs/fat/file.c:472:12
+4 fat_generic_ioctl fs/fat/file.c:97:8 @[ fs/fat/file.c:133:10 ]
+5 fat_dir_ioctl fs/fat/dir.c:802:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 minix_setattr fs/minix/file.c:36:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 ecryptfs_setattr fs/ecryptfs/inode.c:816:10 @[ fs/ecryptfs/inode.c:929:8 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 ecryptfs_setattr fs/ecryptfs/inode.c:816:10 @[ fs/ecryptfs/inode.c:929:8 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 ecryptfs_setattr fs/ecryptfs/inode.c:816:10 @[ fs/ecryptfs/inode.c:929:8 ]
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 jfs_setattr fs/jfs/file.c:126:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 jfs_setattr fs/jfs/file.c:126:8
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 nfs_setattr_update_inode fs/nfs/inode.c:645:8 @[ fs/nfs/inode.c:692:3 ]
+2 nfs4_do_open fs/nfs/nfs4proc.c:2900:5 @[ fs/nfs/nfs4proc.c:2951:12 ]
+3 nfs4_proc_create fs/nfs/nfs4proc.c:4154:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 nfs_setattr_update_inode fs/nfs/inode.c:645:8 @[ fs/nfs/inode.c:692:3 ]
+2 nfs4_do_open fs/nfs/nfs4proc.c:2900:5 @[ fs/nfs/nfs4proc.c:2951:12 ]
+3 nfs4_atomic_open fs/nfs/nfs4proc.c:3414:10
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 nfs_setattr_update_inode fs/nfs/inode.c:645:8 @[ fs/nfs/inode.c:692:3 ]
+2 nfs4_proc_setattr fs/nfs/nfs4proc.c:3866:3
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 hpfs_setattr fs/hpfs/inode.c:283:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 hpfs_setattr fs/hpfs/inode.c:283:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 hfs_inode_setattr fs/hfs/inode.c:639:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 hfs_inode_setattr fs/hfs/inode.c:639:11
+[32m-------------[0m
+[35mUse:fs/attr.c:136:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 inode_newsize_ok fs/attr.c:136:2
+1 nfs42_fallocate fs/nfs/nfs4file.c:169:8
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 btrfs_file_write_iter fs/btrfs/file.c:1900:8
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 ntfs_file_write_iter fs/ntfs/file.c:348:8 @[ fs/ntfs/file.c:1949:8 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 ceph_write_iter fs/ceph/file.c:1326:8
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 xfs_file_aio_write_checks fs/xfs/xfs_file.c:349:10
+2 xfs_file_dax_write fs/xfs/xfs_file.c:621:8
+3 xfs_file_write_iter fs/xfs/xfs_file.c:730:9
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 udf_file_write_iter fs/udf/file.c:146:11
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 orangefs_file_write_iter fs/orangefs/file.c:495:7
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 ncp_file_write_iter fs/ncpfs/file.c:180:10
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 nfs_file_write fs/nfs/file.c:628:11
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 cifs_strict_writev fs/cifs/file.c:2816:7 @[ fs/cifs/file.c:2857:13 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 cifs_user_writev fs/cifs/file.c:2724:7
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 cifs_user_writev fs/cifs/file.c:2724:7
+2 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_write_checks mm/filemap.c:2946:4
+1 cifs_user_writev fs/cifs/file.c:2724:7
+2 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+1 afs_file_write fs/afs/write.c:713:11
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+1 cifs_strict_writev fs/cifs/file.c:2854:14
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+1 gfs2_file_write_iter fs/gfs2/file.c:724:9
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+1 cifs_file_write_iter fs/cifs/cifsfs.c:806:12
+[32m-------------[0m
+[35mUse:mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 generic_file_write_iter mm/filemap.c:2946:4 @[ mm/filemap.c:3290:8 ]
+1 cifs_file_write_iter fs/cifs/cifsfs.c:806:12
+[32m-------------[0m
+[35mUse:fs/pipe.c:374:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 pipe_write fs/pipe.c:374:3
+[32m-------------[0m
+[35mUse:fs/pipe.c:408:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 pipe_write fs/pipe.c:408:4
+[32m-------------[0m
+[32mGood: 1 [31mBad: 222 [33mIgnored: 530[0m
+[33mInspect Use of Function:__audit_bprm[0m
+[33mInspect Use of Function:free_bprm[0m
+[35mUse:fs/exec.c:1830:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:1830:2
+1 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:fs/exec.c:1830:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:1830:2
+1 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:fs/exec.c:1830:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:1830:2
+1 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:fs/exec.c:1830:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_execveat_common fs/exec.c:1830:2
+1 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 4 [33mIgnored: 3[0m
+[33mInspect Use of Function:put_files_struct[0m
+[35mUse:fs/proc/fd.c:127:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tid_fd_revalidate fs/proc/fd.c:127:4
+1 proc_lookupfdinfo fs/proc/fd.c:328:6 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:337:9 ] ]
+[32m-------------[0m
+[35mUse:fs/proc/fd.c:127:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tid_fd_revalidate fs/proc/fd.c:127:4
+1 proc_lookupfd fs/proc/fd.c:193:6 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:276:9 ] ]
+[32m-------------[0m
+[35mUse:fs/proc/fd.c:109:5[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tid_fd_revalidate fs/proc/fd.c:109:5
+1 proc_lookupfdinfo fs/proc/fd.c:328:6 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:337:9 ] ]
+[32m-------------[0m
+[35mUse:fs/proc/fd.c:109:5[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tid_fd_revalidate fs/proc/fd.c:109:5
+1 proc_lookupfd fs/proc/fd.c:193:6 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:276:9 ] ]
+[32m-------------[0m
+[35mUse:fs/file.c:439:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 reset_files_struct fs/file.c:439:2
+1 do_execveat_common fs/exec.c:1835:3
+2 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:fs/file.c:439:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 reset_files_struct fs/file.c:439:2
+1 do_execveat_common fs/exec.c:1835:3
+2 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:fs/file.c:439:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 reset_files_struct fs/file.c:439:2
+1 do_execveat_common fs/exec.c:1835:3
+2 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:fs/file.c:439:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 reset_files_struct fs/file.c:439:2
+1 do_execveat_common fs/exec.c:1835:3
+2 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/fork.c:2421:3 @[ kernel/fork.c:2315:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_unshare kernel/fork.c:2421:3 @[ kernel/fork.c:2315:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 25[0m
+[33mInspect Use of Function:SyS_wait4[0m
+[35mUse:kernel/exit.c:1694:9 @[ kernel/exit.c:1692:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_waitpid kernel/exit.c:1694:9 @[ kernel/exit.c:1692:1 ]
+[32m-------------[0m
+[32mGood: 0 [31mBad: 1 [33mIgnored: 2[0m
+[33mInspect Use of Function:load_elf_binary[0m
+[35mUse:fs/binfmt_elf.c:1108:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:1108:2
+[32m-------------[0m
+[31mindirect call @ fs/exec.c:1638:12
+[32mGood: 1 [31mBad: 1 [33mIgnored: 6[0m
+[33mInspect Use of Function:proc_exec_connector[0m
+[33mInspect Use of Function:force_sigsegv[0m
+[33mInspect Use of Function:load_script[0m
+[31mindirect call @ fs/exec.c:1638:12
+[33mInspect Use of Function:load_misc_binary[0m
+[31mindirect call @ fs/exec.c:1638:12
+[33mInspect Use of Function:load_elf_binary.14742[0m
+[35mUse:fs/binfmt_elf.c:1108:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14742 fs/binfmt_elf.c:1108:2
+[32m-------------[0m
+[31mindirect call @ fs/exec.c:1638:12
+[32mGood: 1 [31mBad: 1 [33mIgnored: 6[0m
+[33mInspect Use of Function:acct_update_integrals[0m
+STOP WATCH[0]: 12501.495000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    11 : Good Path
+    238 : Bad Path
+    590 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    13 : Critical Functions
+    2 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    3 : Critical Function Pointer Unable to Resolve, Collect Pass
+    1 : Critical Function Pointer Resolved, Collect Pass
+    35 : Critical Functions used by non CallInst
+    490 : Critical Functions used by static assignment
+    233 : # of times indirect call site matched with critical functions
+    672 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

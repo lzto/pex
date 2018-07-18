@@ -1,0 +1,169 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.514000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.466000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_inet_conn_established
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 948.282000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.957000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.334000 ms
+STOP WATCH[0]: 6820.789000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.156000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.804000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.095000 ms
+STOP WATCH[0]: 248.692000 ms
+Collect all permission-checked variables and functions
+Add call<direct> tcp_parse_options use @ net/ipv4/tcp_input.c:5516:3 @[ net/ipv4/tcp_input.c:5680:5 @[ net/ipv4/tcp_input.c:5842:12 ] ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> tcp_fastopen_cache_set use @ net/ipv4/tcp_input.c:5538:2 @[ net/ipv4/tcp_input.c:5680:5 @[ net/ipv4/tcp_input.c:5842:12 ] ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> __tcp_retransmit_skb use @ net/ipv4/tcp_input.c:5542:8 @[ net/ipv4/tcp_input.c:5680:5 @[ net/ipv4/tcp_input.c:5842:12 ] ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> tcp_rearm_rto use @ net/ipv4/tcp_input.c:5545:3 @[ net/ipv4/tcp_input.c:5680:5 @[ net/ipv4/tcp_input.c:5842:12 ] ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> tcp_fastopen_add_skb use @ net/ipv4/tcp_input.c:5555:2 @[ net/ipv4/tcp_input.c:5680:5 @[ net/ipv4/tcp_input.c:5842:12 ] ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Resolve indirect call @ net/ipv4/tcp_input.c:5683:4 @[ net/ipv4/tcp_input.c:5842:12 ]
+[31m[NO MATCH][0m
+Add call<direct> sock_wake_async use @ ./include/net/sock.h:2107:3 @[ net/ipv4/tcp_input.c:5684:4 @[ net/ipv4/tcp_input.c:5842:12 ] ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> sk_reset_timer use @ ./include/net/inet_connection_sock.h:247:3 @[ net/ipv4/tcp_input.c:5700:4 @[ net/ipv4/tcp_input.c:5842:12 ] ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> tcp_send_ack use @ net/ipv4/tcp_input.c:5707:4 @[ net/ipv4/tcp_input.c:5842:12 ]
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> tcp_urg use @ net/ipv4/tcp_input.c:5847:3
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+Add call<direct> tcp_data_snd_check use @ net/ipv4/tcp_input.c:5849:3
+ cause:[32mProcess Stack:[0m
+0 tcp_finish_connect 
+1 tcp_rcv_state_process net/ipv4/tcp_input.c:5677:3 @[ net/ipv4/tcp_input.c:5842:12 ]
+[32m-------------[0m
+STOP WATCH[1]: 1964.789000 ms
+STOP WATCH[0]: 1964.802000 ms
+Collected 10 critical functions
+Collected 0 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mtcp_urg[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32mtcp_send_ack[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32msk_reset_timer[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32mtcp_fastopen_cache_set[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32mtcp_parse_options[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32m__tcp_retransmit_skb[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32mtcp_rearm_rto[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32mtcp_data_snd_check[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32msock_wake_async[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32mtcp_fastopen_add_skb[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.net.851897:0,[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+[32mstruct.sock.852073:0,[0m
+    security_inet_conn_established @ net/ipv4/tcp_input.c:5483:3
+Run Analysis
+Critical functions
+[33mInspect Use of Function:tcp_fastopen_add_skb[0m
+[33mInspect Use of Function:sock_wake_async[0m
+[33mInspect Use of Function:tcp_data_snd_check[0m
+[33mInspect Use of Function:tcp_send_ack[0m
+[33mInspect Use of Function:tcp_urg[0m
+[33mInspect Use of Function:sk_reset_timer[0m
+[33mInspect Use of Function:tcp_fastopen_cache_set[0m
+[33mInspect Use of Function:tcp_parse_options[0m
+[33mInspect Use of Function:tcp_rearm_rto[0m
+[33mInspect Use of Function:__tcp_retransmit_skb[0m
+STOP WATCH[0]: 1870.204000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    10 : Good Path
+    0 : Bad Path
+    1679 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    10 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    1 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    70 : Critical Functions used by non CallInst
+    1004 : Critical Functions used by static assignment
+    527 : # of times indirect call site matched with critical functions
+    650 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

@@ -1,0 +1,127 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 805.703000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.186000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_netlbl_sid_to_secattr
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1004.593000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.946000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.314000 ms
+STOP WATCH[0]: 6783.479000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.489000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.742000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.005000 ms
+STOP WATCH[0]: 248.904000 ms
+Collect all permission-checked variables and functions
+Add call<direct> netlbl_skbuff_setattr use @ security/selinux/netlabel.c:265:7
+ cause:[32mProcess Stack:[0m
+0 selinux_netlbl_skbuff_setsid 
+[32m-------------[0m
+Add call<direct> netlbl_req_setattr use @ security/selinux/netlabel.c:296:7
+ cause:[32mProcess Stack:[0m
+0 selinux_netlbl_inet_conn_request 
+[32m-------------[0m
+Resolve indirect call @ ./include/net/netlabel.h:316:3 @[ ./include/net/netlabel.h:380:3 @[ security/selinux/netlabel.c:298:2 ] ]
+[31m[NO MATCH][0m
+Resolve indirect call @ ./include/net/netlabel.h:316:3 @[ ./include/net/netlabel.h:380:3 @[ ./include/net/netlabel.h:409:2 @[ security/selinux/netlabel.c:96:3 ] ] ]
+[31m[NO MATCH][0m
+Add call<direct> netlbl_conn_setattr use @ security/selinux/netlabel.c:508:7
+ cause:[32mProcess Stack:[0m
+0 selinux_netlbl_sock_genattr 
+1 selinux_netlbl_socket_connect security/selinux/netlabel.c:503:12
+[32m-------------[0m
+Add call<direct> netlbl_sock_setattr use @ security/selinux/netlabel.c:344:7
+ cause:[32mProcess Stack:[0m
+0 selinux_netlbl_sock_genattr 
+1 selinux_netlbl_socket_post_create security/selinux/netlabel.c:341:12
+[32m-------------[0m
+STOP WATCH[1]: 2025.386000 ms
+STOP WATCH[0]: 2025.399000 ms
+Collected 4 critical functions
+Collected 0 critical variables
+Collected 4 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mnetlbl_sock_setattr[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:94:7
+[32mnetlbl_conn_setattr[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:94:7
+[32mnetlbl_skbuff_setattr[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:260:8
+[32mnetlbl_req_setattr[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:293:7
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.netlbl_lsm_catmap:0,[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:94:7
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:293:7
+[32mstruct.netlbl_lsm_secattr:0,[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:293:7
+[32mstruct.sk_security_struct:0,[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:94:7
+[32mstruct.netlbl_lsm_cache:0,[0m
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:94:7
+    security_netlbl_sid_to_secattr @ security/selinux/netlabel.c:293:7
+Run Analysis
+Critical functions
+[33mInspect Use of Function:netlbl_sock_setattr[0m
+[33mInspect Use of Function:netlbl_conn_setattr[0m
+[33mInspect Use of Function:netlbl_skbuff_setattr[0m
+[33mInspect Use of Function:netlbl_req_setattr[0m
+STOP WATCH[0]: 336.039000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    4 : Good Path
+    0 : Bad Path
+    4 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    4 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    2 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    0 : Critical Functions used by non CallInst
+    4 : Critical Functions used by static assignment
+    0 : # of times indirect call site matched with critical functions
+    12 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

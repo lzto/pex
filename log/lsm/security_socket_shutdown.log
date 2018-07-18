@@ -1,0 +1,137 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 805.837000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.383000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_socket_shutdown
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 944.240000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.812000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.912000 ms
+STOP WATCH[0]: 6771.751000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.514000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.900000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.449000 ms
+STOP WATCH[0]: 249.512000 ms
+Collect all permission-checked variables and functions
+Resolve indirect call @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+[32m[FOUND 4 MATCH][0m
+Add call<indirect> rxrpc_shutdown use @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_shutdown net/socket.c:1874:1
+[32m-------------[0m
+Add call<indirect> sock_no_shutdown use @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_shutdown net/socket.c:1874:1
+[32m-------------[0m
+Add call<indirect> inet_shutdown use @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_shutdown net/socket.c:1874:1
+[32m-------------[0m
+Add call<indirect> unix_shutdown use @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_shutdown net/socket.c:1874:1
+[32m-------------[0m
+STOP WATCH[1]: 1960.390000 ms
+STOP WATCH[0]: 1960.405000 ms
+Collected 4 critical functions
+Collected 0 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32munix_shutdown[0m
+    security_socket_shutdown @ net/socket.c:1881:9 @[ net/socket.c:1874:1 ]
+[32minet_shutdown[0m
+    security_socket_shutdown @ net/socket.c:1881:9 @[ net/socket.c:1874:1 ]
+[32mrxrpc_shutdown[0m
+    security_socket_shutdown @ net/socket.c:1881:9 @[ net/socket.c:1874:1 ]
+[32msock_no_shutdown[0m
+    security_socket_shutdown @ net/socket.c:1881:9 @[ net/socket.c:1874:1 ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.proto_ops.800304:0,[0m
+    security_socket_shutdown @ net/socket.c:1881:9 @[ net/socket.c:1874:1 ]
+[32mstruct.socket.800305:0,[0m
+    security_socket_shutdown @ net/socket.c:1881:9 @[ net/socket.c:1874:1 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:sock_no_shutdown[0m
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2959:2 @[ net/ceph/messenger.c:2933:3 ] ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:710:2 ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2712:4 @[ net/ceph/messenger.c:2911:9 ] ]
+[31mindirect call @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+[31mindirect call @ net/socket.c:3409:9
+[33mInspect Use of Function:rxrpc_shutdown[0m
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2959:2 @[ net/ceph/messenger.c:2933:3 ] ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:710:2 ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2712:4 @[ net/ceph/messenger.c:2911:9 ] ]
+[31mindirect call @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+[31mindirect call @ net/socket.c:3409:9
+[33mInspect Use of Function:unix_shutdown[0m
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2959:2 @[ net/ceph/messenger.c:2933:3 ] ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:710:2 ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2712:4 @[ net/ceph/messenger.c:2911:9 ] ]
+[31mindirect call @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+[31mindirect call @ net/socket.c:3409:9
+[33mInspect Use of Function:inet_shutdown[0m
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2959:2 @[ net/ceph/messenger.c:2933:3 ] ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:710:2 ]
+[31mindirect call @ net/ceph/messenger.c:629:8 @[ net/ceph/messenger.c:2712:4 @[ net/ceph/messenger.c:2911:9 ] ]
+[31mindirect call @ net/socket.c:1883:10 @[ net/socket.c:1874:1 ]
+[31mindirect call @ net/socket.c:3409:9
+STOP WATCH[0]: 2476.691000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    4 : Good Path
+    0 : Bad Path
+    484 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    4 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    1 : Critical Function Pointer Resolved, Collect Pass
+    48 : Critical Functions used by non CallInst
+    224 : Critical Functions used by static assignment
+    208 : # of times indirect call site matched with critical functions
+    344 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

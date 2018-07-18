@@ -1,0 +1,108 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 810.183000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.212000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_audit_rule_known
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 945.743000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.913000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.101000 ms
+STOP WATCH[0]: 6770.353000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 70.780000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.601000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.094000 ms
+STOP WATCH[0]: 250.120000 ms
+Collect all permission-checked variables and functions
+Add call<direct> audit_dupe_rule use @ kernel/auditfilter.c:1394:11 @[ kernel/auditfilter.c:1432:14 ]
+ cause:[32mProcess Stack:[0m
+0 audit_update_lsm_rules kernel/auditfilter.c:1425:9
+[32m-------------[0m
+Add call<direct> audit_remove_mark use @ kernel/auditfilter.c:1396:3 @[ kernel/auditfilter.c:1432:14 ]
+ cause:[32mProcess Stack:[0m
+0 audit_update_lsm_rules kernel/auditfilter.c:1425:9
+[32m-------------[0m
+Add call<direct> audit_panic use @ kernel/auditfilter.c:1401:3 @[ kernel/auditfilter.c:1432:14 ]
+ cause:[32mProcess Stack:[0m
+0 audit_update_lsm_rules kernel/auditfilter.c:1425:9
+[32m-------------[0m
+STOP WATCH[1]: 1959.425000 ms
+STOP WATCH[0]: 1959.439000 ms
+Collected 3 critical functions
+Collected 1 critical variables
+Collected 1 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32maudit_rules_list[0m
+    security_audit_rule_known @ kernel/auditfilter.c:1391:7 @[ kernel/auditfilter.c:1432:14 ]
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32maudit_panic[0m
+    security_audit_rule_known @ kernel/auditfilter.c:1391:7 @[ kernel/auditfilter.c:1432:14 ]
+[32maudit_dupe_rule[0m
+    security_audit_rule_known @ kernel/auditfilter.c:1391:7 @[ kernel/auditfilter.c:1432:14 ]
+[32maudit_remove_mark[0m
+    security_audit_rule_known @ kernel/auditfilter.c:1391:7 @[ kernel/auditfilter.c:1432:14 ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.audit_entry:0,[0m
+    security_audit_rule_known @ kernel/auditfilter.c:1391:7 @[ kernel/auditfilter.c:1432:14 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:audit_remove_mark[0m
+[33mInspect Use of Function:audit_panic[0m
+[33mInspect Use of Function:audit_dupe_rule[0m
+STOP WATCH[0]: 764.543000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    0 : Good Path
+    0 : Bad Path
+    28 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    3 : Critical Functions
+    1 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    0 : Critical Functions used by non CallInst
+    12 : Critical Functions used by static assignment
+    3 : # of times indirect call site matched with critical functions
+    78 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

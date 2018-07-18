@@ -1,0 +1,207 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 810.012000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.341000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_netif_sid
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1012.303000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.935000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.938000 ms
+STOP WATCH[0]: 6778.230000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 70.739000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.539000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.098000 ms
+STOP WATCH[0]: 250.034000 ms
+Collect all permission-checked variables and functions
+Add call<direct> avc_has_perm use @ security/selinux/hooks.c:4709:8 @[ security/selinux/hooks.c:5173:9 ]
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_ip_forward security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:5173:9 ]
+[32m-------------[0m
+Add call<direct> sel_netnode_sid use @ security/selinux/hooks.c:4714:8 @[ security/selinux/hooks.c:5173:9 ]
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_ip_forward security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:5173:9 ]
+[32m-------------[0m
+Add call<direct> avc_has_perm use @ security/selinux/hooks.c:4717:9 @[ security/selinux/hooks.c:5173:9 ]
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_ip_forward security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:5173:9 ]
+[32m-------------[0m
+Add call<direct> selinux_netlbl_err use @ security/selinux/hooks.c:5176:4
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_ip_forward security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:5173:9 ]
+[32m-------------[0m
+Add call<direct> avc_has_perm use @ security/selinux/hooks.c:5427:7
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_ip_postroute security/selinux/hooks.c:5425:7
+[32m-------------[0m
+Add call<direct> sel_netnode_sid use @ security/selinux/hooks.c:5431:7
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_ip_postroute security/selinux/hooks.c:5425:7
+[32m-------------[0m
+Add call<direct> avc_has_perm use @ security/selinux/hooks.c:5433:7
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_ip_postroute security/selinux/hooks.c:5425:7
+[32m-------------[0m
+Add call<direct> avc_has_perm use @ security/selinux/hooks.c:4709:8 @[ security/selinux/hooks.c:4799:9 ]
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_socket_sock_rcv_skb security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:4799:9 ]
+[32m-------------[0m
+Add call<direct> sel_netnode_sid use @ security/selinux/hooks.c:4714:8 @[ security/selinux/hooks.c:4799:9 ]
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_socket_sock_rcv_skb security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:4799:9 ]
+[32m-------------[0m
+Add call<direct> avc_has_perm use @ security/selinux/hooks.c:4717:9 @[ security/selinux/hooks.c:4799:9 ]
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_socket_sock_rcv_skb security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:4799:9 ]
+[32m-------------[0m
+Add call<direct> selinux_netlbl_err use @ security/selinux/hooks.c:4802:4
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_socket_sock_rcv_skb security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:4799:9 ]
+[32m-------------[0m
+Add call<direct> avc_has_perm use @ security/selinux/hooks.c:4805:9
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_socket_sock_rcv_skb security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:4799:9 ]
+[32m-------------[0m
+Add call<direct> selinux_netlbl_err use @ security/selinux/hooks.c:4808:4
+ cause:[32mProcess Stack:[0m
+0 sel_netif_sid security/selinux/netif.c:203:31
+1 selinux_socket_sock_rcv_skb security/selinux/hooks.c:4706:8 @[ security/selinux/hooks.c:4799:9 ]
+[32m-------------[0m
+STOP WATCH[1]: 2020.506000 ms
+STOP WATCH[0]: 2020.520000 ms
+Collected 3 critical functions
+Collected 2 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32msel_netif_hash[0m
+    security_netif_sid @ security/selinux/netif.c:166:8 @[ security/selinux/netif.c:216:9 ]
+[32msel_netif_total[0m
+    security_netif_sid @ security/selinux/netif.c:166:8 @[ security/selinux/netif.c:216:9 ]
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mselinux_netlbl_err[0m
+    security_netif_sid @ security/selinux/netif.c:166:8 @[ security/selinux/netif.c:216:9 ]
+[32mavc_has_perm[0m
+    security_netif_sid @ security/selinux/netif.c:166:8 @[ security/selinux/netif.c:216:9 ]
+[32msel_netnode_sid[0m
+    security_netif_sid @ security/selinux/netif.c:166:8 @[ security/selinux/netif.c:216:9 ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+[33mInspect Use of Function:sel_netnode_sid[0m
+[33mInspect Use of Function:selinux_netlbl_err[0m
+[33mInspect Use of Function:avc_has_perm[0m
+[35mUse:security/selinux/selinuxfs.c:1359:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_write_avc_cache_threshold security/selinux/selinuxfs.c:1359:8
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:410:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_policy security/selinux/selinuxfs.c:410:8
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:638:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_write_validatetrans security/selinux/selinuxfs.c:638:7
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:480:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_write_load security/selinux/selinuxfs.c:480:11
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:348:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_open_policy security/selinux/selinuxfs.c:348:7
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:142:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_write_enforce security/selinux/selinuxfs.c:142:12
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1201:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_commit_bools_write security/selinux/selinuxfs.c:1201:11
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:595:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_write_checkreqprot security/selinux/selinuxfs.c:595:11
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1143:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_write_bool security/selinux/selinuxfs.c:1143:11
+[32m-------------[0m
+[32mGood: 7 [31mBad: 9 [33mIgnored: 212[0m
+STOP WATCH[0]: 5342.685000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    13 : Good Path
+    9 : Bad Path
+    213 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    3 : Critical Functions
+    2 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    13 : Critical Functions used by non CallInst
+    209 : Critical Functions used by static assignment
+    0 : # of times indirect call site matched with critical functions
+    462 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

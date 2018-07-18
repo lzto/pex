@@ -1,37 +1,41 @@
 [36m--- PROCESS FUNCTIONS ---[0m
 Pre-processing...
-Load skip function list, total:355
+Load skip function list, total:360
 Load skip var list, total:22
+Load kernel api list, total:1048
 Collect all functions and indirect callsites
-STOP WATCH[0]: 1144.658000 ms
+STOP WATCH[0]: 811.055000 ms
 Process Gating Functions
 Load LSM hook list, total:1
-STOP WATCH[0]: 21.343000 ms
+STOP WATCH[0]: 14.138000 ms
 [48;5;021m[38;5;255m=LSM hook functions=[0m
 . security_kernel_read_file
 =o=
 Collect Checkpoints
-STOP WATCH[0]: 1260.771000 ms
+STOP WATCH[0]: 1340.387000 ms
 Identify interesting struct
-STOP WATCH[0]: 7.375000 ms
+STOP WATCH[0]: 7.303000 ms
+Identify Logical Modules
+STOP WATCH[0]: 82.757000 ms
+STOP WATCH[0]: 7221.466000 ms
 Collecting Initialization Closure.
 Finding Kernel Entry Point and all __initcall_
 [32mFound x86_64_start_kernel[0m
-STOP WATCH[1]: 105.451000 ms
-Initial Kernel Init Function Count:668
+STOP WATCH[1]: 71.020000 ms
+Initial Kernel Init Function Count:642
 Over Approximate Kernel Init Functions
-STOP WATCH[1]: 191.943000 ms
+STOP WATCH[1]: 132.391000 ms
 Refine Result
-refine pass 0 3112 left
-refine pass 1 2059 left
-refine pass 2 1769 left
-refine pass 3 1705 left
-refine pass 4 1676 left
-refine pass 5 1671 left
-refine pass 6 1669 left
- Refine result : count=1669
-STOP WATCH[1]: 74.851000 ms
-STOP WATCH[0]: 373.219000 ms
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.150000 ms
+STOP WATCH[0]: 250.226000 ms
 Collect all permission-checked variables and functions
 Add call<direct> kernel_read use @ fs/exec.c:925:11
  cause:[32mProcess Stack:[0m
@@ -132,14 +136,15 @@ Add call<direct> async_synchronize_full_domain use @ drivers/base/firmware_class
 [32m-------------[0m
 Resolve indirect call @ drivers/base/firmware_class.c:1365:2
 [31m[NO MATCH][0m
-STOP WATCH[1]: 3409.567000 ms
+STOP WATCH[1]: 2027.054000 ms
+STOP WATCH[0]: 2027.068000 ms
 Collected 4 critical functions
 Collected 4 critical variables
 Collected 3 critical type/fields
 [48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
-[32mloading_timeout[0m
-    security_kernel_read_file @ fs/exec.c:898:8
 [32mfw_cache_domain[0m
+    security_kernel_read_file @ fs/exec.c:898:8
+[32mloading_timeout[0m
     security_kernel_read_file @ fs/exec.c:898:8
 [32mnames_cachep[0m
     security_kernel_read_file @ fs/exec.c:898:8
@@ -148,9 +153,9 @@ Collected 3 critical type/fields
 [48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
 [32mkernel_read_file_from_path[0m
     security_kernel_read_file @ fs/exec.c:898:8
-[32masync_synchronize_full_domain[0m
-    security_kernel_read_file @ fs/exec.c:898:8
 [32mkernel_read[0m
+    security_kernel_read_file @ fs/exec.c:898:8
+[32masync_synchronize_full_domain[0m
     security_kernel_read_file @ fs/exec.c:898:8
 [32msecurity_kernel_post_read_file[0m
     security_kernel_read_file @ fs/exec.c:898:8
@@ -195,6 +200,76 @@ Critical functions
 1 ecryptfs_read_and_validate_header_region fs/ecryptfs/crypto.c:1019:7
 2 ecryptfs_lookup fs/ecryptfs/inode.c:311:7 @[ fs/ecryptfs/inode.c:361:8 @[ fs/ecryptfs/inode.c:419:9 ] ]
 [32m-------------[0m
+[35mUse:fs/coda/dir.c:375:9 @[ fs/coda/dir.c:452:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 coda_readdir fs/coda/dir.c:375:9 @[ fs/coda/dir.c:452:9 ]
+[32m-------------[0m
+[35mUse:fs/coda/dir.c:375:9 @[ fs/coda/dir.c:452:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 coda_readdir fs/coda/dir.c:375:9 @[ fs/coda/dir.c:452:9 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:1218:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_library fs/binfmt_elf.c:1218:11
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:789:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:789:13
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:763:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:763:13
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:789:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14742 fs/binfmt_elf.c:789:13
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:1191:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_library fs/binfmt_elf.c:1191:11
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:1218:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_library.14743 fs/binfmt_elf.c:1218:11
+[32m-------------[0m
+[35mUse:fs/binfmt_misc.c:227:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_misc_binary fs/binfmt_misc.c:227:12
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14742 fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:763:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14742 fs/binfmt_elf.c:763:13
+[32m-------------[0m
+[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_elf_binary.14742 fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ]
+[32m-------------[0m
 [35mUse:fs/exec.c:1566:9[0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
@@ -235,82 +310,22 @@ Critical functions
 1 do_execveat_common fs/exec.c:1783:11
 2 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
 [32m-------------[0m
-[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ]
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:789:13[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary fs/binfmt_elf.c:789:13
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:763:13[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary fs/binfmt_elf.c:763:13
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ]
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:789:13[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary.14623 fs/binfmt_elf.c:789:13
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary.14623 fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:833:23 ]
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:1218:11[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_library fs/binfmt_elf.c:1218:11
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:1218:11[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_library.14624 fs/binfmt_elf.c:1218:11
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:763:13[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary.14623 fs/binfmt_elf.c:763:13
-[32m-------------[0m
-[35mUse:fs/binfmt_misc.c:227:12[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_misc_binary fs/binfmt_misc.c:227:12
-[32m-------------[0m
-[35mUse:fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_binary.14623 fs/binfmt_elf.c:441:11 @[ fs/binfmt_elf.c:732:15 ]
-[32m-------------[0m
 [35mUse:fs/binfmt_elf.c:1191:11[0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
-0 load_elf_library fs/binfmt_elf.c:1191:11
+0 load_elf_library.14743 fs/binfmt_elf.c:1191:11
 [32m-------------[0m
-[35mUse:fs/binfmt_elf.c:1191:11[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 load_elf_library.14624 fs/binfmt_elf.c:1191:11
-[32m-------------[0m
-[32mGood: 1 [31mBad: 23 [33mIgnored: 14[0m
-STOP WATCH[0]: 7014.949000 ms
+[32mGood: 1 [31mBad: 25 [33mIgnored: 53[0m
+STOP WATCH[0]: 3700.363000 ms
 [36m--- DONE! ---[0m
 ------------STATISTICS---------------
-    43491 : Functions greeted
-    113 : External functions
+    53021 : Functions greeted
+    110 : External functions
     0 : Discovered Path
     0 : Matched Path
-    15 : Good Path
-    23 : Bad Path
-    75 : Ignored Path
+    19 : Good Path
+    25 : Bad Path
+    162 : Ignored Path
     0 : Path Unable to Resolve
     0 : Resolved CallSite Using Function Pointer
     4 : Critical Functions
@@ -319,14 +334,19 @@ STOP WATCH[0]: 7014.949000 ms
     0 : # of times max depth for backward analysis hit
     5 : Critical Function Pointer Unable to Resolve, Collect Pass
     0 : Critical Function Pointer Resolved, Collect Pass
-    7 : Critical Functions used by non CallInst
-    87 : Critical Functions used by static assignment
-    34 : # of times indirect call site matched with critical functions
+    13 : Critical Functions used by non CallInst
+    83 : Critical Functions used by static assignment
+    31 : # of times indirect call site matched with critical functions
     200 : # of times indirect call site failed to match with critical functions
     0 : found capability check inside call using function ptr
 
 
 
 
-Printing analysis 'capchk Pass (with getAnalysisUsage implemented)':
-Pass::print not implemented for pass: 'capchk'!
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

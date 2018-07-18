@@ -1,0 +1,98 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 804.305000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.354000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_policydb_len
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1003.401000 ms
+Identify interesting struct
+Function: sel_open_policy used by struct.file_operations.469112[0m
+STOP WATCH[0]: 6.014000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.260000 ms
+STOP WATCH[0]: 6820.479000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.454000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.702000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.894000 ms
+STOP WATCH[0]: 248.698000 ms
+Collect all permission-checked variables and functions
+Add call<direct> security_read_policy use @ security/selinux/selinuxfs.c:368:7
+ cause:[32mProcess Stack:[0m
+0 sel_open_policy security/selinux/selinuxfs.c:339:42
+[32m-------------[0m
+STOP WATCH[1]: 2023.043000 ms
+STOP WATCH[0]: 2023.057000 ms
+Collected 1 critical functions
+Collected 2 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32msel_mutex[0m
+    security_policydb_len @ security/selinux/selinuxfs.c:364:23
+    security_policydb_len @ security/selinux/selinuxfs.c:362:28
+[32mpolicy_opened[0m
+    security_policydb_len @ security/selinux/selinuxfs.c:364:23
+    security_policydb_len @ security/selinux/selinuxfs.c:362:28
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32msecurity_read_policy[0m
+    security_policydb_len @ security/selinux/selinuxfs.c:364:23
+    security_policydb_len @ security/selinux/selinuxfs.c:362:28
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+[33mInspect Use of Function:security_read_policy[0m
+STOP WATCH[0]: 43.214000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    1 : Good Path
+    0 : Bad Path
+    0 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    1 : Critical Functions
+    2 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    0 : Critical Functions used by non CallInst
+    0 : Critical Functions used by static assignment
+    0 : # of times indirect call site matched with critical functions
+    0 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

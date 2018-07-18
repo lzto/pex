@@ -1,0 +1,341 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 807.156000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.188000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_prepare_creds
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 943.593000 ms
+Identify interesting struct
+STOP WATCH[0]: 6.328000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.324000 ms
+STOP WATCH[0]: 6778.199000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.470000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.499000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.905000 ms
+STOP WATCH[0]: 248.540000 ms
+Collect all permission-checked variables and functions
+Resolve indirect call @ kernel/umh.c:91:12
+[31m[NO MATCH][0m
+Add call<direct> commit_creds use @ kernel/umh.c:98:2
+ cause:[32mProcess Stack:[0m
+0 prepare_kernel_cred 
+1 call_usermodehelper_exec_async kernel/umh.c:80:8
+[32m-------------[0m
+Add call<direct> getname_kernel use @ kernel/umh.c:100:21
+ cause:[32mProcess Stack:[0m
+0 prepare_kernel_cred 
+1 call_usermodehelper_exec_async kernel/umh.c:80:8
+[32m-------------[0m
+Add call<direct> do_execve use @ kernel/umh.c:100:11
+ cause:[32mProcess Stack:[0m
+0 prepare_kernel_cred 
+1 call_usermodehelper_exec_async kernel/umh.c:80:8
+[32m-------------[0m
+Resolve indirect call @ kernel/umh.c:42:3 @[ kernel/umh.c:57:3 @[ kernel/umh.c:110:3 ] ]
+[31m[NO MATCH][0m
+Resolve indirect call @ kernel/umh.c:42:3 @[ kernel/umh.c:57:3 @[ kernel/umh.c:187:4 ] ]
+[31m[NO MATCH][0m
+Add call<direct> SyS_wait4 use @ kernel/umh.c:138:3 @[ kernel/umh.c:175:3 ]
+ cause:[32mProcess Stack:[0m
+0 prepare_kernel_cred 
+1 call_usermodehelper_exec_async kernel/umh.c:80:8
+2 call_usermodehelper_exec_work kernel/umh.c:123:8 @[ kernel/umh.c:175:3 ]
+[32m-------------[0m
+Add call<direct> kernel_sigaction use @ kernel/umh.c:150:2 @[ kernel/umh.c:175:3 ]
+ cause:[32mProcess Stack:[0m
+0 prepare_kernel_cred 
+1 call_usermodehelper_exec_async kernel/umh.c:80:8
+2 call_usermodehelper_exec_work kernel/umh.c:123:8 @[ kernel/umh.c:175:3 ]
+[32m-------------[0m
+Resolve indirect call @ kernel/umh.c:42:3 @[ kernel/umh.c:57:3 @[ kernel/umh.c:152:2 @[ kernel/umh.c:175:3 ] ] ]
+[31m[NO MATCH][0m
+STOP WATCH[1]: 1958.792000 ms
+STOP WATCH[0]: 1958.806000 ms
+Collected 5 critical functions
+Collected 2 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32minit_cred[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[32mcred_jar[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mkernel_sigaction[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[32mdo_execve[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[32mSyS_wait4[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[32mcommit_creds[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[32mgetname_kernel[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.work_struct:2,[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+[32mstruct.task_struct.38147:0,[0m
+    security_prepare_creds @ kernel/cred.c:631:6
+Run Analysis
+Critical functions
+[33mInspect Use of Function:kernel_sigaction[0m
+[33mInspect Use of Function:getname_kernel[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+2 perf_compat_ioctl kernel/events/core.c:4774:9
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 do_mount fs/namespace.c:2207:8 @[ fs/namespace.c:2836:12 ]
+2 compat_SyS_mount fs/compat.c:195:11 @[ fs/compat.c:160:1 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 do_mount fs/namespace.c:2207:8 @[ fs/namespace.c:2836:12 ]
+2 SyS_mount fs/namespace.c:3058:8 @[ fs/namespace.c:3035:1 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+2 btrfs_init_dev_replace_tgtdev fs/btrfs/volumes.c:2544:9
+3 btrfs_dev_replace_start fs/btrfs/dev-replace.c:327:8
+4 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+5 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+6 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+2 btrfs_init_dev_replace_tgtdev fs/btrfs/volumes.c:2544:9
+3 btrfs_dev_replace_start fs/btrfs/dev-replace.c:327:8
+4 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+5 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+6 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+2 btrfs_init_dev_replace_tgtdev fs/btrfs/volumes.c:2544:9
+3 btrfs_dev_replace_start fs/btrfs/dev-replace.c:327:8
+4 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+5 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+2 btrfs_init_dev_replace_tgtdev fs/btrfs/volumes.c:2544:9
+3 btrfs_dev_replace_start fs/btrfs/dev-replace.c:327:8
+4 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+5 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+2 btrfs_scan_one_device fs/btrfs/volumes.c:1137:9
+3 btrfs_control_ioctl fs/btrfs/super.c:2209:9
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+2 btrfs_scan_one_device fs/btrfs/volumes.c:1137:9
+3 btrfs_control_ioctl fs/btrfs/super.c:2209:9
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 configfs_symlink fs/configfs/symlink.c:116:8 @[ fs/configfs/symlink.c:160:8 ]
+[32m-------------[0m
+[35mUse:fs/namei.c:2425:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kern_path fs/namei.c:2425:35
+1 lookup_bdev fs/block_dev.c:2070:10
+2 SyS_quotactl fs/quota/quota.c:810:9 @[ fs/quota/quota.c:871:7 @[ fs/quota/quota.c:836:1 ] ]
+[32m-------------[0m
+[35mUse:fs/namei.c:2444:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_path_lookup fs/namei.c:2444:35
+1 mount_subtree fs/namespace.c:3016:8
+2 nfs_follow_remote_path fs/nfs/nfs4super.c:231:11
+3 nfs4_try_mount fs/nfs/nfs4super.c:254:8
+[32m-------------[0m
+[35mUse:fs/namei.c:2444:35[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vfs_path_lookup fs/namei.c:2444:35
+1 mntns_install fs/namespace.c:3484:8
+[32m-------------[0m
+[35mUse:fs/open.c:1002:26[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 filp_open fs/open.c:1002:26
+1 btrfs_scratch_superblocks fs/btrfs/volumes.c:1727:9 @[ fs/btrfs/volumes.c:7209:2 ]
+2 btrfs_destroy_dev_replace_tgtdev fs/btrfs/volumes.c:2083:2
+3 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:741:3 @[ fs/btrfs/dev-replace.c:694:17 ]
+4 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+5 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/open.c:1002:26[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 filp_open fs/open.c:1002:26
+1 btrfs_scratch_superblocks fs/btrfs/volumes.c:1727:9 @[ fs/btrfs/volumes.c:7209:2 ]
+2 btrfs_destroy_dev_replace_tgtdev fs/btrfs/volumes.c:2083:2
+3 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:741:3 @[ fs/btrfs/dev-replace.c:694:17 ]
+4 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+5 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/open.c:1002:26[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 filp_open fs/open.c:1002:26
+1 btrfs_scratch_superblocks fs/btrfs/volumes.c:1727:9 @[ fs/btrfs/volumes.c:7209:2 ]
+2 btrfs_destroy_dev_replace_tgtdev fs/btrfs/volumes.c:2083:2
+3 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:741:3 @[ fs/btrfs/dev-replace.c:694:17 ]
+4 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1002:26[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 filp_open fs/open.c:1002:26
+1 btrfs_scratch_superblocks fs/btrfs/volumes.c:1727:9 @[ fs/btrfs/volumes.c:7209:2 ]
+2 btrfs_destroy_dev_replace_tgtdev fs/btrfs/volumes.c:2083:2
+3 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:741:3 @[ fs/btrfs/dev-replace.c:694:17 ]
+4 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:fs/exec.c:877:30[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 open_exec fs/exec.c:877:30
+1 load_elf_binary.14742 fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:fs/exec.c:877:30[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 open_exec fs/exec.c:877:30
+1 load_elf_binary fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:fs/exec.c:877:30[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 open_exec fs/exec.c:877:30
+1 load_script fs/binfmt_script.c:101:9
+[32m-------------[0m
+[35mUse:fs/exec.c:877:30[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 open_exec fs/exec.c:877:30
+1 load_misc_binary fs/binfmt_misc.c:212:17
+[32m-------------[0m
+[35mUse:fs/exec.c:877:30[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 open_exec fs/exec.c:877:30
+1 bm_register_write fs/binfmt_misc.c:723:7
+[32m-------------[0m
+[32mGood: 8 [31mBad: 23 [33mIgnored: 400[0m
+[33mInspect Use of Function:do_execve[0m
+[33mInspect Use of Function:SyS_wait4[0m
+[35mUse:kernel/exit.c:1694:9 @[ kernel/exit.c:1692:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_waitpid kernel/exit.c:1694:9 @[ kernel/exit.c:1692:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 1 [33mIgnored: 2[0m
+[33mInspect Use of Function:commit_creds[0m
+[35mUse:fs/exec.c:1436:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 install_exec_creds fs/exec.c:1436:2
+1 load_elf_binary.14742 fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:fs/exec.c:1436:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 install_exec_creds fs/exec.c:1436:2
+1 load_elf_binary fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[32mGood: 28 [31mBad: 2 [33mIgnored: 8[0m
+STOP WATCH[0]: 9873.210000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    39 : Good Path
+    26 : Bad Path
+    428 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    5 : Critical Functions
+    2 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    4 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    19 : Critical Functions used by non CallInst
+    183 : Critical Functions used by static assignment
+    123 : # of times indirect call site matched with critical functions
+    326 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

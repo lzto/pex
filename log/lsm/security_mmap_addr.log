@@ -1,0 +1,398 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 807.315000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.481000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_mmap_addr
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 942.157000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.908000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.967000 ms
+STOP WATCH[0]: 7051.535000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 70.327000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 133.798000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.120000 ms
+STOP WATCH[0]: 250.896000 ms
+Collect all permission-checked variables and functions
+Add call<direct> __anon_vma_prepare use @ ./include/linux/rmap.h:153:9 @[ mm/mmap.c:2351:6 ]
+ cause:[32mProcess Stack:[0m
+0 expand_downwards mm/mmap.c:2329:45
+[32m-------------[0m
+Add call<direct> security_vm_enough_memory_mm use @ mm/mmap.c:2227:6 @[ mm/mmap.c:2370:12 ]
+ cause:[32mProcess Stack:[0m
+0 expand_downwards mm/mmap.c:2329:45
+[32m-------------[0m
+Add call<direct> anon_vma_interval_tree_remove use @ mm/mmap.c:478:3 @[ mm/mmap.c:2387:5 ]
+ cause:[32mProcess Stack:[0m
+0 expand_downwards mm/mmap.c:2329:45
+[32m-------------[0m
+Add call<direct> anon_vma_interval_tree_insert use @ mm/mmap.c:487:3 @[ mm/mmap.c:2390:5 ]
+ cause:[32mProcess Stack:[0m
+0 expand_downwards mm/mmap.c:2329:45
+[32m-------------[0m
+Add call<direct> perf_event_mmap use @ mm/mmap.c:2394:5
+ cause:[32mProcess Stack:[0m
+0 expand_downwards mm/mmap.c:2329:45
+[32m-------------[0m
+Add call<direct> populate_vma_page_range use @ mm/mmap.c:2465:3
+ cause:[32mProcess Stack:[0m
+0 expand_downwards mm/mmap.c:2329:45
+1 find_extend_vma mm/mmap.c:2444:9 @[ mm/mmap.c:2462:6 ]
+[32m-------------[0m
+STOP WATCH[1]: 1968.319000 ms
+STOP WATCH[0]: 1968.333000 ms
+Collected 6 critical functions
+Collected 3 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mstack_guard_gap[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32mmay_expand_vm.__print_once[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32mignore_rlimit_data[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mperf_event_mmap[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32manon_vma_interval_tree_insert[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32mpopulate_vma_page_range[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32manon_vma_interval_tree_remove[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32m__anon_vma_prepare[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32msecurity_vm_enough_memory_mm[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.task_struct.99264:0,[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+[32mstruct.vm_area_struct.99133:0,[0m
+    security_mmap_addr @ mm/mmap.c:2337:10
+Run Analysis
+Critical functions
+[33mInspect Use of Function:security_vm_enough_memory_mm[0m
+[35mUse:mm/shmem.c:163:11 @[ mm/shmem.c:1013:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_setattr mm/shmem.c:163:11 @[ mm/shmem.c:1013:12 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:163:11 @[ mm/shmem.c:1013:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_setattr mm/shmem.c:163:11 @[ mm/shmem.c:1013:12 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:163:11 @[ mm/shmem.c:1013:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_setattr mm/shmem.c:163:11 @[ mm/shmem.c:1013:12 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_getpage_gfp mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ]
+1 shmem_get_link mm/shmem.c:131:9 @[ mm/shmem.c:3275:11 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_getpage_gfp mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ]
+1 shmem_symlink mm/shmem.c:131:9 @[ mm/shmem.c:3234:11 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_getpage_gfp mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ]
+1 shmem_file_read_iter mm/shmem.c:131:9 @[ mm/shmem.c:2447:11 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_getpage_gfp mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ]
+1 shmem_fallocate mm/shmem.c:131:9 @[ mm/shmem.c:2916:12 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_getpage_gfp mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ]
+1 shmem_undo_range mm/shmem.c:131:9 @[ mm/shmem.c:872:3 ]
+2 shmem_setattr mm/shmem.c:972:2 @[ mm/shmem.c:1026:5 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_getpage_gfp mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ]
+1 shmem_undo_range mm/shmem.c:131:9 @[ mm/shmem.c:872:3 ]
+2 shmem_setattr mm/shmem.c:972:2 @[ mm/shmem.c:1026:5 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_getpage_gfp mm/shmem.c:182:9 @[ mm/shmem.c:197:6 @[ mm/shmem.c:1481:7 @[ mm/shmem.c:1762:23 ] ] ]
+1 shmem_undo_range mm/shmem.c:131:9 @[ mm/shmem.c:872:3 ]
+2 shmem_setattr mm/shmem.c:972:2 @[ mm/shmem.c:1026:5 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:149:7 @[ mm/shmem.c:4196:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __shmem_file_setup mm/shmem.c:149:7 @[ mm/shmem.c:4196:6 ]
+1 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+2 mmap_zero drivers/char/mem.c:693:10
+[32m-------------[0m
+[35mUse:mm/shmem.c:149:7 @[ mm/shmem.c:4196:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __shmem_file_setup mm/shmem.c:149:7 @[ mm/shmem.c:4196:6 ]
+1 SyS_memfd_create mm/shmem.c:4260:9 @[ mm/shmem.c:3716:10 @[ mm/shmem.c:3656:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:3067:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 insert_vm_struct mm/mmap.c:3067:7
+1 do_execveat_common fs/exec.c:316:8 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+2 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:3067:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 insert_vm_struct mm/mmap.c:3067:7
+1 do_execveat_common fs/exec.c:316:8 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+2 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:3067:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 insert_vm_struct mm/mmap.c:3067:7
+1 do_execveat_common fs/exec.c:316:8 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+2 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:3067:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 insert_vm_struct mm/mmap.c:3067:7
+1 do_execveat_common fs/exec.c:316:8 @[ fs/exec.c:414:8 @[ fs/exec.c:1771:11 ] ]
+2 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mmap.c:2923:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_brk_flags mm/mmap.c:2923:6
+1 SyS_brk mm/mmap.c:2961:9 @[ mm/mmap.c:239:6 @[ mm/mmap.c:182:1 ] ]
+[32m-------------[0m
+[35mUse:mm/mprotect.c:326:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mprotect_fixup mm/mprotect.c:326:8
+1 do_mprotect_pkey mm/mprotect.c:492:11
+2 SyS_pkey_mprotect mm/mprotect.c:525:9 @[ mm/mprotect.c:522:1 ]
+[32m-------------[0m
+[35mUse:mm/mprotect.c:326:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mprotect_fixup mm/mprotect.c:326:8
+1 do_mprotect_pkey mm/mprotect.c:492:11
+2 SyS_mprotect mm/mprotect.c:517:9 @[ mm/mprotect.c:514:1 ]
+[32m-------------[0m
+[35mUse:mm/mremap.c:435:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 vma_to_resize mm/mremap.c:435:7
+1 SyS_mremap mm/mremap.c:581:8 @[ mm/mremap.c:523:1 ]
+[32m-------------[0m
+[35mUse:mm/swapfile.c:2575:7 @[ mm/swapfile.c:2533:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_swapoff mm/swapfile.c:2575:7 @[ mm/swapfile.c:2533:1 ]
+[32m-------------[0m
+[32mGood: 16 [31mBad: 22 [33mIgnored: 558[0m
+[33mInspect Use of Function:populate_vma_page_range[0m
+[33mInspect Use of Function:__anon_vma_prepare[0m
+[35mUse:./include/linux/rmap.h:153:9 @[ mm/memory.c:3628:6 @[ mm/memory.c:3714:9 @[ mm/memory.c:3943:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 handle_mm_fault ./include/linux/rmap.h:153:9 @[ mm/memory.c:3628:6 @[ mm/memory.c:3714:9 @[ mm/memory.c:3943:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ] ]
+1 __get_user_pages mm/gup.c:502:8 @[ mm/gup.c:699:10 ]
+2 get_dump_page mm/gup.c:1302:6
+3 elf_core_dump.14744 fs/binfmt_elf.c:2362:11
+[32m-------------[0m
+[35mUse:./include/linux/rmap.h:153:9 @[ mm/memory.c:3628:6 @[ mm/memory.c:3714:9 @[ mm/memory.c:3943:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 handle_mm_fault ./include/linux/rmap.h:153:9 @[ mm/memory.c:3628:6 @[ mm/memory.c:3714:9 @[ mm/memory.c:3943:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ] ]
+1 __get_user_pages mm/gup.c:502:8 @[ mm/gup.c:699:10 ]
+2 get_dump_page mm/gup.c:1302:6
+3 elf_core_dump fs/binfmt_elf.c:2362:11
+[32m-------------[0m
+[35mUse:./include/linux/rmap.h:153:9 @[ mm/memory.c:2464:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 wp_page_copy ./include/linux/rmap.h:153:9 @[ mm/memory.c:2464:6 ]
+1 do_wp_page mm/memory.c:2759:9
+2 do_swap_page mm/memory.c:3052:10
+3 handle_mm_fault mm/memory.c:3947:10 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ]
+4 __get_user_pages mm/gup.c:502:8 @[ mm/gup.c:699:10 ]
+5 get_dump_page mm/gup.c:1302:6
+6 elf_core_dump.14744 fs/binfmt_elf.c:2362:11
+[32m-------------[0m
+[35mUse:./include/linux/rmap.h:153:9 @[ mm/memory.c:2464:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 wp_page_copy ./include/linux/rmap.h:153:9 @[ mm/memory.c:2464:6 ]
+1 do_wp_page mm/memory.c:2759:9
+2 do_swap_page mm/memory.c:3052:10
+3 handle_mm_fault mm/memory.c:3947:10 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ]
+4 __get_user_pages mm/gup.c:502:8 @[ mm/gup.c:699:10 ]
+5 get_dump_page mm/gup.c:1302:6
+6 elf_core_dump fs/binfmt_elf.c:2362:11
+[32m-------------[0m
+[35mUse:./include/linux/rmap.h:153:9 @[ mm/memory.c:3133:6 @[ mm/memory.c:3941:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 handle_mm_fault ./include/linux/rmap.h:153:9 @[ mm/memory.c:3133:6 @[ mm/memory.c:3941:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ]
+1 __get_user_pages mm/gup.c:502:8 @[ mm/gup.c:699:10 ]
+2 get_dump_page mm/gup.c:1302:6
+3 elf_core_dump.14744 fs/binfmt_elf.c:2362:11
+[32m-------------[0m
+[35mUse:./include/linux/rmap.h:153:9 @[ mm/memory.c:3133:6 @[ mm/memory.c:3941:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 handle_mm_fault ./include/linux/rmap.h:153:9 @[ mm/memory.c:3133:6 @[ mm/memory.c:3941:11 @[ mm/memory.c:4067:9 @[ mm/memory.c:4104:9 ] ] ] ]
+1 __get_user_pages mm/gup.c:502:8 @[ mm/gup.c:699:10 ]
+2 get_dump_page mm/gup.c:1302:6
+3 elf_core_dump fs/binfmt_elf.c:2362:11
+[32m-------------[0m
+[32mGood: 44 [31mBad: 6 [33mIgnored: 75[0m
+[33mInspect Use of Function:anon_vma_interval_tree_remove[0m
+[35mUse:mm/rmap.c:388:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 unlink_anon_vmas mm/rmap.c:388:3
+1 anon_vma_clone mm/rmap.c:305:2
+2 __split_vma mm/mmap.c:2584:8
+3 do_munmap mm/mmap.c:2687:15
+4 SyS_munmap mm/mmap.c:2745:8 @[ mm/mmap.c:2755:9 @[ mm/mmap.c:2752:1 ] ]
+[32m-------------[0m
+[35mUse:mm/rmap.c:388:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 unlink_anon_vmas mm/rmap.c:388:3
+1 anon_vma_clone mm/rmap.c:305:2
+2 __split_vma mm/mmap.c:2584:8
+3 do_munmap mm/mmap.c:2687:15
+4 SyS_brk mm/mmap.c:228:8 @[ mm/mmap.c:182:1 ]
+[32m-------------[0m
+[35mUse:mm/rmap.c:388:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 unlink_anon_vmas mm/rmap.c:388:3
+1 anon_vma_clone mm/rmap.c:305:2
+2 __split_vma mm/mmap.c:2584:8
+3 do_munmap mm/mmap.c:2687:15
+4 vm_munmap mm/mmap.c:2745:8
+5 kill_ioctx fs/aio.c:854:3
+6 SyS_io_destroy fs/aio.c:1427:9 @[ fs/aio.c:1413:1 ]
+[32m-------------[0m
+[35mUse:mm/rmap.c:388:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 unlink_anon_vmas mm/rmap.c:388:3
+1 anon_vma_clone mm/rmap.c:305:2
+2 __split_vma mm/mmap.c:2584:8
+3 do_munmap mm/mmap.c:2687:15
+4 SyS_mremap mm/mremap.c:465:8 @[ mm/mremap.c:560:9 @[ mm/mremap.c:523:1 ] ]
+[32m-------------[0m
+[32mGood: 28 [31mBad: 7 [33mIgnored: 46[0m
+[33mInspect Use of Function:perf_event_mmap[0m
+[33mInspect Use of Function:anon_vma_interval_tree_insert[0m
+[35mUse:mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_vma_clone mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ]
+1 __split_vma mm/mmap.c:2584:8
+2 do_munmap mm/mmap.c:2687:15
+3 SyS_munmap mm/mmap.c:2745:8 @[ mm/mmap.c:2755:9 @[ mm/mmap.c:2752:1 ] ]
+[32m-------------[0m
+[35mUse:mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_vma_clone mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ]
+1 __split_vma mm/mmap.c:2584:8
+2 do_munmap mm/mmap.c:2687:15
+3 SyS_brk mm/mmap.c:228:8 @[ mm/mmap.c:182:1 ]
+[32m-------------[0m
+[35mUse:mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_vma_clone mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ]
+1 __split_vma mm/mmap.c:2584:8
+2 do_munmap mm/mmap.c:2687:15
+3 vm_munmap mm/mmap.c:2745:8
+4 kill_ioctx fs/aio.c:854:3
+5 SyS_io_destroy fs/aio.c:1427:9 @[ fs/aio.c:1413:1 ]
+[32m-------------[0m
+[35mUse:mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_vma_clone mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ]
+1 __split_vma mm/mmap.c:2584:8
+2 do_munmap mm/mmap.c:2687:15
+3 SyS_mremap mm/mremap.c:465:8 @[ mm/mremap.c:560:9 @[ mm/mremap.c:523:1 ] ]
+[32m-------------[0m
+[32mGood: 33 [31mBad: 7 [33mIgnored: 58[0m
+STOP WATCH[0]: 11726.169000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    129 : Good Path
+    42 : Bad Path
+    741 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    6 : Critical Functions
+    3 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    72 : Critical Functions used by non CallInst
+    340 : Critical Functions used by static assignment
+    375 : # of times indirect call site matched with critical functions
+    536 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

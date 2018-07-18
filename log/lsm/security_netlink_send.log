@@ -1,0 +1,2909 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.502000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.296000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_netlink_send
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1003.934000 ms
+Identify interesting struct
+Function: netlink_sendmsg used by [32m new discover:struct.proto_ops[0m
+STOP WATCH[0]: 5.961000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.957000 ms
+STOP WATCH[0]: 6786.246000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.376000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.345000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.876000 ms
+STOP WATCH[0]: 248.232000 ms
+Collect all permission-checked variables and functions
+Add call<direct> netlink_broadcast_filtered use @ net/netlink/af_netlink.c:1499:9 @[ net/netlink/af_netlink.c:1862:3 ]
+ cause:[32mProcess Stack:[0m
+0 netlink_sendmsg 
+[32m-------------[0m
+Add call<direct> netlink_unicast use @ net/netlink/af_netlink.c:1864:8
+ cause:[32mProcess Stack:[0m
+0 netlink_sendmsg 
+[32m-------------[0m
+STOP WATCH[1]: 2014.046000 ms
+STOP WATCH[0]: 2014.059000 ms
+Collected 2 critical functions
+Collected 0 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mnetlink_unicast[0m
+    security_netlink_send @ net/netlink/af_netlink.c:1854:8
+[32mnetlink_broadcast_filtered[0m
+    security_netlink_send @ net/netlink/af_netlink.c:1854:8
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+[33mInspect Use of Function:netlink_broadcast_filtered[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_comm_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:246:2 ]
+4 SyS_prctl kernel/sys.c:2258:3 @[ kernel/sys.c:2193:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_ptrace_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:221:2 ]
+4 ptrace_attach kernel/ptrace.c:441:3
+5 compat_SyS_ptrace kernel/ptrace.c:1288:9 @[ kernel/ptrace.c:1270:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_ptrace_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:221:2 ]
+4 ptrace_attach kernel/ptrace.c:441:3
+5 SyS_ptrace kernel/ptrace.c:1141:9 @[ kernel/ptrace.c:1121:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_sid_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:189:2 ]
+4 sys_setsid kernel/sys.c:1133:3
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 install_exec_creds fs/exec.c:1436:2
+6 load_elf_binary.14742 fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 install_exec_creds fs/exec.c:1436:2
+6 load_elf_binary fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setgroups kernel/groups.c:148:9 @[ kernel/groups.c:210:11 @[ kernel/groups.c:190:1 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_capset kernel/capability.c:278:9 @[ kernel/capability.c:224:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 join_session_keyring security/keys/process_keys.c:823:2
+6 lookup_user_key security/keys/process_keys.c:606:10
+7 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 join_session_keyring security/keys/process_keys.c:823:2
+6 lookup_user_key security/keys/process_keys.c:606:10
+7 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 join_session_keyring security/keys/process_keys.c:823:2
+6 lookup_user_key security/keys/process_keys.c:606:10
+7 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+8 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 join_session_keyring security/keys/process_keys.c:823:2
+6 lookup_user_key security/keys/process_keys.c:606:10
+7 keyctl_update_key security/keys/keyctl.c:342:12
+8 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setreuid kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setresuid kernel/sys.c:652:9 @[ kernel/sys.c:594:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setresgid kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setregid kernel/sys.c:388:9 @[ kernel/sys.c:343:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setgid kernel/sys.c:425:9 @[ kernel/sys.c:400:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setfsuid kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setfsgid kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+4 commit_creds kernel/cred.c:484:3
+5 SyS_setuid kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+4 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+5 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+4 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+5 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+4 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+5 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 cn_netlink_send_mult drivers/connector/connector.c:125:10
+2 cn_netlink_send drivers/connector/connector.c:136:9
+3 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+4 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+5 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 selnl_notify security/selinux/netlink.c:90:2
+2 selnl_notify_policyload security/selinux/netlink.c:108:2
+3 security_set_bools security/selinux/ss/services.c:2790:3
+4 sel_commit_bools_write security/selinux/selinuxfs.c:1229:12
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 selnl_notify security/selinux/netlink.c:90:2
+2 selnl_notify_policyload security/selinux/netlink.c:108:2
+3 security_load_policy security/selinux/ss/services.c:2179:2
+4 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 selnl_notify security/selinux/netlink.c:90:2
+2 selnl_notify_setenforce security/selinux/netlink.c:103:2
+3 sel_write_enforce security/selinux/selinuxfs.c:155:3
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+4 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+4 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+4 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+4 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+4 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_rename2 fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:1514:11 @[ fs/gfs2/inode.c:1724:9 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_link fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:967:11 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+4 ea_set_i fs/gfs2/xattr.c:1077:9
+5 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+6 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+4 ea_set_i fs/gfs2/xattr.c:1077:9
+5 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+6 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+4 ea_set_i fs/gfs2/xattr.c:1077:9
+5 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+6 __gfs2_set_acl fs/gfs2/acl.c:104:10
+7 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+4 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+4 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+4 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 gfs2_quota_check fs/gfs2/quota.c:1239:4
+3 gfs2_fallocate fs/gfs2/quota.h:55:8 @[ fs/gfs2/file.c:857:11 @[ fs/gfs2/file.c:955:8 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_set_acl fs/xfs/xfs_acl.c:269:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_mknod fs/xfs/xfs_iops.c:234:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_mknod fs/xfs/xfs_iops.c:234:9
+10 xfs_vn_create fs/xfs/xfs_iops.c:244:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_mknod fs/xfs/xfs_iops.c:234:9
+10 xfs_vn_create fs/xfs/xfs_iops.c:244:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_mknod fs/xfs/xfs_iops.c:234:9
+10 xfs_vn_mkdir fs/xfs/xfs_iops.c:253:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_mknod fs/xfs/xfs_iops.c:234:9
+10 xfs_vn_mkdir fs/xfs/xfs_iops.c:253:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_mknod fs/xfs/xfs_iops.c:234:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_tmpfile fs/xfs/xfs_iops.c:1106:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 __xfs_set_acl fs/xfs/xfs_acl.c:207:11
+8 xfs_generic_create fs/xfs/xfs_iops.c:197:11
+9 xfs_vn_tmpfile fs/xfs/xfs_iops.c:1106:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 xfs_attrmulti_attr_set fs/xfs/xfs_ioctl.c:491:10
+8 xfs_compat_attrmulti_by_handle fs/xfs/xfs_ioctl32.c:457:22
+9 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:673:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 xfs_xattr_set fs/xfs/xfs_xattr.c:93:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 xfs_xattr_set fs/xfs/xfs_xattr.c:93:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 xfs_xattr_set fs/xfs/xfs_xattr.c:93:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_attr_set fs/xfs/libxfs/xfs_attr.c:271:10
+7 xfs_attrmulti_by_handle fs/xfs/xfs_ioctl.c:491:10 @[ fs/xfs/xfs_ioctl.c:575:22 ]
+8 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1947:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_alloc_file_space fs/xfs/xfs_bmap_util.c:1037:2
+7 xfs_zero_file_space fs/xfs/xfs_bmap_util.c:1256:10
+8 xfs_file_fallocate fs/xfs/xfs_file.c:847:12
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_rename fs/xfs/xfs_inode.c:3143:11
+16 xfs_vn_rename fs/xfs/xfs_iops.c:440:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_rename fs/xfs/xfs_inode.c:3143:11
+16 xfs_vn_rename fs/xfs/xfs_iops.c:440:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_remove fs/xfs/xfs_inode.c:2633:10
+16 xfs_cleanup_inode fs/xfs/xfs_iops.c:139:2
+17 xfs_vn_symlink fs/xfs/xfs_iops.c:404:2
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_remove fs/xfs/xfs_inode.c:2633:10
+16 xfs_cleanup_inode fs/xfs/xfs_iops.c:139:2
+17 xfs_vn_symlink fs/xfs/xfs_iops.c:404:2
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_remove fs/xfs/xfs_inode.c:2633:10
+16 xfs_vn_unlink fs/xfs/xfs_iops.c:354:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_remove fs/xfs/xfs_inode.c:2633:10
+16 xfs_vn_unlink fs/xfs/xfs_iops.c:354:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_remove fs/xfs/xfs_inode.c:2633:10
+16 xfs_vn_unlink fs/xfs/xfs_iops.c:354:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_dir2_shrink_inode fs/xfs/libxfs/xfs_dir2.c:681:10
+10 xfs_dir2_block_to_sf fs/xfs/libxfs/xfs_dir2_sf.c:247:10
+11 xfs_dir2_leaf_to_block fs/xfs/libxfs/xfs_dir2_block.c:1040:9
+12 xfs_dir2_node_to_leaf fs/xfs/libxfs/xfs_dir2_leaf.c:1821:10
+13 xfs_dir2_node_removename fs/xfs/libxfs/xfs_dir2_node.c:2168:11
+14 xfs_dir_removename fs/xfs/libxfs/xfs_dir2.c:483:10
+15 xfs_remove fs/xfs/xfs_inode.c:2633:10
+16 xfs_vn_unlink fs/xfs/xfs_iops.c:354:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_setattr_size fs/xfs/xfs_iops.c:966:11
+11 xfs_vn_setattr_size fs/xfs/xfs_iops.c:1019:9
+12 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_setattr_size fs/xfs/xfs_iops.c:966:11
+11 xfs_vn_setattr_size fs/xfs/xfs_iops.c:1019:9
+12 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_setattr_size fs/xfs/xfs_iops.c:966:11
+11 xfs_vn_setattr_size fs/xfs/xfs_iops.c:1019:9
+12 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_setattr_size fs/xfs/xfs_iops.c:966:11
+11 xfs_vn_setattr_size fs/xfs/xfs_iops.c:1019:9
+12 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_setattr_size fs/xfs/xfs_iops.c:966:11
+11 xfs_vn_setattr_size fs/xfs/xfs_iops.c:1019:9
+12 xfs_vn_setattr fs/xfs/xfs_iops.c:1038:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_free_eofblocks fs/xfs/xfs_bmap_util.c:874:11
+11 xfs_reflink_remap_range fs/xfs/xfs_reflink.c:1306:9
+12 xfs_file_dedupe_range fs/xfs/xfs_file.c:915:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_free_eofblocks fs/xfs/xfs_bmap_util.c:874:11
+11 xfs_reflink_remap_range fs/xfs/xfs_reflink.c:1306:9
+12 xfs_file_clone_range fs/xfs/xfs_file.c:901:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 xfs_quota_warn fs/xfs/xfs_trans_dquot.c:584:2
+3 xfs_trans_dqresv fs/xfs/xfs_trans_dquot.c:694:5
+4 xfs_trans_reserve_quota_bydquots fs/xfs/xfs_trans_dquot.c:805:3
+5 xfs_trans_reserve_quota_nblks fs/xfs/xfs_trans_dquot.c:841:9
+6 xfs_bmap_del_extent_delay fs/xfs/libxfs/xfs_bmap.c:4674:10
+7 __xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5354:12
+8 xfs_bunmapi fs/xfs/libxfs/xfs_bmap.c:5456:10
+9 xfs_itruncate_extents fs/xfs/xfs_inode.c:1575:11
+10 xfs_free_eofblocks fs/xfs/xfs_bmap_util.c:874:11
+11 xfs_release fs/xfs/xfs_inode.c:1694:12
+12 xfs_file_release fs/xfs/xfs_file.c:964:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 fill_zero fs/f2fs/file.c:855:9
+9 punch_hole fs/f2fs/file.c:928:10
+10 f2fs_ioctl fs/f2fs/file.c:1798:8 @[ fs/f2fs/file.c:2703:10 ]
+11 f2fs_compat_ioctl fs/f2fs/file.c:2813:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 fill_zero fs/f2fs/file.c:855:9
+9 punch_hole fs/f2fs/file.c:928:10
+10 f2fs_ioctl fs/f2fs/file.c:1798:8 @[ fs/f2fs/file.c:2703:10 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_do_tmpfile fs/f2fs/dir.c:663:9
+10 __f2fs_tmpfile fs/f2fs/namei.c:731:8
+11 f2fs_rename2 fs/f2fs/namei.c:781:9 @[ fs/f2fs/namei.c:851:9 @[ fs/f2fs/namei.c:1167:9 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_do_tmpfile fs/f2fs/dir.c:663:9
+10 __f2fs_tmpfile fs/f2fs/namei.c:731:8
+11 f2fs_tmpfile fs/f2fs/namei.c:773:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_add_regular_entry fs/f2fs/dir.c:568:10
+10 __f2fs_add_link fs/f2fs/dir.c:610:9 @[ fs/f2fs/dir.c:651:9 ]
+11 __recover_dot_dentries fs/f2fs/namei.c:337:9
+12 f2fs_lookup fs/f2fs/namei.c:406:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_add_regular_entry fs/f2fs/dir.c:568:10
+10 __f2fs_add_link fs/f2fs/dir.c:610:9 @[ fs/f2fs/dir.c:651:9 ]
+11 f2fs_create fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:213:8 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_add_regular_entry fs/f2fs/dir.c:568:10
+10 __f2fs_add_link fs/f2fs/dir.c:610:9 @[ fs/f2fs/dir.c:651:9 ]
+11 f2fs_link fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:263:8 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_add_regular_entry fs/f2fs/dir.c:568:10
+10 __f2fs_add_link fs/f2fs/dir.c:610:9 @[ fs/f2fs/dir.c:651:9 ]
+11 f2fs_symlink fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:537:8 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_add_regular_entry fs/f2fs/dir.c:568:10
+10 __f2fs_add_link fs/f2fs/dir.c:610:9 @[ fs/f2fs/dir.c:651:9 ]
+11 f2fs_mkdir fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:630:8 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 get_new_data_page fs/f2fs/data.c:755:8
+8 init_inode_metadata fs/f2fs/dir.c:349:16 @[ fs/f2fs/dir.c:380:10 ]
+9 f2fs_add_regular_entry fs/f2fs/dir.c:568:10
+10 __f2fs_add_link fs/f2fs/dir.c:610:9 @[ fs/f2fs/dir.c:651:9 ]
+11 f2fs_mknod fs/f2fs/f2fs.h:2551:9 @[ fs/f2fs/namei.c:682:8 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 f2fs_convert_inline_page fs/f2fs/inline.c:128:8
+8 f2fs_convert_inline_inode fs/f2fs/inline.c:189:9
+9 f2fs_truncate fs/f2fs/file.c:666:9
+10 f2fs_setattr fs/f2fs/file.c:784:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_reserve_block fs/f2fs/data.c:582:8 @[ fs/f2fs/data.c:597:9 ]
+7 f2fs_convert_inline_page fs/f2fs/inline.c:128:8
+8 f2fs_convert_inline_inode fs/f2fs/inline.c:189:9
+9 f2fs_truncate fs/f2fs/file.c:666:9
+10 f2fs_setattr fs/f2fs/file.c:784:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_block_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1566:8 ]
+5 reserve_new_blocks fs/f2fs/data.c:553:6
+6 f2fs_map_blocks fs/f2fs/data.c:1017:9
+7 f2fs_fiemap fs/f2fs/data.c:1065:8 @[ fs/f2fs/data.c:1078:9 @[ fs/f2fs/data.c:1142:8 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_xattr_generic_set fs/f2fs/xattr.c:73:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_xattr_generic_set fs/f2fs/xattr.c:73:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_xattr_generic_set fs/f2fs/xattr.c:73:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_tmpfile fs/ext4/namei.c:2507:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_create fs/ext4/namei.c:2445:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_symlink fs/ext4/namei.c:3113:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_expand_extra_isize fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5855:10 ]
+14 ext4_ioctl fs/ext4/ioctl.c:361:9 @[ fs/ext4/ioctl.c:1040:9 ]
+15 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_expand_extra_isize fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5855:10 ]
+14 ext4_ioctl fs/ext4/ioctl.c:361:9 @[ fs/ext4/ioctl.c:1040:9 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_setattr fs/ext4/inode.c:5468:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_setattr fs/ext4/inode.c:5468:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+15 ext4_add_entry fs/ext4/namei.c:2056:12
+16 ext4_link fs/ext4/namei.c:3247:8
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+15 ext4_add_entry fs/ext4/namei.c:2056:12
+16 ext4_mkdir fs/ext4/namei.c:2639:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+15 ext4_add_entry fs/ext4/namei.c:2056:12
+16 ext4_add_nondir fs/ext4/namei.c:2410:12
+17 ext4_mknod fs/ext4/namei.c:2485:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+15 ext4_add_entry fs/ext4/namei.c:2056:12
+16 ext4_rename2 fs/ext4/namei.c:3616:12 @[ fs/ext4/namei.c:3851:9 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_delete_inline_entry fs/ext4/inline.c:1713:9
+15 ext4_delete_entry fs/ext4/namei.c:2345:9
+16 ext4_unlink fs/ext4/namei.c:3032:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_delete_inline_entry fs/ext4/inline.c:1713:9
+15 ext4_delete_entry fs/ext4/namei.c:2345:9
+16 ext4_rmdir fs/ext4/namei.c:2954:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_set_acl fs/ext4/acl.c:258:3
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_set_acl fs/ext4/acl.c:258:3
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+15 ext4_map_blocks fs/ext4/inode.c:561:12
+16 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+17 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+18 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+19 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+20 ext4_get_acl fs/ext4/acl.c:167:12
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+15 ext4_map_blocks fs/ext4/inode.c:561:12
+16 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+17 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+18 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+19 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+20 ext4_get_acl fs/ext4/acl.c:167:12
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+15 ext4_map_blocks fs/ext4/inode.c:561:12
+16 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+17 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+18 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+19 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+20 ext4_xattr_security_get fs/ext4/xattr_security.c:20:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+15 ext4_map_blocks fs/ext4/inode.c:561:12
+16 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+17 ext4_find_entry fs/ext4/namei.c:1423:13
+18 ext4_lookup fs/ext4/namei.c:1555:7
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+13 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+14 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+15 ext4_map_blocks fs/ext4/inode.c:561:12
+16 ext4_getblk fs/ext4/inode.c:965:8
+17 ext4_bread fs/ext4/inode.c:1015:7
+18 ext4_readdir fs/ext4/dir.c:170:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 f2fs_set_context fs/f2fs/super.c:1726:9
+9 fscrypt_inherit_context fs/crypto/policy.c:261:8
+10 __ext4_new_inode fs/ext4/ialloc.c:1175:9
+11 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+12 ext4_xattr_block_set fs/ext4/xattr.c:1929:10
+13 ext4_xattr_set_handle fs/ext4/xattr.c:2388:12
+14 ext4_xattr_set fs/ext4/xattr.c:2488:11
+15 ext4_xattr_security_set fs/ext4/xattr_security.c:30:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 __f2fs_set_acl fs/f2fs/acl.c:241:10
+9 f2fs_set_acl fs/f2fs/acl.c:256:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 __f2fs_setxattr fs/f2fs/xattr.c:444:11 @[ fs/f2fs/xattr.c:663:10 ]
+7 f2fs_setxattr fs/f2fs/xattr.c:704:8
+8 __f2fs_set_acl fs/f2fs/acl.c:241:10
+9 f2fs_set_acl fs/f2fs/acl.c:256:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 get_dnode_of_data fs/f2fs/node.c:639:15
+7 get_read_data_page fs/f2fs/data.c:635:8
+8 get_lock_data_page fs/f2fs/data.c:710:9
+9 f2fs_gc fs/f2fs/gc.c:714:9 @[ fs/f2fs/gc.c:881:5 @[ fs/f2fs/gc.c:961:4 @[ fs/f2fs/gc.c:1042:14 ] ] ]
+10 f2fs_balance_fs fs/f2fs/segment.c:471:3
+11 __write_node_page fs/f2fs/node.c:1396:3
+12 fsync_node_pages fs/f2fs/node.c:1520:10
+13 f2fs_do_sync_file fs/f2fs/file.c:271:8
+14 f2fs_sync_file fs/f2fs/file.c:323:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 get_dnode_of_data fs/f2fs/node.c:639:15
+7 get_read_data_page fs/f2fs/data.c:635:8
+8 get_lock_data_page fs/f2fs/data.c:710:9
+9 f2fs_gc fs/f2fs/gc.c:714:9 @[ fs/f2fs/gc.c:881:5 @[ fs/f2fs/gc.c:961:4 @[ fs/f2fs/gc.c:1042:14 ] ] ]
+10 f2fs_balance_fs fs/f2fs/segment.c:471:3
+11 __write_node_page fs/f2fs/node.c:1396:3
+12 sync_node_pages fs/f2fs/node.c:1635:10
+13 write_checkpoint fs/f2fs/checkpoint.c:1079:9 @[ fs/f2fs/checkpoint.c:1370:8 ]
+14 f2fs_sync_fs fs/f2fs/super.c:921:9
+15 f2fs_unlink fs/f2fs/namei.c:473:3
+16 f2fs_rmdir fs/f2fs/namei.c:656:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 get_dnode_of_data fs/f2fs/node.c:639:15
+7 get_read_data_page fs/f2fs/data.c:635:8
+8 get_lock_data_page fs/f2fs/data.c:710:9
+9 f2fs_gc fs/f2fs/gc.c:714:9 @[ fs/f2fs/gc.c:881:5 @[ fs/f2fs/gc.c:961:4 @[ fs/f2fs/gc.c:1042:14 ] ] ]
+10 f2fs_balance_fs fs/f2fs/segment.c:471:3
+11 __write_node_page fs/f2fs/node.c:1396:3
+12 sync_node_pages fs/f2fs/node.c:1635:10
+13 write_checkpoint fs/f2fs/checkpoint.c:1079:9 @[ fs/f2fs/checkpoint.c:1370:8 ]
+14 f2fs_sync_fs fs/f2fs/super.c:921:9
+15 f2fs_unlink fs/f2fs/namei.c:473:3
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 inc_valid_node_count ./include/linux/quotaops.h:342:9 @[ fs/f2fs/f2fs.h:1766:13 ]
+5 new_node_page fs/f2fs/node.c:1066:6
+6 get_dnode_of_data fs/f2fs/node.c:639:15
+7 get_read_data_page fs/f2fs/data.c:635:8
+8 get_lock_data_page fs/f2fs/data.c:710:9
+9 f2fs_readdir fs/f2fs/dir.c:887:17
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_xattr_set fs/jfs/xattr.c:928:7
+7 jfs_xattr_set_os2 fs/jfs/xattr.c:970:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_xattr_set fs/jfs/xattr.c:928:7
+7 jfs_xattr_set fs/jfs/xattr.c:951:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_xattr_set fs/jfs/xattr.c:928:7
+7 jfs_xattr_set fs/jfs/xattr.c:951:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_xattr_set fs/jfs/xattr.c:928:7
+7 jfs_xattr_set fs/jfs/xattr.c:951:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_set_acl fs/jfs/acl.c:97:7
+7 jfs_init_acl fs/jfs/acl.c:153:9
+8 jfs_create fs/jfs/namei.c:116:7
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_set_acl fs/jfs/acl.c:97:7
+7 jfs_init_acl fs/jfs/acl.c:153:9
+8 jfs_mknod fs/jfs/namei.c:1400:7
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_set_acl fs/jfs/acl.c:97:7
+7 jfs_init_acl fs/jfs/acl.c:153:9
+8 jfs_mkdir fs/jfs/namei.c:250:7
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_set_acl fs/jfs/acl.c:97:7
+7 jfs_set_acl fs/jfs/acl.c:122:7
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_write ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:241:7 ] ] ]
+5 __jfs_setxattr fs/jfs/xattr.c:628:8 @[ fs/jfs/xattr.c:794:7 ]
+6 __jfs_set_acl fs/jfs/acl.c:97:7
+7 jfs_set_acl fs/jfs/acl.c:122:7
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 add_index ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/jfs_dtree.c:385:7 ] ] ]
+5 jfs_readdir fs/jfs/jfs_dtree.c:2955:15 @[ fs/jfs/jfs_dtree.c:3314:4 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 add_index ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/jfs_dtree.c:385:7 ] ] ]
+5 dtInsertEntry fs/jfs/jfs_dtree.c:3949:16
+6 dtSplitRoot fs/jfs/jfs_dtree.c:2013:2
+7 dtInsert fs/jfs/jfs_dtree.c:1248:8 @[ fs/jfs/jfs_dtree.c:875:8 ]
+8 jfs_rename fs/jfs/namei.c:1237:8
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 add_index ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/jfs_dtree.c:385:7 ] ] ]
+5 dtInsertEntry fs/jfs/jfs_dtree.c:3949:16
+6 dtSplitRoot fs/jfs/jfs_dtree.c:2013:2
+7 dtInsert fs/jfs/jfs_dtree.c:1248:8 @[ fs/jfs/jfs_dtree.c:875:8 ]
+8 jfs_symlink fs/jfs/namei.c:1030:8
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 add_index ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/jfs_dtree.c:385:7 ] ] ]
+5 dtInsertEntry fs/jfs/jfs_dtree.c:3949:16
+6 dtSplitRoot fs/jfs/jfs_dtree.c:2013:2
+7 dtInsert fs/jfs/jfs_dtree.c:1248:8 @[ fs/jfs/jfs_dtree.c:875:8 ]
+8 jfs_link fs/jfs/namei.c:836:12
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 jfs_listxattr fs/jfs/xattr.c:878:15
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 jfs_listxattr fs/jfs/xattr.c:878:15
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 __jfs_getxattr fs/jfs/xattr.c:818:15
+6 jfs_xattr_get_os2 fs/jfs/xattr.c:960:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 __jfs_getxattr fs/jfs/xattr.c:818:15
+6 jfs_xattr_get fs/jfs/xattr.c:942:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 __jfs_getxattr fs/jfs/xattr.c:818:15
+6 jfs_xattr_get fs/jfs/xattr.c:942:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 __jfs_getxattr fs/jfs/xattr.c:818:15
+6 jfs_xattr_get fs/jfs/xattr.c:942:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 __jfs_getxattr fs/jfs/xattr.c:818:15
+6 jfs_get_acl fs/jfs/acl.c:54:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ea_get ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/jfs/xattr.c:519:8 ] ] ]
+5 __jfs_getxattr fs/jfs/xattr.c:818:15
+6 jfs_get_acl fs/jfs/acl.c:54:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_paste_into_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2095:11 ]
+5 reiserfs_add_entry fs/reiserfs/namei.c:563:6
+6 reiserfs_create fs/reiserfs/namei.c:674:6
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_paste_into_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2095:11 ]
+5 reiserfs_add_entry fs/reiserfs/namei.c:563:6
+6 reiserfs_link fs/reiserfs/namei.c:1235:6
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_paste_into_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2095:11 ]
+5 reiserfs_add_entry fs/reiserfs/namei.c:563:6
+6 reiserfs_symlink fs/reiserfs/namei.c:1176:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_paste_into_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2095:11 ]
+5 reiserfs_add_entry fs/reiserfs/namei.c:563:6
+6 reiserfs_mkdir fs/reiserfs/namei.c:857:6
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_paste_into_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2095:11 ]
+5 reiserfs_add_entry fs/reiserfs/namei.c:563:6
+6 reiserfs_mknod fs/reiserfs/namei.c:760:6
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_paste_into_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2095:11 ]
+5 reiserfs_add_entry fs/reiserfs/namei.c:563:6
+6 reiserfs_rename fs/reiserfs/namei.c:1416:6
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_do_truncate fs/reiserfs/stree.c:1956:7
+8 reiserfs_truncate_file fs/reiserfs/inode.c:2314:9
+9 reiserfs_setattr fs/reiserfs/inode.c:3406:4
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_do_truncate fs/reiserfs/stree.c:1956:7
+8 reiserfs_truncate_file fs/reiserfs/inode.c:2314:9
+9 reiserfs_setattr fs/reiserfs/inode.c:3406:4
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_do_truncate fs/reiserfs/stree.c:1956:7
+8 reiserfs_truncate_file fs/reiserfs/inode.c:2314:9
+9 reiserfs_setattr fs/reiserfs/inode.c:3406:4
+10 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+11 reiserfs_xattr_set fs/reiserfs/xattr.c:616:10
+12 security_set fs/reiserfs/xattr_security.c:31:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_do_truncate fs/reiserfs/stree.c:1956:7
+8 reiserfs_truncate_file fs/reiserfs/inode.c:2314:9
+9 reiserfs_setattr fs/reiserfs/inode.c:3406:4
+10 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+11 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+12 reiserfs_set_acl fs/reiserfs/xattr_acl.c:48:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_do_truncate fs/reiserfs/stree.c:1956:7
+8 reiserfs_truncate_file fs/reiserfs/inode.c:2314:9
+9 reiserfs_setattr fs/reiserfs/inode.c:3406:4
+10 reiserfs_xattr_set_handle fs/reiserfs/xattr.c:587:9
+11 __reiserfs_set_acl fs/reiserfs/xattr_acl.c:271:10
+12 reiserfs_set_acl fs/reiserfs/xattr_acl.c:48:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_do_truncate fs/reiserfs/stree.c:1956:7
+8 reiserfs_truncate_file fs/reiserfs/inode.c:2314:9
+9 reiserfs_file_release fs/reiserfs/file.c:115:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_rmdir fs/reiserfs/namei.c:954:11
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 reiserfs_insert_item ./include/linux/quotaops.h:285:9 @[ fs/reiserfs/stree.c:2202:12 ]
+5 indirect2direct fs/reiserfs/tail_conversion.c:283:6
+6 reiserfs_cut_from_item fs/reiserfs/stree.c:1570:9 @[ fs/reiserfs/stree.c:1677:8 ]
+7 reiserfs_unlink fs/reiserfs/namei.c:1064:6
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 ext2_xattr_security_set fs/ext2/xattr_security.c:26:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 __ext2_set_acl fs/ext2/acl.c:207:10
+7 ext2_init_acl fs/ext2/acl.c:262:12
+8 ext2_new_inode fs/ext2/ialloc.c:594:8
+9 ext2_tmpfile fs/ext2/namei.c:124:24
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 __ext2_set_acl fs/ext2/acl.c:207:10
+7 ext2_init_acl fs/ext2/acl.c:262:12
+8 ext2_new_inode fs/ext2/ialloc.c:594:8
+9 ext2_mknod fs/ext2/namei.c:151:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 __ext2_set_acl fs/ext2/acl.c:207:10
+7 ext2_init_acl fs/ext2/acl.c:262:12
+8 ext2_new_inode fs/ext2/ialloc.c:594:8
+9 ext2_mkdir fs/ext2/namei.c:250:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 __ext2_set_acl fs/ext2/acl.c:207:10
+7 ext2_init_acl fs/ext2/acl.c:262:12
+8 ext2_new_inode fs/ext2/ialloc.c:594:8
+9 ext2_create fs/ext2/namei.c:106:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 __ext2_set_acl fs/ext2/acl.c:207:10
+7 ext2_init_acl fs/ext2/acl.c:262:12
+8 ext2_new_inode fs/ext2/ialloc.c:594:8
+9 ext2_symlink fs/ext2/namei.c:179:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 __ext2_set_acl fs/ext2/acl.c:207:10
+7 ext2_set_acl fs/ext2/acl.c:231:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_alloc_space fs/quota/dquot.c:1706:2
+4 ext2_xattr_set2 ./include/linux/quotaops.h:285:9 @[ ./include/linux/quotaops.h:298:8 @[ ./include/linux/quotaops.h:322:9 @[ fs/ext2/xattr.c:646:13 ] ] ]
+5 ext2_xattr_set fs/ext2/xattr.c:611:11
+6 __ext2_set_acl fs/ext2/acl.c:207:10
+7 ext2_set_acl fs/ext2/acl.c:231:10
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 dtDelete ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:369:2 @[ ./include/linux/quotaops.h:380:2 @[ fs/jfs/jfs_dtree.c:2293:2 @[ fs/jfs/jfs_dtree.c:2156:8 ] ] ] ]
+5 jfs_unlink fs/jfs/namei.c:518:12
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 dtDelete ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:369:2 @[ ./include/linux/quotaops.h:380:2 @[ fs/jfs/jfs_dtree.c:2293:2 @[ fs/jfs/jfs_dtree.c:2156:8 ] ] ] ]
+5 jfs_rmdir fs/jfs/namei.c:395:12
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 xtTruncate ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:369:2 @[ ./include/linux/quotaops.h:380:2 @[ fs/jfs/jfs_xtree.c:3683:2 ] ] ]
+5 jfs_truncate_nolock fs/jfs/inode.c:398:13
+6 jfs_truncate fs/jfs/inode.c:422:2
+7 jfs_setattr fs/jfs/file.c:131:3
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 xtTruncate ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:369:2 @[ ./include/linux/quotaops.h:380:2 @[ fs/jfs/jfs_xtree.c:3683:2 ] ] ]
+5 jfs_truncate_nolock fs/jfs/inode.c:398:13
+6 jfs_truncate fs/jfs/inode.c:422:2
+7 jfs_setattr fs/jfs/file.c:131:3
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 _reiserfs_free_block ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:375:2 @[ fs/reiserfs/bitmap.c:462:3 ] ]
+5 __discard_prealloc fs/reiserfs/bitmap.c:499:2 @[ fs/reiserfs/bitmap.c:526:3 ]
+6 reiserfs_discard_all_prealloc fs/reiserfs/bitmap.c:562:3
+7 do_journal_end fs/reiserfs/journal.c:4065:2
+8 journal_end_sync fs/reiserfs/journal.c:3531:9
+9 reiserfs_commit_for_inode fs/reiserfs/journal.c:3873:9 @[ fs/reiserfs/journal.c:3916:9 ]
+10 reiserfs_sync_file fs/reiserfs/file.c:165:17
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 _reiserfs_free_block ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:375:2 @[ fs/reiserfs/bitmap.c:462:3 ] ]
+5 __discard_prealloc fs/reiserfs/bitmap.c:499:2 @[ fs/reiserfs/bitmap.c:526:3 ]
+6 reiserfs_discard_all_prealloc fs/reiserfs/bitmap.c:562:3
+7 do_journal_end fs/reiserfs/journal.c:4065:2
+8 journal_end fs/reiserfs/journal.c:3409:10
+9 reiserfs_end_persistent_transaction fs/reiserfs/journal.c:3178:9
+10 reiserfs_commit_write fs/reiserfs/inode.c:3059:9
+11 reiserfs_unpack fs/reiserfs/ioctl.c:222:11
+12 reiserfs_ioctl fs/reiserfs/ioctl.c:88:14
+13 reiserfs_compat_ioctl fs/reiserfs/ioctl.c:159:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 _reiserfs_free_block ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:375:2 @[ fs/reiserfs/bitmap.c:462:3 ] ]
+5 __discard_prealloc fs/reiserfs/bitmap.c:499:2 @[ fs/reiserfs/bitmap.c:526:3 ]
+6 reiserfs_discard_all_prealloc fs/reiserfs/bitmap.c:562:3
+7 do_journal_end fs/reiserfs/journal.c:4065:2
+8 journal_end fs/reiserfs/journal.c:3409:10
+9 reiserfs_end_persistent_transaction fs/reiserfs/journal.c:3178:9
+10 reiserfs_commit_write fs/reiserfs/inode.c:3059:9
+11 reiserfs_unpack fs/reiserfs/ioctl.c:222:11
+12 reiserfs_ioctl fs/reiserfs/ioctl.c:88:14
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 ext2_free_blocks ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:375:2 @[ fs/ext2/balloc.c:566:3 ] ]
+5 __ext2_truncate_blocks fs/ext2/inode.c:1123:3 @[ fs/ext2/inode.c:1205:3 ]
+6 ext2_setattr fs/ext2/inode.c:1314:2 @[ fs/ext2/inode.c:1661:11 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 netlink_broadcast net/netlink/af_netlink.c:1499:9
+1 quota_send_warning ./include/net/netlink.h:591:8 @[ ./include/net/genetlink.h:256:9 @[ ./include/net/genetlink.h:271:9 @[ fs/quota/netlink.c:87:2 ] ] ]
+2 flush_warnings fs/quota/dquot.c:1244:3
+3 __dquot_free_space fs/quota/dquot.c:1891:2
+4 ext2_free_blocks ./include/linux/quotaops.h:364:2 @[ ./include/linux/quotaops.h:375:2 @[ fs/ext2/balloc.c:566:3 ] ]
+5 __ext2_truncate_blocks fs/ext2/inode.c:1123:3 @[ fs/ext2/inode.c:1205:3 ]
+6 ext2_setattr fs/ext2/inode.c:1314:2 @[ fs/ext2/inode.c:1661:11 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 dev_change_flags net/core/dev.c:6914:2
+9 dev_ifsioc net/core/dev_ioctl.c:257:10
+10 dev_ioctl net/core/dev_ioctl.c:589:10
+11 compat_ifr_data_ioctl net/socket.c:2965:9
+12 compat_sock_ioctl net/socket.c:3186:10 @[ net/socket.c:3265:9 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 dev_change_flags net/core/dev.c:6914:2
+9 dev_ifsioc net/core/dev_ioctl.c:257:10
+10 dev_ioctl net/core/dev_ioctl.c:589:10
+11 sock_ioctl net/socket.c:973:9 @[ net/socket.c:1063:10 ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 dev_change_flags net/core/dev.c:6914:2
+9 flags_store net/core/net-sysfs.c:318:9 @[ net/core/net-sysfs.c:100:9 @[ net/core/net-sysfs.c:324:9 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_setsockopt net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3578:6 @[ net/packet/af_packet.c:3637:10 ] ]
+11 compat_packet_setsockopt net/packet/af_packet.c:3968:9
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_setsockopt net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3578:6 @[ net/packet/af_packet.c:3637:10 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_release net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3603:4 @[ net/packet/af_packet.c:3008:2 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_release net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3603:4 @[ net/packet/af_packet.c:3008:2 ] ]
+[32m-------------[0m
+[35mUse:net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify net/netlink/af_netlink.c:1499:9 @[ ./include/net/netlink.h:591:8 @[ net/netlink/af_netlink.c:2452:9 ] ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 netdev_state_change net/core/dev.c:1341:3
+8 ifalias_store net/core/net-sysfs.c:402:3
+[32m-------------[0m
+[32mGood: 1 [31mBad: 224 [33mIgnored: 2969[0m
+[33mInspect Use of Function:netlink_unicast[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 dev_change_flags net/core/dev.c:6914:2
+9 dev_ifsioc net/core/dev_ioctl.c:257:10
+10 dev_ioctl net/core/dev_ioctl.c:589:10
+11 compat_ifr_data_ioctl net/socket.c:2965:9
+12 compat_sock_ioctl net/socket.c:3186:10 @[ net/socket.c:3265:9 ]
+[32m-------------[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 dev_change_flags net/core/dev.c:6914:2
+9 dev_ifsioc net/core/dev_ioctl.c:257:10
+10 dev_ioctl net/core/dev_ioctl.c:589:10
+11 sock_ioctl net/socket.c:973:9 @[ net/socket.c:1063:10 ]
+[32m-------------[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 dev_change_flags net/core/dev.c:6914:2
+9 flags_store net/core/net-sysfs.c:318:9 @[ net/core/net-sysfs.c:100:9 @[ net/core/net-sysfs.c:324:9 ] ]
+[32m-------------[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_setsockopt net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3578:6 @[ net/packet/af_packet.c:3637:10 ] ]
+11 compat_packet_setsockopt net/packet/af_packet.c:3968:9
+[32m-------------[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_setsockopt net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3578:6 @[ net/packet/af_packet.c:3637:10 ] ]
+[32m-------------[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_release net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3603:4 @[ net/packet/af_packet.c:3008:2 ] ]
+[32m-------------[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 __dev_notify_flags net/core/dev.c:6874:3
+8 __dev_set_allmulti net/core/dev.c:6706:4
+9 dev_set_allmulti net/core/dev.c:6727:9
+10 packet_release net/packet/af_packet.c:3477:10 @[ net/packet/af_packet.c:3603:4 @[ net/packet/af_packet.c:3008:2 ] ]
+[32m-------------[0m
+[35mUse:./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlmsg_notify ./include/net/netlink.h:608:8 @[ net/netlink/af_netlink.c:2458:10 ]
+1 rtnl_notify net/core/rtnetlink.c:649:2
+2 rtnl_net_notifyid net/core/net_namespace.c:815:2
+3 peernet2id_alloc net/core/net_namespace.c:234:3
+4 rtnl_fill_ifinfo net/core/rtnetlink.c:1381:13 @[ net/core/rtnetlink.c:1522:6 ]
+5 rtmsg_ifinfo_build_skb net/core/rtnetlink.c:3017:8
+6 rtmsg_ifinfo net/core/rtnetlink.c:3049:8 @[ net/core/rtnetlink.c:3057:2 ]
+7 netdev_state_change net/core/dev.c:1341:3
+8 ifalias_store net/core/net-sysfs.c:402:3
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_comm_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:246:2 ]
+3 SyS_prctl kernel/sys.c:2258:3 @[ kernel/sys.c:2193:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_ptrace_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:221:2 ]
+3 ptrace_attach kernel/ptrace.c:441:3
+4 compat_SyS_ptrace kernel/ptrace.c:1288:9 @[ kernel/ptrace.c:1270:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_ptrace_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:221:2 ]
+3 ptrace_attach kernel/ptrace.c:441:3
+4 SyS_ptrace kernel/ptrace.c:1141:9 @[ kernel/ptrace.c:1121:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_sid_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:189:2 ]
+3 sys_setsid kernel/sys.c:1133:3
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 install_exec_creds fs/exec.c:1436:2
+5 load_elf_binary.14742 fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 install_exec_creds fs/exec.c:1436:2
+5 load_elf_binary fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setgroups kernel/groups.c:148:9 @[ kernel/groups.c:210:11 @[ kernel/groups.c:190:1 ] ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_capset kernel/capability.c:278:9 @[ kernel/capability.c:224:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 join_session_keyring security/keys/process_keys.c:823:2
+5 lookup_user_key security/keys/process_keys.c:606:10
+6 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 join_session_keyring security/keys/process_keys.c:823:2
+5 lookup_user_key security/keys/process_keys.c:606:10
+6 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 join_session_keyring security/keys/process_keys.c:823:2
+5 lookup_user_key security/keys/process_keys.c:606:10
+6 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+7 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 join_session_keyring security/keys/process_keys.c:823:2
+5 lookup_user_key security/keys/process_keys.c:606:10
+6 keyctl_update_key security/keys/keyctl.c:342:12
+7 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setreuid kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setresuid kernel/sys.c:652:9 @[ kernel/sys.c:594:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setresgid kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setregid kernel/sys.c:388:9 @[ kernel/sys.c:343:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setgid kernel/sys.c:425:9 @[ kernel/sys.c:400:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setfsuid kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setfsgid kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_id_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:165:2 ]
+3 commit_creds kernel/cred.c:484:3
+4 SyS_setuid kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+3 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+4 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+3 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+4 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+3 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+4 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:drivers/connector/connector.c:127:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 cn_netlink_send_mult drivers/connector/connector.c:127:9
+1 cn_netlink_send drivers/connector/connector.c:136:9
+2 proc_exec_connector drivers/connector/cn_proc.c:71:2 @[ drivers/connector/cn_proc.c:127:2 ]
+3 do_execveat_common fs/exec.c:1685:3 @[ fs/exec.c:1802:11 ]
+4 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 81 [33mIgnored: 1213[0m
+STOP WATCH[0]: 40298.208000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    2 : Good Path
+    305 : Bad Path
+    4182 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    2 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    225 : Critical Functions used by non CallInst
+    1941 : Critical Functions used by static assignment
+    1847 : # of times indirect call site matched with critical functions
+    2908 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

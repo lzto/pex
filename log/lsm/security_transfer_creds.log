@@ -1,0 +1,350 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.822000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.495000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_transfer_creds
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 943.942000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.912000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.398000 ms
+STOP WATCH[0]: 6804.097000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.600000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 133.046000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.137000 ms
+STOP WATCH[0]: 249.434000 ms
+Collect all permission-checked variables and functions
+Add call<direct> commit_creds use @ security/keys/process_keys.c:879:2
+ cause:[32mProcess Stack:[0m
+0 key_change_session_keyring 
+[32m-------------[0m
+STOP WATCH[1]: 1970.771000 ms
+STOP WATCH[0]: 1970.784000 ms
+Collected 1 critical functions
+Collected 0 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mcommit_creds[0m
+    security_transfer_creds @ security/keys/process_keys.c:877:2
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+[33mInspect Use of Function:commit_creds[0m
+[35mUse:security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ]
+1 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ]
+1 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ]
+1 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+2 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:176:9 @[ security/keys/process_keys.c:556:10 ]
+1 keyctl_update_key security/keys/keyctl.c:342:12
+2 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ]
+1 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ]
+1 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ]
+1 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+2 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:223:9 @[ security/keys/process_keys.c:574:10 ]
+1 keyctl_update_key security/keys/keyctl.c:342:12
+2 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:789:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:789:9
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:789:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:789:9
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:789:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:789:9
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+3 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:789:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:789:9
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 keyctl_update_key security/keys/keyctl.c:342:12
+3 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ]
+1 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ]
+1 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ]
+1 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+2 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 lookup_user_key security/keys/process_keys.c:287:9 @[ security/keys/process_keys.c:597:11 ]
+1 keyctl_update_key security/keys/keyctl.c:342:12
+2 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:823:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:823:2
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 SyS_add_key security/keys/keyctl.c:114:16 @[ security/keys/keyctl.c:62:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:823:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:823:2
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 SyS_request_key security/keys/keyctl.c:197:14 @[ security/keys/keyctl.c:158:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:823:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:823:2
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 keyctl_get_keyring_ID security/keys/keyctl.c:256:12
+3 compat_SyS_keyctl security/keys/compat.c:64:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/process_keys.c:823:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 join_session_keyring security/keys/process_keys.c:823:2
+1 lookup_user_key security/keys/process_keys.c:606:10
+2 keyctl_update_key security/keys/keyctl.c:342:12
+3 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_instantiate_key_common security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ]
+1 compat_SyS_keyctl security/keys/compat.c:46:8 @[ security/keys/compat.c:126:10 @[ security/keys/compat.c:59:1 ] ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_instantiate_key_common security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ]
+1 SyS_keyctl security/keys/keyctl.c:1166:8 @[ security/keys/keyctl.c:1728:10 @[ security/keys/keyctl.c:1637:1 ] ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1251:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_reject_key security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1251:3 ]
+1 compat_SyS_keyctl security/keys/compat.c:123:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1251:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_reject_key security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1251:3 ]
+1 SyS_keyctl security/keys/keyctl.c:1722:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1397:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_assume_authority security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1397:9 ]
+1 compat_SyS_keyctl security/keys/compat.c:114:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1397:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_assume_authority security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1397:9 ]
+1 SyS_keyctl security/keys/keyctl.c:1711:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1307:2 @[ security/keys/keyctl.c:1704:10 @[ security/keys/keyctl.c:1637:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_keyctl security/keys/keyctl.c:1307:2 @[ security/keys/keyctl.c:1704:10 @[ security/keys/keyctl.c:1637:1 ] ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1307:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_set_reqkey_keyring security/keys/keyctl.c:1307:2
+1 compat_SyS_keyctl security/keys/compat.c:108:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1412:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_assume_authority security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1412:8 ]
+1 compat_SyS_keyctl security/keys/compat.c:114:10 @[ security/keys/compat.c:59:1 ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1412:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_assume_authority security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1412:8 ]
+1 SyS_keyctl security/keys/keyctl.c:1711:10 @[ security/keys/keyctl.c:1637:1 ]
+[32m-------------[0m
+[35mUse:fs/exec.c:1436:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 install_exec_creds fs/exec.c:1436:2
+1 load_elf_binary.14742 fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:fs/exec.c:1436:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 install_exec_creds fs/exec.c:1436:2
+1 load_elf_binary fs/binfmt_elf.c:878:2
+[32m-------------[0m
+[35mUse:kernel/groups.c:148:9 @[ kernel/groups.c:210:11 @[ kernel/groups.c:190:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setgroups kernel/groups.c:148:9 @[ kernel/groups.c:210:11 @[ kernel/groups.c:190:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/capability.c:278:9 @[ kernel/capability.c:224:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_capset kernel/capability.c:278:9 @[ kernel/capability.c:224:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:388:9 @[ kernel/sys.c:343:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setregid kernel/sys.c:388:9 @[ kernel/sys.c:343:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:425:9 @[ kernel/sys.c:400:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setgid kernel/sys.c:425:9 @[ kernel/sys.c:400:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setfsuid kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setreuid kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setfsgid kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:652:9 @[ kernel/sys.c:594:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setresuid kernel/sys.c:652:9 @[ kernel/sys.c:594:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setresgid kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setuid kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 256 [33mIgnored: 15[0m
+STOP WATCH[0]: 1139.979000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    1 : Good Path
+    256 : Bad Path
+    15 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    1 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    2 : Critical Functions used by non CallInst
+    9 : Critical Functions used by static assignment
+    0 : # of times indirect call site matched with critical functions
+    264 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

@@ -1,0 +1,447 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.184000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.220000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_socket_getpeername
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 944.867000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.904000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.180000 ms
+STOP WATCH[0]: 6778.099000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.375000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.743000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.983000 ms
+STOP WATCH[0]: 248.754000 ms
+Collect all permission-checked variables and functions
+Resolve indirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[32m[FOUND 7 MATCH][0m
+Add call<indirect> packet_getname_spkt use @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+Add call<indirect> unix_getname use @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+Add call<indirect> sock_no_getname use @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+Add call<indirect> netlink_getname use @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+Add call<indirect> inet6_getname use @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+Add call<indirect> inet_getname use @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+Add call<indirect> packet_getname use @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+Add call<direct> move_addr_to_user use @ net/socket.c:1684:10 @[ net/socket.c:1665:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_getpeername 
+[32m-------------[0m
+STOP WATCH[1]: 1957.354000 ms
+STOP WATCH[0]: 1957.368000 ms
+Collected 8 critical functions
+Collected 0 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mmove_addr_to_user[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32munix_getname[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32msock_no_getname[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32mpacket_getname_spkt[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32mnetlink_getname[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32minet6_getname[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32mpacket_getname[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32minet_getname[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.proto_ops.800304:0,[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+[32mstruct.socket.800305:0,[0m
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:inet_getname[0m
+[31mindirect call @ net/core/sock.c:1275:7
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[35mUse:net/socket.c:1649:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[31mindirect call @ net/socket.c:3318:9
+[35mUse:net/socket.c:3318:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3325:9
+[31mindirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1558:7 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 31[0m
+[33mInspect Use of Function:packet_getname[0m
+[31mindirect call @ net/core/sock.c:1275:7
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[35mUse:net/socket.c:1649:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[31mindirect call @ net/socket.c:3318:9
+[35mUse:net/socket.c:3318:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3325:9
+[31mindirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1558:7 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 31[0m
+[33mInspect Use of Function:unix_getname[0m
+[31mindirect call @ net/core/sock.c:1275:7
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[35mUse:net/socket.c:1649:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[31mindirect call @ net/socket.c:3318:9
+[35mUse:net/socket.c:3318:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3325:9
+[31mindirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1558:7 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 31[0m
+[33mInspect Use of Function:move_addr_to_user[0m
+[35mUse:net/socket.c:2193:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ___sys_recvmsg net/socket.c:2193:9
+1 __sys_recvmmsg net/socket.c:2295:10
+2 compat_SyS_recvmmsg net/compat.c:780:14 @[ net/compat.c:766:1 ]
+[32m-------------[0m
+[35mUse:net/socket.c:2193:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ___sys_recvmsg net/socket.c:2193:9
+1 __sys_recvmmsg net/socket.c:2295:10
+2 SyS_recvmmsg net/socket.c:2376:14 @[ net/socket.c:2360:1 ]
+[32m-------------[0m
+[35mUse:net/socket.c:2193:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ___sys_recvmsg net/socket.c:2193:9
+1 SyS_recvmsg net/socket.c:2232:8 @[ net/socket.c:2244:9 @[ net/socket.c:2239:1 ] ]
+[32m-------------[0m
+[35mUse:net/socket.c:2193:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ___sys_recvmsg net/socket.c:2193:9
+1 __sys_recvmsg net/socket.c:2232:8
+2 compat_SyS_recvmsg net/compat.c:751:9 @[ net/compat.c:749:1 ]
+[32m-------------[0m
+[35mUse:net/socket.c:1784:10 @[ net/socket.c:1753:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_recvfrom net/socket.c:1784:10 @[ net/socket.c:1753:1 ]
+[32m-------------[0m
+[35mUse:net/socket.c:1652:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1652:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[35mUse:net/socket.c:1563:9 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1563:9 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 0[0m
+[33mInspect Use of Function:sock_no_getname[0m
+[31mindirect call @ net/core/sock.c:1275:7
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[35mUse:net/socket.c:1649:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[31mindirect call @ net/socket.c:3318:9
+[35mUse:net/socket.c:3318:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3325:9
+[31mindirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1558:7 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 31[0m
+[33mInspect Use of Function:packet_getname_spkt[0m
+[31mindirect call @ net/core/sock.c:1275:7
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[35mUse:net/socket.c:1649:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[31mindirect call @ net/socket.c:3318:9
+[35mUse:net/socket.c:3318:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3325:9
+[31mindirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1558:7 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 31[0m
+[33mInspect Use of Function:netlink_getname[0m
+[31mindirect call @ net/core/sock.c:1275:7
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[35mUse:net/socket.c:1649:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[31mindirect call @ net/socket.c:3318:9
+[35mUse:net/socket.c:3318:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3325:9
+[31mindirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1558:7 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 31[0m
+[33mInspect Use of Function:inet6_getname[0m
+[31mindirect call @ net/core/sock.c:1275:7
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:1275:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[35mUse:net/socket.c:1649:8 @[ net/socket.c:1634:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+[31mindirect call @ net/socket.c:3318:9
+[35mUse:net/socket.c:3318:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3325:9
+[31mindirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1558:7 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 9 [33mIgnored: 31[0m
+STOP WATCH[0]: 1345.788000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    8 : Good Path
+    72 : Bad Path
+    217 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    8 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    1 : Critical Function Pointer Resolved, Collect Pass
+    14 : Critical Functions used by non CallInst
+    126 : Critical Functions used by static assignment
+    119 : # of times indirect call site matched with critical functions
+    181 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

@@ -1,0 +1,1350 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.738000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.337000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_quotactl
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1004.671000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.929000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.039000 ms
+STOP WATCH[0]: 6772.972000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.554000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.421000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.986000 ms
+STOP WATCH[0]: 248.602000 ms
+Collect all permission-checked variables and functions
+Add call<direct> iterate_supers use @ fs/quota/quota.c:66:3 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:89:10 @[ fs/quota/quota.c:721:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_quota_enable use @ fs/quota/quota.c:89:10 @[ fs/quota/quota.c:721:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:92:9 @[ fs/quota/quota.c:721:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31m[NO MATCH][0m
+Resolve indirect call @ fs/quota/quota.c:100:10 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_quota_disable use @ fs/quota/quota.c:100:10 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 5 MATCH][0m
+Add call<indirect> jfs_quota_off use @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> ext4_quota_off use @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> ext2_quota_off use @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> reiserfs_quota_off use @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> f2fs_quota_off use @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:127:8 @[ fs/quota/quota.c:727:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> dquot_get_state use @ fs/quota/quota.c:127:8 @[ fs/quota/quota.c:727:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_quota_get_state use @ fs/quota/quota.c:127:8 @[ fs/quota/quota.c:727:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:173:9 @[ fs/quota/quota.c:729:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_set_dqinfo use @ fs/quota/quota.c:173:9 @[ fs/quota/quota.c:729:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ ./include/linux/quota.h:189:9 @[ fs/quota/quota.c:211:7 @[ fs/quota/quota.c:731:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:213:8 @[ fs/quota/quota.c:731:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> dquot_get_dqblk use @ fs/quota/quota.c:213:8 @[ fs/quota/quota.c:731:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_get_dqblk use @ fs/quota/quota.c:213:8 @[ fs/quota/quota.c:731:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ ./include/linux/quota.h:189:9 @[ fs/quota/quota.c:237:7 @[ fs/quota/quota.c:733:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:239:8 @[ fs/quota/quota.c:733:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_get_next_dqblk use @ fs/quota/quota.c:239:8 @[ fs/quota/quota.c:733:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ fs/quota/quota.c:244:15 @[ fs/quota/quota.c:733:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ ./include/linux/quota.h:189:9 @[ fs/quota/quota.c:288:7 @[ fs/quota/quota.c:735:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:291:9 @[ fs/quota/quota.c:735:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> dquot_set_dqblk use @ fs/quota/quota.c:291:9 @[ fs/quota/quota.c:735:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_set_dqblk use @ fs/quota/quota.c:291:9 @[ fs/quota/quota.c:735:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:739:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ]
+[32m[FOUND 3 MATCH][0m
+Add call<indirect> f2fs_quota_sync use @ fs/quota/quota.c:739:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_quota_sync use @ fs/quota/quota.c:739:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> dquot_quota_sync use @ fs/quota/quota.c:739:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:302:9 @[ fs/quota/quota.c:741:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_quota_enable use @ fs/quota/quota.c:302:9 @[ fs/quota/quota.c:741:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:313:9 @[ fs/quota/quota.c:743:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_quota_disable use @ fs/quota/quota.c:313:9 @[ fs/quota/quota.c:743:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:695:9 @[ fs/quota/quota.c:745:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31m[NO MATCH][0m
+Resolve indirect call @ fs/quota/quota.c:342:8 @[ fs/quota/quota.c:402:8 @[ fs/quota/quota.c:747:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> dquot_get_state use @ fs/quota/quota.c:342:8 @[ fs/quota/quota.c:402:8 @[ fs/quota/quota.c:747:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_quota_get_state use @ fs/quota/quota.c:342:8 @[ fs/quota/quota.c:402:8 @[ fs/quota/quota.c:747:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:415:8 @[ fs/quota/quota.c:478:8 @[ fs/quota/quota.c:749:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> dquot_get_state use @ fs/quota/quota.c:415:8 @[ fs/quota/quota.c:478:8 @[ fs/quota/quota.c:749:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_quota_get_state use @ fs/quota/quota.c:415:8 @[ fs/quota/quota.c:478:8 @[ fs/quota/quota.c:749:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ ./include/linux/quota.h:189:9 @[ fs/quota/quota.c:587:7 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ fs/quota/quota.c:590:6 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:598:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_set_dqinfo use @ fs/quota/quota.c:598:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:605:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> dquot_set_dqblk use @ fs/quota/quota.c:605:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_set_dqblk use @ fs/quota/quota.c:605:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ ./include/linux/quota.h:189:9 @[ fs/quota/quota.c:648:7 @[ fs/quota/quota.c:753:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:650:8 @[ fs/quota/quota.c:753:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> dquot_get_dqblk use @ fs/quota/quota.c:650:8 @[ fs/quota/quota.c:753:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<indirect> gfs2_get_dqblk use @ fs/quota/quota.c:650:8 @[ fs/quota/quota.c:753:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ ./include/linux/quota.h:189:9 @[ fs/quota/quota.c:675:7 @[ fs/quota/quota.c:755:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Resolve indirect call @ fs/quota/quota.c:677:8 @[ fs/quota/quota.c:755:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[32m[FOUND 1 MATCH][0m
+Add call<indirect> dquot_get_next_dqblk use @ fs/quota/quota.c:677:8 @[ fs/quota/quota.c:755:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+Add call<direct> from_kqid use @ fs/quota/quota.c:680:11 @[ fs/quota/quota.c:755:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_quotactl 
+[32m-------------[0m
+STOP WATCH[1]: 2017.519000 ms
+STOP WATCH[0]: 2017.533000 ms
+Collected 20 critical functions
+Collected 1 critical variables
+Collected 1 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mswitch.table.SyS_quotactl.4[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mdquot_quota_sync[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mgfs2_quota_sync[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mf2fs_quota_sync[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mgfs2_set_dqblk[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mdquot_quota_disable[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mfrom_kqid[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mext2_quota_off[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32miterate_supers[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mjfs_quota_off[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mdquot_quota_enable[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mf2fs_quota_off[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mreiserfs_quota_off[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mdquot_set_dqblk[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mdquot_get_state[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mext4_quota_off[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mgfs2_quota_get_state[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mdquot_set_dqinfo[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mdquot_get_dqblk[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mgfs2_get_dqblk[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32mdquot_get_next_dqblk[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.quotactl_ops:0,[0m
+    security_quotactl @ fs/quota/quota.c:46:9 @[ fs/quota/quota.c:715:8 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+    security_quotactl @ fs/quota/quota.c:64:8 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:dquot_get_next_dqblk[0m
+[31mindirect call @ fs/quota/quota.c:677:8 @[ fs/quota/quota.c:755:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:239:8 @[ fs/quota/quota.c:733:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:gfs2_get_dqblk[0m
+[31mindirect call @ fs/quota/quota.c:213:8 @[ fs/quota/quota.c:731:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:650:8 @[ fs/quota/quota.c:753:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:dquot_get_dqblk[0m
+[31mindirect call @ fs/quota/quota.c:213:8 @[ fs/quota/quota.c:731:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:650:8 @[ fs/quota/quota.c:753:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:dquot_set_dqinfo[0m
+[31mindirect call @ fs/quota/quota.c:598:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:173:9 @[ fs/quota/quota.c:729:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:from_kqid[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_rename2 fs/gfs2/inode.c:1557:3 @[ fs/gfs2/inode.c:1724:9 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_setattr fs/gfs2/inode.c:1912:2 @[ fs/gfs2/inode.c:1954:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_setattr fs/gfs2/inode.c:1912:2 @[ fs/gfs2/inode.c:1954:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_setattr fs/gfs2/inode.c:1912:2 @[ fs/gfs2/inode.c:1954:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 __gfs2_set_acl fs/gfs2/acl.c:104:10
+6 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_fallocate fs/gfs2/file.c:915:2 @[ fs/gfs2/file.c:955:8 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:904:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_link fs/gfs2/inode.c:1008:3
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_create_inode fs/gfs2/inode.c:547:2 @[ fs/gfs2/inode.c:763:10 ]
+3 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_rename2 fs/gfs2/inode.c:1557:3 @[ fs/gfs2/inode.c:1724:9 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_setattr fs/gfs2/inode.c:1912:2 @[ fs/gfs2/inode.c:1954:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_setattr fs/gfs2/inode.c:1912:2 @[ fs/gfs2/inode.c:1954:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_setattr fs/gfs2/inode.c:1912:2 @[ fs/gfs2/inode.c:1954:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 __gfs2_set_acl fs/gfs2/acl.c:104:10
+6 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_fallocate fs/gfs2/file.c:915:2 @[ fs/gfs2/file.c:955:8 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sync fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:936:12 ] ]
+1 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+2 gfs2_link fs/gfs2/inode.c:1008:3
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_dir_write_data fs/gfs2/dir.c:182:11
+5 dir_split_leaf fs/gfs2/dir.c:1071:10
+6 gfs2_dir_add fs/gfs2/dir.c:1855:12
+7 gfs2_create_inode fs/gfs2/inode.c:541:10 @[ fs/gfs2/inode.c:763:10 ]
+8 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_dir_write_data fs/gfs2/dir.c:182:11
+5 dir_split_leaf fs/gfs2/dir.c:1071:10
+6 gfs2_dir_add fs/gfs2/dir.c:1855:12
+7 gfs2_create_inode fs/gfs2/inode.c:541:10 @[ fs/gfs2/inode.c:763:10 ]
+8 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_dir_write_data fs/gfs2/dir.c:182:11
+5 dir_split_leaf fs/gfs2/dir.c:1071:10
+6 gfs2_dir_add fs/gfs2/dir.c:1855:12
+7 gfs2_create_inode fs/gfs2/inode.c:541:10 @[ fs/gfs2/inode.c:763:10 ]
+8 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_dir_write_data fs/gfs2/dir.c:182:11
+5 dir_split_leaf fs/gfs2/dir.c:1071:10
+6 gfs2_dir_add fs/gfs2/dir.c:1855:12
+7 gfs2_create_inode fs/gfs2/inode.c:541:10 @[ fs/gfs2/inode.c:763:10 ]
+8 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_dir_write_data fs/gfs2/dir.c:182:11
+5 dir_split_leaf fs/gfs2/dir.c:1071:10
+6 gfs2_dir_add fs/gfs2/dir.c:1855:12
+7 gfs2_create_inode fs/gfs2/inode.c:541:10 @[ fs/gfs2/inode.c:763:10 ]
+8 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_dir_write_data fs/gfs2/dir.c:182:11
+5 dir_split_leaf fs/gfs2/dir.c:1071:10
+6 gfs2_dir_add fs/gfs2/dir.c:1855:12
+7 gfs2_link fs/gfs2/inode.c:988:10
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_dir_write_data fs/gfs2/dir.c:182:11
+5 dir_split_leaf fs/gfs2/dir.c:1071:10
+6 gfs2_dir_add fs/gfs2/dir.c:1855:12
+7 gfs2_rename2 fs/gfs2/inode.c:1546:10 @[ fs/gfs2/inode.c:1724:9 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_setattr_size fs/gfs2/bmap.c:1611:11 @[ fs/gfs2/bmap.c:1669:9 ]
+5 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_setattr_size fs/gfs2/bmap.c:1611:11 @[ fs/gfs2/bmap.c:1669:9 ]
+5 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_setattr_size fs/gfs2/bmap.c:1611:11 @[ fs/gfs2/bmap.c:1669:9 ]
+5 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_adjust_quota fs/gfs2/quota.c:821:9
+5 do_sync fs/gfs2/quota.c:937:11
+6 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+7 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+8 ea_set_i fs/gfs2/xattr.c:1077:9
+9 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+10 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_adjust_quota fs/gfs2/quota.c:821:9
+5 do_sync fs/gfs2/quota.c:937:11
+6 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+7 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+8 ea_set_i fs/gfs2/xattr.c:1077:9
+9 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+10 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_adjust_quota fs/gfs2/quota.c:821:9
+5 do_sync fs/gfs2/quota.c:937:11
+6 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+7 ea_alloc_skeleton fs/gfs2/quota.h:57:3 @[ fs/gfs2/xattr.c:752:10 ]
+8 ea_set_i fs/gfs2/xattr.c:1077:9
+9 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+10 __gfs2_set_acl fs/gfs2/acl.c:104:10
+11 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_unstuff_dinode fs/gfs2/bmap.c:135:11
+4 gfs2_adjust_quota fs/gfs2/quota.c:821:9
+5 do_sync fs/gfs2/quota.c:937:11
+6 gfs2_quota_unlock fs/gfs2/quota.c:1148:3
+7 gfs2_fallocate fs/gfs2/file.c:915:2 @[ fs/gfs2/file.c:955:8 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_iomap_begin fs/gfs2/bmap.c:569:11 @[ fs/gfs2/bmap.c:830:8 ]
+4 gfs2_block_map fs/gfs2/bmap.c:864:8
+5 gfs2_extent_map fs/gfs2/bmap.c:905:8
+6 gfs2_dir_get_hash_table fs/gfs2/dir.c:304:12 @[ fs/gfs2/dir.c:369:8 ]
+7 gfs2_dirent_search fs/gfs2/dir.c:789:9 @[ fs/gfs2/dir.c:804:10 @[ fs/gfs2/dir.c:832:11 ] ]
+8 gfs2_dir_del fs/gfs2/dir.c:1888:9
+9 gfs2_unlink_inode fs/gfs2/inode.c:1073:10
+10 gfs2_unlink fs/gfs2/inode.c:1157:10
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_iomap_begin fs/gfs2/bmap.c:569:11 @[ fs/gfs2/bmap.c:830:8 ]
+4 gfs2_block_map fs/gfs2/bmap.c:864:8
+5 gfs2_extent_map fs/gfs2/bmap.c:905:8
+6 gfs2_dir_get_hash_table fs/gfs2/dir.c:304:12 @[ fs/gfs2/dir.c:369:8 ]
+7 gfs2_dirent_search fs/gfs2/dir.c:789:9 @[ fs/gfs2/dir.c:804:10 @[ fs/gfs2/dir.c:832:11 ] ]
+8 gfs2_dir_del fs/gfs2/dir.c:1888:9
+9 gfs2_unlink_inode fs/gfs2/inode.c:1073:10
+10 gfs2_unlink fs/gfs2/inode.c:1157:10
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_iomap_begin fs/gfs2/bmap.c:569:11 @[ fs/gfs2/bmap.c:830:8 ]
+4 gfs2_block_map fs/gfs2/bmap.c:864:8
+5 gfs2_extent_map fs/gfs2/bmap.c:905:8
+6 gfs2_dir_get_hash_table fs/gfs2/dir.c:304:12 @[ fs/gfs2/dir.c:369:8 ]
+7 gfs2_dirent_search fs/gfs2/dir.c:789:9 @[ fs/gfs2/dir.c:804:10 @[ fs/gfs2/dir.c:832:11 ] ]
+8 gfs2_dir_search fs/gfs2/dir.c:1655:9
+9 gfs2_lookupi fs/gfs2/inode.c:312:10
+10 __gfs2_lookup fs/gfs2/inode.c:848:10
+11 gfs2_lookup fs/gfs2/inode.c:882:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:663:15[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_qc fs/gfs2/quota.c:663:15
+1 gfs2_quota_change fs/gfs2/quota.c:1266:4
+2 gfs2_alloc_blocks fs/gfs2/rgrp.c:2380:2
+3 gfs2_iomap_begin fs/gfs2/bmap.c:569:11 @[ fs/gfs2/bmap.c:830:8 ]
+4 gfs2_block_map fs/gfs2/bmap.c:864:8
+5 gfs2_extent_map fs/gfs2/bmap.c:905:8
+6 gfs2_dir_get_hash_table fs/gfs2/dir.c:304:12 @[ fs/gfs2/dir.c:369:8 ]
+7 gfs2_dir_read fs/gfs2/dir.c:1550:7 @[ fs/gfs2/dir.c:1587:10 ]
+8 gfs2_readdir fs/gfs2/file.c:114:10
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_rename2 fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:1514:11 @[ fs/gfs2/inode.c:1724:9 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_link fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:967:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+2 ea_set_i fs/gfs2/xattr.c:1077:9
+3 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+4 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+2 ea_set_i fs/gfs2/xattr.c:1077:9
+3 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+4 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+2 ea_set_i fs/gfs2/xattr.c:1077:9
+3 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+4 __gfs2_set_acl fs/gfs2/acl.c:104:10
+5 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1227:6 ]
+1 gfs2_fallocate fs/gfs2/quota.h:55:8 @[ fs/gfs2/file.c:857:11 @[ fs/gfs2/file.c:955:8 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_create_inode fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+2 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_rename2 fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:1514:11 @[ fs/gfs2/inode.c:1724:9 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_link fs/gfs2/quota.h:55:8 @[ fs/gfs2/inode.c:967:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+2 ea_set_i fs/gfs2/xattr.c:1077:9
+3 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+4 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+2 ea_set_i fs/gfs2/xattr.c:1077:9
+3 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+4 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 ea_alloc_skeleton fs/gfs2/quota.h:55:8 @[ fs/gfs2/xattr.c:752:10 ]
+2 ea_set_i fs/gfs2/xattr.c:1077:9
+3 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+4 __gfs2_set_acl fs/gfs2/acl.c:104:10
+5 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_setattr_size fs/gfs2/quota.h:55:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+2 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gfs2_quota_check fs/gfs2/quota.c:1163:2 @[ fs/gfs2/quota.c:1241:12 ]
+1 gfs2_fallocate fs/gfs2/quota.h:55:8 @[ fs/gfs2/file.c:857:11 @[ fs/gfs2/file.c:955:8 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+3 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+3 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+3 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+3 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+3 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 ea_alloc_skeleton fs/gfs2/quota.h:50:8 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 ea_alloc_skeleton fs/gfs2/quota.h:50:8 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 ea_alloc_skeleton fs/gfs2/quota.h:50:8 @[ fs/gfs2/xattr.c:752:10 ]
+3 ea_set_i fs/gfs2/xattr.c:1077:9
+4 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+5 __gfs2_set_acl fs/gfs2/acl.c:104:10
+6 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_fallocate fs/gfs2/quota.h:50:8 @[ fs/gfs2/file.c:857:11 @[ fs/gfs2/file.c:955:8 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_setattr_size fs/gfs2/quota.h:50:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+3 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_setattr_size fs/gfs2/quota.h:50:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+3 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_setattr_size fs/gfs2/quota.h:50:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+3 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_rename2 fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:1514:11 @[ fs/gfs2/inode.c:1724:9 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_glock fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:208:11 @[ fs/gfs2/quota.c:971:8 @[ fs/gfs2/quota.c:1016:11 ] ] ]
+1 gfs2_quota_lock fs/gfs2/quota.c:1055:11
+2 gfs2_link fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:967:11 ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+5 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+5 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+5 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+5 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_create_inode fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:524:11 @[ fs/gfs2/inode.c:763:10 ] ]
+5 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 ea_alloc_skeleton fs/gfs2/quota.h:50:8 @[ fs/gfs2/xattr.c:752:10 ]
+5 ea_set_i fs/gfs2/xattr.c:1077:9
+6 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+7 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 ea_alloc_skeleton fs/gfs2/quota.h:50:8 @[ fs/gfs2/xattr.c:752:10 ]
+5 ea_set_i fs/gfs2/xattr.c:1077:9
+6 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+7 gfs2_xattr_set fs/gfs2/xattr.c:1258:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 ea_alloc_skeleton fs/gfs2/quota.h:50:8 @[ fs/gfs2/xattr.c:752:10 ]
+5 ea_set_i fs/gfs2/xattr.c:1077:9
+6 __gfs2_xattr_set fs/gfs2/xattr.c:1229:11
+7 __gfs2_set_acl fs/gfs2/acl.c:104:10
+8 gfs2_set_acl fs/gfs2/acl.c:142:8
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_fallocate fs/gfs2/quota.h:50:8 @[ fs/gfs2/file.c:857:11 @[ fs/gfs2/file.c:955:8 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_setattr_size fs/gfs2/quota.h:50:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+5 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_setattr_size fs/gfs2/quota.h:50:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+5 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_setattr_size fs/gfs2/quota.h:50:8 @[ fs/gfs2/bmap.c:1594:11 @[ fs/gfs2/bmap.c:1669:9 ] ]
+5 gfs2_setattr fs/gfs2/inode.c:1952:11
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_rename2 fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:1514:11 @[ fs/gfs2/inode.c:1724:9 ] ]
+[32m-------------[0m
+[35mUse:fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 qd_get fs/gfs2/quota.c:200:19 @[ fs/gfs2/quota.c:231:30 @[ fs/gfs2/quota.c:278:11 ] ]
+1 qdsb_get fs/gfs2/quota.c:502:10
+2 gfs2_quota_hold fs/gfs2/quota.c:607:11
+3 gfs2_quota_lock fs/gfs2/quota.c:1046:10
+4 gfs2_link fs/gfs2/quota.h:50:8 @[ fs/gfs2/inode.c:967:11 ]
+[32m-------------[0m
+[32mGood: 9 [31mBad: 102 [33mIgnored: 565[0m
+[33mInspect Use of Function:dquot_quota_disable[0m
+[31mindirect call @ fs/quota/quota.c:313:9 @[ fs/quota/quota.c:743:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:100:10 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:f2fs_quota_sync[0m
+[31mindirect call @ fs/quota/quota.c:739:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ]
+[31mindirect call @ fs/quota/quota.c:55:3
+[33mInspect Use of Function:gfs2_set_dqblk[0m
+[31mindirect call @ fs/quota/quota.c:291:9 @[ fs/quota/quota.c:735:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:605:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:reiserfs_quota_off[0m
+[31mindirect call @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:dquot_set_dqblk[0m
+[31mindirect call @ fs/quota/quota.c:291:9 @[ fs/quota/quota.c:735:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:605:9 @[ fs/quota/quota.c:751:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:dquot_quota_sync[0m
+[31mindirect call @ fs/quota/quota.c:739:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ]
+[31mindirect call @ fs/quota/quota.c:55:3
+[33mInspect Use of Function:gfs2_quota_sync[0m
+[31mindirect call @ fs/quota/quota.c:739:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ]
+[31mindirect call @ fs/quota/quota.c:55:3
+[33mInspect Use of Function:ext2_quota_off[0m
+[31mindirect call @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:iterate_supers[0m
+[35mUse:security/selinux/hooks.c:6681:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 selinux_complete_init security/selinux/hooks.c:6681:2
+1 security_load_policy security/selinux/ss/services.c:2096:3
+2 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:fs/sync.c:113:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sys_sync fs/sync.c:113:2
+[32m-------------[0m
+[35mUse:fs/sync.c:115:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sys_sync fs/sync.c:115:2
+[32m-------------[0m
+[35mUse:fs/sync.c:114:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sys_sync fs/sync.c:114:2
+[32m-------------[0m
+[32mGood: 1 [31mBad: 4 [33mIgnored: 1[0m
+[33mInspect Use of Function:jfs_quota_off[0m
+[31mindirect call @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:dquot_quota_enable[0m
+[31mindirect call @ fs/quota/quota.c:89:10 @[ fs/quota/quota.c:721:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[31mindirect call @ fs/quota/quota.c:302:9 @[ fs/quota/quota.c:741:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:f2fs_quota_off[0m
+[31mindirect call @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:dquot_get_state[0m
+[31mindirect call @ fs/quota/quota.c:342:8 @[ fs/quota/quota.c:402:8 @[ fs/quota/quota.c:747:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+[31mindirect call @ fs/quota/quota.c:415:8 @[ fs/quota/quota.c:478:8 @[ fs/quota/quota.c:749:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+[31mindirect call @ fs/quota/quota.c:127:8 @[ fs/quota/quota.c:727:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:gfs2_quota_get_state[0m
+[31mindirect call @ fs/quota/quota.c:342:8 @[ fs/quota/quota.c:402:8 @[ fs/quota/quota.c:747:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+[31mindirect call @ fs/quota/quota.c:415:8 @[ fs/quota/quota.c:478:8 @[ fs/quota/quota.c:749:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ] ]
+[31mindirect call @ fs/quota/quota.c:127:8 @[ fs/quota/quota.c:727:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+[33mInspect Use of Function:ext4_quota_off[0m
+[31mindirect call @ fs/quota/quota.c:101:9 @[ fs/quota/quota.c:723:10 @[ fs/quota/quota.c:877:8 @[ fs/quota/quota.c:836:1 ] ] ]
+STOP WATCH[0]: 4491.032000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    40 : Good Path
+    106 : Bad Path
+    598 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    20 : Critical Functions
+    1 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    2 : Critical Function Pointer Unable to Resolve, Collect Pass
+    17 : Critical Function Pointer Resolved, Collect Pass
+    43 : Critical Functions used by non CallInst
+    374 : Critical Functions used by static assignment
+    283 : # of times indirect call site matched with critical functions
+    578 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

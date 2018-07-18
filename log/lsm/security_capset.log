@@ -1,37 +1,41 @@
 [36m--- PROCESS FUNCTIONS ---[0m
 Pre-processing...
-Load skip function list, total:355
+Load skip function list, total:360
 Load skip var list, total:22
+Load kernel api list, total:1048
 Collect all functions and indirect callsites
-STOP WATCH[0]: 1126.103000 ms
+STOP WATCH[0]: 809.499000 ms
 Process Gating Functions
 Load LSM hook list, total:1
-STOP WATCH[0]: 19.801000 ms
+STOP WATCH[0]: 14.251000 ms
 [48;5;021m[38;5;255m=LSM hook functions=[0m
 . security_capset
 =o=
 Collect Checkpoints
-STOP WATCH[0]: 1185.505000 ms
+STOP WATCH[0]: 943.473000 ms
 Identify interesting struct
-STOP WATCH[0]: 7.028000 ms
+STOP WATCH[0]: 5.910000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.278000 ms
+STOP WATCH[0]: 6822.304000 ms
 Collecting Initialization Closure.
 Finding Kernel Entry Point and all __initcall_
 [32mFound x86_64_start_kernel[0m
-STOP WATCH[1]: 101.719000 ms
-Initial Kernel Init Function Count:668
+STOP WATCH[1]: 69.957000 ms
+Initial Kernel Init Function Count:642
 Over Approximate Kernel Init Functions
-STOP WATCH[1]: 249.725000 ms
+STOP WATCH[1]: 133.951000 ms
 Refine Result
-refine pass 0 3112 left
-refine pass 1 2059 left
-refine pass 2 1769 left
-refine pass 3 1705 left
-refine pass 4 1676 left
-refine pass 5 1671 left
-refine pass 6 1669 left
- Refine result : count=1669
-STOP WATCH[1]: 98.743000 ms
-STOP WATCH[0]: 451.419000 ms
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.292000 ms
+STOP WATCH[0]: 250.865000 ms
 Collect all permission-checked variables and functions
 Add call<direct> __audit_log_capset use @ ./include/linux/audit.h:433:3 @[ kernel/capability.c:276:2 @[ kernel/capability.c:224:1 ] ]
  cause:[32mProcess Stack:[0m
@@ -41,7 +45,8 @@ Add call<direct> commit_creds use @ kernel/capability.c:278:9 @[ kernel/capabili
  cause:[32mProcess Stack:[0m
 0 SyS_capset 
 [32m-------------[0m
-STOP WATCH[1]: 4861.064000 ms
+STOP WATCH[1]: 1943.811000 ms
+STOP WATCH[0]: 1943.824000 ms
 Collected 2 critical functions
 Collected 0 critical variables
 Collected 1 critical type/fields
@@ -52,7 +57,7 @@ Collected 1 critical type/fields
 [32m__audit_log_capset[0m
     security_capset @ kernel/capability.c:271:8 @[ kernel/capability.c:224:1 ]
 [48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
-[32mstruct.task_struct.38020:0,[0m
+[32mstruct.task_struct.38147:0,[0m
     security_capset @ kernel/capability.c:271:8 @[ kernel/capability.c:224:1 ]
 Run Analysis
 Critical functions
@@ -196,6 +201,18 @@ Critical functions
 2 keyctl_update_key security/keys/keyctl.c:342:12
 3 SyS_keyctl security/keys/keyctl.c:1649:10 @[ security/keys/keyctl.c:1637:1 ]
 [32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_instantiate_key_common security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ]
+1 compat_SyS_keyctl security/keys/compat.c:46:8 @[ security/keys/compat.c:126:10 @[ security/keys/compat.c:59:1 ] ]
+[32m-------------[0m
+[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 keyctl_instantiate_key_common security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ]
+1 SyS_keyctl security/keys/keyctl.c:1166:8 @[ security/keys/keyctl.c:1728:10 @[ security/keys/keyctl.c:1637:1 ] ]
+[32m-------------[0m
 [35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1251:3 ][0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
@@ -207,12 +224,6 @@ Critical functions
 [32mCall Stack:[0m
 0 keyctl_reject_key security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1251:3 ]
 1 SyS_keyctl security/keys/keyctl.c:1722:10 @[ security/keys/keyctl.c:1637:1 ]
-[32m-------------[0m
-[35mUse:security/keys/keyctl.c:1307:2[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 keyctl_set_reqkey_keyring security/keys/keyctl.c:1307:2
-1 compat_SyS_keyctl security/keys/compat.c:108:10 @[ security/keys/compat.c:59:1 ]
 [32m-------------[0m
 [35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1397:9 ][0m
 [31m=NO CHECK ON PATH=[0m
@@ -231,17 +242,11 @@ Critical functions
 [32mCall Stack:[0m
 0 SyS_keyctl security/keys/keyctl.c:1307:2 @[ security/keys/keyctl.c:1704:10 @[ security/keys/keyctl.c:1637:1 ] ]
 [32m-------------[0m
-[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ][0m
+[35mUse:security/keys/keyctl.c:1307:2[0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
-0 keyctl_instantiate_key_common security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ]
-1 compat_SyS_keyctl security/keys/compat.c:46:8 @[ security/keys/compat.c:126:10 @[ security/keys/compat.c:59:1 ] ]
-[32m-------------[0m
-[35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 keyctl_instantiate_key_common security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1100:3 ]
-1 SyS_keyctl security/keys/keyctl.c:1166:8 @[ security/keys/keyctl.c:1728:10 @[ security/keys/keyctl.c:1637:1 ] ]
+0 keyctl_set_reqkey_keyring security/keys/keyctl.c:1307:2
+1 compat_SyS_keyctl security/keys/compat.c:108:10 @[ security/keys/compat.c:59:1 ]
 [32m-------------[0m
 [35mUse:security/keys/keyctl.c:1028:9 @[ security/keys/keyctl.c:1412:8 ][0m
 [31m=NO CHECK ON PATH=[0m
@@ -259,7 +264,7 @@ Critical functions
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
 0 install_exec_creds fs/exec.c:1436:2
-1 load_elf_binary.14623 fs/binfmt_elf.c:878:2
+1 load_elf_binary.14742 fs/binfmt_elf.c:878:2
 [32m-------------[0m
 [35mUse:fs/exec.c:1436:2[0m
 [31m=NO CHECK ON PATH=[0m
@@ -272,63 +277,57 @@ Critical functions
 [32mCall Stack:[0m
 0 SyS_setgroups kernel/groups.c:148:9 @[ kernel/groups.c:210:11 @[ kernel/groups.c:190:1 ] ]
 [32m-------------[0m
-[35mUse:kernel/groups.c:148:9[0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 set_current_groups kernel/groups.c:148:9
-1 SyS_setgroups16 kernel/uid16.c:196:11 @[ kernel/uid16.c:176:1 ]
-[32m-------------[0m
 [35mUse:kernel/sys.c:388:9 @[ kernel/sys.c:343:1 ][0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
 0 SyS_setregid kernel/sys.c:388:9 @[ kernel/sys.c:343:1 ]
-[32m-------------[0m
-[35mUse:kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 SyS_setfsuid kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ]
-[32m-------------[0m
-[35mUse:kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 SyS_setuid kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ]
-[32m-------------[0m
-[35mUse:kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 SyS_setfsgid kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ]
-[32m-------------[0m
-[35mUse:kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 SyS_setreuid kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ]
-[32m-------------[0m
-[35mUse:kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ][0m
-[31m=NO CHECK ON PATH=[0m
-[32mCall Stack:[0m
-0 SyS_setresgid kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ]
 [32m-------------[0m
 [35mUse:kernel/sys.c:425:9 @[ kernel/sys.c:400:1 ][0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
 0 SyS_setgid kernel/sys.c:425:9 @[ kernel/sys.c:400:1 ]
 [32m-------------[0m
+[35mUse:kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setfsuid kernel/sys.c:792:2 @[ kernel/sys.c:760:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setreuid kernel/sys.c:529:9 @[ kernel/sys.c:476:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setfsgid kernel/sys.c:830:2 @[ kernel/sys.c:799:1 ]
+[32m-------------[0m
 [35mUse:kernel/sys.c:652:9 @[ kernel/sys.c:594:1 ][0m
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
 0 SyS_setresuid kernel/sys.c:652:9 @[ kernel/sys.c:594:1 ]
 [32m-------------[0m
-[32mGood: 1 [31mBad: 256 [33mIgnored: 11[0m
-STOP WATCH[0]: 2353.509000 ms
+[35mUse:kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setresgid kernel/sys.c:726:9 @[ kernel/sys.c:681:1 ]
+[32m-------------[0m
+[35mUse:kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_setuid kernel/sys.c:582:9 @[ kernel/sys.c:547:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 255 [33mIgnored: 16[0m
+STOP WATCH[0]: 1158.864000 ms
 [36m--- DONE! ---[0m
 ------------STATISTICS---------------
-    43491 : Functions greeted
-    113 : External functions
+    53021 : Functions greeted
+    110 : External functions
     0 : Discovered Path
     0 : Matched Path
     2 : Good Path
-    256 : Bad Path
-    11 : Ignored Path
+    255 : Bad Path
+    16 : Ignored Path
     0 : Path Unable to Resolve
     0 : Resolved CallSite Using Function Pointer
     2 : Critical Functions
@@ -337,14 +336,19 @@ STOP WATCH[0]: 2353.509000 ms
     0 : # of times max depth for backward analysis hit
     0 : Critical Function Pointer Unable to Resolve, Collect Pass
     0 : Critical Function Pointer Resolved, Collect Pass
-    1 : Critical Functions used by non CallInst
-    10 : Critical Functions used by static assignment
+    4 : Critical Functions used by non CallInst
+    9 : Critical Functions used by static assignment
     0 : # of times indirect call site matched with critical functions
-    268 : # of times indirect call site failed to match with critical functions
+    266 : # of times indirect call site failed to match with critical functions
     0 : found capability check inside call using function ptr
 
 
 
 
-Printing analysis 'capchk Pass (with getAnalysisUsage implemented)':
-Pass::print not implemented for pass: 'capchk'!
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

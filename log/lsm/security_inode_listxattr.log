@@ -1,0 +1,838 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 810.024000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.433000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_inode_listxattr
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 946.642000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.949000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.927000 ms
+STOP WATCH[0]: 7176.137000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.680000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 133.257000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.074000 ms
+STOP WATCH[0]: 249.676000 ms
+Collect all permission-checked variables and functions
+Resolve indirect call @ fs/xattr.c:358:11
+[32m[FOUND 23 MATCH][0m
+Add call<indirect> orangefs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> cifs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> reiserfs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> ovl_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> sockfs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> bad_inode_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> kernfs_iop_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> jfs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> xfs_vn_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> squashfs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> generic_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> f2fs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> ext4_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> btrfs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> shmem_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> nfs4_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> nfs3_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> afs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> gfs2_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> ext2_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> hfsplus_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> ceph_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<indirect> ecryptfs_listxattr use @ fs/xattr.c:358:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Add call<direct> security_inode_listsecurity use @ fs/xattr.c:360:11
+ cause:[32mProcess Stack:[0m
+0 vfs_listxattr fs/xattr.c:348:30
+[32m-------------[0m
+Resolve indirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[32m[FOUND 23 MATCH][0m
+Add call<indirect> orangefs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> cifs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> reiserfs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> ovl_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> sockfs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> bad_inode_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> kernfs_iop_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> jfs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> xfs_vn_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> squashfs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> generic_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> f2fs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> ext4_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> btrfs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> shmem_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> nfs4_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> nfs3_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> afs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> gfs2_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> ext2_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> hfsplus_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> ceph_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<indirect> ecryptfs_listxattr use @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+Add call<direct> security_inode_listsecurity use @ fs/xattr.c:360:11 @[ fs/xattr.c:620:10 ]
+ cause:[32mProcess Stack:[0m
+0 listxattr fs/xattr.c:607:26
+[32m-------------[0m
+STOP WATCH[1]: 2059.314000 ms
+STOP WATCH[0]: 2059.328000 ms
+Collected 24 critical functions
+Collected 0 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mecryptfs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mceph_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mhfsplus_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mext2_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mgfs2_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mafs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32movl_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32msockfs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mreiserfs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32morangefs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mbad_inode_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mkernfs_iop_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mcifs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mjfs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32msecurity_inode_listsecurity[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mxfs_vn_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32msquashfs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mgeneric_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mf2fs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mext4_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mbtrfs_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mshmem_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mnfs3_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[32mnfs4_listxattr[0m
+    security_inode_listxattr @ fs/xattr.c:353:10 @[ fs/xattr.c:620:10 ]
+    security_inode_listxattr @ fs/xattr.c:353:10
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+[33mInspect Use of Function:nfs4_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:nfs3_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:shmem_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:btrfs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:ext4_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:f2fs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:generic_listxattr[0m
+[35mUse:fs/nfs/nfs4proc.c:9508:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_listxattr fs/nfs/nfs4proc.c:9508:10
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:9508:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_listxattr fs/nfs/nfs4proc.c:9508:10
+[32m-------------[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 5 [33mIgnored: 0[0m
+[33mInspect Use of Function:squashfs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:gfs2_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:ext2_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:hfsplus_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:afs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:ecryptfs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:ceph_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:sockfs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:ovl_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:reiserfs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:orangefs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:bad_inode_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:kernfs_iop_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:cifs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:jfs_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:security_inode_listsecurity[0m
+[35mUse:net/socket.c:518:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sockfs_listxattr net/socket.c:518:8
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:6875:9 @[ fs/nfs/nfs4proc.c:9516:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_listxattr fs/nfs/nfs4proc.c:6875:9 @[ fs/nfs/nfs4proc.c:9516:11 ]
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:6875:9 @[ fs/nfs/nfs4proc.c:9516:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_listxattr fs/nfs/nfs4proc.c:6875:9 @[ fs/nfs/nfs4proc.c:9516:11 ]
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+[33mInspect Use of Function:xfs_vn_listxattr[0m
+[31mindirect call @ fs/xattr.c:358:11
+[31mindirect call @ fs/xattr.c:358:11 @[ fs/xattr.c:620:10 ]
+[31mindirect call @ fs/ecryptfs/inode.c:1059:7
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[35mUse:fs/ecryptfs/inode.c:1059:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+[32m-------------[0m
+[32mGood: 2 [31mBad: 3 [33mIgnored: 0[0m
+STOP WATCH[0]: 116.330000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    48 : Good Path
+    74 : Bad Path
+    0 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    24 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    2 : Critical Function Pointer Resolved, Collect Pass
+    0 : Critical Functions used by non CallInst
+    74 : Critical Functions used by static assignment
+    0 : # of times indirect call site matched with critical functions
+    52 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

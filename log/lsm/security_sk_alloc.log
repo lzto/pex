@@ -1,0 +1,1846 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 807.609000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.476000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_sk_alloc
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 945.717000 ms
+Identify interesting struct
+STOP WATCH[0]: 6.020000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.215000 ms
+STOP WATCH[0]: 6786.384000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 70.475000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 133.269000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.427000 ms
+STOP WATCH[0]: 249.826000 ms
+Collect all permission-checked variables and functions
+Add call<direct> security_sk_free use @ net/core/sock.c:1483:2
+ cause:[32mProcess Stack:[0m
+0 sk_prot_alloc net/core/sock.c:1455:49
+[32m-------------[0m
+Add call<direct> security_sk_clone use @ net/core/sock.c:1451:2 @[ net/core/sock.c:1653:3 ]
+ cause:[32mProcess Stack:[0m
+0 sk_prot_alloc net/core/sock.c:1455:49
+1 sk_clone_lock net/core/sock.c:1649:10
+[32m-------------[0m
+Add call<direct> sk_filter_charge use @ net/core/sock.c:1697:17
+ cause:[32mProcess Stack:[0m
+0 sk_prot_alloc net/core/sock.c:1455:49
+1 sk_clone_lock net/core/sock.c:1649:10
+[32m-------------[0m
+Add call<direct> __xfrm_sk_clone_policy use @ ./include/net/xfrm.h:1213:10 @[ net/core/sock.c:1701:7 ]
+ cause:[32mProcess Stack:[0m
+0 sk_prot_alloc net/core/sock.c:1455:49
+1 sk_clone_lock net/core/sock.c:1649:10
+[32m-------------[0m
+Add call<direct> net_enable_timestamp use @ net/core/sock.c:1747:4
+ cause:[32mProcess Stack:[0m
+0 sk_prot_alloc net/core/sock.c:1455:49
+1 sk_clone_lock net/core/sock.c:1649:10
+[32m-------------[0m
+Add call<direct> security_inet_csk_clone use @ net/ipv4/inet_connection_sock.c:809:3
+ cause:[32mProcess Stack:[0m
+0 sk_prot_alloc net/core/sock.c:1455:49
+1 sk_clone_lock net/core/sock.c:1649:10
+2 inet_csk_clone_lock net/ipv4/inet_connection_sock.c:781:23
+[32m-------------[0m
+STOP WATCH[1]: 1958.735000 ms
+STOP WATCH[0]: 1958.749000 ms
+Collected 6 critical functions
+Collected 1 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mpercpu_counter_batch[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32msecurity_inet_csk_clone[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[32mnet_enable_timestamp[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[32m__xfrm_sk_clone_policy[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[32msk_filter_charge[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[32msecurity_sk_free[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[32msecurity_sk_clone[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.sock.800800:1,0,[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+[32mstruct.proto.800781:0,[0m
+    security_sk_alloc @ net/core/sock.c:1472:7
+Run Analysis
+Critical functions
+[33mInspect Use of Function:sk_filter_charge[0m
+[33mInspect Use of Function:security_sk_clone[0m
+[33mInspect Use of Function:__xfrm_sk_clone_policy[0m
+[33mInspect Use of Function:security_sk_free[0m
+[33mInspect Use of Function:security_inet_csk_clone[0m
+[33mInspect Use of Function:net_enable_timestamp[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 compat_SyS_setsockopt net/compat.c:347:9 @[ net/compat.c:378:10 @[ net/compat.c:400:10 @[ net/compat.c:386:1 ] ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_lock fs/cifs/file.c:1577:8 @[ fs/cifs/file.c:1684:7 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_strict_readv fs/cifs/file.c:3342:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_strict_writev fs/cifs/file.c:2866:12
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_setattr fs/cifs/inode.c:2425:8 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_unlink fs/cifs/inode.c:1363:3
+11 cifs_rename2 fs/cifs/inode.c:1802:12
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_unlink fs/cifs/inode.c:1363:3
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetPathInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:6015:7 ]
+7 cifs_mknod fs/cifs/dir.c:673:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetPathInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:6015:7 ]
+7 cifs_mkdir_qinfo fs/cifs/inode.c:1431:3
+8 cifs_mkdir fs/cifs/inode.c:1568:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetFileInfo fs/cifs/cifssmb.c:251:7 @[ fs/cifs/cifssmb.c:5944:7 ]
+7 cifs_do_create fs/cifs/dir.c:402:3
+8 cifs_create fs/cifs/dir.c:609:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetFileInfo fs/cifs/cifssmb.c:251:7 @[ fs/cifs/cifssmb.c:5944:7 ]
+7 cifs_do_create fs/cifs/dir.c:402:3
+8 cifs_atomic_open fs/cifs/dir.c:533:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetFileInfo fs/cifs/cifssmb.c:251:7 @[ fs/cifs/cifssmb.c:5944:7 ]
+7 cifs_open fs/cifs/file.c:567:3
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_getattr fs/cifs/inode.c:2021:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_symlink fs/cifs/link.c:724:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_revalidate_file fs/cifs/inode.c:1979:7
+9 cifs_file_mmap fs/cifs/file.c:3497:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSGetExtAttr fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3687:7 ]
+7 cifs_ioctl fs/cifs/ioctl.c:145:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSUnixCreateHardLink fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:2933:7 ]
+7 cifs_hardlink fs/cifs/link.c:559:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 cifs_rmdir fs/cifs/inode.c:1604:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 cifs_get_link fs/cifs/link.c:638:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 initiate_cifs_search fs/cifs/readdir.c:279:11
+8 cifs_readdir fs/cifs/readdir.c:619:8 @[ fs/cifs/readdir.c:820:7 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 cifs_listxattr fs/cifs/xattr.c:315:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_setattr fs/afs/inode.c:541:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_do_setlk fs/afs/flock.c:527:2
+14 afs_flock fs/afs/flock.c:682:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_do_setlk fs/afs/flock.c:527:2
+14 afs_lock fs/afs/flock.c:655:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_unlink fs/afs/dir.c:962:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_permission fs/afs/security.c:367:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_permission fs/afs/security.c:367:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_lookup fs/afs/dir.c:539:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_open fs/afs/file.c:140:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_open fs/afs/file.c:140:8
+14 afs_dir_open fs/afs/dir.c:239:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_iget fs/afs/inode.c:270:9
+13 afs_mkdir fs/afs/dir.c:770:10 @[ fs/afs/dir.c:817:3 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_iget fs/afs/inode.c:270:9
+13 afs_symlink fs/afs/dir.c:770:10 @[ fs/afs/dir.c:1156:3 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_iget fs/afs/inode.c:270:9
+13 afs_create fs/afs/dir.c:770:10 @[ fs/afs/dir.c:1028:3 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_link fs/afs/dir.c:1084:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_rmdir fs/afs/dir.c:872:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_rename fs/afs/dir.c:1215:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:860:4 ]
+1 SyS_setsockopt net/socket.c:1827:8 @[ net/socket.c:1810:1 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 compat_SyS_setsockopt net/compat.c:347:9 @[ net/compat.c:378:10 @[ net/compat.c:400:10 @[ net/compat.c:386:1 ] ] ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_lock fs/cifs/file.c:1577:8 @[ fs/cifs/file.c:1684:7 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_strict_readv fs/cifs/file.c:3342:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_send_async_read fs/cifs/file.c:3115:14
+8 cifs_user_readv fs/cifs/file.c:3284:7
+9 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_strict_writev fs/cifs/file.c:2866:12
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_setattr fs/cifs/inode.c:2425:8 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_unlink fs/cifs/inode.c:1363:3
+11 cifs_rename2 fs/cifs/inode.c:1802:12
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceiveBlockingLock fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:1029:7 ]
+4 CIFSSMBPosixLock fs/cifs/cifssmb.c:2493:8
+5 cifs_push_posix_locks fs/cifs/file.c:1259:15
+6 cifs_reopen_file fs/cifs/file.c:602:8 @[ fs/cifs/file.c:760:3 ]
+7 find_writable_file fs/cifs/file.c:1888:8
+8 smb_set_file_info fs/cifs/smb1ops.c:780:14
+9 cifs_set_file_info fs/cifs/inode.c:1122:9
+10 cifs_unlink fs/cifs/inode.c:1363:3
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetPathInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:6015:7 ]
+7 cifs_mknod fs/cifs/dir.c:673:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetPathInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:6015:7 ]
+7 cifs_mkdir_qinfo fs/cifs/inode.c:1431:3
+8 cifs_mkdir fs/cifs/inode.c:1568:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetFileInfo fs/cifs/cifssmb.c:251:7 @[ fs/cifs/cifssmb.c:5944:7 ]
+7 cifs_do_create fs/cifs/dir.c:402:3
+8 cifs_create fs/cifs/dir.c:609:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetFileInfo fs/cifs/cifssmb.c:251:7 @[ fs/cifs/cifssmb.c:5944:7 ]
+7 cifs_do_create fs/cifs/dir.c:402:3
+8 cifs_atomic_open fs/cifs/dir.c:533:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixSetFileInfo fs/cifs/cifssmb.c:251:7 @[ fs/cifs/cifssmb.c:5944:7 ]
+7 cifs_open fs/cifs/file.c:567:3
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_getattr fs/cifs/inode.c:2021:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+9 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSFindFirst fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4411:7 ]
+7 cifs_get_inode_info fs/cifs/inode.c:780:9
+8 cifs_symlink fs/cifs/link.c:724:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_revalidate_file fs/cifs/inode.c:1979:7
+9 cifs_file_mmap fs/cifs/file.c:3497:7
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBUnixQFileInfo fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:4251:7 ]
+7 cifs_revalidate_file_attr fs/cifs/inode.c:348:7 @[ fs/cifs/inode.c:1927:8 ]
+8 cifs_llseek fs/cifs/cifsfs.c:850:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSGetExtAttr fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3687:7 ]
+7 cifs_ioctl fs/cifs/ioctl.c:145:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSSMBSetPosixACL fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:3609:7 ]
+7 cifs_xattr_set fs/cifs/xattr.c:133:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSTCon fs/cifs/connect.c:4021:7
+5 cifs_reconnect_tcon fs/cifs/cifssmb.c:204:7
+6 CIFSUnixCreateHardLink fs/cifs/cifssmb.c:329:7 @[ fs/cifs/cifssmb.c:2933:7 ]
+7 cifs_hardlink fs/cifs/link.c:559:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 cifs_rmdir fs/cifs/inode.c:1604:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 cifs_get_link fs/cifs/link.c:638:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 initiate_cifs_search fs/cifs/readdir.c:279:11
+8 cifs_readdir fs/cifs/readdir.c:619:8 @[ fs/cifs/readdir.c:820:7 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 __smb_send_rqst fs/cifs/transport.c:288:2
+3 SendReceive fs/cifs/transport.c:348:9 @[ fs/cifs/transport.c:890:7 ]
+4 CIFSSMBSetFSUnixInfo fs/cifs/cifssmb.c:5346:7
+5 reset_cifs_unix_caps fs/cifs/connect.c:3376:7
+6 cifs_sb_tlink fs/cifs/connect.c:4235:3 @[ fs/cifs/connect.c:4368:19 ]
+7 cifs_listxattr fs/cifs/xattr.c:315:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_setattr fs/afs/inode.c:541:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_do_setlk fs/afs/flock.c:527:2
+14 afs_flock fs/afs/flock.c:682:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_do_setlk fs/afs/flock.c:527:2
+14 afs_lock fs/afs/flock.c:655:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_unlink fs/afs/dir.c:962:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_permission fs/afs/security.c:367:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_permission fs/afs/security.c:367:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_lookup fs/afs/dir.c:539:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_open fs/afs/file.c:140:8
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_validate fs/afs/inode.c:395:9
+13 afs_open fs/afs/file.c:140:8
+14 afs_dir_open fs/afs/dir.c:239:9
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_iget fs/afs/inode.c:270:9
+13 afs_mkdir fs/afs/dir.c:770:10 @[ fs/afs/dir.c:817:3 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_iget fs/afs/inode.c:270:9
+13 afs_symlink fs/afs/dir.c:770:10 @[ fs/afs/dir.c:1156:3 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_fetch_status fs/afs/inode.c:119:10
+12 afs_iget fs/afs/inode.c:270:9
+13 afs_create fs/afs/dir.c:770:10 @[ fs/afs/dir.c:1028:3 ]
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_link fs/afs/dir.c:1084:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_rmdir fs/afs/dir.c:872:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 kernel_setsockopt net/socket.c:3362:9
+2 rxrpc_send_data_packet net/rxrpc/output.c:434:4
+3 rxrpc_send_data net/rxrpc/sendmsg.c:222:8 @[ net/rxrpc/sendmsg.c:411:4 ]
+4 rxrpc_kernel_send_data net/rxrpc/sendmsg.c:766:9
+5 afs_make_call fs/afs/rxrpc.c:401:8
+6 afs_yfsvl_get_endpoints fs/afs/vlclient.c:644:33
+7 afs_vl_lookup_addrs fs/afs/server.c:270:12
+8 afs_update_server_record fs/afs/server.c:631:10
+9 afs_check_server_record fs/afs/server.c:677:13
+10 afs_select_fileserver fs/afs/rotate.c:363:7
+11 afs_rename fs/afs/dir.c:1215:10
+[32m-------------[0m
+[35mUse:net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_setsockopt net/core/sock.c:2875:4 @[ net/core/sock.c:896:4 ]
+1 SyS_setsockopt net/socket.c:1827:8 @[ net/socket.c:1810:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 126 [33mIgnored: 1909[0m
+STOP WATCH[0]: 14796.969000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    6 : Good Path
+    126 : Bad Path
+    1911 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    6 : Critical Functions
+    1 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    75 : Critical Functions used by non CallInst
+    985 : Critical Functions used by static assignment
+    1028 : # of times indirect call site matched with critical functions
+    992 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

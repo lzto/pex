@@ -1,0 +1,3479 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.281000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.230000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_socket_create
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1003.646000 ms
+Identify interesting struct
+STOP WATCH[0]: 6.006000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.982000 ms
+STOP WATCH[0]: 6779.220000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.408000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 133.861000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.052000 ms
+STOP WATCH[0]: 249.959000 ms
+Collect all permission-checked variables and functions
+Add call<direct> new_inode_pseudo use @ net/socket.c:571:10 @[ net/socket.c:1078:9 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Add call<direct> get_next_ino use @ net/socket.c:577:17 @[ net/socket.c:1078:9 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Add call<direct> security_socket_post_create use @ net/socket.c:1085:8
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:3293:8
+[32m[FOUND 3 MATCH][0m
+Add call<indirect> unix_accept use @ net/socket.c:3293:8
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<indirect> inet_accept use @ net/socket.c:3293:8
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<indirect> sock_no_accept use @ net/socket.c:3293:8
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+ cause:[32mProcess Stack:[0m
+0 sock_create_lite net/socket.c:1069:26
+1 kernel_accept net/socket.c:3288:8
+[32m-------------[0m
+Add call<direct> new_inode_pseudo use @ net/socket.c:571:10 @[ net/socket.c:1231:9 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<direct> get_next_ino use @ net/socket.c:577:17 @[ net/socket.c:1231:9 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:1267:8
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> netlink_create use @ net/socket.c:1267:8
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> packet_create use @ net/socket.c:1267:8
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> rxrpc_create use @ net/socket.c:1267:8
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> unix_create use @ net/socket.c:1267:8
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> inet_create use @ net/socket.c:1267:8
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> inet6_create use @ net/socket.c:1267:8
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<direct> security_socket_post_create use @ net/socket.c:1283:8
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> unix_socketpair use @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> sock_no_socketpair use @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> sock_alloc_file use @ net/socket.c:1408:13 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> sock_alloc_file use @ net/socket.c:1415:13 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> fd_install use @ net/socket.c:1424:2 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> fd_install use @ net/socket.c:1425:2 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> __sock_create use @ net/socket.c:1307:9 @[ net/socket.c:1395:8 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+[32m[FOUND 2 MATCH][0m
+Add call<indirect> unix_socketpair use @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> sock_no_socketpair use @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> sock_alloc_file use @ net/socket.c:1408:13 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> sock_alloc_file use @ net/socket.c:1415:13 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> fd_install use @ net/socket.c:1424:2 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Add call<direct> fd_install use @ net/socket.c:1425:2 @[ net/socket.c:1348:1 ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+Resolve indirect call @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+[32m[FOUND 6 MATCH][0m
+Add call<indirect> rxrpc_release use @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+Add call<indirect> netlink_release use @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet6_release use @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+Add call<indirect> inet_release use @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+Add call<indirect> packet_release use @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+Add call<indirect> unix_release use @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+Add call<direct> sock_alloc_file use @ net/socket.c:444:12 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+Add call<direct> fd_install use @ net/socket.c:446:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 __sock_create net/socket.c:1196:31
+1 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+STOP WATCH[1]: 2038.637000 ms
+STOP WATCH[0]: 2038.650000 ms
+Collected 23 critical functions
+Collected 4 critical variables
+Collected 7 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32msockets_in_use[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mnet_families[0m
+    security_socket_create @ net/socket.c:1222:8
+[32msock_mnt[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32msockfs_inode_ops[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32msock_alloc_file[0m
+    security_socket_create @ net/socket.c:1222:8
+[32msock_no_socketpair[0m
+    security_socket_create @ net/socket.c:1222:8
+[32mfd_install[0m
+    security_socket_create @ net/socket.c:1222:8
+[32munix_socketpair[0m
+    security_socket_create @ net/socket.c:1222:8
+[32minet6_create[0m
+    security_socket_create @ net/socket.c:1222:8
+[32mnetlink_release[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32minet_create[0m
+    security_socket_create @ net/socket.c:1222:8
+[32minet6_release[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32munix_release[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32minet_accept[0m
+    security_socket_create @ net/socket.c:1074:8
+[32munix_create[0m
+    security_socket_create @ net/socket.c:1222:8
+[32mnew_inode_pseudo[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32m__sock_create[0m
+    security_socket_create @ net/socket.c:1222:8
+[32munix_accept[0m
+    security_socket_create @ net/socket.c:1074:8
+[32mget_next_ino[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mpacket_create[0m
+    security_socket_create @ net/socket.c:1222:8
+[32minet_release[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32msecurity_socket_post_create[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mrxrpc_release[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mpacket_release[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32msock_no_accept[0m
+    security_socket_create @ net/socket.c:1074:8
+[32mnetlink_create[0m
+    security_socket_create @ net/socket.c:1222:8
+[32mrxrpc_create[0m
+    security_socket_create @ net/socket.c:1222:8
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.task_struct.800272:0,[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mstruct.vfsmount.800397:0,[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mstruct.proto_ops.800304:0,[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mstruct.socket_wq.800297:0,[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mstruct.socket.800305:0,[0m
+    security_socket_create @ net/socket.c:1222:8
+    security_socket_create @ net/socket.c:1074:8
+[32mstruct.nsproxy.800172:0,[0m
+    security_socket_create @ net/socket.c:1222:8
+[32mstruct.net_proto_family:0,[0m
+    security_socket_create @ net/socket.c:1222:8
+Run Analysis
+Critical functions
+[33mInspect Use of Function:sock_alloc_file[0m
+[35mUse:net/socket.c:1542:12 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[32mGood: 3 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:sock_no_socketpair[0m
+[31mindirect call @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+[33mInspect Use of Function:unix_socketpair[0m
+[31mindirect call @ net/socket.c:1401:8 @[ net/socket.c:1348:1 ]
+[33mInspect Use of Function:fd_install[0m
+[35mUse:net/socket.c:1571:2 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1571:2 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[35mUse:drivers/tty/pty.c:646:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ptm_open_peer drivers/tty/pty.c:646:2
+1 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:drivers/tty/pty.c:646:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ptm_open_peer drivers/tty/pty.c:646:2
+1 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:ipc/mqueue.c:829:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mq_open ipc/mqueue.c:829:3
+1 compat_SyS_mq_open ipc/mqueue.c:1474:9 @[ ipc/mqueue.c:1464:1 ]
+[32m-------------[0m
+[35mUse:ipc/mqueue.c:829:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mq_open ipc/mqueue.c:829:3
+1 SyS_mq_open ipc/mqueue.c:854:9 @[ ipc/mqueue.c:847:1 ]
+[32m-------------[0m
+[35mUse:fs/xfs/xfs_ioctl.c:269:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 xfs_open_by_handle fs/xfs/xfs_ioctl.c:269:2
+1 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1931:10
+[32m-------------[0m
+[35mUse:fs/xfs/xfs_ioctl.c:269:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 xfs_open_by_handle fs/xfs/xfs_ioctl.c:269:2
+1 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1931:10
+2 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/fhandle.c:240:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_handle_open fs/fhandle.c:240:3
+1 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/fhandle.c:240:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_handle_open fs/fhandle.c:240:3
+1 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_misc.c:172:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_misc_binary fs/binfmt_misc.c:172:3
+[32m-------------[0m
+[35mUse:fs/eventfd.c:473:2 @[ fs/eventfd.c:458:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_eventfd2 fs/eventfd.c:473:2 @[ fs/eventfd.c:458:1 ]
+[32m-------------[0m
+[35mUse:fs/eventpoll.c:1969:2 @[ fs/eventpoll.c:1936:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_epoll_create1 fs/eventpoll.c:1969:2 @[ fs/eventpoll.c:1936:1 ]
+[32m-------------[0m
+[35mUse:fs/notify/fanotify/fanotify_user.c:230:3 @[ fs/notify/fanotify/fanotify_user.c:297:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fanotify_read fs/notify/fanotify/fanotify_user.c:230:3 @[ fs/notify/fanotify/fanotify_user.c:297:9 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:3733:2 @[ mm/shmem.c:3656:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_memfd_create mm/shmem.c:3733:2 @[ mm/shmem.c:3656:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[35mUse:fs/pipe.c:855:4 @[ fs/pipe.c:839:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_pipe2 fs/pipe.c:855:4 @[ fs/pipe.c:839:1 ]
+[32m-------------[0m
+[35mUse:fs/pipe.c:854:4 @[ fs/pipe.c:839:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_pipe2 fs/pipe.c:854:4 @[ fs/pipe.c:839:1 ]
+[32m-------------[0m
+[35mUse:drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sync_file_ioctl drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ]
+[32m-------------[0m
+[35mUse:drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sync_file_ioctl drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ]
+[32m-------------[0m
+[35mUse:kernel/events/core.c:10260:2 @[ kernel/events/core.c:9862:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_perf_event_open kernel/events/core.c:10260:2 @[ kernel/events/core.c:9862:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_timerfd_create fs/timerfd.c:427:8 @[ fs/timerfd.c:387:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_signalfd4 fs/signalfd.c:280:9 @[ fs/signalfd.c:250:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_inotify_init1 fs/notify/inotify/inotify_user.c:655:8 @[ fs/notify/inotify/inotify_user.c:638:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_fanotify_init fs/notify/fanotify/fanotify_user.c:812:7 @[ fs/notify/fanotify/fanotify_user.c:706:1 ]
+[32m-------------[0m
+[32mGood: 3 [31mBad: 27 [33mIgnored: 60[0m
+[33mInspect Use of Function:unix_create[0m
+[31mindirect call @ net/socket.c:1267:8
+[33mInspect Use of Function:rxrpc_create[0m
+[31mindirect call @ net/socket.c:1267:8
+[33mInspect Use of Function:__sock_create[0m
+[35mUse:net/sunrpc/clnt.c:1239:8 @[ net/sunrpc/clnt.c:1356:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 rpc_localaddr net/sunrpc/clnt.c:1239:8 @[ net/sunrpc/clnt.c:1356:8 ]
+1 nfs4_init_client fs/nfs/nfs4client.c:385:11
+[32m-------------[0m
+[35mUse:net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_socketpair net/socket.c:1307:9 @[ net/socket.c:1391:8 @[ net/socket.c:1348:1 ] ]
+[32m-------------[0m
+[35mUse:net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_socket net/socket.c:1307:9 @[ net/socket.c:1337:11 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+[32mGood: 30 [31mBad: 3 [33mIgnored: 103[0m
+[33mInspect Use of Function:unix_accept[0m
+[31mindirect call @ net/socket.c:1553:8 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1553:8 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1553:8 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3293:8
+[32mGood: 1 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:inet6_create[0m
+[31mindirect call @ net/socket.c:1267:8
+[33mInspect Use of Function:get_next_ino[0m
+[35mUse:net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __rpc_create_common net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+1 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+2 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+3 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+4 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+5 rpc_new_client net/sunrpc/clnt.c:432:8
+6 __rpc_clone_client net/sunrpc/clnt.c:617:8
+7 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+8 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+9 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+10 nfs_callback_up fs/nfs/callback.c:203:8 @[ fs/nfs/callback.c:324:8 ]
+11 nfs4_init_client fs/nfs/nfs4client.c:259:10 @[ fs/nfs/nfs4client.c:341:9 @[ fs/nfs/nfs4client.c:403:10 ] ]
+[32m-------------[0m
+[35mUse:net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __rpc_create_common net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+1 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+2 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+3 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+4 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+5 rpc_new_client net/sunrpc/clnt.c:432:8
+6 __rpc_clone_client net/sunrpc/clnt.c:617:8
+7 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+8 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+9 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+10 lockd_up fs/lockd/svc.c:257:10 @[ fs/lockd/svc.c:477:10 ]
+11 nlmclnt_init fs/lockd/clntlock.c:59:11
+12 nfs_clone_server fs/nfs/client.c:576:9 @[ fs/nfs/client.c:1039:10 ]
+[32m-------------[0m
+[35mUse:net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __rpc_create_common net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+1 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+2 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+3 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+4 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+5 rpc_new_client net/sunrpc/clnt.c:432:8
+6 __rpc_clone_client net/sunrpc/clnt.c:617:8
+7 rpc_clone_client net/sunrpc/clnt.c:651:9
+8 nfs4_proc_lookup_mountpoint fs/nfs/nfs4proc.c:3982:39
+9 nfs4_submount fs/nfs/nfs4namespace.c:401:11
+[32m-------------[0m
+[35mUse:net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __rpc_create_common net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+1 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+2 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+3 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+4 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+5 rpc_new_client net/sunrpc/clnt.c:432:8
+6 __rpc_clone_client net/sunrpc/clnt.c:617:8
+7 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+8 nfs_init_server_rpcclient fs/nfs/client.c:594:19
+9 nfs4_create_server fs/nfs/nfs4client.c:1066:9 @[ fs/nfs/nfs4client.c:1090:10 ]
+[32m-------------[0m
+[35mUse:net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __rpc_create_common net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+1 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+2 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+3 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+4 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+5 rpc_new_client net/sunrpc/clnt.c:432:8
+6 __rpc_clone_client net/sunrpc/clnt.c:617:8
+7 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+8 nfs4_negotiate_security fs/nfs/nfs4namespace.c:178:11 @[ fs/nfs/nfs4namespace.c:231:8 ]
+9 nfs4_proc_lookup_common fs/nfs/nfs4proc.c:3937:13
+10 nfs4_proc_lookup fs/nfs/nfs4proc.c:3964:11
+[32m-------------[0m
+[35mUse:net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __rpc_create_common net/sunrpc/rpc_pipe.c:478:17 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+1 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+2 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+3 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+4 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+5 rpc_new_client net/sunrpc/clnt.c:432:8
+6 rpc_create_xprt net/sunrpc/clnt.c:474:9
+7 rpc_create net/sunrpc/clnt.c:587:9
+8 set_gssp_clnt net/sunrpc/auth_gss/gss_rpc_upcall.c:119:9 @[ net/sunrpc/auth_gss/gss_rpc_upcall.c:149:8 ]
+9 write_gssp net/sunrpc/auth_gss/svcauth_gss.c:1335:8
+[32m-------------[0m
+[35mUse:net/socket.c:577:17 @[ net/socket.c:1523:12 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:577:17 @[ net/socket.c:1523:12 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[35mUse:ipc/mqueue.c:227:17 @[ ipc/mqueue.c:442:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mqueue_create ipc/mqueue.c:227:17 @[ ipc/mqueue.c:442:10 ]
+[32m-------------[0m
+[35mUse:fs/efivarfs/inode.c:25:18 @[ fs/efivarfs/inode.c:95:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 efivarfs_create fs/efivarfs/inode.c:25:18 @[ fs/efivarfs/inode.c:95:10 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+6 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+7 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+8 nfs_callback_up fs/nfs/callback.c:203:8 @[ fs/nfs/callback.c:324:8 ]
+9 nfs4_init_client fs/nfs/nfs4client.c:259:10 @[ fs/nfs/nfs4client.c:341:9 @[ fs/nfs/nfs4client.c:403:10 ] ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+6 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+7 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+8 lockd_up fs/lockd/svc.c:257:10 @[ fs/lockd/svc.c:477:10 ]
+9 nlmclnt_init fs/lockd/clntlock.c:59:11
+10 nfs_clone_server fs/nfs/client.c:576:9 @[ fs/nfs/client.c:1039:10 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_clone_client net/sunrpc/clnt.c:651:9
+6 nfs4_proc_lookup_mountpoint fs/nfs/nfs4proc.c:3982:39
+7 nfs4_submount fs/nfs/nfs4namespace.c:401:11
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+6 nfs_init_server_rpcclient fs/nfs/client.c:594:19
+7 nfs4_create_server fs/nfs/nfs4client.c:1066:9 @[ fs/nfs/nfs4client.c:1090:10 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+6 nfs4_negotiate_security fs/nfs/nfs4namespace.c:178:11 @[ fs/nfs/nfs4namespace.c:231:8 ]
+7 nfs4_proc_lookup_common fs/nfs/nfs4proc.c:3937:13
+8 nfs4_proc_lookup fs/nfs/nfs4proc.c:3964:11
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 rpc_create_xprt net/sunrpc/clnt.c:474:9
+5 rpc_create net/sunrpc/clnt.c:587:9
+6 set_gssp_clnt net/sunrpc/auth_gss/gss_rpc_upcall.c:119:9 @[ net/sunrpc/auth_gss/gss_rpc_upcall.c:149:8 ]
+7 write_gssp net/sunrpc/auth_gss/svcauth_gss.c:1335:8
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 blk_mq_debugfs_register_sched block/blk-mq-debugfs.c:934:25
+2 blk_mq_init_sched block/blk-mq-sched.c:594:2
+3 elevator_init block/elevator.c:264:9
+4 blk_mq_sched_init block/blk-mq-sched.c:641:8
+5 blk_mq_init_allocated_queue block/blk-mq.c:2506:9
+6 blk_mq_init_queue block/blk-mq.c:2360:6
+7 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+8 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+9 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+10 __scsi_add_device drivers/scsi/scsi_scan.c:1487:3
+11 scsi_add_device drivers/scsi/scsi_scan.c:1507:3
+12 proc_scsi_write drivers/scsi/scsi_proc.c:253:11 @[ drivers/scsi/scsi_proc.c:346:9 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 blk_mq_debugfs_register_sched block/blk-mq-debugfs.c:934:25
+2 blk_mq_init_sched block/blk-mq-sched.c:594:2
+3 elevator_init block/elevator.c:264:9
+4 blk_mq_sched_init block/blk-mq-sched.c:641:8
+5 blk_mq_init_allocated_queue block/blk-mq.c:2506:9
+6 blk_mq_init_queue block/blk-mq.c:2360:6
+7 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+8 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+9 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+10 __scsi_scan_target drivers/scsi/scsi_scan.c:1270:8 @[ drivers/scsi/scsi_scan.c:1576:4 ]
+11 scsi_scan_host_selected drivers/scsi/scsi_scan.c:1661:3 @[ drivers/scsi/scsi_scan.c:1689:4 ]
+12 store_scan drivers/scsi/scsi_sysfs.c:149:9 @[ drivers/scsi/scsi_sysfs.c:189:8 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 blk_mq_debugfs_register_sched block/blk-mq-debugfs.c:934:25
+2 blk_mq_init_sched block/blk-mq-sched.c:594:2
+3 elevator_init block/elevator.c:264:9
+4 blk_mq_sched_init block/blk-mq-sched.c:641:8
+5 blk_mq_init_allocated_queue block/blk-mq.c:2506:9
+6 blk_mq_init_queue block/blk-mq.c:2360:6
+7 loop_add drivers/block/loop.c:1796:17
+8 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 blk_mq_debugfs_register_sched block/blk-mq-debugfs.c:934:25
+2 blk_mq_init_sched block/blk-mq-sched.c:594:2
+3 elevator_init block/elevator.c:264:9
+4 blk_mq_sched_init block/blk-mq-sched.c:641:8
+5 blk_mq_init_allocated_queue block/blk-mq.c:2506:9
+6 blk_mq_init_queue block/blk-mq.c:2360:6
+7 loop_add drivers/block/loop.c:1796:17
+8 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+2 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+3 compat_blkdev_ioctl block/compat_ioctl.c:402:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+2 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+3 blkdev_ioctl block/ioctl.c:587:10
+4 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_dir fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:514:10 ]
+1 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+2 blk_trace_setup kernel/trace/blktrace.c:589:8 @[ kernel/trace/blktrace.c:607:8 ]
+3 sg_ioctl drivers/scsi/sg.c:1089:10
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:142:7
+3 rpc_client_register net/sunrpc/clnt.c:305:2
+4 rpc_new_client net/sunrpc/clnt.c:432:8
+5 __rpc_clone_client net/sunrpc/clnt.c:617:8
+6 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+7 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+8 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+9 nfs_callback_up fs/nfs/callback.c:203:8 @[ fs/nfs/callback.c:324:8 ]
+10 nfs4_init_client fs/nfs/nfs4client.c:259:10 @[ fs/nfs/nfs4client.c:341:9 @[ fs/nfs/nfs4client.c:403:10 ] ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:142:7
+3 rpc_client_register net/sunrpc/clnt.c:305:2
+4 rpc_new_client net/sunrpc/clnt.c:432:8
+5 __rpc_clone_client net/sunrpc/clnt.c:617:8
+6 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+7 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+8 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+9 lockd_up fs/lockd/svc.c:257:10 @[ fs/lockd/svc.c:477:10 ]
+10 nlmclnt_init fs/lockd/clntlock.c:59:11
+11 nfs_clone_server fs/nfs/client.c:576:9 @[ fs/nfs/client.c:1039:10 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:142:7
+3 rpc_client_register net/sunrpc/clnt.c:305:2
+4 rpc_new_client net/sunrpc/clnt.c:432:8
+5 __rpc_clone_client net/sunrpc/clnt.c:617:8
+6 rpc_clone_client net/sunrpc/clnt.c:651:9
+7 nfs4_proc_lookup_mountpoint fs/nfs/nfs4proc.c:3982:39
+8 nfs4_submount fs/nfs/nfs4namespace.c:401:11
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:142:7
+3 rpc_client_register net/sunrpc/clnt.c:305:2
+4 rpc_new_client net/sunrpc/clnt.c:432:8
+5 __rpc_clone_client net/sunrpc/clnt.c:617:8
+6 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+7 nfs_init_server_rpcclient fs/nfs/client.c:594:19
+8 nfs4_create_server fs/nfs/nfs4client.c:1066:9 @[ fs/nfs/nfs4client.c:1090:10 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:142:7
+3 rpc_client_register net/sunrpc/clnt.c:305:2
+4 rpc_new_client net/sunrpc/clnt.c:432:8
+5 __rpc_clone_client net/sunrpc/clnt.c:617:8
+6 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+7 nfs4_negotiate_security fs/nfs/nfs4namespace.c:178:11 @[ fs/nfs/nfs4namespace.c:231:8 ]
+8 nfs4_proc_lookup_common fs/nfs/nfs4proc.c:3937:13
+9 nfs4_proc_lookup fs/nfs/nfs4proc.c:3964:11
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:142:7
+3 rpc_client_register net/sunrpc/clnt.c:305:2
+4 rpc_new_client net/sunrpc/clnt.c:432:8
+5 rpc_create_xprt net/sunrpc/clnt.c:474:9
+6 rpc_create net/sunrpc/clnt.c:587:9
+7 set_gssp_clnt net/sunrpc/auth_gss/gss_rpc_upcall.c:119:9 @[ net/sunrpc/auth_gss/gss_rpc_upcall.c:149:8 ]
+8 write_gssp net/sunrpc/auth_gss/svcauth_gss.c:1335:8
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 orangefs_client_debug_init fs/orangefs/orangefs-debugfs.c:351:24
+3 orangefs_debugfs_new_client_string fs/orangefs/orangefs-debugfs.c:1012:2
+4 dispatch_ioctl_command fs/orangefs/devorangefs-req.c:688:10
+5 orangefs_devreq_ioctl fs/orangefs/devorangefs-req.c:707:14
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 orangefs_client_debug_init fs/orangefs/orangefs-debugfs.c:351:24
+3 orangefs_debugfs_new_client_string fs/orangefs/orangefs-debugfs.c:1012:2
+4 dispatch_ioctl_command fs/orangefs/devorangefs-req.c:688:10
+5 orangefs_devreq_compat_ioctl fs/orangefs/devorangefs-req.c:777:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 do_blk_trace_setup kernel/trace/blktrace.c:540:17
+3 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+4 compat_blkdev_ioctl block/compat_ioctl.c:402:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 do_blk_trace_setup kernel/trace/blktrace.c:540:17
+3 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+4 blkdev_ioctl block/ioctl.c:587:10
+5 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 do_blk_trace_setup kernel/trace/blktrace.c:540:17
+3 blk_trace_setup kernel/trace/blktrace.c:589:8 @[ kernel/trace/blktrace.c:607:8 ]
+4 sg_ioctl drivers/scsi/sg.c:1089:10
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+3 blk_mq_debugfs_register block/blk-mq-debugfs.c:826:29
+4 blk_register_queue block/blk-sysfs.c:900:3
+5 device_add_disk block/genhd.c:685:2
+6 loop_add ./include/linux/genhd.h:396:2 @[ drivers/block/loop.c:1849:2 ]
+7 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+3 blk_mq_debugfs_register block/blk-mq-debugfs.c:826:29
+4 blk_register_queue block/blk-sysfs.c:900:3
+5 device_add_disk block/genhd.c:685:2
+6 loop_add ./include/linux/genhd.h:396:2 @[ drivers/block/loop.c:1849:2 ]
+7 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+3 blk_mq_realloc_hw_ctxs block/blk-mq.c:2085:2 @[ block/blk-mq.c:2412:7 ]
+4 blk_mq_init_allocated_queue block/blk-mq.c:2462:2
+5 blk_mq_init_queue block/blk-mq.c:2360:6
+6 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+7 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+8 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+9 __scsi_add_device drivers/scsi/scsi_scan.c:1487:3
+10 scsi_add_device drivers/scsi/scsi_scan.c:1507:3
+11 proc_scsi_write drivers/scsi/scsi_proc.c:253:11 @[ drivers/scsi/scsi_proc.c:346:9 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __debugfs_create_file fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:355:10 ]
+1 debugfs_create_file fs/debugfs/inode.c:402:9
+2 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+3 blk_mq_realloc_hw_ctxs block/blk-mq.c:2085:2 @[ block/blk-mq.c:2412:7 ]
+4 blk_mq_init_allocated_queue block/blk-mq.c:2462:2
+5 blk_mq_init_queue block/blk-mq.c:2360:6
+6 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+7 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+8 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+9 __scsi_scan_target drivers/scsi/scsi_scan.c:1270:8 @[ drivers/scsi/scsi_scan.c:1576:4 ]
+10 scsi_scan_host_selected drivers/scsi/scsi_scan.c:1661:3 @[ drivers/scsi/scsi_scan.c:1689:4 ]
+11 store_scan drivers/scsi/scsi_sysfs.c:149:9 @[ drivers/scsi/scsi_sysfs.c:189:8 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_symlink fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:160:7
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+6 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+7 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+8 nfs_callback_up fs/nfs/callback.c:203:8 @[ fs/nfs/callback.c:324:8 ]
+9 nfs4_init_client fs/nfs/nfs4client.c:259:10 @[ fs/nfs/nfs4client.c:341:9 @[ fs/nfs/nfs4client.c:403:10 ] ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_symlink fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:160:7
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+6 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+7 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+8 lockd_up fs/lockd/svc.c:257:10 @[ fs/lockd/svc.c:477:10 ]
+9 nlmclnt_init fs/lockd/clntlock.c:59:11
+10 nfs_clone_server fs/nfs/client.c:576:9 @[ fs/nfs/client.c:1039:10 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_symlink fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:160:7
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_clone_client net/sunrpc/clnt.c:651:9
+6 nfs4_proc_lookup_mountpoint fs/nfs/nfs4proc.c:3982:39
+7 nfs4_submount fs/nfs/nfs4namespace.c:401:11
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_symlink fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:160:7
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+6 nfs_init_server_rpcclient fs/nfs/client.c:594:19
+7 nfs4_create_server fs/nfs/nfs4client.c:1066:9 @[ fs/nfs/nfs4client.c:1090:10 ]
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_symlink fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:160:7
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 __rpc_clone_client net/sunrpc/clnt.c:617:8
+5 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+6 nfs4_negotiate_security fs/nfs/nfs4namespace.c:178:11 @[ fs/nfs/nfs4namespace.c:231:8 ]
+7 nfs4_proc_lookup_common fs/nfs/nfs4proc.c:3937:13
+8 nfs4_proc_lookup fs/nfs/nfs4proc.c:3964:11
+[32m-------------[0m
+[35mUse:fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_create_symlink fs/debugfs/inode.c:39:18 @[ fs/debugfs/inode.c:608:10 ]
+1 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:160:7
+2 rpc_client_register net/sunrpc/clnt.c:305:2
+3 rpc_new_client net/sunrpc/clnt.c:432:8
+4 rpc_create_xprt net/sunrpc/clnt.c:474:9
+5 rpc_create net/sunrpc/clnt.c:587:9
+6 set_gssp_clnt net/sunrpc/auth_gss/gss_rpc_upcall.c:119:9 @[ net/sunrpc/auth_gss/gss_rpc_upcall.c:149:8 ]
+7 write_gssp net/sunrpc/auth_gss/svcauth_gss.c:1335:8
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:681:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_get_inode fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:681:2 ]
+1 ovl_lookup fs/overlayfs/namei.c:737:11
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_new_inode fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ]
+1 ovl_create_object fs/overlayfs/dir.c:543:10
+2 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_new_inode fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ]
+1 ovl_create_object fs/overlayfs/dir.c:543:10
+2 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_new_inode fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ]
+1 ovl_create_object fs/overlayfs/dir.c:543:10
+2 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ovl_new_inode fs/overlayfs/inode.c:454:17 @[ fs/overlayfs/inode.c:590:3 ]
+1 ovl_create_object fs/overlayfs/dir.c:543:10
+2 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/autofs4/inode.c:363:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 autofs4_get_inode fs/autofs4/inode.c:363:17
+1 autofs4_dir_mkdir fs/autofs4/root.c:752:10
+[32m-------------[0m
+[35mUse:fs/autofs4/inode.c:363:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 autofs4_get_inode fs/autofs4/inode.c:363:17
+1 autofs4_dir_symlink fs/autofs4/root.c:580:10
+[32m-------------[0m
+[35mUse:fs/hugetlbfs/inode.c:725:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 hugetlbfs_get_inode fs/hugetlbfs/inode.c:725:18
+1 hugetlb_file_setup fs/hugetlbfs/inode.c:1332:10
+2 SyS_memfd_create mm/shmem.c:3711:10 @[ mm/shmem.c:3656:1 ]
+[32m-------------[0m
+[35mUse:fs/hugetlbfs/inode.c:725:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 hugetlbfs_get_inode fs/hugetlbfs/inode.c:725:18
+1 hugetlb_file_setup fs/hugetlbfs/inode.c:1332:10
+2 SyS_mmap_pgoff mm/mmap.c:1523:10 @[ mm/mmap.c:1491:1 ]
+[32m-------------[0m
+[35mUse:fs/hugetlbfs/inode.c:725:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 hugetlbfs_get_inode fs/hugetlbfs/inode.c:725:18
+1 hugetlbfs_create fs/hugetlbfs/inode.c:768:10 @[ fs/hugetlbfs/inode.c:788:9 ]
+[32m-------------[0m
+[35mUse:fs/hugetlbfs/inode.c:725:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 hugetlbfs_get_inode fs/hugetlbfs/inode.c:725:18
+1 hugetlbfs_symlink fs/hugetlbfs/inode.c:797:10
+[32m-------------[0m
+[35mUse:fs/hugetlbfs/inode.c:725:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 hugetlbfs_get_inode fs/hugetlbfs/inode.c:725:18
+1 hugetlbfs_mkdir fs/hugetlbfs/inode.c:768:10 @[ fs/hugetlbfs/inode.c:780:15 ]
+[32m-------------[0m
+[35mUse:fs/hugetlbfs/inode.c:725:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 hugetlbfs_get_inode fs/hugetlbfs/inode.c:725:18
+1 hugetlbfs_mknod fs/hugetlbfs/inode.c:768:10
+[32m-------------[0m
+[35mUse:fs/ramfs/inode.c:67:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ramfs_get_inode fs/ramfs/inode.c:67:18
+1 ramfs_create fs/ramfs/inode.c:104:25 @[ fs/ramfs/inode.c:126:9 ]
+[32m-------------[0m
+[35mUse:fs/ramfs/inode.c:67:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ramfs_get_inode fs/ramfs/inode.c:67:18
+1 ramfs_symlink fs/ramfs/inode.c:134:10
+[32m-------------[0m
+[35mUse:fs/ramfs/inode.c:67:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ramfs_get_inode fs/ramfs/inode.c:67:18
+1 ramfs_mkdir fs/ramfs/inode.c:104:25 @[ fs/ramfs/inode.c:118:15 ]
+[32m-------------[0m
+[35mUse:fs/ramfs/inode.c:67:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ramfs_get_inode fs/ramfs/inode.c:67:18
+1 ramfs_mknod fs/ramfs/inode.c:104:25
+[32m-------------[0m
+[35mUse:fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 configfs_create fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ]
+1 configfs_create_link fs/configfs/dir.c:360:9
+2 configfs_symlink fs/configfs/symlink.c:95:9 @[ fs/configfs/symlink.c:167:9 ]
+[32m-------------[0m
+[35mUse:fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 configfs_create fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ]
+1 configfs_lookup fs/configfs/dir.c:431:10 @[ fs/configfs/dir.c:469:10 ]
+[32m-------------[0m
+[35mUse:fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 configfs_create fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ]
+1 configfs_lookup fs/configfs/dir.c:431:10 @[ fs/configfs/dir.c:469:10 ]
+[32m-------------[0m
+[35mUse:fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 configfs_create fs/configfs/inode.c:134:18 @[ fs/configfs/inode.c:195:10 ]
+1 configfs_attach_item fs/configfs/dir.c:296:10 @[ fs/configfs/dir.c:819:8 ]
+2 configfs_attach_group fs/configfs/dir.c:854:8
+3 configfs_mkdir fs/configfs/dir.c:1385:9
+[32m-------------[0m
+[35mUse:fs/proc/proc_sysctl.c:469:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_sys_make_inode fs/proc/proc_sysctl.c:469:17
+1 proc_sys_lookup fs/proc/proc_sysctl.c:553:10
+[32m-------------[0m
+[35mUse:fs/proc/proc_sysctl.c:469:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_sys_make_inode fs/proc/proc_sysctl.c:469:17
+1 proc_sys_fill_cache fs/proc/proc_sysctl.c:687:12
+2 proc_sys_readdir fs/proc/proc_sysctl.c:737:9 @[ fs/proc/proc_sysctl.c:764:8 ]
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1751:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_pid_make_inode fs/proc/base.c:1751:17
+1 proc_pid_lookup fs/proc/base.c:3110:10 @[ fs/proc/base.c:3150:11 ]
+2 proc_root_lookup fs/proc/root.c:165:7
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1751:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_pid_make_inode fs/proc/base.c:1751:17
+1 proc_ns_dir_lookup fs/proc/namespaces.c:97:10 @[ fs/proc/namespaces.c:170:10 ]
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1751:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_pid_make_inode fs/proc/base.c:1751:17
+1 proc_lookupfdinfo fs/proc/fd.c:315:10 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:337:9 ] ]
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1751:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_pid_make_inode fs/proc/base.c:1751:17
+1 proc_lookupfd fs/proc/fd.c:177:10 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:276:9 ] ]
+[32m-------------[0m
+[35mUse:fs/binfmt_misc.c:587:18 @[ fs/binfmt_misc.c:707:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 bm_register_write fs/binfmt_misc.c:587:18 @[ fs/binfmt_misc.c:707:10 ]
+[32m-------------[0m
+[35mUse:fs/libfs.c:1094:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 alloc_anon_inode fs/libfs.c:1094:17
+1 ioctx_alloc fs/aio.c:210:24 @[ fs/aio.c:471:9 @[ fs/aio.c:769:8 ] ]
+2 compat_SyS_io_setup fs/aio.c:1392:10 @[ fs/aio.c:1375:1 ]
+[32m-------------[0m
+[35mUse:fs/libfs.c:1094:17[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 alloc_anon_inode fs/libfs.c:1094:17
+1 ioctx_alloc fs/aio.c:210:24 @[ fs/aio.c:471:9 @[ fs/aio.c:769:8 ] ]
+2 SyS_io_setup fs/aio.c:1361:10 @[ fs/aio.c:1344:1 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 shmem_symlink mm/shmem.c:3210:10
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 shmem_mknod mm/shmem.c:2990:10
+2 shmem_create mm/shmem.c:3050:9
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 shmem_mknod mm/shmem.c:2990:10
+2 shmem_mkdir mm/shmem.c:3041:15
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 shmem_mknod mm/shmem.c:2990:10
+2 shmem_rename2 mm/shmem.c:3135:10 @[ mm/shmem.c:3175:11 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 shmem_mknod mm/shmem.c:2990:10
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 shmem_tmpfile mm/shmem.c:3019:10
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_zero drivers/char/mem.c:693:10
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 SyS_remap_file_pages ./include/linux/mm.h:2217:9 @[ mm/mmap.c:2846:8 @[ mm/mmap.c:2762:1 ] ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 do_shmat ./include/linux/mm.h:2217:9 @[ ipc/shm.c:1404:9 ]
+6 compat_SyS_ipc ipc/syscall.c:171:9 @[ ipc/syscall.c:115:1 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 do_shmat ./include/linux/mm.h:2217:9 @[ ipc/shm.c:1404:9 ]
+6 compat_SyS_shmat ipc/shm.c:1457:8 @[ ipc/shm.c:1452:1 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 do_shmat ./include/linux/mm.h:2217:9 @[ ipc/shm.c:1404:9 ]
+6 SyS_shmat ipc/shm.c:1439:8 @[ ipc/shm.c:1434:1 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+6 vm_mmap mm/util.c:352:9
+7 elf_map.14753 fs/binfmt_elf.c:378:14
+8 load_elf_binary.14742 fs/binfmt_elf.c:582:15 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+6 vm_mmap mm/util.c:352:9
+7 load_elf_library fs/binfmt_elf.c:1232:10
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+6 vm_mmap mm/util.c:352:9
+7 load_elf_binary fs/binfmt_elf.c:1140:11
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+6 vm_mmap mm/util.c:352:9
+7 load_elf_library.14743 fs/binfmt_elf.c:1232:10
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+6 SyS_mmap_pgoff mm/mmap.c:1533:11 @[ mm/mmap.c:1491:1 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 ioctx_alloc ./include/linux/mm.h:2217:9 @[ fs/aio.c:520:19 @[ fs/aio.c:769:8 ] ]
+6 compat_SyS_io_setup fs/aio.c:1392:10 @[ fs/aio.c:1375:1 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+3 mmap_region mm/mmap.c:1721:11
+4 do_mmap mm/mmap.c:1483:9
+5 ioctx_alloc ./include/linux/mm.h:2217:9 @[ fs/aio.c:520:19 @[ fs/aio.c:769:8 ] ]
+6 SyS_io_setup fs/aio.c:1361:10 @[ fs/aio.c:1344:1 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:2159:18[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 shmem_get_inode mm/shmem.c:2159:18
+1 __shmem_file_setup mm/shmem.c:4211:10
+2 SyS_memfd_create mm/shmem.c:4260:9 @[ mm/shmem.c:3716:10 @[ mm/shmem.c:3656:1 ] ]
+[32m-------------[0m
+[35mUse:fs/pipe.c:705:17 @[ fs/pipe.c:740:24 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_pipe_files fs/pipe.c:705:17 @[ fs/pipe.c:740:24 ]
+1 __do_pipe_flags fs/pipe.c:797:10
+2 SyS_pipe2 fs/pipe.c:845:10 @[ fs/pipe.c:839:1 ]
+[32m-------------[0m
+[32mGood: 12 [31mBad: 95 [33mIgnored: 2532[0m
+[33mInspect Use of Function:rxrpc_release[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1131:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_close net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:424:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:424:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:424:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:410:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:410:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:410:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32mGood: 55 [31mBad: 4 [33mIgnored: 243[0m
+[33mInspect Use of Function:packet_release[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1131:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_close net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:424:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:424:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:424:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:410:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:410:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:410:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32mGood: 55 [31mBad: 4 [33mIgnored: 243[0m
+[33mInspect Use of Function:security_socket_post_create[0m
+[33mInspect Use of Function:new_inode_pseudo[0m
+[35mUse:net/socket.c:571:10 @[ net/socket.c:1523:12 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:571:10 @[ net/socket.c:1523:12 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[35mUse:fs/proc/inode.c:435:24[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_get_inode fs/proc/inode.c:435:24
+1 proc_lookup_de fs/proc/generic.c:224:11
+2 proc_lookup fs/proc/generic.c:238:9
+[32m-------------[0m
+[35mUse:fs/proc/inode.c:435:24[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_get_inode fs/proc/inode.c:435:24
+1 proc_lookup_de fs/proc/generic.c:224:11
+2 proc_lookup fs/proc/generic.c:238:9
+3 proc_root_lookup fs/proc/root.c:168:9
+[32m-------------[0m
+[35mUse:fs/proc/inode.c:435:24[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_get_inode fs/proc/inode.c:435:24
+1 proc_lookup_de fs/proc/generic.c:224:11
+2 proc_tgid_net_lookup fs/proc/proc_net.c:138:8
+[32m-------------[0m
+[35mUse:fs/nsfs.c:76:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ns_get_path fs/nsfs.c:76:10
+1 ns_get_path fs/nsfs.c:117:8
+2 perf_event_namespaces kernel/events/core.c:6686:10 @[ kernel/events/core.c:6728:2 ]
+3 SyS_setns kernel/nsproxy.c:267:2 @[ kernel/nsproxy.c:237:1 ]
+[32m-------------[0m
+[35mUse:fs/nsfs.c:76:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ns_get_path fs/nsfs.c:76:10
+1 ns_get_path fs/nsfs.c:117:8
+2 perf_event_namespaces kernel/events/core.c:6686:10 @[ kernel/events/core.c:6728:2 ]
+3 SyS_unshare kernel/fork.c:2414:2 @[ kernel/fork.c:2315:1 ]
+[32m-------------[0m
+[35mUse:fs/nsfs.c:76:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __ns_get_path fs/nsfs.c:76:10
+1 ns_get_path fs/nsfs.c:117:8
+2 proc_ns_get_link fs/proc/namespaces.c:55:11
+[32m-------------[0m
+[35mUse:fs/libfs.c:1089:24[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 alloc_anon_inode fs/libfs.c:1089:24
+1 ioctx_alloc fs/aio.c:210:24 @[ fs/aio.c:471:9 @[ fs/aio.c:769:8 ] ]
+2 compat_SyS_io_setup fs/aio.c:1392:10 @[ fs/aio.c:1375:1 ]
+[32m-------------[0m
+[35mUse:fs/libfs.c:1089:24[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 alloc_anon_inode fs/libfs.c:1089:24
+1 ioctx_alloc fs/aio.c:210:24 @[ fs/aio.c:471:9 @[ fs/aio.c:769:8 ] ]
+2 SyS_io_setup fs/aio.c:1361:10 @[ fs/aio.c:1344:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hpfs_create fs/hpfs/namei.c:156:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hpfs_symlink fs/hpfs/namei.c:319:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hpfs_mkdir fs/hpfs/namei.c:54:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hpfs_mknod fs/hpfs/namei.c:243:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 sel_write_load security/selinux/selinuxfs.c:1088:22 @[ security/selinux/selinuxfs.c:1753:11 @[ security/selinux/selinuxfs.c:521:11 ] ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hfs_file_lookup fs/hfs/inode.c:521:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hfs_new_inode fs/hfs/inode.c:185:24
+2 hfs_mkdir fs/hfs/dir.c:233:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hfs_new_inode fs/hfs/inode.c:185:24
+2 hfs_create fs/hfs/dir.c:204:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 bfs_create fs/bfs/dir.c:88:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 reiserfs_create fs/reiserfs/namei.c:639:16
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ialloc fs/jfs/jfs_inode.c:61:10
+2 jfs_mknod fs/jfs/namei.c:1388:7
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ialloc fs/jfs/jfs_inode.c:61:10
+2 jfs_mkdir fs/jfs/namei.c:239:7
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ialloc fs/jfs/jfs_inode.c:61:10
+2 jfs_symlink fs/jfs/namei.c:927:7
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ialloc fs/jfs/jfs_inode.c:61:10
+2 jfs_create fs/jfs/namei.c:105:7
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hugetlbfs_get_inode fs/hugetlbfs/inode.c:723:10
+2 hugetlb_file_setup fs/hugetlbfs/inode.c:1332:10
+3 SyS_memfd_create mm/shmem.c:3711:10 @[ mm/shmem.c:3656:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hugetlbfs_get_inode fs/hugetlbfs/inode.c:723:10
+2 hugetlb_file_setup fs/hugetlbfs/inode.c:1332:10
+3 SyS_mmap_pgoff mm/mmap.c:1523:10 @[ mm/mmap.c:1491:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hugetlbfs_get_inode fs/hugetlbfs/inode.c:723:10
+2 hugetlbfs_create fs/hugetlbfs/inode.c:768:10 @[ fs/hugetlbfs/inode.c:788:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hugetlbfs_get_inode fs/hugetlbfs/inode.c:723:10
+2 hugetlbfs_symlink fs/hugetlbfs/inode.c:797:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hugetlbfs_get_inode fs/hugetlbfs/inode.c:723:10
+2 hugetlbfs_mkdir fs/hugetlbfs/inode.c:768:10 @[ fs/hugetlbfs/inode.c:780:15 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 hugetlbfs_get_inode fs/hugetlbfs/inode.c:723:10
+2 hugetlbfs_mknod fs/hugetlbfs/inode.c:768:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 autofs4_get_inode fs/autofs4/inode.c:352:24
+2 autofs4_dir_mkdir fs/autofs4/root.c:752:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 autofs4_get_inode fs/autofs4/inode.c:352:24
+2 autofs4_dir_symlink fs/autofs4/root.c:580:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ramfs_get_inode fs/ramfs/inode.c:64:25
+2 ramfs_create fs/ramfs/inode.c:104:25 @[ fs/ramfs/inode.c:126:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ramfs_get_inode fs/ramfs/inode.c:64:25
+2 ramfs_symlink fs/ramfs/inode.c:134:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ramfs_get_inode fs/ramfs/inode.c:64:25
+2 ramfs_mkdir fs/ramfs/inode.c:104:25 @[ fs/ramfs/inode.c:118:15 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ramfs_get_inode fs/ramfs/inode.c:64:25
+2 ramfs_mknod fs/ramfs/inode.c:104:25
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __rpc_create_common net/sunrpc/rpc_pipe.c:475:24 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+2 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+3 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+4 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+5 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+6 rpc_new_client net/sunrpc/clnt.c:432:8
+7 __rpc_clone_client net/sunrpc/clnt.c:617:8
+8 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+9 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+10 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+11 nfs_callback_up fs/nfs/callback.c:203:8 @[ fs/nfs/callback.c:324:8 ]
+12 nfs4_init_client fs/nfs/nfs4client.c:259:10 @[ fs/nfs/nfs4client.c:341:9 @[ fs/nfs/nfs4client.c:403:10 ] ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __rpc_create_common net/sunrpc/rpc_pipe.c:475:24 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+2 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+3 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+4 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+5 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+6 rpc_new_client net/sunrpc/clnt.c:432:8
+7 __rpc_clone_client net/sunrpc/clnt.c:617:8
+8 rpc_bind_new_program net/sunrpc/clnt.c:955:9
+9 rpcb_create_local net/sunrpc/rpcb_clnt.c:320:10 @[ net/sunrpc/rpcb_clnt.c:351:12 ]
+10 svc_bind net/sunrpc/svc.c:362:8 @[ net/sunrpc/svc.c:400:9 ]
+11 lockd_up fs/lockd/svc.c:257:10 @[ fs/lockd/svc.c:477:10 ]
+12 nlmclnt_init fs/lockd/clntlock.c:59:11
+13 nfs_clone_server fs/nfs/client.c:576:9 @[ fs/nfs/client.c:1039:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __rpc_create_common net/sunrpc/rpc_pipe.c:475:24 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+2 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+3 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+4 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+5 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+6 rpc_new_client net/sunrpc/clnt.c:432:8
+7 __rpc_clone_client net/sunrpc/clnt.c:617:8
+8 rpc_clone_client net/sunrpc/clnt.c:651:9
+9 nfs4_proc_lookup_mountpoint fs/nfs/nfs4proc.c:3982:39
+10 nfs4_submount fs/nfs/nfs4namespace.c:401:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __rpc_create_common net/sunrpc/rpc_pipe.c:475:24 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+2 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+3 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+4 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+5 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+6 rpc_new_client net/sunrpc/clnt.c:432:8
+7 __rpc_clone_client net/sunrpc/clnt.c:617:8
+8 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+9 nfs_init_server_rpcclient fs/nfs/client.c:594:19
+10 nfs4_create_server fs/nfs/nfs4client.c:1066:9 @[ fs/nfs/nfs4client.c:1090:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __rpc_create_common net/sunrpc/rpc_pipe.c:475:24 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+2 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+3 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+4 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+5 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+6 rpc_new_client net/sunrpc/clnt.c:432:8
+7 __rpc_clone_client net/sunrpc/clnt.c:617:8
+8 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+9 nfs4_negotiate_security fs/nfs/nfs4namespace.c:178:11 @[ fs/nfs/nfs4namespace.c:231:8 ]
+10 nfs4_proc_lookup_common fs/nfs/nfs4proc.c:3937:13
+11 nfs4_proc_lookup fs/nfs/nfs4proc.c:3964:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __rpc_create_common net/sunrpc/rpc_pipe.c:475:24 @[ net/sunrpc/rpc_pipe.c:500:10 ]
+2 rpc_populate net/sunrpc/rpc_pipe.c:538:8 @[ net/sunrpc/rpc_pipe.c:734:11 ]
+3 rpc_create_client_dir net/sunrpc/rpc_pipe.c:1044:9 @[ net/sunrpc/rpc_pipe.c:768:11 @[ net/sunrpc/rpc_pipe.c:1071:8 ] ]
+4 rpc_setup_pipedir_sb net/sunrpc/clnt.c:136:12
+5 rpc_client_register net/sunrpc/clnt.c:156:12 @[ net/sunrpc/clnt.c:309:9 ]
+6 rpc_new_client net/sunrpc/clnt.c:432:8
+7 rpc_create_xprt net/sunrpc/clnt.c:474:9
+8 rpc_create net/sunrpc/clnt.c:587:9
+9 set_gssp_clnt net/sunrpc/auth_gss/gss_rpc_upcall.c:119:9 @[ net/sunrpc/auth_gss/gss_rpc_upcall.c:149:8 ]
+10 write_gssp net/sunrpc/auth_gss/svcauth_gss.c:1335:8
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_tmpfile fs/ext4/namei.c:2507:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_create fs/ext4/namei.c:2445:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_symlink fs/ext4/namei.c:3113:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_expand_extra_isize fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5855:10 ]
+5 ext4_ioctl fs/ext4/ioctl.c:361:9 @[ fs/ext4/ioctl.c:1040:9 ]
+6 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_expand_extra_isize fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5855:10 ]
+5 ext4_ioctl fs/ext4/ioctl.c:361:9 @[ fs/ext4/ioctl.c:1040:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_setattr fs/ext4/inode.c:5468:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_setattr fs/ext4/inode.c:5468:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+6 ext4_add_entry fs/ext4/namei.c:2056:12
+7 ext4_link fs/ext4/namei.c:3247:8
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+6 ext4_add_entry fs/ext4/namei.c:2056:12
+7 ext4_mkdir fs/ext4/namei.c:2639:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+6 ext4_add_entry fs/ext4/namei.c:2056:12
+7 ext4_add_nondir fs/ext4/namei.c:2410:12
+8 ext4_mknod fs/ext4/namei.c:2485:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_try_add_inline_entry fs/ext4/inline.c:1314:2
+6 ext4_add_entry fs/ext4/namei.c:2056:12
+7 ext4_rename2 fs/ext4/namei.c:3616:12 @[ fs/ext4/namei.c:3851:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_delete_inline_entry fs/ext4/inline.c:1713:9
+6 ext4_delete_entry fs/ext4/namei.c:2345:9
+7 ext4_unlink fs/ext4/namei.c:3032:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_delete_inline_entry fs/ext4/inline.c:1713:9
+6 ext4_delete_entry fs/ext4/namei.c:2345:9
+7 ext4_rmdir fs/ext4/namei.c:2954:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_set_acl fs/ext4/acl.c:258:3
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_set_acl fs/ext4/acl.c:258:3
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+6 ext4_map_blocks fs/ext4/inode.c:561:12
+7 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+8 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+9 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+10 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+11 ext4_get_acl fs/ext4/acl.c:167:12
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+6 ext4_map_blocks fs/ext4/inode.c:561:12
+7 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+8 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+9 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+10 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+11 ext4_get_acl fs/ext4/acl.c:167:12
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+6 ext4_map_blocks fs/ext4/inode.c:561:12
+7 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+8 ext4_xattr_inode_read fs/ext4/xattr.c:334:8
+9 ext4_xattr_inode_get fs/ext4/xattr.c:467:8
+10 ext4_xattr_get fs/ext4/xattr.c:530:12 @[ fs/ext4/xattr.c:621:11 ]
+11 ext4_xattr_security_get fs/ext4/xattr_security.c:20:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+6 ext4_map_blocks fs/ext4/inode.c:561:12
+7 ext4_bread_batch fs/ext4/inode.c:965:8 @[ fs/ext4/inode.c:1035:12 ]
+8 ext4_find_entry fs/ext4/namei.c:1423:13
+9 ext4_lookup fs/ext4/namei.c:1555:7
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_expand_extra_isize_ea fs/ext4/xattr.c:2224:10 @[ fs/ext4/xattr.c:2584:10 @[ fs/ext4/xattr.c:2657:11 @[ fs/ext4/xattr.c:2749:10 ] ] ]
+4 ext4_mark_inode_dirty fs/ext4/inode.c:5774:10 @[ fs/ext4/inode.c:5818:10 @[ fs/ext4/inode.c:5894:3 ] ]
+5 ext4_ind_map_blocks fs/ext4/indirect.c:466:3 @[ fs/ext4/indirect.c:624:9 ]
+6 ext4_map_blocks fs/ext4/inode.c:561:12
+7 ext4_getblk fs/ext4/inode.c:965:8
+8 ext4_bread fs/ext4/inode.c:1015:7
+9 ext4_readdir fs/ext4/dir.c:170:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __ext4_new_inode fs/ext4/ialloc.c:859:10
+2 ext4_xattr_set_entry fs/ext4/xattr.c:1403:13 @[ fs/ext4/xattr.c:1507:13 @[ fs/ext4/xattr.c:1629:9 ] ]
+3 ext4_xattr_block_set fs/ext4/xattr.c:1929:10
+4 ext4_xattr_set_handle fs/ext4/xattr.c:2388:12
+5 ext4_xattr_set fs/ext4/xattr.c:2488:11
+6 ext4_xattr_security_set fs/ext4/xattr_security.c:30:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 bm_register_write fs/binfmt_misc.c:584:24 @[ fs/binfmt_misc.c:707:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 shmem_symlink mm/shmem.c:3210:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 shmem_mknod mm/shmem.c:2990:10
+3 shmem_create mm/shmem.c:3050:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 shmem_mknod mm/shmem.c:2990:10
+3 shmem_mkdir mm/shmem.c:3041:15
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 shmem_mknod mm/shmem.c:2990:10
+3 shmem_rename2 mm/shmem.c:3135:10 @[ mm/shmem.c:3175:11 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 shmem_mknod mm/shmem.c:2990:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 shmem_tmpfile mm/shmem.c:3019:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_zero drivers/char/mem.c:693:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 SyS_remap_file_pages ./include/linux/mm.h:2217:9 @[ mm/mmap.c:2846:8 @[ mm/mmap.c:2762:1 ] ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 do_shmat ./include/linux/mm.h:2217:9 @[ ipc/shm.c:1404:9 ]
+7 compat_SyS_ipc ipc/syscall.c:171:9 @[ ipc/syscall.c:115:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 do_shmat ./include/linux/mm.h:2217:9 @[ ipc/shm.c:1404:9 ]
+7 compat_SyS_shmat ipc/shm.c:1457:8 @[ ipc/shm.c:1452:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 do_shmat ./include/linux/mm.h:2217:9 @[ ipc/shm.c:1404:9 ]
+7 SyS_shmat ipc/shm.c:1439:8 @[ ipc/shm.c:1434:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+7 vm_mmap mm/util.c:352:9
+8 elf_map.14753 fs/binfmt_elf.c:378:14
+9 load_elf_binary.14742 fs/binfmt_elf.c:582:15 @[ fs/binfmt_elf.c:1075:15 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+7 vm_mmap mm/util.c:352:9
+8 load_elf_library fs/binfmt_elf.c:1232:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+7 vm_mmap mm/util.c:352:9
+8 load_elf_binary fs/binfmt_elf.c:1140:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 vm_mmap_pgoff ./include/linux/mm.h:2217:9 @[ mm/util.c:333:9 ]
+7 vm_mmap mm/util.c:352:9
+8 load_elf_library.14743 fs/binfmt_elf.c:1232:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 ioctx_alloc ./include/linux/mm.h:2217:9 @[ fs/aio.c:520:19 @[ fs/aio.c:769:8 ] ]
+7 compat_SyS_io_setup fs/aio.c:1392:10 @[ fs/aio.c:1375:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 shmem_get_inode mm/shmem.c:2157:10
+2 __shmem_file_setup mm/shmem.c:4211:10
+3 shmem_zero_setup mm/shmem.c:4249:9 @[ mm/shmem.c:4293:9 ]
+4 mmap_region mm/mmap.c:1721:11
+5 do_mmap mm/mmap.c:1483:9
+6 ioctx_alloc ./include/linux/mm.h:2217:9 @[ fs/aio.c:520:19 @[ fs/aio.c:769:8 ] ]
+7 SyS_io_setup fs/aio.c:1361:10 @[ fs/aio.c:1344:1 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 proc_sys_make_inode fs/proc/proc_sysctl.c:465:10
+2 proc_sys_lookup fs/proc/proc_sysctl.c:553:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 proc_sys_make_inode fs/proc/proc_sysctl.c:465:10
+2 proc_sys_fill_cache fs/proc/proc_sysctl.c:687:12
+3 proc_sys_readdir fs/proc/proc_sysctl.c:737:9 @[ fs/proc/proc_sysctl.c:764:8 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 fat_build_inode fs/fat/inode.c:587:10
+2 msdos_mkdir fs/fat/namei_msdos.c:378:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 fat_build_inode fs/fat/inode.c:587:10
+2 vfat_mkdir fs/fat/namei_vfat.c:881:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 fat_build_inode fs/fat/inode.c:587:10
+2 msdos_create fs/fat/namei_msdos.c:290:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 fat_build_inode fs/fat/inode.c:587:10
+2 vfat_lookup fs/fat/namei_vfat.c:729:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 fat_build_inode fs/fat/inode.c:587:10
+2 vfat_create fs/fat/namei_vfat.c:786:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 fat_build_inode fs/fat/inode.c:587:10
+2 msdos_lookup fs/fat/namei_msdos.c:214:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ext2_new_inode fs/ext2/ialloc.c:447:10
+2 ext2_tmpfile fs/ext2/namei.c:124:24
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ext2_new_inode fs/ext2/ialloc.c:447:10
+2 ext2_mknod fs/ext2/namei.c:151:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ext2_new_inode fs/ext2/ialloc.c:447:10
+2 ext2_mkdir fs/ext2/namei.c:250:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ext2_new_inode fs/ext2/ialloc.c:447:10
+2 ext2_create fs/ext2/namei.c:106:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ext2_new_inode fs/ext2/ialloc.c:447:10
+2 ext2_symlink fs/ext2/namei.c:179:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 reiserfs_mkdir fs/reiserfs/namei.c:810:16
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 reiserfs_mknod fs/reiserfs/namei.c:719:16
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 configfs_create fs/configfs/inode.c:132:25 @[ fs/configfs/inode.c:195:10 ]
+2 configfs_create_link fs/configfs/dir.c:360:9
+3 configfs_symlink fs/configfs/symlink.c:95:9 @[ fs/configfs/symlink.c:167:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 configfs_create fs/configfs/inode.c:132:25 @[ fs/configfs/inode.c:195:10 ]
+2 configfs_lookup fs/configfs/dir.c:431:10 @[ fs/configfs/dir.c:469:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 configfs_create fs/configfs/inode.c:132:25 @[ fs/configfs/inode.c:195:10 ]
+2 configfs_lookup fs/configfs/dir.c:431:10 @[ fs/configfs/dir.c:469:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 configfs_create fs/configfs/inode.c:132:25 @[ fs/configfs/inode.c:195:10 ]
+2 configfs_attach_item fs/configfs/dir.c:296:10 @[ fs/configfs/dir.c:819:8 ]
+3 configfs_attach_group fs/configfs/dir.c:854:8
+4 configfs_mkdir fs/configfs/dir.c:1385:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 orangefs_client_debug_init fs/orangefs/orangefs-debugfs.c:351:24
+4 orangefs_debugfs_new_client_string fs/orangefs/orangefs-debugfs.c:1012:2
+5 dispatch_ioctl_command fs/orangefs/devorangefs-req.c:688:10
+6 orangefs_devreq_ioctl fs/orangefs/devorangefs-req.c:707:14
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 orangefs_client_debug_init fs/orangefs/orangefs-debugfs.c:351:24
+4 orangefs_debugfs_new_client_string fs/orangefs/orangefs-debugfs.c:1012:2
+5 dispatch_ioctl_command fs/orangefs/devorangefs-req.c:688:10
+6 orangefs_devreq_compat_ioctl fs/orangefs/devorangefs-req.c:777:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 do_blk_trace_setup kernel/trace/blktrace.c:540:17
+4 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+5 compat_blkdev_ioctl block/compat_ioctl.c:402:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 do_blk_trace_setup kernel/trace/blktrace.c:540:17
+4 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+5 blkdev_ioctl block/ioctl.c:587:10
+6 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 do_blk_trace_setup kernel/trace/blktrace.c:540:17
+4 blk_trace_setup kernel/trace/blktrace.c:589:8 @[ kernel/trace/blktrace.c:607:8 ]
+5 sg_ioctl drivers/scsi/sg.c:1089:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+4 blk_mq_debugfs_register block/blk-mq-debugfs.c:826:29
+5 blk_register_queue block/blk-sysfs.c:900:3
+6 device_add_disk block/genhd.c:685:2
+7 loop_add ./include/linux/genhd.h:396:2 @[ drivers/block/loop.c:1849:2 ]
+8 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+4 blk_mq_debugfs_register block/blk-mq-debugfs.c:826:29
+5 blk_register_queue block/blk-sysfs.c:900:3
+6 device_add_disk block/genhd.c:685:2
+7 loop_add ./include/linux/genhd.h:396:2 @[ drivers/block/loop.c:1849:2 ]
+8 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+4 blk_mq_realloc_hw_ctxs block/blk-mq.c:2085:2 @[ block/blk-mq.c:2412:7 ]
+5 blk_mq_init_allocated_queue block/blk-mq.c:2462:2
+6 blk_mq_init_queue block/blk-mq.c:2360:6
+7 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+8 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+9 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+10 __scsi_add_device drivers/scsi/scsi_scan.c:1487:3
+11 scsi_add_device drivers/scsi/scsi_scan.c:1507:3
+12 proc_scsi_write drivers/scsi/scsi_proc.c:253:11 @[ drivers/scsi/scsi_proc.c:346:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 __debugfs_create_file fs/debugfs/inode.c:37:24 @[ fs/debugfs/inode.c:355:10 ]
+2 debugfs_create_file fs/debugfs/inode.c:402:9
+3 blk_mq_debugfs_register_hctx block/blk-mq-debugfs.c:792:8 @[ block/blk-mq-debugfs.c:879:7 ]
+4 blk_mq_realloc_hw_ctxs block/blk-mq.c:2085:2 @[ block/blk-mq.c:2412:7 ]
+5 blk_mq_init_allocated_queue block/blk-mq.c:2462:2
+6 blk_mq_init_queue block/blk-mq.c:2360:6
+7 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+8 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+9 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+10 __scsi_scan_target drivers/scsi/scsi_scan.c:1270:8 @[ drivers/scsi/scsi_scan.c:1576:4 ]
+11 scsi_scan_host_selected drivers/scsi/scsi_scan.c:1661:3 @[ drivers/scsi/scsi_scan.c:1689:4 ]
+12 store_scan drivers/scsi/scsi_sysfs.c:149:9 @[ drivers/scsi/scsi_sysfs.c:189:8 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 proc_pid_make_inode fs/proc/base.c:1744:10
+2 proc_pid_lookup fs/proc/base.c:3110:10 @[ fs/proc/base.c:3150:11 ]
+3 proc_root_lookup fs/proc/root.c:165:7
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 proc_pid_make_inode fs/proc/base.c:1744:10
+2 proc_ns_dir_lookup fs/proc/namespaces.c:97:10 @[ fs/proc/namespaces.c:170:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 proc_pid_make_inode fs/proc/base.c:1744:10
+2 proc_lookupfdinfo fs/proc/fd.c:315:10 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:337:9 ] ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 proc_pid_make_inode fs/proc/base.c:1744:10
+2 proc_lookupfd fs/proc/fd.c:177:10 @[ fs/proc/fd.c:212:11 @[ fs/proc/fd.c:276:9 ] ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ncp_iget fs/ncpfs/inode.c:265:10
+2 ncp_create_new fs/ncpfs/dir.c:887:10 @[ fs/ncpfs/dir.c:954:10 ]
+3 ncp_create fs/ncpfs/dir.c:962:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ncp_iget fs/ncpfs/inode.c:265:10
+2 ncp_create_new fs/ncpfs/dir.c:887:10 @[ fs/ncpfs/dir.c:954:10 ]
+3 ncp_mknod fs/ncpfs/dir.c:1165:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ncp_iget fs/ncpfs/inode.c:265:10
+2 ncp_create_new fs/ncpfs/dir.c:887:10 @[ fs/ncpfs/dir.c:954:10 ]
+3 ncp_symlink fs/ncpfs/symlink.c:156:6
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ncp_iget fs/ncpfs/inode.c:265:10
+2 ncp_mkdir fs/ncpfs/dir.c:887:10 @[ fs/ncpfs/dir.c:995:11 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ncp_iget fs/ncpfs/inode.c:265:10
+2 ncp_lookup fs/ncpfs/dir.c:863:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ovl_new_inode fs/overlayfs/inode.c:588:10
+2 ovl_create_object fs/overlayfs/dir.c:543:10
+3 ovl_create fs/overlayfs/dir.c:563:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ovl_new_inode fs/overlayfs/inode.c:588:10
+2 ovl_create_object fs/overlayfs/dir.c:543:10
+3 ovl_symlink fs/overlayfs/dir.c:584:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ovl_new_inode fs/overlayfs/inode.c:588:10
+2 ovl_create_object fs/overlayfs/dir.c:543:10
+3 ovl_mkdir fs/overlayfs/dir.c:568:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ovl_new_inode fs/overlayfs/inode.c:588:10
+2 ovl_create_object fs/overlayfs/dir.c:543:10
+3 ovl_mknod fs/overlayfs/dir.c:578:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 affs_new_inode fs/affs/inode.c:300:16
+2 affs_create fs/affs/namei.c:251:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 affs_new_inode fs/affs/inode.c:300:16
+2 affs_mkdir fs/affs/namei.c:281:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 affs_new_inode fs/affs/inode.c:300:16
+2 affs_symlink fs/affs/namei.c:324:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 adfs_iget fs/adfs/inode.c:247:10
+2 adfs_lookup fs/adfs/dir.c:274:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 ovl_get_inode fs/overlayfs/inode.c:677:11
+2 ovl_lookup fs/overlayfs/namei.c:737:11
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 udf_new_inode fs/udf/ialloc.c:60:10
+2 udf_tmpfile fs/udf/namei.c:652:24
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 udf_new_inode fs/udf/ialloc.c:60:10
+2 udf_mknod fs/udf/namei.c:677:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 udf_new_inode fs/udf/ialloc.c:60:10
+2 udf_mkdir fs/udf/namei.c:694:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 udf_new_inode fs/udf/ialloc.c:60:10
+2 udf_create fs/udf/namei.c:634:24
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 udf_new_inode fs/udf/ialloc.c:60:10
+2 udf_symlink fs/udf/namei.c:910:24
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 omfs_new_inode fs/omfs/inode.c:41:10
+2 omfs_mkdir fs/omfs/dir.c:261:24 @[ fs/omfs/dir.c:284:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 omfs_new_inode fs/omfs/inode.c:41:10
+2 omfs_create fs/omfs/dir.c:261:24 @[ fs/omfs/dir.c:290:9 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 efivarfs_create fs/efivarfs/inode.c:22:24 @[ fs/efivarfs/inode.c:95:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 gfs2_create_inode fs/gfs2/inode.c:643:10
+2 gfs2_create fs/gfs2/inode.c:825:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 gfs2_create_inode fs/gfs2/inode.c:643:10
+2 gfs2_symlink fs/gfs2/inode.c:1194:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 gfs2_create_inode fs/gfs2/inode.c:643:10
+2 gfs2_mkdir fs/gfs2/inode.c:1210:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 gfs2_create_inode fs/gfs2/inode.c:643:10
+2 gfs2_mknod fs/gfs2/inode.c:1225:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 gfs2_create_inode fs/gfs2/inode.c:643:10
+2 gfs2_atomic_open fs/gfs2/inode.c:1268:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 mqueue_create ipc/mqueue.c:223:10 @[ ipc/mqueue.c:442:10 ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 f2fs_new_inode fs/f2fs/namei.c:35:10
+2 f2fs_create fs/f2fs/namei.c:200:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 f2fs_new_inode fs/f2fs/namei.c:35:10
+2 f2fs_symlink fs/f2fs/namei.c:525:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 f2fs_new_inode fs/f2fs/namei.c:35:10
+2 f2fs_mkdir fs/f2fs/namei.c:619:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 f2fs_new_inode fs/f2fs/namei.c:35:10
+2 f2fs_mknod fs/f2fs/namei.c:674:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 f2fs_new_inode fs/f2fs/namei.c:35:10
+2 __f2fs_tmpfile fs/f2fs/namei.c:713:10
+3 f2fs_rename2 fs/f2fs/namei.c:781:9 @[ fs/f2fs/namei.c:851:9 @[ fs/f2fs/namei.c:1167:9 ] ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 f2fs_new_inode fs/f2fs/namei.c:35:10
+2 __f2fs_tmpfile fs/f2fs/namei.c:713:10
+3 f2fs_tmpfile fs/f2fs/namei.c:773:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_create_subvol_root fs/btrfs/inode.c:9393:10
+3 create_subvol fs/btrfs/ioctl.c:553:8
+4 btrfs_mksubvol fs/btrfs/ioctl.c:846:11
+5 btrfs_ioctl_snap_create_transid fs/btrfs/ioctl.c:1637:10
+6 btrfs_ioctl_snap_create fs/btrfs/ioctl.c:1663:8
+7 btrfs_ioctl fs/btrfs/ioctl.c:5557:10
+8 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_create_subvol_root fs/btrfs/inode.c:9393:10
+3 create_subvol fs/btrfs/ioctl.c:553:8
+4 btrfs_mksubvol fs/btrfs/ioctl.c:846:11
+5 btrfs_ioctl_snap_create_transid fs/btrfs/ioctl.c:1637:10
+6 btrfs_ioctl_snap_create fs/btrfs/ioctl.c:1663:8
+7 btrfs_ioctl fs/btrfs/ioctl.c:5557:10
+8 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_create_subvol_root fs/btrfs/inode.c:9393:10
+3 create_subvol fs/btrfs/ioctl.c:553:8
+4 btrfs_mksubvol fs/btrfs/ioctl.c:846:11
+5 btrfs_ioctl_snap_create_transid fs/btrfs/ioctl.c:1637:10
+6 btrfs_ioctl_snap_create fs/btrfs/ioctl.c:1663:8
+7 btrfs_ioctl fs/btrfs/ioctl.c:5557:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_create_subvol_root fs/btrfs/inode.c:9393:10
+3 create_subvol fs/btrfs/ioctl.c:553:8
+4 btrfs_mksubvol fs/btrfs/ioctl.c:846:11
+5 btrfs_ioctl_snap_create_transid fs/btrfs/ioctl.c:1637:10
+6 btrfs_ioctl_snap_create fs/btrfs/ioctl.c:1663:8
+7 btrfs_ioctl fs/btrfs/ioctl.c:5557:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_create fs/btrfs/inode.c:6603:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_symlink fs/btrfs/inode.c:10369:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_mkdir fs/btrfs/inode.c:6755:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_mknod fs/btrfs/inode.c:6530:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_rename2 fs/btrfs/inode.c:9884:10 @[ fs/btrfs/inode.c:10102:9 @[ fs/btrfs/inode.c:10152:9 ] ]
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_new_inode fs/btrfs/inode.c:6267:10
+2 btrfs_tmpfile fs/btrfs/inode.c:10650:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 reiserfs_symlink fs/reiserfs/namei.c:1120:16
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_lookup_dentry fs/btrfs/inode.c:5728:24 @[ fs/btrfs/inode.c:5782:12 ]
+2 btrfs_lookup fs/btrfs/inode.c:5831:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 btrfs_lookup_dentry fs/btrfs/inode.c:5728:24 @[ fs/btrfs/inode.c:5782:12 ]
+2 btrfs_lookup fs/btrfs/inode.c:5831:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 sysv_new_inode fs/sysv/ialloc.c:147:10
+2 sysv_mknod fs/sysv/namei.c:72:10
+3 sysv_create fs/sysv/namei.c:85:9
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 sysv_new_inode fs/sysv/ialloc.c:147:10
+2 sysv_mknod fs/sysv/namei.c:72:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 sysv_new_inode fs/sysv/ialloc.c:147:10
+2 sysv_symlink fs/sysv/namei.c:98:10
+[32m-------------[0m
+[35mUse:fs/inode.c:919:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 new_inode fs/inode.c:919:10
+1 sysv_new_inode fs/sysv/ialloc.c:147:10
+2 sysv_mkdir fs/sysv/namei.c:138:10
+[32m-------------[0m
+[35mUse:fs/pipe.c:699:24 @[ fs/pipe.c:740:24 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 create_pipe_files fs/pipe.c:699:24 @[ fs/pipe.c:740:24 ]
+1 __do_pipe_flags fs/pipe.c:797:10
+2 SyS_pipe2 fs/pipe.c:845:10 @[ fs/pipe.c:839:1 ]
+[32m-------------[0m
+[32mGood: 5 [31mBad: 168 [33mIgnored: 2219[0m
+[33mInspect Use of Function:unix_release[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1131:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_close net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:424:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:424:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:424:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:410:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:410:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:410:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32mGood: 55 [31mBad: 4 [33mIgnored: 243[0m
+[33mInspect Use of Function:inet_accept[0m
+[31mindirect call @ net/socket.c:1553:8 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1553:8 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1553:8 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3293:8
+[32mGood: 1 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:netlink_release[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1131:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_close net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:424:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:424:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:424:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:410:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:410:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:410:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32mGood: 55 [31mBad: 4 [33mIgnored: 243[0m
+[33mInspect Use of Function:inet_release[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1131:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_close net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:424:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:424:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:424:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:410:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:410:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:410:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32mGood: 55 [31mBad: 4 [33mIgnored: 247[0m
+[33mInspect Use of Function:packet_create[0m
+[31mindirect call @ net/socket.c:1267:8
+[33mInspect Use of Function:sock_no_accept[0m
+[31mindirect call @ net/socket.c:1553:8 @[ net/socket.c:1504:1 ]
+[35mUse:net/socket.c:1553:8 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1553:8 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:3293:8
+[32mGood: 1 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:inet6_release[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1131:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_close net/socket.c:602:3 @[ net/socket.c:1131:2 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1093:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:440:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1404:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:3295:3 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1296:2 ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1403:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1397:3 @[ net/socket.c:1348:1 ] ]
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:602:3 @[ net/socket.c:1539:3 @[ net/socket.c:1504:1 ] ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:424:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:424:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:424:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:410:3 ]
+[35mUse:net/socket.c:602:3 @[ net/socket.c:410:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sock_alloc_file net/socket.c:602:3 @[ net/socket.c:410:3 ]
+1 SyS_accept4 net/socket.c:1542:12 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[31mindirect call @ net/socket.c:602:3 @[ net/socket.c:1411:3 @[ net/socket.c:1348:1 ] ]
+[32mGood: 55 [31mBad: 4 [33mIgnored: 243[0m
+[33mInspect Use of Function:inet_create[0m
+[31mindirect call @ net/socket.c:1267:8
+[33mInspect Use of Function:netlink_create[0m
+[31mindirect call @ net/socket.c:1267:8
+STOP WATCH[0]: 48503.019000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    396 : Good Path
+    321 : Bad Path
+    6382 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    23 : Critical Functions
+    4 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    16 : Critical Function Pointer Resolved, Collect Pass
+    430 : Critical Functions used by non CallInst
+    2977 : Critical Functions used by static assignment
+    2822 : # of times indirect call site matched with critical functions
+    4519 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

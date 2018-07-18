@@ -1,0 +1,2193 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 807.094000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.229000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_sb_free
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1001.941000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.987000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.870000 ms
+STOP WATCH[0]: 6958.560000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 70.999000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.606000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.080000 ms
+STOP WATCH[0]: 250.322000 ms
+Collect all permission-checked variables and functions
+Add call<direct> __put_super use @ fs/super.c:290:2 @[ fs/super.c:709:3 ]
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 __get_super fs/super.c:675:4
+2 __get_super_thawed fs/super.c:700:27
+[32m-------------[0m
+Add call<direct> __get_super use @ fs/super.c:700:27
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 __get_super fs/super.c:675:4
+2 __get_super_thawed fs/super.c:700:27
+[32m-------------[0m
+Add call<direct> __get_super use @ fs/super.c:700:27
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 __get_super_thawed fs/super.c:290:2 @[ fs/super.c:709:3 ]
+[32m-------------[0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1100:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+2 sget_userns fs/super.c:494:9
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Add call<direct> sb_set_blocksize use @ fs/super.c:1118:3
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+2 sget_userns fs/super.c:494:9
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1119:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1121:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+2 sget_userns fs/super.c:494:9
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1165:10
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1167:3
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+2 sget_userns fs/super.c:494:9
+3 mount_nodev fs/super.c:557:9 @[ fs/super.c:1160:26 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1036:9
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1038:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+2 sget_userns fs/super.c:494:9
+3 mount_ns fs/super.c:1029:7
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1191:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1193:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+2 sget_userns fs/super.c:494:9
+3 mount_single fs/super.c:557:9 @[ fs/super.c:1187:6 ]
+[32m-------------[0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1100:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+2 sget_userns fs/super.c:494:9
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Add call<direct> sb_set_blocksize use @ fs/super.c:1118:3
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+2 sget_userns fs/super.c:494:9
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1119:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1121:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+2 sget_userns fs/super.c:494:9
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1165:10
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1167:3
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+2 sget_userns fs/super.c:494:9
+3 mount_nodev fs/super.c:557:9 @[ fs/super.c:1160:26 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1036:9
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1038:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+2 sget_userns fs/super.c:494:9
+3 mount_ns fs/super.c:1029:7
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1191:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1193:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+2 sget_userns fs/super.c:494:9
+3 mount_single fs/super.c:557:9 @[ fs/super.c:1187:6 ]
+[32m-------------[0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1100:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+2 sget_userns fs/super.c:522:3
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Add call<direct> sb_set_blocksize use @ fs/super.c:1118:3
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+2 sget_userns fs/super.c:522:3
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1119:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1121:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+2 sget_userns fs/super.c:522:3
+3 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1165:10
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1167:3
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+2 sget_userns fs/super.c:522:3
+3 mount_nodev fs/super.c:557:9 @[ fs/super.c:1160:26 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1036:9
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1038:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+2 sget_userns fs/super.c:522:3
+3 mount_ns fs/super.c:1029:7
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1191:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1193:4
+ cause:[32mProcess Stack:[0m
+0 __put_super fs/super.c:266:45
+1 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+2 sget_userns fs/super.c:522:3
+3 mount_single fs/super.c:557:9 @[ fs/super.c:1187:6 ]
+[32m-------------[0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1100:4
+ cause:[32mProcess Stack:[0m
+0 sget_userns fs/super.c:469:58
+1 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Add call<direct> sb_set_blocksize use @ fs/super.c:1118:3
+ cause:[32mProcess Stack:[0m
+0 sget_userns fs/super.c:469:58
+1 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1119:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1121:4
+ cause:[32mProcess Stack:[0m
+0 sget_userns fs/super.c:469:58
+1 mount_bdev fs/super.c:557:9 @[ fs/super.c:1092:6 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1165:10
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1167:3
+ cause:[32mProcess Stack:[0m
+0 sget_userns fs/super.c:469:58
+1 mount_nodev fs/super.c:557:9 @[ fs/super.c:1160:26 ]
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1036:9
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1038:4
+ cause:[32mProcess Stack:[0m
+0 sget_userns fs/super.c:469:58
+1 mount_ns fs/super.c:1029:7
+[32m-------------[0m
+Resolve indirect call @ fs/super.c:1191:11
+[31m[NO MATCH][0m
+Add call<direct> deactivate_locked_super use @ fs/super.c:1193:4
+ cause:[32mProcess Stack:[0m
+0 sget_userns fs/super.c:469:58
+1 mount_single fs/super.c:557:9 @[ fs/super.c:1187:6 ]
+[32m-------------[0m
+STOP WATCH[1]: 2027.674000 ms
+STOP WATCH[0]: 2027.689000 ms
+Collected 4 critical functions
+Collected 1 critical variables
+Collected 1 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32msuper_blocks[0m
+    security_sb_free @ fs/super.c:273:3
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32msb_set_blocksize[0m
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:496:4 ]
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:257:2 @[ fs/super.c:502:7 ] ]
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:491:5 ]
+    security_sb_free @ fs/super.c:273:3
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:511:3 ]
+[32mdeactivate_locked_super[0m
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:496:4 ]
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:257:2 @[ fs/super.c:502:7 ] ]
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:491:5 ]
+    security_sb_free @ fs/super.c:273:3
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:511:3 ]
+[32m__put_super[0m
+    security_sb_free @ fs/super.c:273:3
+[32m__get_super[0m
+    security_sb_free @ fs/super.c:273:3
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.block_device.108632:0,[0m
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:496:4 ]
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:257:2 @[ fs/super.c:502:7 ] ]
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:491:5 ]
+    security_sb_free @ fs/super.c:273:3
+    security_sb_free @ fs/super.c:166:2 @[ fs/super.c:511:3 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:deactivate_locked_super[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 vfs_submount fs/namespace.c:1066:9
+3 nfs_submount fs/nfs/namespace.c:219:9 @[ fs/nfs/namespace.c:251:9 @[ fs/nfs/namespace.c:270:9 ] ]
+4 nfs_d_automount fs/nfs/namespace.c:155:8
+[32m-------------[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 simple_pin_fs fs/libfs.c:581:9
+3 start_creating fs/debugfs/inode.c:297:10
+4 debugfs_create_dir fs/debugfs/inode.c:508:26
+5 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+6 rpc_client_register net/sunrpc/clnt.c:305:2
+7 rpc_new_client net/sunrpc/clnt.c:432:8
+8 __rpc_clone_client net/sunrpc/clnt.c:617:8
+9 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+10 nfs_init_server_rpcclient fs/nfs/client.c:594:19
+11 nfs4_create_server fs/nfs/nfs4client.c:1066:9 @[ fs/nfs/nfs4client.c:1090:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 simple_pin_fs fs/libfs.c:581:9
+3 start_creating fs/debugfs/inode.c:297:10
+4 debugfs_create_dir fs/debugfs/inode.c:508:26
+5 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+6 rpc_client_register net/sunrpc/clnt.c:305:2
+7 rpc_new_client net/sunrpc/clnt.c:432:8
+8 __rpc_clone_client net/sunrpc/clnt.c:617:8
+9 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+10 nfs_clone_server fs/nfs/client.c:594:19 @[ fs/nfs/client.c:1025:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 simple_pin_fs fs/libfs.c:581:9
+3 start_creating fs/debugfs/inode.c:297:10
+4 debugfs_create_dir fs/debugfs/inode.c:508:26
+5 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+6 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+7 compat_blkdev_ioctl block/compat_ioctl.c:402:9
+[32m-------------[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 simple_pin_fs fs/libfs.c:581:9
+3 start_creating fs/debugfs/inode.c:297:10
+4 debugfs_create_dir fs/debugfs/inode.c:508:26
+5 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+6 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+7 blkdev_ioctl block/ioctl.c:587:10
+8 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 simple_pin_fs fs/libfs.c:581:9
+3 start_creating fs/debugfs/inode.c:297:10
+4 debugfs_create_dir fs/debugfs/inode.c:508:26
+5 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+6 blk_trace_setup kernel/trace/blktrace.c:589:8 @[ kernel/trace/blktrace.c:607:8 ]
+7 sg_ioctl drivers/scsi/sg.c:1089:10
+[32m-------------[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 simple_pin_fs fs/libfs.c:581:9
+3 bm_register_write fs/binfmt_misc.c:713:8
+[32m-------------[0m
+[35mUse:fs/super.c:1250:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mount_fs fs/super.c:1250:2
+1 vfs_kern_mount fs/namespace.c:1037:9
+2 nfs_do_root_mount fs/nfs/nfs4super.c:145:13
+3 nfs4_try_mount fs/nfs/nfs4super.c:250:13
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+4 cifs_user_readv fs/cifs/file.c:3284:7
+5 cifs_strict_readv fs/cifs/file.c:3342:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+4 cifs_user_readv fs/cifs/file.c:3284:7
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+4 cifs_user_readv fs/cifs/file.c:3284:7
+5 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+4 cifs_user_readv fs/cifs/file.c:3284:7
+5 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 cifs_close fs/cifs/file.c:771:3
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 find_writable_file fs/cifs/file.c:1896:4
+4 smb_set_file_info fs/cifs/smb1ops.c:780:14
+5 cifs_set_file_info fs/cifs/inode.c:1122:9
+6 cifs_setattr fs/cifs/inode.c:2425:8 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 find_writable_file fs/cifs/file.c:1896:4
+4 smb_set_file_info fs/cifs/smb1ops.c:780:14
+5 cifs_set_file_info fs/cifs/inode.c:1122:9
+6 cifs_unlink fs/cifs/inode.c:1363:3
+7 cifs_rename2 fs/cifs/inode.c:1802:12
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 find_writable_file fs/cifs/file.c:1896:4
+4 smb_set_file_info fs/cifs/smb1ops.c:780:14
+5 cifs_set_file_info fs/cifs/inode.c:1122:9
+6 cifs_unlink fs/cifs/inode.c:1363:3
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_getattr fs/cifs/inode.c:2021:7
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+7 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_mkdir_qinfo fs/cifs/inode.c:1395:8
+7 cifs_mkdir fs/cifs/inode.c:1568:7
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_strict_writev fs/cifs/file.c:2866:12
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_reopen_file fs/cifs/file.c:739:9
+7 cifs_write_from_iter fs/cifs/file.c:2603:14
+8 cifs_user_writev fs/cifs/file.c:2755:7
+9 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_open fs/cifs/file.c:252:8 @[ fs/cifs/file.c:534:8 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_lookup fs/cifs/dir.c:811:8
+7 cifs_atomic_open fs/cifs/dir.c:502:9
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_symlink fs/cifs/link.c:724:9
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+2 cifsFileInfo_put fs/cifs/file.c:447:2
+3 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+4 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+5 cifs_get_inode_info fs/cifs/inode.c:850:8
+6 cifs_do_create fs/cifs/dir.c:420:8
+7 cifs_create fs/cifs/dir.c:609:7
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 nfs4_opendata_put fs/nfs/nfs4proc.c:1279:2 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/nfs4proc.c:1288:3 ] ]
+3 nfs4_do_open fs/nfs/nfs4proc.c:2922:2 @[ fs/nfs/nfs4proc.c:2951:12 ]
+4 nfs4_proc_create fs/nfs/nfs4proc.c:4154:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 nfs4_opendata_put fs/nfs/nfs4proc.c:1279:2 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/nfs4proc.c:1288:3 ] ]
+3 nfs4_do_open fs/nfs/nfs4proc.c:2922:2 @[ fs/nfs/nfs4proc.c:2951:12 ]
+4 nfs4_atomic_open fs/nfs/nfs4proc.c:3414:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 nfs_file_clear_open_context fs/nfs/inode.c:951:2 @[ fs/nfs/inode.c:1018:3 ]
+4 nfs_file_release fs/nfs/file.c:85:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs4_file_open fs/nfs/nfs4file.c:96:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+10 nfs_file_mmap fs/nfs/file.c:192:12
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+10 nfs_readdir fs/nfs/dir.c:859:9
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+10 nfs_file_write fs/nfs/file.c:625:3
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+10 nfs_file_read fs/nfs/file.c:167:11
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_setattr fs/nfs/inode.c:145:9 @[ fs/nfs/inode.c:608:3 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_setattr fs/nfs/inode.c:145:9 @[ fs/nfs/inode.c:608:3 ]
+10 nfs_namespace_setattr fs/nfs/namespace.c:183:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_sync_inode fs/nfs/inode.c:145:9
+10 nfs42_proc_copy fs/nfs/nfs42proc.c:167:11 @[ fs/nfs/nfs42proc.c:240:9 ]
+11 nfs4_copy_file_range fs/nfs/nfs4file.c:140:9
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_sync_inode fs/nfs/inode.c:145:9
+10 nfs42_proc_deallocate fs/nfs/nfs42proc.c:119:8
+11 nfs42_fallocate fs/nfs/nfs4file.c:174:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_wb_all fs/nfs/write.c:1983:8
+9 nfs_sync_inode fs/nfs/inode.c:145:9
+10 nfs42_clone_file_range fs/nfs/nfs4file.c:213:8
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 nfs_sb_deactive fs/nfs/super.c:428:3
+2 __put_nfs_open_context fs/nfs/inode.c:938:2
+3 put_nfs_open_context fs/nfs/inode.c:945:2
+4 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+5 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+6 nfs_scan_commit_list fs/nfs/write.c:1040:5
+7 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+8 nfs_file_fsync fs/nfs/file.c:222:11 @[ fs/nfs/file.c:257:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 devpts_release fs/devpts/inode.c:210:2
+2 pty_unix98_remove drivers/tty/pty.c:742:3
+3 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+4 tty_init_dev drivers/tty/tty_io.c:1351:2
+5 tty_open drivers/tty/tty_io.c:1942:9 @[ drivers/tty/tty_io.c:1990:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 devpts_release fs/devpts/inode.c:210:2
+2 pty_unix98_remove drivers/tty/pty.c:742:3
+3 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+4 tty_init_dev drivers/tty/tty_io.c:1351:2
+5 tty_open drivers/tty/tty_io.c:1942:9 @[ drivers/tty/tty_io.c:1990:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 devpts_release fs/devpts/inode.c:210:2
+2 pty_unix98_remove drivers/tty/pty.c:742:3
+3 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+4 tty_release_struct drivers/tty/tty_io.c:1585:2
+5 tty_release drivers/tty/tty_io.c:1745:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 devpts_release fs/devpts/inode.c:210:2
+2 pty_unix98_remove drivers/tty/pty.c:742:3
+3 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+4 tty_release_struct drivers/tty/tty_io.c:1585:2
+5 tty_release drivers/tty/tty_io.c:1745:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 devpts_release fs/devpts/inode.c:210:2
+2 pty_unix98_remove drivers/tty/pty.c:742:3
+3 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+4 tty_release_struct drivers/tty/tty_io.c:1585:2
+5 tty_release drivers/tty/tty_io.c:1745:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 copy_mnt_ns fs/namespace.c:1247:3 @[ fs/namespace.c:2981:3 ]
+4 create_new_namespaces kernel/nsproxy.c:75:20
+5 SyS_setns kernel/nsproxy.c:254:16 @[ kernel/nsproxy.c:237:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 copy_mnt_ns fs/namespace.c:1247:3 @[ fs/namespace.c:2981:3 ]
+4 create_new_namespaces kernel/nsproxy.c:75:20
+5 unshare_nsproxy_namespaces kernel/nsproxy.c:206:13
+6 SyS_unshare kernel/fork.c:2365:8 @[ kernel/fork.c:2315:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 lookup_mnt fs/namespace.c:1247:3 @[ fs/namespace.c:679:3 @[ fs/namespace.c:727:12 ] ]
+4 path_pts fs/namei.c:1434:30 @[ fs/namei.c:2582:2 ]
+5 devpts_mntget fs/devpts/inode.c:146:8 @[ fs/devpts/inode.c:167:8 ]
+6 ptm_open_peer drivers/tty/pty.c:632:13
+7 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 lookup_mnt fs/namespace.c:1247:3 @[ fs/namespace.c:679:3 @[ fs/namespace.c:727:12 ] ]
+4 path_pts fs/namei.c:1434:30 @[ fs/namei.c:2582:2 ]
+5 devpts_mntget fs/devpts/inode.c:146:8 @[ fs/devpts/inode.c:167:8 ]
+6 ptm_open_peer drivers/tty/pty.c:632:13
+7 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+4 mq_put_mnt ipc/mqueue.c:1609:2
+5 put_ipc_ns ipc/namespace.c:163:3
+6 ipcns_put ipc/namespace.c:189:9
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+4 mq_put_mnt ipc/mqueue.c:1609:2
+5 put_ipc_ns ipc/namespace.c:163:3
+6 ipcns_install ipc/namespace.c:201:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+4 mq_put_mnt ipc/mqueue.c:1609:2
+5 put_ipc_ns ipc/namespace.c:163:3
+6 sysvipc_proc_release ipc/util.c:880:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+4 mq_put_mnt ipc/mqueue.c:1609:2
+5 put_ipc_ns ipc/namespace.c:163:3
+6 mqueue_create ipc/mqueue.c:450:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+4 mq_put_mnt ipc/mqueue.c:1609:2
+5 put_ipc_ns ipc/namespace.c:163:3
+6 shm_release ipc/shm.c:447:2
+[32m-------------[0m
+[35mUse:fs/super.c:343:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_super fs/super.c:343:3
+1 cleanup_mnt fs/namespace.c:1173:2
+2 mntput_no_expire fs/namespace.c:1237:2
+3 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+4 exit_sel_fs security/selinux/selinuxfs.c:1939:2
+5 selinux_disable security/selinux/hooks.c:6811:2
+6 sel_write_disable security/selinux/selinuxfs.c:271:12
+[32m-------------[0m
+[35mUse:fs/super.c:1474:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_super fs/super.c:1474:4
+1 do_vfs_ioctl fs/ioctl.c:562:9 @[ fs/ioctl.c:660:11 ]
+2 SyS_ioctl fs/ioctl.c:701:11 @[ fs/ioctl.c:692:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:1474:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_super fs/super.c:1474:4
+1 do_vfs_ioctl fs/ioctl.c:562:9 @[ fs/ioctl.c:660:11 ]
+2 compat_SyS_ioctl fs/compat_ioctl.c:1495:10 @[ fs/compat_ioctl.c:1419:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:1433:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_super fs/super.c:1433:3
+1 do_vfs_ioctl fs/ioctl.c:562:9 @[ fs/ioctl.c:660:11 ]
+2 SyS_ioctl fs/ioctl.c:701:11 @[ fs/ioctl.c:692:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:1433:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_super fs/super.c:1433:3
+1 do_vfs_ioctl fs/ioctl.c:562:9 @[ fs/ioctl.c:660:11 ]
+2 compat_SyS_ioctl fs/compat_ioctl.c:1495:10 @[ fs/compat_ioctl.c:1419:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:1527:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 thaw_super fs/super.c:1527:2
+1 do_vfs_ioctl fs/ioctl.c:575:9 @[ fs/ioctl.c:664:11 ]
+2 SyS_ioctl fs/ioctl.c:701:11 @[ fs/ioctl.c:692:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:1527:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 thaw_super fs/super.c:1527:2
+1 do_vfs_ioctl fs/ioctl.c:575:9 @[ fs/ioctl.c:664:11 ]
+2 compat_SyS_ioctl fs/compat_ioctl.c:1495:10 @[ fs/compat_ioctl.c:1419:1 ]
+[32m-------------[0m
+[32mGood: 275 [31mBad: 71 [33mIgnored: 1757[0m
+[33mInspect Use of Function:sb_set_blocksize[0m
+[33mInspect Use of Function:__get_super[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 freeze_bdev fs/block_dev.c:502:8
+2 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+3 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 freeze_bdev fs/block_dev.c:502:8
+2 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 freeze_bdev fs/block_dev.c:502:8
+2 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+3 f2fs_compat_ioctl fs/f2fs/file.c:2813:9
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 freeze_bdev fs/block_dev.c:502:8
+2 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 freeze_bdev fs/block_dev.c:502:8
+2 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+3 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 freeze_bdev fs/block_dev.c:502:8
+2 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+3 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+4 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 __invalidate_device fs/block_dev.c:2096:27
+2 check_disk_size_change fs/block_dev.c:1289:6 @[ fs/block_dev.c:1320:3 ]
+3 revalidate_disk fs/block_dev.c:1345:2
+4 cache_type_store drivers/scsi/sd.c:214:2
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 fsync_bdev fs/block_dev.c:468:27
+2 blkdev_ioctl block/ioctl.c:436:2 @[ block/ioctl.c:521:10 ]
+3 compat_blkdev_ioctl block/compat_ioctl.c:360:10
+[32m-------------[0m
+[35mUse:fs/super.c:692:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 get_super fs/super.c:692:9
+1 fsync_bdev fs/block_dev.c:468:27
+2 blkdev_ioctl block/ioctl.c:436:2 @[ block/ioctl.c:521:10 ]
+3 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[32mGood: 8 [31mBad: 9 [33mIgnored: 108[0m
+[33mInspect Use of Function:__put_super[0m
+[35mUse:fs/super.c:793:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 user_get_super fs/super.c:793:4
+1 compat_SyS_ustat fs/statfs.c:222:26 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ]
+[32m-------------[0m
+[35mUse:fs/super.c:793:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 user_get_super fs/super.c:793:4
+1 SyS_ustat fs/statfs.c:222:26 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ]
+[32m-------------[0m
+[35mUse:fs/super.c:607:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_supers fs/super.c:607:3
+1 selinux_complete_init security/selinux/hooks.c:6681:2
+2 security_load_policy security/selinux/ss/services.c:2096:3
+3 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:fs/super.c:607:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_supers fs/super.c:607:3
+1 sys_sync fs/sync.c:113:2
+[32m-------------[0m
+[35mUse:fs/super.c:607:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_supers fs/super.c:607:3
+1 SyS_quotactl fs/quota/quota.c:66:3 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32m-------------[0m
+[35mUse:fs/super.c:603:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_supers fs/super.c:603:4
+1 selinux_complete_init security/selinux/hooks.c:6681:2
+2 security_load_policy security/selinux/ss/services.c:2096:3
+3 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:fs/super.c:603:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_supers fs/super.c:603:4
+1 sys_sync fs/sync.c:113:2
+[32m-------------[0m
+[35mUse:fs/super.c:603:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 iterate_supers fs/super.c:603:4
+1 SyS_quotactl fs/quota/quota.c:66:3 @[ fs/quota/quota.c:854:11 @[ fs/quota/quota.c:836:1 ] ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:565:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 drop_super fs/super.c:290:2 @[ fs/super.c:565:2 ]
+1 SyS_quotactl fs/quota/quota.c:880:3 @[ fs/quota/quota.c:836:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:573:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 drop_super_exclusive fs/super.c:290:2 @[ fs/super.c:573:2 ]
+1 SyS_quotactl fs/quota/quota.c:882:3 @[ fs/quota/quota.c:836:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 freeze_bdev fs/block_dev.c:502:8
+3 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+4 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 freeze_bdev fs/block_dev.c:502:8
+3 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 freeze_bdev fs/block_dev.c:502:8
+3 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+4 f2fs_compat_ioctl fs/f2fs/file.c:2813:9
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 freeze_bdev fs/block_dev.c:502:8
+3 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 freeze_bdev fs/block_dev.c:502:8
+3 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+4 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 freeze_bdev fs/block_dev.c:502:8
+3 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+4 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+5 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 __invalidate_device fs/block_dev.c:2096:27
+3 check_disk_size_change fs/block_dev.c:1289:6 @[ fs/block_dev.c:1320:3 ]
+4 revalidate_disk fs/block_dev.c:1345:2
+5 cache_type_store drivers/scsi/sd.c:214:2
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 fsync_bdev fs/block_dev.c:468:27
+3 blkdev_ioctl block/ioctl.c:436:2 @[ block/ioctl.c:521:10 ]
+4 compat_blkdev_ioctl block/compat_ioctl.c:360:10
+[32m-------------[0m
+[35mUse:fs/super.c:675:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __get_super fs/super.c:675:4
+1 get_super fs/super.c:692:9
+2 fsync_bdev fs/block_dev.c:468:27
+3 blkdev_ioctl block/ioctl.c:436:2 @[ block/ioctl.c:521:10 ]
+4 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:372:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+4 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:372:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:372:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+4 f2fs_compat_ioctl fs/f2fs/file.c:2813:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:372:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:372:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+4 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:372:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:372:2 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+4 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+5 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:368:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+4 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:368:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:368:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+4 f2fs_compat_ioctl fs/f2fs/file.c:2813:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:368:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:368:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+4 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:368:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 grab_super fs/super.c:290:2 @[ fs/super.c:368:3 ]
+1 get_active_super fs/super.c:764:9
+2 freeze_bdev fs/block_dev.c:509:7
+3 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+4 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+5 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 vfs_submount fs/namespace.c:1066:9
+4 nfs_submount fs/nfs/namespace.c:219:9 @[ fs/nfs/namespace.c:251:9 @[ fs/nfs/namespace.c:270:9 ] ]
+5 nfs_d_automount fs/nfs/namespace.c:155:8
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 simple_pin_fs fs/libfs.c:581:9
+4 start_creating fs/debugfs/inode.c:297:10
+5 debugfs_create_dir fs/debugfs/inode.c:508:26
+6 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+7 rpc_client_register net/sunrpc/clnt.c:305:2
+8 rpc_new_client net/sunrpc/clnt.c:432:8
+9 __rpc_clone_client net/sunrpc/clnt.c:617:8
+10 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+11 nfs_init_server_rpcclient fs/nfs/client.c:594:19
+12 nfs4_create_server fs/nfs/nfs4client.c:1066:9 @[ fs/nfs/nfs4client.c:1090:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 simple_pin_fs fs/libfs.c:581:9
+4 start_creating fs/debugfs/inode.c:297:10
+5 debugfs_create_dir fs/debugfs/inode.c:508:26
+6 rpc_clnt_debugfs_register net/sunrpc/debugfs.c:137:21
+7 rpc_client_register net/sunrpc/clnt.c:305:2
+8 rpc_new_client net/sunrpc/clnt.c:432:8
+9 __rpc_clone_client net/sunrpc/clnt.c:617:8
+10 rpc_clone_client_set_auth net/sunrpc/clnt.c:672:9
+11 nfs_clone_server fs/nfs/client.c:594:19 @[ fs/nfs/client.c:1025:10 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 simple_pin_fs fs/libfs.c:581:9
+4 start_creating fs/debugfs/inode.c:297:10
+5 debugfs_create_dir fs/debugfs/inode.c:508:26
+6 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+7 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+8 compat_blkdev_ioctl block/compat_ioctl.c:402:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 simple_pin_fs fs/libfs.c:581:9
+4 start_creating fs/debugfs/inode.c:297:10
+5 debugfs_create_dir fs/debugfs/inode.c:508:26
+6 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+7 blk_trace_ioctl kernel/trace/blktrace.c:635:8 @[ kernel/trace/blktrace.c:733:9 ]
+8 blkdev_ioctl block/ioctl.c:587:10
+9 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 simple_pin_fs fs/libfs.c:581:9
+4 start_creating fs/debugfs/inode.c:297:10
+5 debugfs_create_dir fs/debugfs/inode.c:508:26
+6 do_blk_trace_setup kernel/trace/blktrace.c:526:19
+7 blk_trace_setup kernel/trace/blktrace.c:589:8 @[ kernel/trace/blktrace.c:607:8 ]
+8 sg_ioctl drivers/scsi/sg.c:1089:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 simple_pin_fs fs/libfs.c:581:9
+4 bm_register_write fs/binfmt_misc.c:713:8
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 mount_fs fs/super.c:1250:2
+2 vfs_kern_mount fs/namespace.c:1037:9
+3 nfs_do_root_mount fs/nfs/nfs4super.c:145:13
+4 nfs4_try_mount fs/nfs/nfs4super.c:250:13
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_strict_readv fs/cifs/file.c:3342:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+5 cifs_user_readv fs/cifs/file.c:3284:7
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 cifs_send_async_read fs/cifs/file.c:2907:3 @[ fs/cifs/file.c:2949:2 @[ ./include/linux/kref.h:70:3 @[ fs/cifs/file.c:3120:4 ] ] ]
+5 cifs_user_readv fs/cifs/file.c:3284:7
+6 cifs_loose_read_iter fs/cifs/cifsfs.c:774:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 cifs_close fs/cifs/file.c:771:3
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 find_writable_file fs/cifs/file.c:1896:4
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_setattr fs/cifs/inode.c:2425:8 @[ fs/cifs/inode.c:2465:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 find_writable_file fs/cifs/file.c:1896:4
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_unlink fs/cifs/inode.c:1363:3
+8 cifs_rename2 fs/cifs/inode.c:1802:12
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 find_writable_file fs/cifs/file.c:1896:4
+5 smb_set_file_info fs/cifs/smb1ops.c:780:14
+6 cifs_set_file_info fs/cifs/inode.c:1122:9
+7 cifs_unlink fs/cifs/inode.c:1363:3
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+8 cifs_getattr fs/cifs/inode.c:2021:7
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+8 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+8 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+8 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+8 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_revalidate_dentry_attr fs/cifs/inode.c:1965:8
+8 cifs_xattr_get fs/cifs/xattr.c:178:7 @[ fs/cifs/xattr.c:227:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_mkdir_qinfo fs/cifs/inode.c:1395:8
+8 cifs_mkdir fs/cifs/inode.c:1568:7
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_reopen_file fs/cifs/file.c:739:9
+8 cifs_write_from_iter fs/cifs/file.c:2603:14
+9 cifs_user_writev fs/cifs/file.c:2755:7
+10 cifs_strict_writev fs/cifs/file.c:2866:12
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_reopen_file fs/cifs/file.c:739:9
+8 cifs_write_from_iter fs/cifs/file.c:2603:14
+9 cifs_user_writev fs/cifs/file.c:2755:7
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_reopen_file fs/cifs/file.c:739:9
+8 cifs_write_from_iter fs/cifs/file.c:2603:14
+9 cifs_user_writev fs/cifs/file.c:2755:7
+10 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_reopen_file fs/cifs/file.c:739:9
+8 cifs_write_from_iter fs/cifs/file.c:2603:14
+9 cifs_user_writev fs/cifs/file.c:2755:7
+10 cifs_file_write_iter fs/cifs/cifsfs.c:791:13
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_open fs/cifs/file.c:252:8 @[ fs/cifs/file.c:534:8 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_lookup fs/cifs/dir.c:811:8
+8 cifs_atomic_open fs/cifs/dir.c:502:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_lookup fs/cifs/dir.c:811:8
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_symlink fs/cifs/link.c:724:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cifs_sb_deactive fs/cifs/cifsfs.c:113:3
+3 cifsFileInfo_put fs/cifs/file.c:447:2
+4 get_cifs_acl fs/cifs/cifsacl.c:1072:2
+5 cifs_acl_to_fattr fs/cifs/cifsacl.c:1150:11
+6 cifs_get_inode_info fs/cifs/inode.c:850:8
+7 cifs_do_create fs/cifs/dir.c:420:8
+8 cifs_create fs/cifs/dir.c:609:7
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 nfs4_opendata_put fs/nfs/nfs4proc.c:1279:2 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/nfs4proc.c:1288:3 ] ]
+4 nfs4_do_open fs/nfs/nfs4proc.c:2922:2 @[ fs/nfs/nfs4proc.c:2951:12 ]
+5 nfs4_proc_create fs/nfs/nfs4proc.c:4154:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 nfs4_opendata_put fs/nfs/nfs4proc.c:1279:2 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/nfs4proc.c:1288:3 ] ]
+4 nfs4_do_open fs/nfs/nfs4proc.c:2922:2 @[ fs/nfs/nfs4proc.c:2951:12 ]
+5 nfs4_atomic_open fs/nfs/nfs4proc.c:3414:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 nfs_file_clear_open_context fs/nfs/inode.c:951:2 @[ fs/nfs/inode.c:1018:3 ]
+5 nfs_file_release fs/nfs/file.c:85:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs4_file_open fs/nfs/nfs4file.c:96:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+11 nfs_file_mmap fs/nfs/file.c:192:12
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+11 nfs_readdir fs/nfs/dir.c:859:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+11 nfs_file_write fs/nfs/file.c:625:3
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_revalidate_mapping fs/nfs/inode.c:158:9 @[ fs/nfs/inode.c:1148:10 @[ fs/nfs/inode.c:1252:8 ] ]
+11 nfs_file_read fs/nfs/file.c:167:11
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_setattr fs/nfs/inode.c:145:9 @[ fs/nfs/inode.c:608:3 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_setattr fs/nfs/inode.c:145:9 @[ fs/nfs/inode.c:608:3 ]
+11 nfs_namespace_setattr fs/nfs/namespace.c:183:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_sync_inode fs/nfs/inode.c:145:9
+11 nfs42_proc_copy fs/nfs/nfs42proc.c:167:11 @[ fs/nfs/nfs42proc.c:240:9 ]
+12 nfs4_copy_file_range fs/nfs/nfs4file.c:140:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_sync_inode fs/nfs/inode.c:145:9
+11 nfs42_proc_deallocate fs/nfs/nfs42proc.c:119:8
+12 nfs42_fallocate fs/nfs/nfs4file.c:174:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_wb_all fs/nfs/write.c:1983:8
+10 nfs_sync_inode fs/nfs/inode.c:145:9
+11 nfs42_clone_file_range fs/nfs/nfs4file.c:213:8
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 nfs_sb_deactive fs/nfs/super.c:428:3
+3 __put_nfs_open_context fs/nfs/inode.c:938:2
+4 put_nfs_open_context fs/nfs/inode.c:945:2
+5 nfs_free_request fs/nfs/pagelist.c:406:3 @[ fs/nfs/pagelist.c:429:2 ]
+6 nfs_release_request fs/nfs/pagelist.c:289:3 @[ ./include/linux/kref.h:70:3 @[ fs/nfs/pagelist.c:435:2 ] ]
+7 nfs_scan_commit_list fs/nfs/write.c:1040:5
+8 nfs_commit_inode fs/nfs/write.c:1085:9 @[ fs/nfs/write.c:1889:8 ]
+9 nfs_file_fsync fs/nfs/file.c:222:11 @[ fs/nfs/file.c:257:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 devpts_release fs/devpts/inode.c:210:2
+3 pty_unix98_remove drivers/tty/pty.c:742:3
+4 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+5 tty_init_dev drivers/tty/tty_io.c:1351:2
+6 tty_open drivers/tty/tty_io.c:1942:9 @[ drivers/tty/tty_io.c:1990:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 devpts_release fs/devpts/inode.c:210:2
+3 pty_unix98_remove drivers/tty/pty.c:742:3
+4 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+5 tty_init_dev drivers/tty/tty_io.c:1351:2
+6 tty_open drivers/tty/tty_io.c:1942:9 @[ drivers/tty/tty_io.c:1990:9 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 devpts_release fs/devpts/inode.c:210:2
+3 pty_unix98_remove drivers/tty/pty.c:742:3
+4 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+5 tty_release_struct drivers/tty/tty_io.c:1585:2
+6 tty_release drivers/tty/tty_io.c:1745:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 devpts_release fs/devpts/inode.c:210:2
+3 pty_unix98_remove drivers/tty/pty.c:742:3
+4 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+5 tty_release_struct drivers/tty/tty_io.c:1585:2
+6 tty_release drivers/tty/tty_io.c:1745:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 devpts_release fs/devpts/inode.c:210:2
+3 pty_unix98_remove drivers/tty/pty.c:742:3
+4 release_tty drivers/tty/tty_io.c:1232:3 @[ drivers/tty/tty_io.c:1474:2 ]
+5 tty_release_struct drivers/tty/tty_io.c:1585:2
+6 tty_release drivers/tty/tty_io.c:1745:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 lookup_mnt fs/namespace.c:1247:3 @[ fs/namespace.c:679:3 @[ fs/namespace.c:727:12 ] ]
+5 path_pts fs/namei.c:1434:30 @[ fs/namei.c:2582:2 ]
+6 devpts_mntget fs/devpts/inode.c:146:8 @[ fs/devpts/inode.c:167:8 ]
+7 ptm_open_peer drivers/tty/pty.c:632:13
+8 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 lookup_mnt fs/namespace.c:1247:3 @[ fs/namespace.c:679:3 @[ fs/namespace.c:727:12 ] ]
+5 path_pts fs/namei.c:1434:30 @[ fs/namei.c:2582:2 ]
+6 devpts_mntget fs/devpts/inode.c:146:8 @[ fs/devpts/inode.c:167:8 ]
+7 ptm_open_peer drivers/tty/pty.c:632:13
+8 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+5 mq_put_mnt ipc/mqueue.c:1609:2
+6 put_ipc_ns ipc/namespace.c:163:3
+7 ipcns_put ipc/namespace.c:189:9
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+5 mq_put_mnt ipc/mqueue.c:1609:2
+6 put_ipc_ns ipc/namespace.c:163:3
+7 ipcns_install ipc/namespace.c:201:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+5 mq_put_mnt ipc/mqueue.c:1609:2
+6 put_ipc_ns ipc/namespace.c:163:3
+7 sysvipc_proc_release ipc/util.c:880:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+5 mq_put_mnt ipc/mqueue.c:1609:2
+6 put_ipc_ns ipc/namespace.c:163:3
+7 mqueue_create ipc/mqueue.c:450:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+5 mq_put_mnt ipc/mqueue.c:1609:2
+6 put_ipc_ns ipc/namespace.c:163:3
+7 shm_release ipc/shm.c:447:2
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 deactivate_super fs/super.c:343:3
+2 cleanup_mnt fs/namespace.c:1173:2
+3 mntput_no_expire fs/namespace.c:1237:2
+4 kern_unmount fs/namespace.c:1247:3 @[ fs/namespace.c:3310:3 ]
+5 exit_sel_fs security/selinux/selinuxfs.c:1939:2
+6 selinux_disable security/selinux/hooks.c:6811:2
+7 sel_write_disable security/selinux/selinuxfs.c:271:12
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 freeze_super fs/super.c:1474:4
+2 do_vfs_ioctl fs/ioctl.c:562:9 @[ fs/ioctl.c:660:11 ]
+3 SyS_ioctl fs/ioctl.c:701:11 @[ fs/ioctl.c:692:1 ]
+[32m-------------[0m
+[35mUse:fs/super.c:290:2 @[ fs/super.c:323:3 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 deactivate_locked_super fs/super.c:290:2 @[ fs/super.c:323:3 ]
+1 freeze_super fs/super.c:1474:4
+2 do_vfs_ioctl fs/ioctl.c:562:9 @[ fs/ioctl.c:660:11 ]
+3 compat_SyS_ioctl fs/compat_ioctl.c:1495:10 @[ fs/compat_ioctl.c:1419:1 ]
+[32m-------------[0m
+[32mGood: 321 [31mBad: 97 [33mIgnored: 2252[0m
+STOP WATCH[0]: 28201.808000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    610 : Good Path
+    177 : Bad Path
+    4164 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    4 : Critical Functions
+    1 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    16 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    148 : Critical Functions used by non CallInst
+    1902 : Critical Functions used by static assignment
+    1655 : # of times indirect call site matched with critical functions
+    2230 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

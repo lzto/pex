@@ -1,0 +1,282 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 814.946000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.545000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_file_receive
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 1023.293000 ms
+Identify interesting struct
+STOP WATCH[0]: 6.109000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.888000 ms
+STOP WATCH[0]: 6823.612000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.302000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.688000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.634000 ms
+STOP WATCH[0]: 249.282000 ms
+Collect all permission-checked variables and functions
+Add call<direct> sock_from_file use @ net/core/scm.c:297:10
+ cause:[32mProcess Stack:[0m
+0 scm_detach_fds 
+[32m-------------[0m
+Add call<direct> fd_install use @ net/core/scm.c:302:3
+ cause:[32mProcess Stack:[0m
+0 scm_detach_fds 
+[32m-------------[0m
+Add call<direct> fd_install use @ net/compat.c:292:3
+ cause:[32mProcess Stack:[0m
+0 scm_detach_fds_compat net/compat.c:264:43
+[32m-------------[0m
+STOP WATCH[1]: 2013.872000 ms
+STOP WATCH[0]: 2013.886000 ms
+Collected 2 critical functions
+Collected 0 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mfd_install[0m
+    security_file_receive @ net/compat.c:278:9
+    security_file_receive @ net/core/scm.c:283:9
+[32msock_from_file[0m
+    security_file_receive @ net/core/scm.c:283:9
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.msghdr.799803:0,[0m
+    security_file_receive @ net/compat.c:278:9
+    security_file_receive @ net/core/scm.c:283:9
+[32mstruct.scm_fp_list:0,[0m
+    security_file_receive @ net/compat.c:278:9
+    security_file_receive @ net/core/scm.c:283:9
+Run Analysis
+Critical functions
+[33mInspect Use of Function:sock_from_file[0m
+[35mUse:fs/eventpoll.c:435:9 @[ fs/eventpoll.c:1486:2 @[ fs/eventpoll.c:2106:12 @[ fs/eventpoll.c:1992:1 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_epoll_ctl fs/eventpoll.c:435:9 @[ fs/eventpoll.c:1486:2 @[ fs/eventpoll.c:2106:12 @[ fs/eventpoll.c:1992:1 ] ] ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 1 [33mIgnored: 0[0m
+[33mInspect Use of Function:fd_install[0m
+[35mUse:net/socket.c:446:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_socket net/socket.c:446:3 @[ net/socket.c:1341:9 @[ net/socket.c:1317:1 ] ]
+[32m-------------[0m
+[35mUse:net/socket.c:1424:2 @[ net/socket.c:1348:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_socketpair net/socket.c:1424:2 @[ net/socket.c:1348:1 ]
+[32m-------------[0m
+[35mUse:net/socket.c:1571:2 @[ net/socket.c:1504:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_accept4 net/socket.c:1571:2 @[ net/socket.c:1504:1 ]
+[32m-------------[0m
+[35mUse:net/socket.c:1425:2 @[ net/socket.c:1348:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_socketpair net/socket.c:1425:2 @[ net/socket.c:1348:1 ]
+[32m-------------[0m
+[35mUse:drivers/tty/pty.c:646:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ptm_open_peer drivers/tty/pty.c:646:2
+1 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:drivers/tty/pty.c:646:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ptm_open_peer drivers/tty/pty.c:646:2
+1 tty_ioctl drivers/tty/tty_io.c:2622:10
+[32m-------------[0m
+[35mUse:ipc/mqueue.c:829:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mq_open ipc/mqueue.c:829:3
+1 compat_SyS_mq_open ipc/mqueue.c:1474:9 @[ ipc/mqueue.c:1464:1 ]
+[32m-------------[0m
+[35mUse:ipc/mqueue.c:829:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_mq_open ipc/mqueue.c:829:3
+1 SyS_mq_open ipc/mqueue.c:854:9 @[ ipc/mqueue.c:847:1 ]
+[32m-------------[0m
+[35mUse:fs/xfs/xfs_ioctl.c:269:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 xfs_open_by_handle fs/xfs/xfs_ioctl.c:269:2
+1 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1931:10
+[32m-------------[0m
+[35mUse:fs/xfs/xfs_ioctl.c:269:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 xfs_open_by_handle fs/xfs/xfs_ioctl.c:269:2
+1 xfs_file_ioctl fs/xfs/xfs_ioctl.c:1931:10
+2 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/fhandle.c:240:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_handle_open fs/fhandle.c:240:3
+1 compat_SyS_open_by_handle_at fs/fhandle.c:278:9 @[ fs/fhandle.c:275:1 ]
+[32m-------------[0m
+[35mUse:fs/fhandle.c:240:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_handle_open fs/fhandle.c:240:3
+1 SyS_open_by_handle_at fs/fhandle.c:266:8 @[ fs/fhandle.c:257:1 ]
+[32m-------------[0m
+[35mUse:fs/binfmt_misc.c:172:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 load_misc_binary fs/binfmt_misc.c:172:3
+[32m-------------[0m
+[35mUse:fs/eventfd.c:473:2 @[ fs/eventfd.c:458:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_eventfd2 fs/eventfd.c:473:2 @[ fs/eventfd.c:458:1 ]
+[32m-------------[0m
+[35mUse:fs/eventpoll.c:1969:2 @[ fs/eventpoll.c:1936:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_epoll_create1 fs/eventpoll.c:1969:2 @[ fs/eventpoll.c:1936:1 ]
+[32m-------------[0m
+[35mUse:fs/notify/fanotify/fanotify_user.c:230:3 @[ fs/notify/fanotify/fanotify_user.c:297:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fanotify_read fs/notify/fanotify/fanotify_user.c:230:3 @[ fs/notify/fanotify/fanotify_user.c:297:9 ]
+[32m-------------[0m
+[35mUse:mm/shmem.c:3733:2 @[ mm/shmem.c:3656:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_memfd_create mm/shmem.c:3733:2 @[ mm/shmem.c:3656:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:fs/open.c:1065:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_sys_open fs/open.c:1065:4
+1 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[35mUse:drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sync_file_ioctl drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ]
+[32m-------------[0m
+[35mUse:drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sync_file_ioctl drivers/dma-buf/sync_file.c:371:2 @[ drivers/dma-buf/sync_file.c:477:10 ]
+[32m-------------[0m
+[35mUse:fs/pipe.c:855:4 @[ fs/pipe.c:839:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_pipe2 fs/pipe.c:855:4 @[ fs/pipe.c:839:1 ]
+[32m-------------[0m
+[35mUse:fs/pipe.c:854:4 @[ fs/pipe.c:839:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_pipe2 fs/pipe.c:854:4 @[ fs/pipe.c:839:1 ]
+[32m-------------[0m
+[35mUse:kernel/events/core.c:10260:2 @[ kernel/events/core.c:9862:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_perf_event_open kernel/events/core.c:10260:2 @[ kernel/events/core.c:9862:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_timerfd_create fs/timerfd.c:427:8 @[ fs/timerfd.c:387:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_signalfd4 fs/signalfd.c:280:9 @[ fs/signalfd.c:250:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_inotify_init1 fs/notify/inotify/inotify_user.c:655:8 @[ fs/notify/inotify/inotify_user.c:638:1 ]
+[32m-------------[0m
+[35mUse:fs/anon_inodes.c:155:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 anon_inode_getfd fs/anon_inodes.c:155:2
+1 SyS_fanotify_init fs/notify/fanotify/fanotify_user.c:812:7 @[ fs/notify/fanotify/fanotify_user.c:706:1 ]
+[32m-------------[0m
+[32mGood: 2 [31mBad: 30 [33mIgnored: 42[0m
+STOP WATCH[0]: 2406.533000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    3 : Good Path
+    31 : Bad Path
+    42 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    2 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    1 : Critical Functions used by non CallInst
+    32 : Critical Functions used by static assignment
+    9 : # of times indirect call site matched with critical functions
+    51 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

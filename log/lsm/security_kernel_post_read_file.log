@@ -1,0 +1,192 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 805.230000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.173000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_kernel_post_read_file
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 943.403000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.919000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.123000 ms
+STOP WATCH[0]: 6775.599000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.434000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.527000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.036000 ms
+STOP WATCH[0]: 248.655000 ms
+Collect all permission-checked variables and functions
+Add call<direct> async_synchronize_full_domain use @ drivers/base/firmware_class.c:1692:2 @[ drivers/base/firmware_class.c:1739:3 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+3 __async_dev_cache_fw_image drivers/base/firmware_class.c:1270:8 @[ drivers/base/firmware_class.c:1457:8 @[ drivers/base/firmware_class.c:1572:8 ] ]
+4 dev_cache_fw_image drivers/base/firmware_class.c:1628:4
+5 fw_pm_notify drivers/base/firmware_class.c:1688:2 @[ drivers/base/firmware_class.c:1739:3 ]
+[32m-------------[0m
+Resolve indirect call @ drivers/base/firmware_class.c:1365:2
+[31m[NO MATCH][0m
+Add call<direct> kernel_read_file_from_path use @ drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+[32m-------------[0m
+Add call<direct> async_synchronize_full_domain use @ drivers/base/firmware_class.c:1692:2 @[ drivers/base/firmware_class.c:1739:3 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+3 __async_dev_cache_fw_image drivers/base/firmware_class.c:1270:8 @[ drivers/base/firmware_class.c:1457:8 @[ drivers/base/firmware_class.c:1572:8 ] ]
+4 dev_cache_fw_image drivers/base/firmware_class.c:1628:4
+5 fw_pm_notify drivers/base/firmware_class.c:1688:2 @[ drivers/base/firmware_class.c:1739:3 ]
+[32m-------------[0m
+Resolve indirect call @ drivers/base/firmware_class.c:1365:2
+[31m[NO MATCH][0m
+Add call<direct> kernel_read_file_from_path use @ drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+[32m-------------[0m
+Add call<direct> kernel_read_file_from_path use @ drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+[32m-------------[0m
+Add call<direct> async_synchronize_full_domain use @ drivers/base/firmware_class.c:1692:2 @[ drivers/base/firmware_class.c:1739:3 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+3 __async_dev_cache_fw_image drivers/base/firmware_class.c:1270:8 @[ drivers/base/firmware_class.c:1457:8 @[ drivers/base/firmware_class.c:1572:8 ] ]
+4 dev_cache_fw_image drivers/base/firmware_class.c:1628:4
+5 fw_pm_notify drivers/base/firmware_class.c:1688:2 @[ drivers/base/firmware_class.c:1739:3 ]
+[32m-------------[0m
+Resolve indirect call @ drivers/base/firmware_class.c:1365:2
+[31m[NO MATCH][0m
+Add call<direct> kernel_read_file_from_path use @ drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+[32m-------------[0m
+Add call<direct> kernel_read_file_from_path use @ drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+[32m-------------[0m
+Add call<direct> kernel_read_file_from_path use @ drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+[32m-------------[0m
+Add call<direct> async_synchronize_full_domain use @ drivers/base/firmware_class.c:1692:2 @[ drivers/base/firmware_class.c:1739:3 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+3 __async_dev_cache_fw_image drivers/base/firmware_class.c:1270:8 @[ drivers/base/firmware_class.c:1457:8 @[ drivers/base/firmware_class.c:1572:8 ] ]
+4 dev_cache_fw_image drivers/base/firmware_class.c:1628:4
+5 fw_pm_notify drivers/base/firmware_class.c:1688:2 @[ drivers/base/firmware_class.c:1739:3 ]
+[32m-------------[0m
+Resolve indirect call @ drivers/base/firmware_class.c:1365:2
+[31m[NO MATCH][0m
+Add call<direct> async_synchronize_full_domain use @ drivers/base/firmware_class.c:1692:2 @[ drivers/base/firmware_class.c:1739:3 ]
+ cause:[32mProcess Stack:[0m
+0 kernel_read_file 
+1 kernel_read_file_from_path fs/exec.c:971:8
+2 _request_firmware drivers/base/firmware_class.c:418:8 @[ drivers/base/firmware_class.c:1217:8 ]
+3 __async_dev_cache_fw_image drivers/base/firmware_class.c:1270:8 @[ drivers/base/firmware_class.c:1457:8 @[ drivers/base/firmware_class.c:1572:8 ] ]
+4 dev_cache_fw_image drivers/base/firmware_class.c:1628:4
+5 fw_pm_notify drivers/base/firmware_class.c:1688:2 @[ drivers/base/firmware_class.c:1739:3 ]
+[32m-------------[0m
+Resolve indirect call @ drivers/base/firmware_class.c:1365:2
+[31m[NO MATCH][0m
+STOP WATCH[1]: 1966.416000 ms
+STOP WATCH[0]: 1966.430000 ms
+Collected 2 critical functions
+Collected 4 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mfw_cache_domain[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+[32mloading_timeout[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+[32mnames_cachep[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+[32mfw_lock[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mkernel_read_file_from_path[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+[32masync_synchronize_full_domain[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.firmware_buf:0,[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+[32mstruct.work_struct:2,1,[0m
+    security_kernel_post_read_file @ fs/exec.c:940:8
+Run Analysis
+Critical functions
+[33mInspect Use of Function:kernel_read_file_from_path[0m
+[33mInspect Use of Function:async_synchronize_full_domain[0m
+STOP WATCH[0]: 2292.535000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    13 : Good Path
+    0 : Bad Path
+    111 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    2 : Critical Functions
+    4 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    5 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    11 : Critical Functions used by non CallInst
+    57 : Critical Functions used by static assignment
+    26 : # of times indirect call site matched with critical functions
+    142 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

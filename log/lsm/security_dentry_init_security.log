@@ -1,0 +1,1800 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 820.520000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.335000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_dentry_init_security
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 954.633000 ms
+Identify interesting struct
+Function: nfs4_proc_mknod used by struct.nfs_rpc_ops.227619[0m
+Function: nfs4_atomic_open used by struct.nfs_rpc_ops.227619[0m
+Function: nfs4_proc_create used by struct.nfs_rpc_ops.227619[0m
+Function: nfs4_proc_symlink used by struct.nfs_rpc_ops.227619[0m
+Function: nfs4_proc_mkdir used by struct.nfs_rpc_ops.227619[0m
+STOP WATCH[0]: 6.089000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.013000 ms
+STOP WATCH[0]: 6873.521000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.830000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 135.573000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.527000 ms
+STOP WATCH[0]: 252.596000 ms
+Collect all permission-checked variables and functions
+Add call<direct> nfs4_do_open use @ fs/nfs/nfs4proc.c:3414:10
+ cause:[32mProcess Stack:[0m
+0 nfs4_atomic_open 
+[32m-------------[0m
+Add call<direct> security_release_secctx use @ fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:3416:2 ]
+ cause:[32mProcess Stack:[0m
+0 nfs4_atomic_open 
+[32m-------------[0m
+STOP WATCH[1]: 1988.769000 ms
+STOP WATCH[0]: 1988.783000 ms
+Collected 2 critical functions
+Collected 0 critical variables
+Collected 1 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32msecurity_release_secctx[0m
+    security_dentry_init_security @ fs/nfs/nfs4proc.c:122:8 @[ fs/nfs/nfs4proc.c:3411:10 ]
+[32mnfs4_do_open[0m
+    security_dentry_init_security @ fs/nfs/nfs4proc.c:122:8 @[ fs/nfs/nfs4proc.c:3411:10 ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.nfs4_label:0,[0m
+    security_dentry_init_security @ fs/nfs/nfs4proc.c:122:8 @[ fs/nfs/nfs4proc.c:3411:10 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:nfs4_do_open[0m
+[35mUse:fs/nfs/nfs4proc.c:4154:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_proc_create fs/nfs/nfs4proc.c:4154:10
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:3414:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_atomic_open fs/nfs/nfs4proc.c:3414:10
+[32m-------------[0m
+[32mGood: 1 [31mBad: 2 [33mIgnored: 0[0m
+[33mInspect Use of Function:security_release_secctx[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_set_loginuid kernel/auditsc.c:2034:2 @[ kernel/auditsc.c:2074:2 ]
+2 proc_loginuid_write fs/proc/base.c:1270:7
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 SyS_linkat fs/namei.c:1014:2 @[ fs/namei.c:4275:10 @[ fs/namei.c:4237:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 SyS_uselib fs/exec.c:136:9 @[ fs/exec.c:120:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 do_execveat_common fs/exec.c:1740:9
+8 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_elf_binary.14742 fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_elf_binary fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_script fs/binfmt_script.c:101:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 load_misc_binary fs/binfmt_misc.c:212:17
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_open_execat fs/exec.c:849:9
+7 open_exec fs/exec.c:881:7
+8 bm_register_write fs/binfmt_misc.c:723:7
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_openat fs/namei.c:3522:7
+5 do_filp_open fs/namei.c:3558:10
+6 do_sys_open fs/open.c:1059:20
+7 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_mountpoint fs/namei.c:2679:7
+5 filename_mountpoint fs/namei.c:2708:11
+6 user_path_mountpoint_at fs/namei.c:2734:9
+7 SyS_umount fs/namespace.c:1699:11 @[ fs/namespace.c:1683:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+8 perf_compat_ioctl kernel/events/core.c:4774:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 do_mount fs/namespace.c:2207:8 @[ fs/namespace.c:2836:12 ]
+8 compat_SyS_mount fs/compat.c:195:11 @[ fs/compat.c:160:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 do_mount fs/namespace.c:2207:8 @[ fs/namespace.c:2836:12 ]
+8 SyS_mount fs/namespace.c:3058:8 @[ fs/namespace.c:3035:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+8 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+9 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+10 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+8 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+9 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+10 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+8 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+9 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+8 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+9 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+8 btrfs_scan_one_device fs/btrfs/volumes.c:1137:9
+9 btrfs_control_ioctl fs/btrfs/super.c:2209:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+8 btrfs_scan_one_device fs/btrfs/volumes.c:1137:9
+9 btrfs_control_ioctl fs/btrfs/super.c:2209:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 configfs_symlink fs/configfs/symlink.c:116:8 @[ fs/configfs/symlink.c:160:8 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 kern_path fs/namei.c:2425:9
+7 lookup_bdev fs/block_dev.c:2070:10
+8 SyS_quotactl fs/quota/quota.c:810:9 @[ fs/quota/quota.c:871:7 @[ fs/quota/quota.c:836:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 vfs_path_lookup fs/namei.c:2444:9
+7 mount_subtree fs/namespace.c:3016:8
+8 nfs_follow_remote_path fs/nfs/nfs4super.c:231:11
+9 nfs4_try_mount fs/nfs/nfs4super.c:254:8
+[32m-------------[0m
+[35mUse:kernel/audit.c:2172:2[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_task_context kernel/audit.c:2172:2
+1 audit_log_task_info kernel/audit.c:2250:2
+2 audit_log_link_denied kernel/audit.c:2274:2
+3 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+4 path_lookupat fs/namei.c:2303:7
+5 filename_lookup fs/namei.c:2340:12
+6 vfs_path_lookup fs/namei.c:2444:9
+7 mntns_install fs/namespace.c:3484:8
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 SyS_linkat fs/namei.c:1014:2 @[ fs/namei.c:4275:10 @[ fs/namei.c:4237:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 SyS_uselib fs/exec.c:136:9 @[ fs/exec.c:120:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 compat_SyS_execve fs/exec.c:1874:9 @[ fs/exec.c:1949:9 @[ fs/exec.c:1945:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 SyS_execveat fs/exec.c:1858:9 @[ fs/exec.c:1939:9 @[ fs/exec.c:1931:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 do_execveat_common fs/exec.c:1740:9
+7 SyS_execve fs/exec.c:1847:9 @[ fs/exec.c:1928:9 @[ fs/exec.c:1923:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_elf_binary.14742 fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_elf_binary fs/binfmt_elf.c:775:18
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_script fs/binfmt_script.c:101:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 load_misc_binary fs/binfmt_misc.c:212:17
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_open_execat fs/exec.c:849:9
+6 open_exec fs/exec.c:881:7
+7 bm_register_write fs/binfmt_misc.c:723:7
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 compat_SyS_openat fs/open.c:1105:9 @[ fs/open.c:1103:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 compat_SyS_open fs/open.c:1096:9 @[ fs/open.c:1094:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 SyS_openat fs/open.c:1086:9 @[ fs/open.c:1080:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_openat fs/namei.c:3522:7
+4 do_filp_open fs/namei.c:3558:10
+5 do_sys_open fs/open.c:1059:20
+6 SyS_open fs/open.c:1077:9 @[ fs/open.c:1072:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_mountpoint fs/namei.c:2679:7
+4 filename_mountpoint fs/namei.c:2708:11
+5 user_path_mountpoint_at fs/namei.c:2734:9
+6 SyS_umount fs/namespace.c:1699:11 @[ fs/namespace.c:1683:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+7 perf_compat_ioctl kernel/events/core.c:4774:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 perf_ioctl kernel/events/core.c:8448:11 @[ kernel/events/core.c:8503:8 @[ kernel/events/core.c:8569:9 @[ kernel/events/core.c:4717:10 @[ kernel/events/core.c:4754:8 ] ] ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 do_mount fs/namespace.c:2207:8 @[ fs/namespace.c:2836:12 ]
+7 compat_SyS_mount fs/compat.c:195:11 @[ fs/compat.c:160:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 do_mount fs/namespace.c:2207:8 @[ fs/namespace.c:2836:12 ]
+7 SyS_mount fs/namespace.c:3058:8 @[ fs/namespace.c:3035:1 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+7 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+8 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+9 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+7 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+8 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+9 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+7 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+8 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+7 btrfs_init_new_device fs/btrfs/volumes.c:2325:9
+8 btrfs_ioctl fs/btrfs/ioctl.c:2637:8 @[ fs/btrfs/ioctl.c:5575:10 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+7 btrfs_scan_one_device fs/btrfs/volumes.c:1137:9
+8 btrfs_control_ioctl fs/btrfs/super.c:2209:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 blkdev_get_by_path fs/block_dev.c:2070:10 @[ fs/block_dev.c:1665:9 ]
+7 btrfs_scan_one_device fs/btrfs/volumes.c:1137:9
+8 btrfs_control_ioctl fs/btrfs/super.c:2209:9
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 configfs_symlink fs/configfs/symlink.c:116:8 @[ fs/configfs/symlink.c:160:8 ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 kern_path fs/namei.c:2425:9
+6 lookup_bdev fs/block_dev.c:2070:10
+7 SyS_quotactl fs/quota/quota.c:810:9 @[ fs/quota/quota.c:871:7 @[ fs/quota/quota.c:836:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 vfs_path_lookup fs/namei.c:2444:9
+6 mount_subtree fs/namespace.c:3016:8
+7 nfs_follow_remote_path fs/nfs/nfs4super.c:231:11
+8 nfs4_try_mount fs/nfs/nfs4super.c:254:8
+[32m-------------[0m
+[35mUse:kernel/audit.c:2125:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 audit_log_name kernel/audit.c:2125:4
+1 audit_log_link_denied kernel/audit.c:2281:2
+2 trailing_symlink fs/namei.c:948:2 @[ fs/namei.c:2237:14 ]
+3 path_lookupat fs/namei.c:2303:7
+4 filename_lookup fs/namei.c:2340:12
+5 vfs_path_lookup fs/namei.c:2444:9
+6 mntns_install fs/namespace.c:3484:8
+[32m-------------[0m
+[35mUse:fs/kernfs/inode.c:372:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_security_xattr_set fs/kernfs/inode.c:372:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 mon_text_open drivers/usb/mon/mon_text.c:354:15
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 mon_text_open drivers/usb/mon/mon_text.c:354:15
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 ebitmap_cache_init security/selinux/ss/ebitmap.c:528:24
+8 security_load_policy security/selinux/ss/services.c:2062:3
+9 sel_write_load security/selinux/selinuxfs.c:503:11
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+8 blk_alloc_queue_node block/blk-core.c:891:17
+9 blk_mq_init_queue block/blk-mq.c:2356:13
+10 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+11 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+12 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+13 __scsi_add_device drivers/scsi/scsi_scan.c:1487:3
+14 scsi_add_device drivers/scsi/scsi_scan.c:1507:3
+15 proc_scsi_write drivers/scsi/scsi_proc.c:253:11 @[ drivers/scsi/scsi_proc.c:346:9 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+8 blk_alloc_queue_node block/blk-core.c:891:17
+9 blk_mq_init_queue block/blk-mq.c:2356:13
+10 scsi_mq_alloc_queue drivers/scsi/scsi_lib.c:2250:24
+11 scsi_alloc_sdev drivers/scsi/scsi_scan.c:270:25
+12 scsi_probe_and_add_lun drivers/scsi/scsi_scan.c:1086:10
+13 __scsi_scan_target drivers/scsi/scsi_scan.c:1270:8 @[ drivers/scsi/scsi_scan.c:1576:4 ]
+14 scsi_scan_host_selected drivers/scsi/scsi_scan.c:1661:3 @[ drivers/scsi/scsi_scan.c:1689:4 ]
+15 store_scan drivers/scsi/scsi_sysfs.c:149:9 @[ drivers/scsi/scsi_sysfs.c:189:8 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+8 blk_alloc_queue_node block/blk-core.c:891:17
+9 blk_mq_init_queue block/blk-mq.c:2356:13
+10 loop_add drivers/block/loop.c:1796:17
+11 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 bioset_create block/bio.c:115:9 @[ block/bio.c:1938:17 ]
+8 blk_alloc_queue_node block/blk-core.c:891:17
+9 blk_mq_init_queue block/blk-mq.c:2356:13
+10 loop_add drivers/block/loop.c:1796:17
+11 loop_control_ioctl drivers/block/loop.c:1972:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 copy_pid_ns kernel/pid_namespace.c:57:11 @[ kernel/pid_namespace.c:122:19 @[ kernel/pid_namespace.c:175:9 ] ]
+8 create_new_namespaces kernel/nsproxy.c:94:3
+9 SyS_setns kernel/nsproxy.c:254:16 @[ kernel/nsproxy.c:237:1 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 sysfs_slab_add mm/slub.c:5777:10 @[ mm/slub.c:5726:3 ]
+5 __kmem_cache_create mm/slub.c:4270:8
+6 kmem_cache_create mm/slab_common.c:390:8 @[ mm/slab_common.c:475:6 ]
+7 copy_pid_ns kernel/pid_namespace.c:57:11 @[ kernel/pid_namespace.c:122:19 @[ kernel/pid_namespace.c:175:9 ] ]
+8 create_new_namespaces kernel/nsproxy.c:94:3
+9 unshare_nsproxy_namespaces kernel/nsproxy.c:206:13
+10 SyS_unshare kernel/fork.c:2365:8 @[ kernel/fork.c:2315:1 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 netdev_adjacent_rename_links net/core/dev.c:6138:9 @[ net/core/dev.c:6537:3 ]
+5 dev_change_name net/core/dev.c:1220:2
+6 dev_ifsioc net/core/dev_ioctl.c:323:10
+7 dev_ioctl net/core/dev_ioctl.c:589:10
+8 compat_ifr_data_ioctl net/socket.c:2965:9
+9 compat_sock_ioctl net/socket.c:3186:10 @[ net/socket.c:3265:9 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 netdev_adjacent_rename_links net/core/dev.c:6138:9 @[ net/core/dev.c:6537:3 ]
+5 dev_change_name net/core/dev.c:1220:2
+6 dev_ifsioc net/core/dev_ioctl.c:323:10
+7 dev_ioctl net/core/dev_ioctl.c:589:10
+8 sock_ioctl net/socket.c:973:9 @[ net/socket.c:1063:10 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_create drivers/base/core.c:2430:11 @[ drivers/base/core.c:2470:9 @[ drivers/base/core.c:2506:8 ] ]
+7 usb_register_dev drivers/usb/core/file.c:202:18
+8 hiddev_connect drivers/hid/usbhid/hiddev.c:902:11
+9 hiddev_release ./include/linux/hid.h:992:34 @[ drivers/hid/usbhid/hiddev.c:241:4 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_create drivers/base/core.c:2430:11 @[ drivers/base/core.c:2470:9 @[ drivers/base/core.c:2506:8 ] ]
+7 usb_register_dev drivers/usb/core/file.c:202:18
+8 hiddev_connect drivers/hid/usbhid/hiddev.c:902:11
+9 hiddev_open ./include/linux/hid.h:992:34 @[ drivers/hid/usbhid/hiddev.c:302:10 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_create drivers/base/core.c:2430:11 @[ drivers/base/core.c:2470:9 @[ drivers/base/core.c:2506:8 ] ]
+7 vcs_make_sysfs drivers/tty/vt/vc_screen.c:631:2
+8 vc_allocate drivers/tty/vt/vt.c:797:2
+9 vt_move_to_console drivers/tty/vt/vt_ioctl.c:1417:15
+10 pm_prepare_console kernel/power/console.c:135:19
+11 hibernate kernel/power/hibernate.c:696:2
+12 SyS_reboot kernel/reboot.c:384:9 @[ kernel/reboot.c:307:1 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_create drivers/base/core.c:2430:11 @[ drivers/base/core.c:2470:9 @[ drivers/base/core.c:2506:8 ] ]
+7 vcs_make_sysfs drivers/tty/vt/vc_screen.c:631:2
+8 vc_allocate drivers/tty/vt/vt.c:797:2
+9 vt_move_to_console drivers/tty/vt/vt_ioctl.c:1417:15
+10 pm_prepare_console kernel/power/console.c:135:19
+11 hibernate kernel/power/hibernate.c:696:2
+12 state_store kernel/power/main.c:504:11
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_create drivers/base/core.c:2430:11 @[ drivers/base/core.c:2470:9 @[ drivers/base/core.c:2506:8 ] ]
+7 vcs_make_sysfs drivers/tty/vt/vc_screen.c:631:2
+8 vc_allocate drivers/tty/vt/vt.c:797:2
+9 vt_move_to_console drivers/tty/vt/vt_ioctl.c:1417:15
+10 pm_prepare_console kernel/power/console.c:135:19
+11 hibernation_restore kernel/power/hibernate.c:505:2
+12 snapshot_ioctl kernel/power/user.c:273:11
+13 snapshot_compat_ioctl kernel/power/user.c:451:10
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_create drivers/base/core.c:2430:11 @[ drivers/base/core.c:2470:9 @[ drivers/base/core.c:2506:8 ] ]
+7 vcs_make_sysfs drivers/tty/vt/vc_screen.c:631:2
+8 vc_allocate drivers/tty/vt/vt.c:797:2
+9 vt_move_to_console drivers/tty/vt/vt_ioctl.c:1417:15
+10 pm_prepare_console kernel/power/console.c:135:19
+11 hibernation_restore kernel/power/hibernate.c:505:2
+12 snapshot_ioctl kernel/power/user.c:273:11
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_reset_configuration drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1569:4 ]
+9 usbdev_do_ioctl drivers/usb/core/devio.c:1399:13 @[ drivers/usb/core/devio.c:2448:9 ]
+10 usbdev_ioctl drivers/usb/core/devio.c:2557:8
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_reset_configuration drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1569:4 ]
+9 usbdev_do_ioctl drivers/usb/core/devio.c:1399:13 @[ drivers/usb/core/devio.c:2448:9 ]
+10 usbdev_compat_ioctl drivers/usb/core/devio.c:2568:8
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_set_configuration drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1973:3 ]
+9 bConfigurationValue_store drivers/usb/core/sysfs.c:103:10
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_set_configuration drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1973:3 ]
+9 remove_store.67679 drivers/usb/core/sysfs.c:764:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_set_configuration drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1973:3 ]
+9 usb_deauthorize_device drivers/usb/core/hub.c:2517:2
+10 authorized_store drivers/usb/core/sysfs.c:745:12
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_set_interface drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1448:3 ]
+9 usblp_ioctl drivers/usb/class/usblp.c:1304:6 @[ drivers/usb/class/usblp.c:574:5 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_set_interface drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1448:3 ]
+9 usblp_ioctl drivers/usb/class/usblp.c:1304:6 @[ drivers/usb/class/usblp.c:574:5 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_set_interface drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1448:3 ]
+9 usb_unbind_interface drivers/usb/core/driver.c:455:7
+10 usb_forced_unbind_intf drivers/usb/core/driver.c:607:3 @[ drivers/usb/core/driver.c:1025:2 ]
+11 usb_deauthorize_interface drivers/usb/core/message.c:1605:3
+12 interface_authorized_store drivers/usb/core/sysfs.c:1054:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 usb_create_ep_devs drivers/usb/core/endpoint.c:196:11
+8 usb_set_interface drivers/usb/core/message.c:1066:10 @[ drivers/usb/core/message.c:1448:3 ]
+9 usb_unbind_interface drivers/usb/core/driver.c:455:7
+10 usb_driver_release_interface drivers/usb/core/driver.c:607:3
+11 usbdev_release drivers/usb/core/devio.c:766:3 @[ drivers/usb/core/devio.c:1048:4 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 i2c_new_device drivers/i2c/i2c-core-base.c:792:11
+8 i2c_sysfs_new_device drivers/i2c/i2c-core-base.c:1007:11
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 pci_add_new_bus drivers/pci/probe.c:919:8 @[ drivers/pci/probe.c:941:10 ]
+8 pci_scan_bridge_extend drivers/pci/probe.c:1092:12
+9 pci_scan_child_bus_extend drivers/pci/probe.c:2526:9
+10 pci_rescan_bus_bridge_resize drivers/pci/probe.c:2570:9 @[ drivers/pci/probe.c:2794:8 ]
+11 dev_bus_rescan_store drivers/pci/pci-sysfs.c:513:4
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 pci_add_new_bus drivers/pci/probe.c:919:8 @[ drivers/pci/probe.c:941:10 ]
+8 pci_scan_bridge_extend drivers/pci/probe.c:1092:12
+9 pci_scan_child_bus_extend drivers/pci/probe.c:2526:9
+10 pci_rescan_bus drivers/pci/probe.c:2570:9 @[ drivers/pci/probe.c:2816:8 ]
+11 dev_rescan_store drivers/pci/pci-sysfs.c:475:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 pci_add_new_bus drivers/pci/probe.c:919:8 @[ drivers/pci/probe.c:941:10 ]
+8 pci_scan_bridge_extend drivers/pci/probe.c:1092:12
+9 pci_scan_child_bus_extend drivers/pci/probe.c:2526:9
+10 pci_rescan_bus drivers/pci/probe.c:2570:9 @[ drivers/pci/probe.c:2816:8 ]
+11 bus_rescan_store drivers/pci/pci-sysfs.c:442:4
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 workqueue_sysfs_register kernel/workqueue.c:5311:8
+8 __alloc_workqueue_key kernel/workqueue.c:4029:32
+9 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+10 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+11 scrub_workers_get fs/btrfs/scrub.c:4034:4
+12 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+13 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+14 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+15 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+16 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 workqueue_sysfs_register kernel/workqueue.c:5311:8
+8 __alloc_workqueue_key kernel/workqueue.c:4029:32
+9 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+10 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+11 scrub_workers_get fs/btrfs/scrub.c:4034:4
+12 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+13 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+14 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+15 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+16 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 workqueue_sysfs_register kernel/workqueue.c:5311:8
+8 __alloc_workqueue_key kernel/workqueue.c:4029:32
+9 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+10 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+11 scrub_workers_get fs/btrfs/scrub.c:4034:4
+12 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+13 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+14 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+15 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 workqueue_sysfs_register kernel/workqueue.c:5311:8
+8 __alloc_workqueue_key kernel/workqueue.c:4029:32
+9 __btrfs_alloc_workqueue fs/btrfs/async-thread.c:0
+10 btrfs_alloc_workqueue fs/btrfs/async-thread.c:197:15
+11 scrub_workers_get fs/btrfs/scrub.c:4034:4
+12 btrfs_scrub_dev fs/btrfs/scrub.c:4148:8
+13 btrfs_dev_replace_start fs/btrfs/dev-replace.c:405:8
+14 btrfs_dev_replace_by_ioctl fs/btrfs/dev-replace.c:443:8
+15 btrfs_ioctl fs/btrfs/ioctl.c:4432:10 @[ fs/btrfs/ioctl.c:5664:10 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 workqueue_sysfs_register kernel/workqueue.c:5311:8
+8 __alloc_workqueue_key kernel/workqueue.c:4029:32
+9 sb_init_dio_done_wq fs/direct-io.c:602:32
+10 iomap_dio_rw fs/iomap.c:1028:9
+11 xfs_file_dio_aio_read fs/xfs/xfs_file.c:221:8
+12 xfs_file_read_iter fs/xfs/xfs_file.c:294:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 device_register drivers/base/core.c:1905:9
+7 workqueue_sysfs_register kernel/workqueue.c:5311:8
+8 __alloc_workqueue_key kernel/workqueue.c:4029:32
+9 sb_init_dio_done_wq fs/direct-io.c:602:32
+10 iomap_dio_rw fs/iomap.c:1028:9
+11 xfs_file_dio_aio_write fs/xfs/xfs_file.c:590:8
+12 xfs_file_write_iter fs/xfs/xfs_file.c:738:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 attribute_container_add_class_device_adapter drivers/base/attribute_container.c:352:14 @[ drivers/base/attribute_container.c:370:9 ]
+7 attribute_container_device_trigger drivers/base/attribute_container.c:273:5
+8 transport_remove_device drivers/base/transport_class.c:249:2
+9 __scsi_remove_device drivers/scsi/scsi_sysfs.c:1356:3
+10 sdev_store_delete drivers/scsi/scsi_sysfs.c:1397:2 @[ drivers/scsi/scsi_sysfs.c:726:3 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 attribute_container_add_class_device_adapter drivers/base/attribute_container.c:352:14 @[ drivers/base/attribute_container.c:370:9 ]
+7 attribute_container_device_trigger drivers/base/attribute_container.c:273:5
+8 transport_remove_device drivers/base/transport_class.c:249:2
+9 __scsi_remove_device drivers/scsi/scsi_sysfs.c:1356:3
+10 scsi_free_host_dev drivers/scsi/scsi_scan.c:1938:2
+11 scsi_rescan_device drivers/scsi/scsi_scan.c:1525:3
+12 store_rescan_field drivers/scsi/scsi_sysfs.c:716:2
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 add_partition block/partition-generic.c:362:8
+7 rescan_partitions block/partition-generic.c:609:10
+8 blkdev_ioctl block/ioctl.c:173:9 @[ block/ioctl.c:193:8 @[ block/ioctl.c:575:10 ] ]
+9 compat_blkdev_ioctl block/compat_ioctl.c:360:10
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 add_partition block/partition-generic.c:362:8
+7 rescan_partitions block/partition-generic.c:609:10
+8 blkdev_ioctl block/ioctl.c:173:9 @[ block/ioctl.c:193:8 @[ block/ioctl.c:575:10 ] ]
+9 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 input_register_device drivers/input/input.c:2135:10
+7 atkbd_do_set_extra drivers/input/keyboard/atkbd.c:1383:9 @[ drivers/input/keyboard/atkbd.c:1331:11 @[ drivers/input/keyboard/atkbd.c:272:1 ] ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 input_register_device drivers/input/input.c:2135:10
+7 atkbd_do_set_scroll drivers/input/keyboard/atkbd.c:1459:9 @[ drivers/input/keyboard/atkbd.c:1331:11 @[ drivers/input/keyboard/atkbd.c:274:1 ] ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 input_register_device drivers/input/input.c:2135:10
+7 atkbd_do_set_set drivers/input/keyboard/atkbd.c:1514:9 @[ drivers/input/keyboard/atkbd.c:1331:11 @[ drivers/input/keyboard/atkbd.c:275:1 ] ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 input_register_device drivers/input/input.c:2135:10
+7 atkbd_do_set_softrepeat drivers/input/keyboard/atkbd.c:1567:9 @[ drivers/input/keyboard/atkbd.c:1331:11 @[ drivers/input/keyboard/atkbd.c:276:1 ] ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 bus_add_device drivers/base/bus.c:491:11
+5 device_add drivers/base/core.c:1807:10
+6 input_register_device drivers/input/input.c:2135:10
+7 atkbd_do_set_softraw drivers/input/keyboard/atkbd.c:1615:9 @[ drivers/input/keyboard/atkbd.c:1331:11 @[ drivers/input/keyboard/atkbd.c:277:1 ] ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 device_bind_driver drivers/base/dd.c:303:9 @[ drivers/base/dd.c:340:8 ]
+5 __device_attach drivers/base/dd.c:702:9
+6 device_attach drivers/base/dd.c:760:9
+7 drvctl_store drivers/input/serio/serio.c:136:10 @[ drivers/input/serio/serio.c:414:3 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 device_bind_driver drivers/base/dd.c:303:9 @[ drivers/base/dd.c:340:8 ]
+5 __device_attach drivers/base/dd.c:702:9
+6 device_attach drivers/base/dd.c:760:9
+7 store_drivers_probe drivers/base/bus.c:742:9 @[ drivers/base/bus.c:262:6 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 driver_probe_device drivers/base/dd.c:300:8 @[ drivers/base/dd.c:403:6 @[ drivers/base/dd.c:566:8 ] ]
+5 bind_store drivers/base/bus.c:219:9
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_create_link fs/kernfs/symlink.c:45:2
+2 sysfs_do_create_link_sd fs/sysfs/symlink.c:44:7
+3 sysfs_create_link fs/sysfs/symlink.c:80:9 @[ fs/sysfs/symlink.c:92:9 ]
+4 thermal_zone_bind_cooling_device drivers/thermal/thermal_core.c:731:6
+5 thermal_zone_device_rebind_exception drivers/thermal/thermal_core.c:617:3
+6 passive_store drivers/thermal/thermal_sysfs.c:239:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 dpm_sysfs_remove drivers/base/power/sysfs.c:758:2
+5 device_del drivers/base/core.c:1961:2
+6 device_destroy drivers/base/core.c:2020:2 @[ drivers/base/core.c:2578:3 ]
+7 tty_driver_kref_put drivers/tty/tty_io.c:3003:2 @[ drivers/tty/tty_io.c:3093:5 @[ ./include/linux/kref.h:70:3 @[ drivers/tty/tty_io.c:3108:2 ] ] ]
+8 tty_open drivers/tty/tty_io.c:1946:2 @[ drivers/tty/tty_io.c:1990:9 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 dpm_sysfs_remove drivers/base/power/sysfs.c:758:2
+5 device_del drivers/base/core.c:1961:2
+6 device_destroy drivers/base/core.c:2020:2 @[ drivers/base/core.c:2578:3 ]
+7 tty_driver_kref_put drivers/tty/tty_io.c:3003:2 @[ drivers/tty/tty_io.c:3093:5 @[ ./include/linux/kref.h:70:3 @[ drivers/tty/tty_io.c:3108:2 ] ] ]
+8 tty_open drivers/tty/tty_io.c:1946:2 @[ drivers/tty/tty_io.c:1990:9 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 dpm_sysfs_remove drivers/base/power/sysfs.c:758:2
+5 device_del drivers/base/core.c:1961:2
+6 device_unregister drivers/base/core.c:2020:2
+7 i2c_sysfs_delete_device drivers/i2c/i2c-core-base.c:832:2 @[ drivers/i2c/i2c-core-base.c:1063:4 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 dpm_sysfs_remove drivers/base/power/sysfs.c:758:2
+5 device_del drivers/base/core.c:1961:2
+6 device_unregister drivers/base/core.c:2020:2
+7 pci_remove_bus drivers/pci/remove.c:62:2
+8 pci_remove_bus_device drivers/pci/remove.c:96:3
+9 pci_stop_and_remove_bus_device_locked drivers/pci/remove.c:118:2 @[ drivers/pci/remove.c:125:2 ]
+10 remove_store drivers/pci/pci-sysfs.c:493:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 dpm_sysfs_remove drivers/base/power/sysfs.c:758:2
+5 device_del drivers/base/core.c:1961:2
+6 device_unregister drivers/base/core.c:2020:2
+7 destroy_workqueue kernel/workqueue.c:5350:2 @[ kernel/workqueue.c:4105:2 ]
+8 bioset_free block/bio.c:1889:3
+9 mddev_put drivers/md/md.c:541:3
+10 md_attr_show drivers/md/md.c:5170:2
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 dpm_sysfs_remove drivers/base/power/sysfs.c:758:2
+5 device_del drivers/base/core.c:1961:2
+6 device_unregister drivers/base/core.c:2020:2
+7 destroy_workqueue kernel/workqueue.c:5350:2 @[ kernel/workqueue.c:4105:2 ]
+8 bioset_free block/bio.c:1889:3
+9 mddev_put drivers/md/md.c:541:3
+10 md_attr_store drivers/md/md.c:5194:2
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 dpm_sysfs_remove drivers/base/power/sysfs.c:758:2
+5 device_del drivers/base/core.c:1961:2
+6 device_unregister drivers/base/core.c:2020:2
+7 drm_sysfs_connector_remove drivers/gpu/drm/drm_sysfs.c:300:2
+8 drm_connector_unregister_all drivers/gpu/drm/drm_connector.c:448:2 @[ drivers/gpu/drm/drm_connector.c:463:3 ]
+9 drm_modeset_unregister_all drivers/gpu/drm/drm_mode_config.c:64:2
+10 drm_dev_unregister drivers/gpu/drm/drm_drv.c:874:3
+11 drm_put_dev drivers/gpu/drm/drm_drv.c:363:2
+12 drm_release drivers/gpu/drm/drm_file.c:440:4
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_group ./include/linux/kernfs.h:528:9 @[ fs/sysfs/group.c:32:4 @[ fs/sysfs/group.c:245:2 ] ]
+4 mddev_unlock drivers/md/md.c:668:5
+5 rdev_attr_store drivers/md/md.c:3386:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_mount_point fs/sysfs/dir.c:155:2
+4 exit_sel_fs security/selinux/selinuxfs.c:1938:2
+5 selinux_disable security/selinux/hooks.c:6811:2
+6 sel_write_disable security/selinux/selinuxfs.c:271:12
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_link ./include/linux/kernfs.h:528:9 @[ fs/sysfs/symlink.c:151:2 ]
+4 device_release_driver_internal drivers/base/dd.c:317:3 @[ drivers/base/dd.c:858:3 @[ drivers/base/dd.c:903:3 ] ]
+5 device_release_driver drivers/base/dd.c:928:2
+6 unbind_store drivers/base/bus.c:191:3
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 __kernfs_remove fs/kernfs/dir.c:1317:3
+2 kernfs_remove_by_name_ns fs/kernfs/dir.c:1489:3
+3 sysfs_remove_link ./include/linux/kernfs.h:528:9 @[ fs/sysfs/symlink.c:151:2 ]
+4 device_release_driver_internal drivers/base/dd.c:317:3 @[ drivers/base/dd.c:858:3 @[ drivers/base/dd.c:903:3 ] ]
+5 device_release_driver drivers/base/dd.c:928:2
+6 acpi_bus_trim drivers/acpi/scan.c:2043:3
+7 handle_eject_request drivers/acpi/dock.c:252:3 @[ drivers/acpi/dock.c:414:2 ]
+8 write_undock drivers/acpi/dock.c:538:8
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_dir_pos fs/kernfs/dir.c:1593:3
+2 kernfs_fop_readdir fs/kernfs/dir.c:1624:8 @[ fs/kernfs/dir.c:1653:13 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 kernfs_dir_fop_release fs/kernfs/dir.c:1583:2
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 sysfs_notify fs/sysfs/file.c:186:3
+2 redraw_screen drivers/tty/vt/vt.c:679:4
+3 do_bind_con_driver drivers/tty/vt/vt.c:3203:4
+4 store_bind drivers/tty/vt/vt.c:3336:4 @[ drivers/tty/vt/vt.c:3408:3 ]
+[32m-------------[0m
+[35mUse:fs/kernfs/dir.c:536:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 kernfs_put fs/kernfs/dir.c:536:4
+1 sysfs_notify fs/sysfs/file.c:186:3
+2 backlight_device_set_brightness drivers/video/backlight/backlight.c:121:2 @[ drivers/video/backlight/backlight.c:190:2 ]
+3 brightness_store drivers/video/backlight/backlight.c:207:7
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4592:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_proc_mknod fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4592:2 ]
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4480:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_proc_mkdir fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4480:2 ]
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4440:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_proc_symlink fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4440:2 ]
+[32m-------------[0m
+[35mUse:fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4160:2 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfs4_proc_create fs/nfs/nfs4proc.c:133:3 @[ fs/nfs/nfs4proc.c:4160:2 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 136 [33mIgnored: 7085[0m
+STOP WATCH[0]: 81760.700000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    2 : Good Path
+    138 : Bad Path
+    7085 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    2 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    240 : Critical Functions used by non CallInst
+    3005 : Critical Functions used by static assignment
+    2937 : # of times indirect call site matched with critical functions
+    3823 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

@@ -1,43 +1,48 @@
 [36m--- PROCESS FUNCTIONS ---[0m
 Pre-processing...
-Load skip function list, total:355
+Load skip function list, total:360
 Load skip var list, total:22
+Load kernel api list, total:1048
 Collect all functions and indirect callsites
-STOP WATCH[0]: 1536.663000 ms
+STOP WATCH[0]: 808.547000 ms
 Process Gating Functions
 Load LSM hook list, total:1
-STOP WATCH[0]: 29.606000 ms
+STOP WATCH[0]: 14.477000 ms
 [48;5;021m[38;5;255m=LSM hook functions=[0m
 . security_task_setpgid
 =o=
 Collect Checkpoints
-STOP WATCH[0]: 1313.767000 ms
+STOP WATCH[0]: 945.331000 ms
 Identify interesting struct
-STOP WATCH[0]: 7.558000 ms
+STOP WATCH[0]: 5.899000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.037000 ms
+STOP WATCH[0]: 6867.802000 ms
 Collecting Initialization Closure.
 Finding Kernel Entry Point and all __initcall_
 [32mFound x86_64_start_kernel[0m
-STOP WATCH[1]: 109.676000 ms
-Initial Kernel Init Function Count:668
+STOP WATCH[1]: 69.545000 ms
+Initial Kernel Init Function Count:642
 Over Approximate Kernel Init Functions
-STOP WATCH[1]: 197.424000 ms
+STOP WATCH[1]: 132.693000 ms
 Refine Result
-refine pass 0 3112 left
-refine pass 1 2059 left
-refine pass 2 1769 left
-refine pass 3 1705 left
-refine pass 4 1676 left
-refine pass 5 1671 left
-refine pass 6 1669 left
- Refine result : count=1669
-STOP WATCH[1]: 80.289000 ms
-STOP WATCH[0]: 388.406000 ms
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.672000 ms
+STOP WATCH[0]: 248.571000 ms
 Collect all permission-checked variables and functions
 Add call<direct> change_pid use @ kernel/sys.c:1020:3 @[ kernel/sys.c:959:1 ]
  cause:[32mProcess Stack:[0m
 0 SyS_setpgid kernel/sys.c:959:1
 [32m-------------[0m
-STOP WATCH[1]: 3508.237000 ms
+STOP WATCH[1]: 1970.376000 ms
+STOP WATCH[0]: 1970.390000 ms
 Collected 1 critical functions
 Collected 0 critical variables
 Collected 1 critical type/fields
@@ -46,7 +51,7 @@ Collected 1 critical type/fields
 [32mchange_pid[0m
     security_task_setpgid @ kernel/sys.c:1015:8 @[ kernel/sys.c:959:1 ]
 [48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
-[32mstruct.task_struct.42923:0,[0m
+[32mstruct.task_struct.43063:0,[0m
     security_task_setpgid @ kernel/sys.c:1015:8 @[ kernel/sys.c:959:1 ]
 Run Analysis
 Critical functions
@@ -55,7 +60,7 @@ Critical functions
 [31m=NO CHECK ON PATH=[0m
 [32mCall Stack:[0m
 0 flush_old_exec fs/exec.c:1143:3 @[ fs/exec.c:1256:11 ]
-1 load_elf_binary.14623 fs/binfmt_elf.c:864:11
+1 load_elf_binary.14742 fs/binfmt_elf.c:864:11
 [32m-------------[0m
 [35mUse:fs/exec.c:1143:3 @[ fs/exec.c:1256:11 ][0m
 [31m=NO CHECK ON PATH=[0m
@@ -73,17 +78,17 @@ Critical functions
 [32mCall Stack:[0m
 0 sys_setsid kernel/sys.c:1100:3 @[ kernel/sys.c:1125:2 ]
 [32m-------------[0m
-[32mGood: 1 [31mBad: 4 [33mIgnored: 1[0m
-STOP WATCH[0]: 475.088000 ms
+[32mGood: 1 [31mBad: 4 [33mIgnored: 7[0m
+STOP WATCH[0]: 276.992000 ms
 [36m--- DONE! ---[0m
 ------------STATISTICS---------------
-    43491 : Functions greeted
-    113 : External functions
+    53021 : Functions greeted
+    110 : External functions
     0 : Discovered Path
     0 : Matched Path
     1 : Good Path
     4 : Bad Path
-    1 : Ignored Path
+    7 : Ignored Path
     0 : Path Unable to Resolve
     0 : Resolved CallSite Using Function Pointer
     1 : Critical Functions
@@ -101,5 +106,10 @@ STOP WATCH[0]: 475.088000 ms
 
 
 
-Printing analysis 'capchk Pass (with getAnalysisUsage implemented)':
-Pass::print not implemented for pass: 'capchk'!
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

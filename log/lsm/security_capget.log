@@ -1,0 +1,83 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 810.794000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.269000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_capget
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 949.098000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.947000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.207000 ms
+STOP WATCH[0]: 6887.543000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.852000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 133.162000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.684000 ms
+STOP WATCH[0]: 250.388000 ms
+Collect all permission-checked variables and functions
+STOP WATCH[1]: 1964.249000 ms
+STOP WATCH[0]: 1964.265000 ms
+Collected 0 critical functions
+Collected 0 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+STOP WATCH[0]: 0.011000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    0 : Good Path
+    0 : Bad Path
+    0 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    0 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    0 : Critical Functions used by non CallInst
+    0 : Critical Functions used by static assignment
+    0 : # of times indirect call site matched with critical functions
+    0 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

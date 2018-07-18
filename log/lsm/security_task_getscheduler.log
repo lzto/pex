@@ -1,0 +1,231 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.018000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.399000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_task_getscheduler
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 943.550000 ms
+Identify interesting struct
+STOP WATCH[0]: 5.989000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.327000 ms
+STOP WATCH[0]: 6808.213000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.289000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.464000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 46.248000 ms
+STOP WATCH[0]: 248.640000 ms
+Collect all permission-checked variables and functions
+Add call<direct> __getparam_dl use @ kernel/sched/core.c:4610:3 @[ kernel/sched/core.c:4583:1 ]
+ cause:[32mProcess Stack:[0m
+0 SyS_sched_getattr 
+[32m-------------[0m
+Resolve indirect call @ kernel/sched/core.c:5124:16
+[32m[FOUND 4 MATCH][0m
+Add call<indirect> get_rr_interval_rt use @ kernel/sched/core.c:5124:16
+ cause:[32mProcess Stack:[0m
+0 sched_rr_get_interval kernel/sched/core.c:5100:40
+[32m-------------[0m
+Add call<indirect> get_rr_interval_fair use @ kernel/sched/core.c:5124:16
+ cause:[32mProcess Stack:[0m
+0 sched_rr_get_interval kernel/sched/core.c:5100:40
+[32m-------------[0m
+Add call<indirect> get_rr_interval_idle use @ kernel/sched/core.c:5124:16
+ cause:[32mProcess Stack:[0m
+0 sched_rr_get_interval kernel/sched/core.c:5100:40
+[32m-------------[0m
+Add call<indirect> get_rr_interval_stop use @ kernel/sched/core.c:5124:16
+ cause:[32mProcess Stack:[0m
+0 sched_rr_get_interval kernel/sched/core.c:5100:40
+[32m-------------[0m
+Add call<direct> jiffies_to_timespec64 use @ kernel/sched/core.c:5128:2
+ cause:[32mProcess Stack:[0m
+0 sched_rr_get_interval kernel/sched/core.c:5100:40
+[32m-------------[0m
+Add call<direct> compat_put_timespec64 use @ kernel/sched/core.c:5168:12 @[ kernel/sched/core.c:5160:1 ]
+ cause:[32mProcess Stack:[0m
+0 sched_rr_get_interval kernel/sched/core.c:5100:40
+1 compat_SyS_sched_rr_get_interval kernel/sched/core.c:5165:15 @[ kernel/sched/core.c:5160:1 ]
+[32m-------------[0m
+Add call<direct> put_timespec64 use @ kernel/sched/core.c:5154:12 @[ kernel/sched/core.c:5147:1 ]
+ cause:[32mProcess Stack:[0m
+0 sched_rr_get_interval kernel/sched/core.c:5100:40
+1 SyS_sched_rr_get_interval kernel/sched/core.c:5151:15 @[ kernel/sched/core.c:5147:1 ]
+[32m-------------[0m
+STOP WATCH[1]: 1964.263000 ms
+STOP WATCH[0]: 1964.278000 ms
+Collected 8 critical functions
+Collected 1 critical variables
+Collected 2 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32mrunqueues[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mput_timespec64[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[32mget_rr_interval_rt[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[32m__getparam_dl[0m
+    security_task_getscheduler @ kernel/sched/core.c:4602:11 @[ kernel/sched/core.c:4583:1 ]
+[32mget_rr_interval_fair[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[32mget_rr_interval_idle[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[32mget_rr_interval_stop[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[32mcompat_put_timespec64[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[32mjiffies_to_timespec64[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.sched_class:0,[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+[32mstruct.task_struct.38147:0,[0m
+    security_task_getscheduler @ kernel/sched/core.c:5117:11
+Run Analysis
+Critical functions
+[33mInspect Use of Function:compat_put_timespec64[0m
+[35mUse:fs/select.c:1130:8 @[ fs/select.c:1412:8 @[ fs/select.c:1367:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_ppoll fs/select.c:1130:8 @[ fs/select.c:1412:8 @[ fs/select.c:1367:1 ] ]
+[32m-------------[0m
+[35mUse:fs/select.c:1130:8 @[ fs/select.c:1329:8 @[ fs/select.c:1363:9 @[ fs/select.c:1348:1 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_pselect6 fs/select.c:1130:8 @[ fs/select.c:1329:8 @[ fs/select.c:1363:9 @[ fs/select.c:1348:1 ] ] ]
+[32m-------------[0m
+[35mUse:fs/select.c:1130:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_poll_select_copy_remaining fs/select.c:1130:8
+1 compat_SyS_select fs/select.c:1277:8 @[ fs/select.c:1257:1 ]
+[32m-------------[0m
+[35mUse:kernel/time/hrtimer.c:1448:7 @[ kernel/time/hrtimer.c:1494:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_nanosleep kernel/time/hrtimer.c:1448:7 @[ kernel/time/hrtimer.c:1494:10 ]
+1 compat_SyS_nanosleep kernel/time/hrtimer.c:1527:8 @[ kernel/time/hrtimer.c:1577:9 @[ kernel/time/hrtimer.c:1564:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/time/hrtimer.c:1448:7 @[ kernel/time/hrtimer.c:1494:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_nanosleep kernel/time/hrtimer.c:1448:7 @[ kernel/time/hrtimer.c:1494:10 ]
+1 SyS_nanosleep kernel/time/hrtimer.c:1527:8 @[ kernel/time/hrtimer.c:1559:9 @[ kernel/time/hrtimer.c:1546:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/time/posix-timers.c:1144:14 @[ kernel/time/posix-timers.c:1132:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_clock_gettime kernel/time/posix-timers.c:1144:14 @[ kernel/time/posix-timers.c:1132:1 ]
+[32m-------------[0m
+[35mUse:kernel/time/posix-timers.c:1185:20 @[ kernel/time/posix-timers.c:1174:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_clock_getres kernel/time/posix-timers.c:1185:20 @[ kernel/time/posix-timers.c:1174:1 ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 7 [33mIgnored: 7[0m
+[33mInspect Use of Function:jiffies_to_timespec64[0m
+[33mInspect Use of Function:get_rr_interval_stop[0m
+[31mindirect call @ kernel/sched/core.c:5124:16
+[33mInspect Use of Function:get_rr_interval_idle[0m
+[31mindirect call @ kernel/sched/core.c:5124:16
+[33mInspect Use of Function:__getparam_dl[0m
+[33mInspect Use of Function:put_timespec64[0m
+[35mUse:fs/select.c:323:14 @[ fs/select.c:1092:8 @[ fs/select.c:1046:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_ppoll fs/select.c:323:14 @[ fs/select.c:1092:8 @[ fs/select.c:1046:1 ] ]
+[32m-------------[0m
+[35mUse:fs/select.c:323:14 @[ fs/select.c:730:8 @[ fs/select.c:770:9 @[ fs/select.c:755:1 ] ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_pselect6 fs/select.c:323:14 @[ fs/select.c:730:8 @[ fs/select.c:770:9 @[ fs/select.c:755:1 ] ] ]
+[32m-------------[0m
+[35mUse:fs/select.c:323:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 poll_select_copy_remaining fs/select.c:323:14
+1 SyS_select fs/select.c:696:8 @[ fs/select.c:677:1 ]
+[32m-------------[0m
+[35mUse:kernel/time/posix-timers.c:1109:22 @[ kernel/time/posix-timers.c:1097:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_clock_getres kernel/time/posix-timers.c:1109:22 @[ kernel/time/posix-timers.c:1097:1 ]
+[32m-------------[0m
+[35mUse:kernel/time/posix-timers.c:1068:16 @[ kernel/time/posix-timers.c:1056:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_clock_gettime kernel/time/posix-timers.c:1068:16 @[ kernel/time/posix-timers.c:1056:1 ]
+[32m-------------[0m
+[35mUse:kernel/time/hrtimer.c:1453:7 @[ kernel/time/hrtimer.c:1494:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_nanosleep kernel/time/hrtimer.c:1453:7 @[ kernel/time/hrtimer.c:1494:10 ]
+1 compat_SyS_nanosleep kernel/time/hrtimer.c:1527:8 @[ kernel/time/hrtimer.c:1577:9 @[ kernel/time/hrtimer.c:1564:1 ] ]
+[32m-------------[0m
+[35mUse:kernel/time/hrtimer.c:1453:7 @[ kernel/time/hrtimer.c:1494:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_nanosleep kernel/time/hrtimer.c:1453:7 @[ kernel/time/hrtimer.c:1494:10 ]
+1 SyS_nanosleep kernel/time/hrtimer.c:1527:8 @[ kernel/time/hrtimer.c:1559:9 @[ kernel/time/hrtimer.c:1546:1 ] ]
+[32m-------------[0m
+[32mGood: 1 [31mBad: 7 [33mIgnored: 7[0m
+[33mInspect Use of Function:get_rr_interval_rt[0m
+[31mindirect call @ kernel/sched/core.c:5124:16
+[33mInspect Use of Function:get_rr_interval_fair[0m
+[31mindirect call @ kernel/sched/core.c:5124:16
+STOP WATCH[0]: 700.818000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    8 : Good Path
+    14 : Bad Path
+    16 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    8 : Critical Functions
+    1 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    1 : Critical Function Pointer Resolved, Collect Pass
+    13 : Critical Functions used by non CallInst
+    15 : Critical Functions used by static assignment
+    1 : # of times indirect call site matched with critical functions
+    54 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

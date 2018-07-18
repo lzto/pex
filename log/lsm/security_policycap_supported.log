@@ -1,0 +1,472 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 813.904000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.181000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_policycap_supported
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 945.365000 ms
+Identify interesting struct
+Function: sel_read_policycap used by struct.file_operations.469112[0m
+STOP WATCH[0]: 5.983000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.964000 ms
+STOP WATCH[0]: 6784.023000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.472000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 134.942000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.570000 ms
+STOP WATCH[0]: 250.623000 ms
+Collect all permission-checked variables and functions
+Add call<direct> simple_read_from_buffer use @ security/selinux/selinuxfs.c:1623:9
+ cause:[32mProcess Stack:[0m
+0 sel_read_policycap 
+[32m-------------[0m
+STOP WATCH[1]: 1970.170000 ms
+STOP WATCH[0]: 1970.186000 ms
+Collected 1 critical functions
+Collected 0 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32msimple_read_from_buffer[0m
+    security_policycap_supported @ security/selinux/selinuxfs.c:1620:10
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+[33mInspect Use of Function:simple_read_from_buffer[0m
+[35mUse:net/sunrpc/debugfs.c:284:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fault_disconnect_read net/sunrpc/debugfs.c:284:9
+[32m-------------[0m
+[35mUse:net/sunrpc/cache.c:1445:9 @[ net/sunrpc/cache.c:1585:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 read_flush_procfs net/sunrpc/cache.c:1445:9 @[ net/sunrpc/cache.c:1585:9 ]
+[32m-------------[0m
+[35mUse:net/sunrpc/cache.c:1445:9 @[ net/sunrpc/cache.c:1804:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 read_flush_pipefs net/sunrpc/cache.c:1445:9 @[ net/sunrpc/cache.c:1804:9 ]
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9 @[ arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:180:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 atomic_read_file arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9 @[ arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:180:9 ]
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9 @[ arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:96:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ulong_read_file arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9 @[ arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:96:9 ]
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9 @[ arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:96:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 ulong_read_file arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9 @[ arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:96:9 ]
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 oprofilefs_ulong_to_user arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9
+1 timeout_read arch/x86/oprofile/../../../drivers/oprofile/oprofile_files.c:33:9
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 oprofilefs_ulong_to_user arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9
+1 pointer_size_read arch/x86/oprofile/../../../drivers/oprofile/oprofile_files.c:107:9
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 oprofilefs_ulong_to_user arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9
+1 depth_read arch/x86/oprofile/../../../drivers/oprofile/oprofile_files.c:70:9
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 oprofilefs_ulong_to_user arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:59:9
+1 enable_read arch/x86/oprofile/../../../drivers/oprofile/oprofile_files.c:131:9
+[32m-------------[0m
+[35mUse:arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:47:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 oprofilefs_str_to_user arch/x86/oprofile/../../../drivers/oprofile/oprofilefs.c:47:9
+1 cpu_type_read arch/x86/oprofile/../../../drivers/oprofile/oprofile_files.c:119:9
+[32m-------------[0m
+[35mUse:drivers/usb/host/ohci-dbg.c:720:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debug_output drivers/usb/host/ohci-dbg.c:720:8
+[32m-------------[0m
+[35mUse:drivers/usb/host/ohci-dbg.c:720:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debug_output drivers/usb/host/ohci-dbg.c:720:8
+[32m-------------[0m
+[35mUse:drivers/usb/host/ohci-dbg.c:720:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debug_output drivers/usb/host/ohci-dbg.c:720:8
+[32m-------------[0m
+[35mUse:drivers/base/regmap/regmap-debugfs.c:56:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 regmap_name_read_file drivers/base/regmap/regmap-debugfs.c:56:8
+[32m-------------[0m
+[35mUse:drivers/gpu/drm/i915/i915_debugfs.c:960:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gpu_state_read drivers/gpu/drm/i915/i915_debugfs.c:960:8
+[32m-------------[0m
+[35mUse:drivers/gpu/drm/i915/i915_debugfs.c:960:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 gpu_state_read drivers/gpu/drm/i915/i915_debugfs.c:960:8
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1125:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_bool security/selinux/selinuxfs.c:1125:8
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1590:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_class security/selinux/selinuxfs.c:1590:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1604:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_perm security/selinux/selinuxfs.c:1604:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:112:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_enforce security/selinux/selinuxfs.c:112:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:301:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_policyvers security/selinux/selinuxfs.c:301:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:326:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_mls security/selinux/selinuxfs.c:326:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:585:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_checkreqprot security/selinux/selinuxfs.c:585:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:185:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_handle_unknown security/selinux/selinuxfs.c:185:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:212:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_handle_status security/selinux/selinuxfs.c:212:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:415:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_policy security/selinux/selinuxfs.c:415:8
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1347:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_avc_cache_threshold security/selinux/selinuxfs.c:1347:9
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1400:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_avc_hash_stats security/selinux/selinuxfs.c:1400:12
+[32m-------------[0m
+[35mUse:security/selinux/selinuxfs.c:1531:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 sel_read_initcon security/selinux/selinuxfs.c:1531:8
+[32m-------------[0m
+[35mUse:ipc/mqueue.c:501:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 mqueue_read_file ipc/mqueue.c:501:8
+[32m-------------[0m
+[35mUse:fs/pstore/inode.c:142:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 pstore_file_read fs/pstore/inode.c:142:9
+[32m-------------[0m
+[35mUse:fs/debugfs/file.c:884:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 read_file_blob fs/debugfs/file.c:884:6
+[32m-------------[0m
+[35mUse:fs/debugfs/file.c:979:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 u32_array_read fs/debugfs/file.c:979:9
+[32m-------------[0m
+[35mUse:fs/debugfs/file.c:792:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_read_file_bool fs/debugfs/file.c:792:9
+[32m-------------[0m
+[35mUse:fs/debugfs/file.c:792:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_read_file_bool fs/debugfs/file.c:792:9
+[32m-------------[0m
+[35mUse:fs/debugfs/file.c:792:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 debugfs_read_file_bool fs/debugfs/file.c:792:9
+[32m-------------[0m
+[35mUse:fs/orangefs/orangefs-debugfs.c:415:13[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 orangefs_debug_read fs/orangefs/orangefs-debugfs.c:415:13
+[32m-------------[0m
+[35mUse:fs/lockd/procfs.c:60:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nlm_end_grace_read fs/lockd/procfs.c:60:9
+[32m-------------[0m
+[35mUse:fs/nfsd/fault_inject.c:42:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fault_inject_read fs/nfsd/fault_inject.c:42:9
+[32m-------------[0m
+[35mUse:fs/configfs/file.c:205:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 configfs_read_bin_file fs/configfs/file.c:205:11
+[32m-------------[0m
+[35mUse:fs/configfs/file.c:124:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 configfs_read_file fs/configfs/file.c:124:11
+[32m-------------[0m
+[35mUse:fs/proc/base.c:994:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 auxv_read fs/proc/base.c:994:9
+[32m-------------[0m
+[35mUse:fs/proc/base.c:2504:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_pid_attr_read fs/proc/base.c:2504:12
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1022:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 oom_adj_read fs/proc/base.c:1022:9
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1180:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 oom_score_adj_read fs/proc/base.c:1180:9
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1234:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_loginuid_read fs/proc/base.c:1234:9
+[32m-------------[0m
+[35mUse:fs/proc/base.c:1295:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_sessionid_read fs/proc/base.c:1295:9
+[32m-------------[0m
+[35mUse:fs/proc/base.c:2618:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 proc_coredump_filter_read fs/proc/base.c:2618:9
+[32m-------------[0m
+[35mUse:fs/binfmt_misc.c:769:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 bm_status_read fs/binfmt_misc.c:769:9
+[32m-------------[0m
+[35mUse:fs/binfmt_misc.c:636:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 bm_entry_read fs/binfmt_misc.c:636:8
+[32m-------------[0m
+[35mUse:arch/x86/mm/tlb.c:682:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tlbflush_read_file arch/x86/mm/tlb.c:682:9
+[32m-------------[0m
+[35mUse:arch/x86/mm/pkeys.c:169:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 init_pkru_read_file arch/x86/mm/pkeys.c:169:9
+[32m-------------[0m
+[35mUse:kernel/power/qos.c:662:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 pm_qos_power_read kernel/power/qos.c:662:9
+[32m-------------[0m
+[35mUse:kernel/power/user.c:159:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 snapshot_read kernel/power/user.c:159:8
+[32m-------------[0m
+[35mUse:kernel/kprobes.c:2489:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 read_enabled_file_bool kernel/kprobes.c:2489:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:7234:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 trace_options_read kernel/trace/trace.c:7234:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:4892:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_saved_cmdlines_size_read kernel/trace/trace.c:4892:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:4725:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_readme_read kernel/trace/trace.c:4725:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:5474:9 @[ kernel/trace/trace.c:5497:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_thresh_read kernel/trace/trace.c:5474:9 @[ kernel/trace/trace.c:5497:9 ]
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:6935:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_stats_read kernel/trace/trace.c:6935:10
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:7323:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 trace_options_core_read kernel/trace/trace.c:7323:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:7525:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 rb_simple_read kernel/trace/trace.c:7525:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:6036:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_total_entries_read kernel/trace/trace.c:6036:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:5983:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_entries_read kernel/trace/trace.c:5983:8
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:4207:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_cpumask_read kernel/trace/trace.c:4207:10
+[32m-------------[0m
+[35mUse:kernel/trace/trace.c:5142:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 tracing_set_trace_read kernel/trace/trace.c:5142:9
+[32m-------------[0m
+[35mUse:kernel/trace/blktrace.c:389:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 blk_dropped_read kernel/trace/blktrace.c:389:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace_events.c:1358:7[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 event_filter_read kernel/trace/trace_events.c:1358:7
+[32m-------------[0m
+[35mUse:kernel/trace/trace_events.c:1330:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 event_id_read kernel/trace/trace_events.c:1330:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace_events.c:1059:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 event_enable_read kernel/trace/trace_events.c:1059:9
+[32m-------------[0m
+[35mUse:kernel/trace/trace_events.c:1139:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 system_enable_read kernel/trace/trace_events.c:1139:8
+[32m-------------[0m
+[35mUse:kernel/trace/trace_events.c:1139:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 system_enable_read kernel/trace/trace_events.c:1139:8
+[32m-------------[0m
+[35mUse:kernel/trace/trace_events.c:1519:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 subsystem_filter_read kernel/trace/trace_events.c:1519:6
+[32m-------------[0m
+[35mUse:kernel/trace/trace_events.c:1569:6[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 show_header kernel/trace/trace_events.c:1569:6
+[32m-------------[0m
+[32mGood: 1 [31mBad: 75 [33mIgnored: 52[0m
+STOP WATCH[0]: 2250.971000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    1 : Good Path
+    75 : Bad Path
+    52 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    1 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    0 : Critical Functions used by non CallInst
+    79 : Critical Functions used by static assignment
+    0 : # of times indirect call site matched with critical functions
+    146 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

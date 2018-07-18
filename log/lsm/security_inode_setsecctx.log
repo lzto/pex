@@ -1,0 +1,1927 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 808.874000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.354000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_inode_setsecctx
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 944.144000 ms
+Identify interesting struct
+Function: nfsd4_open used by [32m new discover:struct.nfsd4_operation[0m
+Function: nfsd4_create used by struct.nfsd4_operation[0m
+STOP WATCH[0]: 6.063000 ms
+Identify Logical Modules
+STOP WATCH[0]: 60.937000 ms
+STOP WATCH[0]: 6810.478000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.478000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 132.730000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.379000 ms
+STOP WATCH[0]: 248.244000 ms
+Collect all permission-checked variables and functions
+Add call<direct> nfserrno use @ fs/nfsd/vfs.c:531:9
+ cause:[32mProcess Stack:[0m
+0 nfsd4_set_nfs4_label fs/nfsd/vfs.c:515:46
+[32m-------------[0m
+STOP WATCH[1]: 1966.806000 ms
+STOP WATCH[0]: 1966.819000 ms
+Collected 1 critical functions
+Collected 0 critical variables
+Collected 0 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mnfserrno[0m
+    security_inode_setsecctx @ fs/nfsd/vfs.c:529:15
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+Run Analysis
+Critical functions
+[33mInspect Use of Function:nfserrno[0m
+[35mUse:fs/nfsd/nfs4acl.c:801:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:801:10
+1 nfsd4_open fs/nfsd/nfs4proc.c:153:11 @[ fs/nfsd/nfs4proc.c:288:3 @[ fs/nfsd/nfs4proc.c:414:13 ] ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4acl.c:801:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:801:10
+1 nfsd4_setattr fs/nfsd/nfs4proc.c:956:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4acl.c:801:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:801:10
+1 nfsd4_create fs/nfsd/nfs4proc.c:153:11 @[ fs/nfsd/nfs4proc.c:663:3 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4idmap.c:577:10 @[ fs/nfsd/nfs4idmap.c:622:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 encode_name_from_id fs/nfsd/nfs4idmap.c:577:10 @[ fs/nfsd/nfs4idmap.c:622:9 ]
+1 nfsd4_encode_group fs/nfsd/nfs4idmap.c:670:9
+2 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2743:12
+3 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+4 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+5 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4idmap.c:577:10 @[ fs/nfsd/nfs4idmap.c:622:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 encode_name_from_id fs/nfsd/nfs4idmap.c:577:10 @[ fs/nfsd/nfs4idmap.c:622:9 ]
+1 nfsd4_encode_group fs/nfsd/nfs4idmap.c:670:9
+2 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2743:12
+3 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+4 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+5 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4state.c:6258:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_locku fs/nfsd/nfs4state.c:6258:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4state.c:6109:9 @[ fs/nfsd/nfs4state.c:6176:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_lockt fs/nfsd/nfs4state.c:6109:9 @[ fs/nfsd/nfs4state.c:6176:11 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4state.c:6054:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_lock fs/nfsd/nfs4state.c:6054:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4xdr.c:2889:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2889:11
+1 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+2 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+3 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4xdr.c:2889:11[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2889:11
+1 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+2 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+3 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4xdr.c:2185:10 @[ fs/nfsd/nfs4xdr.c:2202:11 @[ fs/nfsd/nfs4xdr.c:2679:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2185:10 @[ fs/nfsd/nfs4xdr.c:2202:11 @[ fs/nfsd/nfs4xdr.c:2679:12 ] ]
+1 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+2 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+3 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4xdr.c:2185:10 @[ fs/nfsd/nfs4xdr.c:2202:11 @[ fs/nfsd/nfs4xdr.c:2679:12 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2185:10 @[ fs/nfsd/nfs4xdr.c:2202:11 @[ fs/nfsd/nfs4xdr.c:2679:12 ] ]
+1 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+2 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+3 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4proc.c:947:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_setattr fs/nfsd/nfs4proc.c:947:10
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4proc.c:1105:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_copy fs/nfsd/nfs4proc.c:1105:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfs4proc.c:1194:12[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_seek fs/nfsd/nfs4proc.c:1194:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd4_remove fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfs4proc.c:835:3 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd4_create fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfs4proc.c:666:2 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 do_nfsd_create fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/vfs.c:1440:2 ]
+2 nfsd4_open fs/nfsd/nfs4proc.c:255:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd_setattr fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/vfs.c:477:2 ]
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:965:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd4_secinfo fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfs4proc.c:878:2 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd_lookup_dentry fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/vfs.c:248:4 ]
+2 nfsd_lookup fs/nfsd/vfs.c:287:8
+3 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd_lookup_dentry fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/vfs.c:248:4 ]
+2 nfsd_lookup fs/nfsd/vfs.c:287:8
+3 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd_lookup_dentry fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/vfs.c:248:4 ]
+2 nfsd_lookup fs/nfsd/vfs.c:287:8
+3 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 fh_put fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfsfh.c:638:3 ]
+2 fh_compose fs/nfsd/nfsfh.c:586:4
+3 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2423:12
+4 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+5 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+6 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 fh_put fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfsfh.c:638:3 ]
+2 fh_compose fs/nfsd/nfsfh.c:586:4
+3 nfsd4_encode_fattr fs/nfsd/nfs4xdr.c:2423:12
+4 nfsd4_encode_fattr_to_buf fs/nfsd/nfs4xdr.c:2921:8
+5 _nfsd4_verify fs/nfsd/nfs4proc.c:1239:11
+6 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 fh_put fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfsfh.c:638:3 ]
+2 fh_compose fs/nfsd/nfsfh.c:586:4
+3 exp_pseudoroot fs/nfsd/export.c:1084:7
+4 nfsd4_putrootfh fs/nfsd/nfs4proc.c:512:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 fh_put fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfsfh.c:638:3 ]
+2 fh_compose fs/nfsd/nfsfh.c:586:4
+3 exp_pseudoroot fs/nfsd/export.c:1084:7
+4 nfsd4_putrootfh fs/nfsd/nfs4proc.c:512:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 fh_put fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfsfh.c:638:3 ]
+2 nfsd4_savefh fs/nfsd/nfs4proc.c:166:2 @[ fs/nfsd/nfs4proc.c:535:2 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 fh_put fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfsfh.c:638:3 ]
+2 nfsd4_restorefh fs/nfsd/nfs4proc.c:166:2 @[ fs/nfsd/nfs4proc.c:523:2 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 fh_put fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/nfsfh.c:638:3 ]
+2 nfsd4_putfh fs/nfsd/nfs4proc.c:498:2
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd_link fs/nfsd/nfsfh.h:332:3 @[ fs/nfsd/vfs.c:1608:2 ]
+2 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fill_post_wcc fs/nfsd/vfs.h:139:9 @[ fs/nfsd/nfs3xdr.c:263:8 ]
+1 nfsd_rename fs/nfsd/vfs.c:1705:2
+2 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/export.c:1083:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 exp_pseudoroot fs/nfsd/export.c:1083:10
+1 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:716:8 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/export.c:1083:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 exp_pseudoroot fs/nfsd/export.c:1083:10
+1 nfsd4_lookupp fs/nfsd/nfs4proc.c:716:8 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/export.c:1083:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 exp_pseudoroot fs/nfsd/export.c:1083:10
+1 nfsd4_putrootfh fs/nfsd/nfs4proc.c:512:11
+[32m-------------[0m
+[35mUse:fs/nfsd/export.c:1083:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 exp_pseudoroot fs/nfsd/export.c:1083:10
+1 nfsd4_putrootfh fs/nfsd/nfs4proc.c:512:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1765:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_unlink fs/nfsd/vfs.c:1765:8
+1 nfsd4_remove fs/nfsd/nfs4proc.c:832:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1698:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_rename fs/nfsd/vfs.c:1698:8
+1 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1650:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_rename fs/nfsd/vfs.c:1650:9
+1 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1614:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_link fs/nfsd/vfs.c:1614:8
+1 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1603:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_link fs/nfsd/vfs.c:1603:10
+1 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1598:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_link fs/nfsd/vfs.c:1598:10
+1 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1596:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_link fs/nfsd/vfs.c:1596:9
+1 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1576:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_link fs/nfsd/vfs.c:1576:9
+1 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1541:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_symlink fs/nfsd/vfs.c:1541:8
+1 nfsd4_create fs/nfsd/nfs4proc.c:608:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1529:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_symlink fs/nfsd/vfs.c:1529:9
+1 nfsd4_create fs/nfsd/nfs4proc.c:608:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1527:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_symlink fs/nfsd/vfs.c:1527:8
+1 nfsd4_create fs/nfsd/nfs4proc.c:608:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1447:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_nfsd_create fs/nfsd/vfs.c:1447:8
+1 nfsd4_open fs/nfsd/nfs4proc.c:255:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1431:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_nfsd_create fs/nfsd/vfs.c:1431:9
+1 nfsd4_open fs/nfsd/nfs4proc.c:255:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1142:9 @[ fs/nfsd/vfs.c:1424:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 do_nfsd_create fs/nfsd/vfs.c:1142:9 @[ fs/nfsd/vfs.c:1424:8 ]
+1 nfsd4_open fs/nfsd/nfs4proc.c:255:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1275:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_create fs/nfsd/vfs.c:1275:10
+1 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1269:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_create fs/nfsd/vfs.c:1269:10
+1 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1237:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_create_locked fs/nfsd/vfs.c:1237:8
+1 nfsd_create fs/nfsd/vfs.c:1284:9
+2 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1224:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_create_locked fs/nfsd/vfs.c:1224:9
+1 nfsd_create fs/nfsd/vfs.c:1284:9
+2 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1142:9 @[ fs/nfsd/vfs.c:1216:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_create_locked fs/nfsd/vfs.c:1142:9 @[ fs/nfsd/vfs.c:1216:8 ]
+1 nfsd_create fs/nfsd/vfs.c:1284:9
+2 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14 @[ fs/nfsd/vfs.c:1183:8 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_create_locked fs/nfsd/vfs.c:2029:14 @[ fs/nfsd/vfs.c:1183:8 ]
+1 nfsd_create fs/nfsd/vfs.c:1284:9
+2 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1113:10[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_commit fs/nfsd/vfs.c:1113:10
+1 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:1009:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_vfs_write fs/nfsd/vfs.c:1009:9
+1 nfsd4_write fs/nfsd/nfs4proc.c:1018:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfsd_commit fs/nfsd/vfs.c:1105:8
+2 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfsd4_lockt fs/nfsd/nfs4state.c:6107:15 @[ fs/nfsd/nfs4state.c:6176:11 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_get_vfs_file fs/nfsd/nfs4state.c:4193:12
+2 nfsd4_process_open2 fs/nfsd/nfs4state.c:4554:12
+3 nfsd4_open fs/nfsd/nfs4proc.c:448:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+3 nfsd4_copy fs/nfsd/nfs4proc.c:1096:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+3 nfsd4_clone fs/nfsd/nfs4proc.c:1073:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:937:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_deallocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_write fs/nfsd/nfs4proc.c:1004:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_allocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_read fs/nfsd/nfs4proc.c:766:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:779:8[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_open fs/nfsd/vfs.c:779:8
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_seek fs/nfsd/nfs4proc.c:1168:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:576:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_vfs_fallocate fs/nfsd/vfs.c:576:9
+1 nfsd4_allocate fs/nfsd/nfs4proc.c:1136:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:576:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_vfs_fallocate fs/nfsd/vfs.c:576:9
+1 nfsd4_deallocate fs/nfsd/nfs4proc.c:1136:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:544:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd4_clone_file_range fs/nfsd/vfs.c:544:9
+1 nfsd4_clone fs/nfsd/nfs4proc.c:1078:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfsd_access fs/nfsd/vfs.c:654:11
+2 nfsd4_access fs/nfsd/nfs4proc.c:556:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfsd_setattr fs/nfsd/vfs.c:362:9 @[ fs/nfsd/vfs.c:440:9 ]
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:965:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfsd_setattr fs/nfsd/vfs.c:362:9 @[ fs/nfsd/vfs.c:440:9 ]
+2 do_nfsd_create fs/nfsd/vfs.c:1140:10 @[ fs/nfsd/vfs.c:1424:8 ]
+3 nfsd4_open fs/nfsd/nfs4proc.c:255:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfsd_setattr fs/nfsd/vfs.c:362:9 @[ fs/nfsd/vfs.c:440:9 ]
+2 nfsd_create_locked fs/nfsd/vfs.c:1140:10 @[ fs/nfsd/vfs.c:1216:8 ]
+3 nfsd_create fs/nfsd/vfs.c:1284:9
+4 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5066:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+3 nfsd4_copy fs/nfsd/nfs4proc.c:1096:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5066:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+3 nfsd4_clone fs/nfsd/nfs4proc.c:1073:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5066:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_deallocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5066:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_write fs/nfsd/nfs4proc.c:1004:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5066:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_allocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5066:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_read fs/nfsd/nfs4proc.c:766:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5066:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+2 nfsd4_seek fs/nfsd/nfs4proc.c:1168:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_open_confirm fs/nfsd/nfs4state.c:5337:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+3 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+3 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_secinfo fs/nfsd/nfs4proc.c:870:8
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_putfh fs/nfsd/nfs4proc.c:502:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_lock fs/nfsd/nfs4state.c:5912:16
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_getattr fs/nfsd/nfs4proc.c:681:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_layoutreturn fs/nfsd/nfs4proc.c:1515:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_delegreturn fs/nfsd/nfs4state.c:5511:16
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd_rename fs/nfsd/vfs.c:1634:8
+3 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd_lookup fs/nfsd/vfs.c:284:8
+3 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd_lookup fs/nfsd/vfs.c:284:8
+3 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd_lookup fs/nfsd/vfs.c:284:8
+3 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_layoutget fs/nfsd/nfs4proc.c:1382:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd_unlink fs/nfsd/vfs.c:1730:8
+3 nfsd4_remove fs/nfsd/nfs4proc.c:832:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd_link fs/nfsd/vfs.c:1558:8
+3 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_layoutcommit fs/nfsd/nfs4proc.c:1456:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd4_lockt fs/nfsd/nfs4state.c:6140:16
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:2029:14[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_permission fs/nfsd/vfs.c:2029:14
+1 fh_verify fs/nfsd/nfsfh.c:376:10
+2 nfsd_open fs/nfsd/vfs.c:724:8
+3 nfsd_commit fs/nfsd/vfs.c:1105:8
+4 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:483:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_setattr fs/nfsd/vfs.c:483:9
+1 nfsd4_setattr fs/nfsd/nfs4proc.c:965:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:483:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_setattr fs/nfsd/vfs.c:483:9
+1 do_nfsd_create fs/nfsd/vfs.c:1140:10 @[ fs/nfsd/vfs.c:1424:8 ]
+2 nfsd4_open fs/nfsd/nfs4proc.c:255:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:483:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_setattr fs/nfsd/vfs.c:483:9
+1 nfsd_create_locked fs/nfsd/vfs.c:1140:10 @[ fs/nfsd/vfs.c:1216:8 ]
+2 nfsd_create fs/nfsd/vfs.c:1284:9
+3 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:380:9 @[ fs/nfsd/vfs.c:440:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_setattr fs/nfsd/vfs.c:380:9 @[ fs/nfsd/vfs.c:440:9 ]
+1 nfsd4_setattr fs/nfsd/nfs4proc.c:965:11
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:380:9 @[ fs/nfsd/vfs.c:440:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_setattr fs/nfsd/vfs.c:380:9 @[ fs/nfsd/vfs.c:440:9 ]
+1 do_nfsd_create fs/nfsd/vfs.c:1140:10 @[ fs/nfsd/vfs.c:1424:8 ]
+2 nfsd4_open fs/nfsd/nfs4proc.c:255:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:380:9 @[ fs/nfsd/vfs.c:440:9 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_setattr fs/nfsd/vfs.c:380:9 @[ fs/nfsd/vfs.c:440:9 ]
+1 nfsd_create_locked fs/nfsd/vfs.c:1140:10 @[ fs/nfsd/vfs.c:1216:8 ]
+2 nfsd_create fs/nfsd/vfs.c:1284:9
+3 nfsd4_create fs/nfsd/nfs4proc.c:647:12
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:261:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_lookup_dentry fs/nfsd/vfs.c:261:9
+1 nfsd4_secinfo fs/nfsd/nfs4proc.c:873:8
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:261:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_lookup_dentry fs/nfsd/vfs.c:261:9
+1 nfsd_lookup fs/nfsd/vfs.c:287:8
+2 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:261:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_lookup_dentry fs/nfsd/vfs.c:261:9
+1 nfsd_lookup fs/nfsd/vfs.c:287:8
+2 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:261:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_lookup_dentry fs/nfsd/vfs.c:261:9
+1 nfsd_lookup fs/nfsd/vfs.c:287:8
+2 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/vfs.c:261:9[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 nfsd_lookup_dentry fs/nfsd/vfs.c:261:9
+1 nfsd_lookup fs/nfsd/vfs.c:287:8
+2 nfsd4_open fs/nfsd/nfs4proc.c:279:12 @[ fs/nfsd/nfs4proc.c:414:13 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_open_confirm fs/nfsd/nfs4state.c:5337:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_secinfo fs/nfsd/nfs4proc.c:870:8
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_putfh fs/nfsd/nfs4proc.c:502:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_lock fs/nfsd/nfs4state.c:5912:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_getattr fs/nfsd/nfs4proc.c:681:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_layoutreturn fs/nfsd/nfs4proc.c:1515:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_create fs/nfsd/nfs4proc.c:597:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_open fs/nfsd/nfs4proc.c:153:11 @[ fs/nfsd/nfs4proc.c:288:3 @[ fs/nfsd/nfs4proc.c:414:13 ] ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:956:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_delegreturn fs/nfsd/nfs4state.c:5511:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_rename fs/nfsd/vfs.c:1634:8
+2 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_layoutget fs/nfsd/nfs4proc.c:1382:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_access fs/nfsd/vfs.c:632:10
+2 nfsd4_access fs/nfsd/nfs4proc.c:556:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_unlink fs/nfsd/vfs.c:1730:8
+2 nfsd4_remove fs/nfsd/nfs4proc.c:832:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_link fs/nfsd/vfs.c:1558:8
+2 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_layoutcommit fs/nfsd/nfs4proc.c:1456:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd4_lockt fs/nfsd/nfs4state.c:6140:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfsd_commit fs/nfsd/vfs.c:1105:8
+3 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_copy fs/nfsd/nfs4proc.c:1096:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_clone fs/nfsd/nfs4proc.c:1073:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_deallocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_write fs/nfsd/nfs4proc.c:1004:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_allocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_read fs/nfsd/nfs4proc.c:766:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:346:10 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_seek fs/nfsd/nfs4proc.c:1168:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_open_confirm fs/nfsd/nfs4state.c:5337:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_secinfo fs/nfsd/nfs4proc.c:870:8
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_putfh fs/nfsd/nfs4proc.c:502:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_lock fs/nfsd/nfs4state.c:5912:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_getattr fs/nfsd/nfs4proc.c:681:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutreturn fs/nfsd/nfs4proc.c:1515:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_create fs/nfsd/nfs4proc.c:597:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_open fs/nfsd/nfs4proc.c:153:11 @[ fs/nfsd/nfs4proc.c:288:3 @[ fs/nfsd/nfs4proc.c:414:13 ] ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:956:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_delegreturn fs/nfsd/nfs4state.c:5511:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_rename fs/nfsd/vfs.c:1634:8
+2 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutget fs/nfsd/nfs4proc.c:1382:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_access fs/nfsd/vfs.c:632:10
+2 nfsd4_access fs/nfsd/nfs4proc.c:556:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_unlink fs/nfsd/vfs.c:1730:8
+2 nfsd4_remove fs/nfsd/nfs4proc.c:832:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_link fs/nfsd/vfs.c:1558:8
+2 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutcommit fs/nfsd/nfs4proc.c:1456:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_lockt fs/nfsd/nfs4state.c:6140:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfsd_commit fs/nfsd/vfs.c:1105:8
+3 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_copy fs/nfsd/nfs4proc.c:1096:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_clone fs/nfsd/nfs4proc.c:1073:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_deallocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_write fs/nfsd/nfs4proc.c:1004:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_allocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_read fs/nfsd/nfs4proc.c:766:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:265:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_seek fs/nfsd/nfs4proc.c:1168:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_open_confirm fs/nfsd/nfs4state.c:5337:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_secinfo fs/nfsd/nfs4proc.c:870:8
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_putfh fs/nfsd/nfs4proc.c:502:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_lock fs/nfsd/nfs4state.c:5912:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_getattr fs/nfsd/nfs4proc.c:681:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_layoutreturn fs/nfsd/nfs4proc.c:1515:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_create fs/nfsd/nfs4proc.c:597:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_open fs/nfsd/nfs4proc.c:153:11 @[ fs/nfsd/nfs4proc.c:288:3 @[ fs/nfsd/nfs4proc.c:414:13 ] ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:956:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_delegreturn fs/nfsd/nfs4state.c:5511:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_rename fs/nfsd/vfs.c:1634:8
+2 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_layoutget fs/nfsd/nfs4proc.c:1382:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_access fs/nfsd/vfs.c:632:10
+2 nfsd4_access fs/nfsd/nfs4proc.c:556:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_unlink fs/nfsd/vfs.c:1730:8
+2 nfsd4_remove fs/nfsd/nfs4proc.c:832:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_link fs/nfsd/vfs.c:1558:8
+2 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_layoutcommit fs/nfsd/nfs4proc.c:1456:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd4_lockt fs/nfsd/nfs4state.c:6140:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfsd_commit fs/nfsd/vfs.c:1105:8
+3 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_copy fs/nfsd/nfs4proc.c:1096:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_clone fs/nfsd/nfs4proc.c:1073:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_deallocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_write fs/nfsd/nfs4proc.c:1004:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_allocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_read fs/nfsd/nfs4proc.c:766:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:104:9 @[ fs/nfsd/nfsfh.c:229:11 @[ fs/nfsd/nfsfh.c:320:11 ] ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_seek fs/nfsd/nfs4proc.c:1168:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_open_confirm fs/nfsd/nfs4state.c:5337:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_secinfo fs/nfsd/nfs4proc.c:870:8
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_putfh fs/nfsd/nfs4proc.c:502:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_lock fs/nfsd/nfs4state.c:5912:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_getattr fs/nfsd/nfs4proc.c:681:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutreturn fs/nfsd/nfs4proc.c:1515:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_create fs/nfsd/nfs4proc.c:597:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_open fs/nfsd/nfs4proc.c:153:11 @[ fs/nfsd/nfs4proc.c:288:3 @[ fs/nfsd/nfs4proc.c:414:13 ] ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:956:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_delegreturn fs/nfsd/nfs4state.c:5511:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_rename fs/nfsd/vfs.c:1634:8
+2 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutget fs/nfsd/nfs4proc.c:1382:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_access fs/nfsd/vfs.c:632:10
+2 nfsd4_access fs/nfsd/nfs4proc.c:556:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_unlink fs/nfsd/vfs.c:1730:8
+2 nfsd4_remove fs/nfsd/nfs4proc.c:832:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_link fs/nfsd/vfs.c:1558:8
+2 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutcommit fs/nfsd/nfs4proc.c:1456:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_lockt fs/nfsd/nfs4state.c:6140:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfsd_commit fs/nfsd/vfs.c:1105:8
+3 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_copy fs/nfsd/nfs4proc.c:1096:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_clone fs/nfsd/nfs4proc.c:1073:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_deallocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_write fs/nfsd/nfs4proc.c:1004:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_allocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_read fs/nfsd/nfs4proc.c:766:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:220:13 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_seek fs/nfsd/nfs4proc.c:1168:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_open_confirm fs/nfsd/nfs4state.c:5337:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_nverify fs/nfsd/nfs4proc.c:1272:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 _nfsd4_verify fs/nfsd/nfs4proc.c:1216:11
+2 nfsd4_verify fs/nfsd/nfs4proc.c:1282:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_secinfo fs/nfsd/nfs4proc.c:870:8
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_putfh fs/nfsd/nfs4proc.c:502:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_lock fs/nfsd/nfs4state.c:5912:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_getattr fs/nfsd/nfs4proc.c:681:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutreturn fs/nfsd/nfs4proc.c:1515:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_create fs/nfsd/nfs4proc.c:597:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_open fs/nfsd/nfs4proc.c:153:11 @[ fs/nfsd/nfs4proc.c:288:3 @[ fs/nfsd/nfs4proc.c:414:13 ] ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_set_nfs4_acl fs/nfsd/nfs4acl.c:766:10
+2 nfsd4_setattr fs/nfsd/nfs4proc.c:956:12
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_delegreturn fs/nfsd/nfs4state.c:5511:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_rename fs/nfsd/vfs.c:1634:8
+2 nfsd4_rename fs/nfsd/nfs4proc.c:851:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookup fs/nfsd/nfs4proc.c:738:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_lookupp fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:731:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_lookup fs/nfsd/vfs.c:284:8
+2 nfsd4_secinfo_no_name fs/nfsd/nfs4proc.c:724:9 @[ fs/nfsd/nfs4proc.c:901:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutget fs/nfsd/nfs4proc.c:1382:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_access fs/nfsd/vfs.c:632:10
+2 nfsd4_access fs/nfsd/nfs4proc.c:556:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_unlink fs/nfsd/vfs.c:1730:8
+2 nfsd4_remove fs/nfsd/nfs4proc.c:832:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_link fs/nfsd/vfs.c:1558:8
+2 nfsd4_link fs/nfsd/nfs4proc.c:703:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_layoutcommit fs/nfsd/nfs4proc.c:1456:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd4_lockt fs/nfsd/nfs4state.c:6140:16
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfsd_commit fs/nfsd/vfs.c:1105:8
+3 nfsd4_commit fs/nfsd/nfs4proc.c:582:9
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_copy fs/nfsd/nfs4proc.c:1096:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_verify_copy fs/nfsd/nfs4proc.c:1035:11
+4 nfsd4_clone fs/nfsd/nfs4proc.c:1073:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_deallocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1155:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_write fs/nfsd/nfs4proc.c:1004:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_allocate fs/nfsd/nfs4proc.c:1128:11 @[ fs/nfsd/nfs4proc.c:1148:9 ]
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_read fs/nfsd/nfs4proc.c:766:11
+[32m-------------[0m
+[35mUse:fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fh_verify fs/nfsd/nfsfh.c:206:10 @[ fs/nfsd/nfsfh.c:320:11 ]
+1 nfsd_open fs/nfsd/vfs.c:724:8
+2 nfs4_preprocess_stateid_op fs/nfsd/nfs4state.c:5075:12 @[ fs/nfsd/nfs4state.c:5141:12 ]
+3 nfsd4_seek fs/nfsd/nfs4proc.c:1168:11
+[32m-------------[0m
+[32mGood: 1 [31mBad: 263 [33mIgnored: 1571[0m
+STOP WATCH[0]: 6085.318000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    1 : Good Path
+    263 : Bad Path
+    1571 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    1 : Critical Functions
+    0 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    0 : Critical Function Pointer Resolved, Collect Pass
+    10 : Critical Functions used by non CallInst
+    1086 : Critical Functions used by static assignment
+    738 : # of times indirect call site matched with critical functions
+    1586 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+

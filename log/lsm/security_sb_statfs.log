@@ -1,0 +1,1279 @@
+[36m--- PROCESS FUNCTIONS ---[0m
+Pre-processing...
+Load skip function list, total:360
+Load skip var list, total:22
+Load kernel api list, total:1048
+Collect all functions and indirect callsites
+STOP WATCH[0]: 806.924000 ms
+Process Gating Functions
+Load LSM hook list, total:1
+STOP WATCH[0]: 14.191000 ms
+[48;5;021m[38;5;255m=LSM hook functions=[0m
+. security_sb_statfs
+=o=
+Collect Checkpoints
+STOP WATCH[0]: 946.019000 ms
+Identify interesting struct
+STOP WATCH[0]: 6.044000 ms
+Identify Logical Modules
+STOP WATCH[0]: 61.227000 ms
+STOP WATCH[0]: 6798.328000 ms
+Collecting Initialization Closure.
+Finding Kernel Entry Point and all __initcall_
+[32mFound x86_64_start_kernel[0m
+STOP WATCH[1]: 69.372000 ms
+Initial Kernel Init Function Count:642
+Over Approximate Kernel Init Functions
+STOP WATCH[1]: 133.044000 ms
+Refine Result
+refine pass 0 3413 left
+refine pass 1 2221 left
+refine pass 2 1865 left
+refine pass 3 1773 left
+refine pass 4 1736 left
+refine pass 5 1731 left
+refine pass 6 1729 left
+ Refine result : count=1729
+STOP WATCH[1]: 45.272000 ms
+STOP WATCH[0]: 248.343000 ms
+Collect all permission-checked variables and functions
+Resolve indirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[32m[FOUND 38 MATCH][0m
+Add call<indirect> bfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> adfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> befs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> cramfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> f2fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> udf_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> hpfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> qnx4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> qnx6_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> ufs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> hfsplus_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> hugetlbfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> ntfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> coda_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> jfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> simple_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> nilfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> nfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> omfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> efs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> gfs2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> ovl_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> vxfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> isofs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> squashfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> ncp_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> ceph_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> btrfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> sysv_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> afs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> ext2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> ext4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> minix_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> xfs_fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> shmem_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> orangefs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> romfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<indirect> cifs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+[32m-------------[0m
+Add call<direct> pin_remove use @ kernel/acct.c:179:2
+ cause:[32mProcess Stack:[0m
+0 vfs_statfs fs/statfs.c:70:35
+1 do_acct_process kernel/acct.c:109:6 @[ kernel/acct.c:490:7 ]
+2 acct_pin_kill kernel/acct.c:174:2
+[32m-------------[0m
+Resolve indirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32m[FOUND 38 MATCH][0m
+Add call<indirect> bfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> adfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> befs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> cramfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> f2fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> udf_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> hpfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> qnx4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> qnx6_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> ufs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> hfsplus_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> hugetlbfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> ntfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> coda_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> jfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> simple_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> nilfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> nfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> omfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> efs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> gfs2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> ovl_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> vxfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> isofs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> squashfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> ncp_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> ceph_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> btrfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> sysv_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> afs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> ext2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> ext4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> minix_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> xfs_fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> shmem_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> orangefs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> romfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Add call<indirect> cifs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+ cause:[32mProcess Stack:[0m
+0 user_statfs 
+[32m-------------[0m
+Resolve indirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[32m[FOUND 38 MATCH][0m
+Add call<indirect> bfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> adfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> befs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> cramfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> f2fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> udf_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> hpfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> qnx4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> qnx6_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ufs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> hfsplus_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> hugetlbfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ntfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> coda_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> jfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> simple_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> nilfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> nfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> omfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> efs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> gfs2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ovl_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> vxfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> isofs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> squashfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ncp_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ceph_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> btrfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> sysv_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> afs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ext2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ext4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> minix_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> xfs_fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> shmem_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> orangefs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> romfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<indirect> cifs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Add call<direct> drop_super use @ fs/statfs.c:228:2 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 SyS_ustat 
+[32m-------------[0m
+Resolve indirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[32m[FOUND 38 MATCH][0m
+Add call<indirect> bfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> adfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> befs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> cramfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> f2fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> udf_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> hpfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> qnx4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> qnx6_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ufs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> hfsplus_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> hugetlbfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ntfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> coda_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> jfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> simple_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> nilfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> nfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> omfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> efs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> gfs2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ovl_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> vxfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> isofs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> squashfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ncp_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ceph_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> btrfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> sysv_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> afs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ext2_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> ext4_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> minix_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> xfs_fs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> shmem_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> orangefs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> romfs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<indirect> cifs_statfs use @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+Add call<direct> drop_super use @ fs/statfs.c:228:2 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ]
+ cause:[32mProcess Stack:[0m
+0 compat_SyS_ustat 
+[32m-------------[0m
+STOP WATCH[1]: 1970.605000 ms
+STOP WATCH[0]: 1970.619000 ms
+Collected 40 critical functions
+Collected 1 critical variables
+Collected 3 critical type/fields
+[48;5;021m[38;5;255m--- Variables Protected By Gating Function---[0m
+[32msystem_wq[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+[48;5;021m[38;5;255m--- Function Protected By Gating Function---[0m
+[32mdrop_super[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[32mpin_remove[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+[32mcifs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mromfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mhpfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mhugetlbfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mhfsplus_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mjfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32msimple_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mnilfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mufs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mbfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32momfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mnfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mcoda_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mntfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mcramfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32madfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mqnx6_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mqnx4_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mbefs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mf2fs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mudf_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mefs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mgfs2_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32movl_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mvxfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32misofs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32msquashfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mncp_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mceph_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mbtrfs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32msysv_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mafs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mext2_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mminix_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mext4_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mxfs_fs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mshmem_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32morangefs_statfs[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[48;5;039m[38;5;255m--- Interesting Type fields and checks ---[0m
+[32mstruct.fs_pin:2,[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+[32mstruct.super_operations.38160:0,[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[32mstruct.vfsmount.38194:0,[0m
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+    security_sb_statfs @ fs/statfs.c:61:11 @[ fs/statfs.c:74:10 ]
+Run Analysis
+Critical functions
+[33mInspect Use of Function:drop_super[0m
+[35mUse:fs/quota/quota.c:880:3 @[ fs/quota/quota.c:836:1 ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_quotactl fs/quota/quota.c:880:3 @[ fs/quota/quota.c:836:1 ]
+[32m-------------[0m
+[35mUse:fs/block_dev.c:2108:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __invalidate_device fs/block_dev.c:2108:3
+1 check_disk_size_change fs/block_dev.c:1289:6 @[ fs/block_dev.c:1320:3 ]
+2 revalidate_disk fs/block_dev.c:1345:2
+3 cache_type_store drivers/scsi/sd.c:214:2
+[32m-------------[0m
+[35mUse:fs/block_dev.c:2108:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __invalidate_device fs/block_dev.c:2108:3
+1 check_disk_size_change fs/block_dev.c:1289:6 @[ fs/block_dev.c:1320:3 ]
+2 rescan_partitions block/partition-generic.c:513:2
+3 blkdev_ioctl block/ioctl.c:173:9 @[ block/ioctl.c:193:8 @[ block/ioctl.c:575:10 ] ]
+4 compat_blkdev_ioctl block/compat_ioctl.c:360:10
+[32m-------------[0m
+[35mUse:fs/block_dev.c:2108:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __invalidate_device fs/block_dev.c:2108:3
+1 check_disk_size_change fs/block_dev.c:1289:6 @[ fs/block_dev.c:1320:3 ]
+2 rescan_partitions block/partition-generic.c:513:2
+3 blkdev_ioctl block/ioctl.c:173:9 @[ block/ioctl.c:193:8 @[ block/ioctl.c:575:10 ] ]
+4 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/block_dev.c:2108:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __invalidate_device fs/block_dev.c:2108:3
+1 invalidate_partition block/genhd.c:1520:9
+2 del_gendisk block/genhd.c:716:2
+3 loop_control_ioctl drivers/block/loop.c:1868:2 @[ drivers/block/loop.c:1966:3 ]
+[32m-------------[0m
+[35mUse:fs/block_dev.c:2108:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 __invalidate_device fs/block_dev.c:2108:3
+1 invalidate_partition block/genhd.c:1520:9
+2 del_gendisk block/genhd.c:716:2
+3 loop_control_ioctl drivers/block/loop.c:1868:2 @[ drivers/block/loop.c:1966:3 ]
+[32m-------------[0m
+[35mUse:fs/block_dev.c:504:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_bdev fs/block_dev.c:504:4
+1 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+2 f2fs_compat_ioctl fs/f2fs/file.c:2813:9
+[32m-------------[0m
+[35mUse:fs/block_dev.c:504:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_bdev fs/block_dev.c:504:4
+1 f2fs_ioctl fs/f2fs/file.c:1854:8 @[ fs/f2fs/file.c:2707:10 ]
+[32m-------------[0m
+[35mUse:fs/block_dev.c:504:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_bdev fs/block_dev.c:504:4
+1 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+2 ext4_compat_ioctl fs/ext4/ioctl.c:1114:9
+[32m-------------[0m
+[35mUse:fs/block_dev.c:504:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_bdev fs/block_dev.c:504:4
+1 ext4_ioctl fs/ext4/ioctl.c:486:3 @[ fs/ext4/ioctl.c:1047:10 ]
+[32m-------------[0m
+[35mUse:fs/block_dev.c:504:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_bdev fs/block_dev.c:504:4
+1 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+2 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+[32m-------------[0m
+[35mUse:fs/block_dev.c:504:4[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 freeze_bdev fs/block_dev.c:504:4
+1 xfs_fs_goingdown fs/xfs/xfs_fsops.c:916:28
+2 xfs_file_ioctl fs/xfs/xfs_ioctl.c:2070:10
+3 xfs_file_compat_ioctl fs/xfs/xfs_ioctl32.c:625:10
+[32m-------------[0m
+[35mUse:fs/block_dev.c:471:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fsync_bdev fs/block_dev.c:471:3
+1 blkdev_ioctl block/ioctl.c:436:2 @[ block/ioctl.c:521:10 ]
+2 compat_blkdev_ioctl block/compat_ioctl.c:360:10
+[32m-------------[0m
+[35mUse:fs/block_dev.c:471:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fsync_bdev fs/block_dev.c:471:3
+1 blkdev_ioctl block/ioctl.c:436:2 @[ block/ioctl.c:521:10 ]
+2 block_ioctl fs/block_dev.c:1860:9
+[32m-------------[0m
+[35mUse:fs/block_dev.c:471:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fsync_bdev fs/block_dev.c:471:3
+1 invalidate_partition block/genhd.c:1519:3
+2 del_gendisk block/genhd.c:716:2
+3 loop_control_ioctl drivers/block/loop.c:1868:2 @[ drivers/block/loop.c:1966:3 ]
+[32m-------------[0m
+[35mUse:fs/block_dev.c:471:3[0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 fsync_bdev fs/block_dev.c:471:3
+1 invalidate_partition block/genhd.c:1519:3
+2 del_gendisk block/genhd.c:716:2
+3 loop_control_ioctl drivers/block/loop.c:1868:2 @[ drivers/block/loop.c:1966:3 ]
+[32m-------------[0m
+[35mUse:fs/statfs.c:228:2 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 SyS_ustat fs/statfs.c:228:2 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ]
+[32m-------------[0m
+[35mUse:fs/statfs.c:228:2 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ][0m
+[31m=NO CHECK ON PATH=[0m
+[32mCall Stack:[0m
+0 compat_SyS_ustat fs/statfs.c:228:2 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ]
+[32m-------------[0m
+[32mGood: 2 [31mBad: 18 [33mIgnored: 238[0m
+[33mInspect Use of Function:pin_remove[0m
+[33mInspect Use of Function:orangefs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:shmem_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:cramfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:bfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:ufs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:adfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:nfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:omfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:nilfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:ntfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:coda_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:hugetlbfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:hfsplus_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:simple_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:jfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:hpfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:cifs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:romfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:qnx6_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:qnx4_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:befs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:udf_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:f2fs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:efs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:gfs2_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:ovl_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:vxfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:isofs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:squashfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:ncp_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:ceph_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:btrfs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:sysv_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:afs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:ext2_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:minix_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:ext4_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+[33mInspect Use of Function:xfs_fs_statfs[0m
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:236:12 @[ fs/statfs.c:232:1 ] ] ]
+[31mindirect call @ fs/ecryptfs/super.c:114:7
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 @[ fs/statfs.c:89:11 ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:227:8 @[ fs/statfs.c:375:12 @[ fs/statfs.c:371:1 ] ] ]
+[31mindirect call @ fs/statfs.c:64:11 @[ fs/statfs.c:74:10 ]
+STOP WATCH[0]: 4051.073000 ms
+[36m--- DONE! ---[0m
+------------STATISTICS---------------
+    53021 : Functions greeted
+    110 : External functions
+    0 : Discovered Path
+    0 : Matched Path
+    155 : Good Path
+    18 : Bad Path
+    276 : Ignored Path
+    0 : Path Unable to Resolve
+    0 : Resolved CallSite Using Function Pointer
+    40 : Critical Functions
+    1 : Critical Variables
+    0 : # of times max depth for forward analysis hit
+    0 : # of times max depth for backward analysis hit
+    0 : Critical Function Pointer Unable to Resolve, Collect Pass
+    4 : Critical Function Pointer Resolved, Collect Pass
+    13 : Critical Functions used by non CallInst
+    170 : Critical Functions used by static assignment
+    149 : # of times indirect call site matched with critical functions
+    215 : # of times indirect call site failed to match with critical functions
+    0 : found capability check inside call using function ptr
+
+
+
+
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+16305946 bitcode-reader - Number of Metadata records loaded
+  232630 bitcode-reader - Number of MDStrings loaded
+
