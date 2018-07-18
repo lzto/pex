@@ -205,7 +205,7 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
         goto end;
     }
     if (indices.size())
-        return get_value_from_composit(cv, indices);
+        return _get_value_from_composit(cv, indices);
 end:
     return ret;
 }

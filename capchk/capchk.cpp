@@ -231,6 +231,42 @@ bool is_skip_struct(StringRef str)
     return false;
 }
 
+
+/*
+ * deal with struct name alias
+ */
+void str_truncate_dot_number(std::string& str)
+{
+    std::size_t found = str.find_last_of('.');
+    str = str.substr(0,found);
+}
+
+void find_in_mi2m(Type* t, ModuleSet& ms)
+{
+    ms.clear();
+    StructType *st = dyn_cast<StructType>(t);
+    if (!st->hasName())
+    {
+        if (mi2m.find(t)!=mi2m.end())
+            for (auto i: *mi2m[t])
+                ms.insert(i);
+    }
+    //match using struct name
+    std::string name = t->getStructName();
+    str_truncate_dot_number(name);
+    for (auto msi: mi2m)
+    {
+        std::string struct_name = msi.first->getStructName();
+        str_truncate_dot_number(struct_name);
+        if (struct_name!=name)
+            continue;
+        for (auto i: (*msi.second))
+        {
+            ms.insert(i);
+        }
+    }
+}
+
 FunctionSet kernel_init_functions;
 FunctionSet non_kernel_init_functions;
 ////////////////////////////////////////////////////////////////////////////////
@@ -797,22 +833,54 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
             //not load+gep?
             goto end;
         }
+        //need to find till gep is exhausted and mi2m doesn't have a match
         GetElementPtrInst *gep = get_load_from_gep(cv);
         get_gep_indicies(gep, indices);
         if (indices.size()==0)//non-constant in indicies
             goto end;
-        ModuleSet* ms;
-        if (mi2m.find(cvt)==mi2m.end())
-            goto end;
-        ms = mi2m[cvt];
-        for (auto m: *ms)
+        //should remove first element because we already resolved it?
+        indices.pop_front();
+        while(1)
         {
-            Value* v = get_value_from_composit(m, indices);
-            if (v==NULL)
-                continue;
-            Function *f = dyn_cast<Function>(v);
-            assert(f);
-            fs.insert(f);
+            ModuleSet ms;
+            find_in_mi2m(cvt, ms);
+            if (ms.size())
+            {
+                for (auto m: ms)
+                {
+                    Value* v = get_value_from_composit(m, indices);
+                    if (v==NULL)
+                        continue;
+                    Function *f = dyn_cast<Function>(v);
+                    assert(f);
+                    fs.insert(f);
+                }
+                break;
+            }
+            if (indices.size()<=1)
+            {
+                //no match!
+                break;
+            }
+            //no match, we can try inner element
+            int idc = indices.front();
+            indices.pop_front();
+            if (!cvt->isStructTy())
+            {
+                cvt->print(errs());
+                llvm_unreachable("!!!1");
+            }
+            cvt = cvt->getStructElementType(idc);
+            if (cvt->isPointerTy())
+            {
+                cvt = dyn_cast<PointerType>(cvt)->getElementType();
+            }else
+            {
+                //what else can it be ?
+                cvt->print(errs());
+                llvm_unreachable("!!!2");
+            }
+            //cvt should be struct type!!!
         }
 #endif
     }else
@@ -958,7 +1026,7 @@ void capchk::identify_logical_module(Module& module)
         ms->insert(gi);
     }
     //debug
-#if 0
+#if 1
     errs()<<"Kernel Module Interfaces:\n";
     for (auto msi: mi2m)
     {
