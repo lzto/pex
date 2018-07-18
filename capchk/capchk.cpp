@@ -48,6 +48,11 @@ STATISTIC(MatchCallCriticalFuncPtr, "# of times indirect call site matched with 
 STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to match with critical functions");
 STATISTIC(CapChkInFPTR, "found capability check inside call using function ptr\n");
 
+static InstructionList dbgstk;
+
+Instruction* x_dbg_ins;
+std::list<int> x_dbg_idx;
+
 ////////////////////////////////////////////////////////////////////////////////
 //map function to its check instruction
 Function2ChkInst f2ci;
@@ -237,6 +242,8 @@ bool is_skip_struct(StringRef str)
  */
 void str_truncate_dot_number(std::string& str)
 {
+    if (!isdigit(str.back()))
+        return;
     std::size_t found = str.find_last_of('.');
     str = str.substr(0,found);
 }
@@ -250,13 +257,17 @@ void find_in_mi2m(Type* t, ModuleSet& ms)
         if (mi2m.find(t)!=mi2m.end())
             for (auto i: *mi2m[t])
                 ms.insert(i);
+        return;
     }
     //match using struct name
     std::string name = t->getStructName();
     str_truncate_dot_number(name);
     for (auto msi: mi2m)
     {
-        std::string struct_name = msi.first->getStructName();
+        StructType* stype = dyn_cast<StructType>(msi.first);
+        if (!stype->hasName())
+            continue;
+        std::string struct_name = stype->getName();
         str_truncate_dot_number(struct_name);
         if (struct_name!=name)
             continue;
@@ -273,21 +284,6 @@ FunctionSet non_kernel_init_functions;
 /*
  * debug function, track process progress internally
  */
-void capchk::dump_dbgstk()
-{
-    errs()<<ANSI_COLOR_GREEN<<"Process Stack:"<<ANSI_COLOR_RESET<<"\n";
-    int cnt = 0;
-
-    for (auto* I: dbgstk)
-    {
-        errs()<<""<<cnt<<" "<<I->getFunction()->getName()<<" ";
-        I->getDebugLoc().print(errs());
-        errs()<<"\n";
-        cnt++;
-    }
-    errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
-}
-
 void capchk::dump_callstack(InstructionList& callstk)
 {
     errs()<<ANSI_COLOR_GREEN<<"Call Stack:"<<ANSI_COLOR_RESET<<"\n";
@@ -835,7 +831,9 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
         }
         //need to find till gep is exhausted and mi2m doesn't have a match
         GetElementPtrInst *gep = get_load_from_gep(cv);
+        x_dbg_ins = gep;
         get_gep_indicies(gep, indices);
+        x_dbg_idx = indices;
         if (indices.size()==0)//non-constant in indicies
             goto end;
         //should remove first element because we already resolved it?
@@ -870,16 +868,36 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
                 cvt->print(errs());
                 llvm_unreachable("!!!1");
             }
-            cvt = cvt->getStructElementType(idc);
-            if (cvt->isPointerTy())
+            Type* ncvt = cvt->getStructElementType(idc);
+            if (ncvt->isPointerTy())
             {
-                cvt = dyn_cast<PointerType>(cvt)->getElementType();
-            }else
+                ncvt = dyn_cast<PointerType>(ncvt)->getElementType();
+            }else if (!ncvt->isStructTy())
             {
+                if (ncvt->isAggregateType())
+                {
+                    //TODO:what to do with it?
+                    break;
+                }
                 //what else can it be ?
                 cvt->print(errs());
+                errs()<<"\n";
+                ncvt->print(errs());
+                errs()<<"\n";
+                errs()<<ncvt->isAggregateType()<<":"
+                    <<ncvt->isStructTy()<<"\n";
+                errs()<<"-----------\n";
+                x_dbg_ins->print(errs());
+                errs()<<"\n";
+                x_dbg_ins->getDebugLoc().print(errs());
+                errs()<<"\n";
+                for (auto xxx: x_dbg_idx)
+                    errs()<<","<<xxx;
+                errs()<<"\n";
+
                 llvm_unreachable("!!!2");
             }
+            cvt = ncvt;
             //cvt should be struct type!!!
         }
 #endif
@@ -1026,11 +1044,15 @@ void capchk::identify_logical_module(Module& module)
         ms->insert(gi);
     }
     //debug
-#if 1
+#if 0
     errs()<<"Kernel Module Interfaces:\n";
     for (auto msi: mi2m)
     {
-        errs()<<(*msi.first).getStructName()<<"\n";
+        StructType * stype = dyn_cast<StructType>(msi.first);
+        if (stype->hasName())
+            errs()<<stype->getName()<<"\n";
+        else
+            errs()<<"AnnonymouseType\n";
         for (auto m: (*msi.second))
         {
             if (m->hasName())
@@ -1041,6 +1063,34 @@ void capchk::identify_logical_module(Module& module)
     }
     errs()<<"\n";
 #endif
+}
+
+void capchk::populate_indcall_list_through_kinterface(Module& module)
+{
+    //indirect call is load+gep and can be found in mi2m?
+    for (auto* idc: idcs)
+    {
+        if (Function* func = get_callee_function_direct(idc))
+        {
+            FunctionSet* funcs = idcs2callee[idc];
+            if (funcs==NULL)
+            {
+                funcs = new FunctionSet;
+                idcs2callee[idc] = funcs;
+            }
+            funcs->insert(func);
+            continue;
+        }
+        FunctionSet fs = resolve_indirect_callee(idc);
+        FunctionSet *funcs = idcs2callee[idc];
+        if (funcs==NULL)
+        {
+            funcs = new FunctionSet;
+            idcs2callee[idc] = funcs;
+        }
+        for (auto f:fs)
+            funcs->insert(f);
+    }
 }
 
 void capchk::collect_pp(Module& module)
@@ -1590,7 +1640,12 @@ void capchk::check_critical_function_usage(Module& module)
                             (static_cast<const CallInst*>(callees.first));
             for (auto* f: *callees.second)
                 if (f==func)
+                {
+                    errs()<<ANSI_COLOR_RED<<"indirect call @ ";
+                    cs->getDebugLoc().print(errs());
+                    errs()<<"\n";
                     backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
+                }
         }
         //summary
         if (bad!=0)
@@ -1887,7 +1942,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
             errs()<<"Add call<direct> "<<csf->getName()<<" use @ ";
             cs->getDebugLoc().print(errs());
             errs()<<"\n cause:";
-            dump_dbgstk();
+            dump_dbgstk(dbgstk);
         }
 
         InstructionSet* ill = f2ci[csf];
@@ -1932,7 +1987,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
                 errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
                 cs->getDebugLoc().print(errs());
                 errs()<<"\n cause:";
-                dump_dbgstk();
+                dump_dbgstk(dbgstk);
             }
             InstructionSet* ill = f2ci[csf];
             if (ill==NULL)
@@ -1958,7 +2013,7 @@ void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_vari
             errs()<<"Add "<<gv->getName()<<" use @ ";
             ii->getDebugLoc().print(errs());
             errs()<<"\n cause:";
-            dump_dbgstk();
+            dump_dbgstk(dbgstk);
         }
         current_critical_variables.push_back(gv);
         InstructionSet* ill = v2ci[gv];
@@ -2090,7 +2145,7 @@ goodret:
         errs()<<"Add struct "<<t->getStructName()<<" use @ ";
         i->getDebugLoc().print(errs());
         errs()<<"\n cause:";
-        dump_dbgstk();
+        dump_dbgstk(dbgstk);
     }
 
     return;
@@ -2275,7 +2330,7 @@ add:
                         errs()<<ANSI_COLOR_YELLOW
                             <<"capability check used during kernel initialization\n"
                             <<ANSI_COLOR_RESET;
-                        dump_dbgstk();
+                        dump_dbgstk(dbgstk);
                         dbgstk.pop_back();
                     }
                     continue;
@@ -2397,6 +2452,8 @@ void capchk::process_cpgf(Module& module)
 
     errs()<<"Identify Logical Modules\n";
     STOP_WATCH_MON(WID_0, identify_logical_module(module));
+
+    STOP_WATCH_MON(WID_0, populate_indcall_list_through_kinterface(module));
 
     if (knob_capchk_cvf)
     {

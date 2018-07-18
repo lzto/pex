@@ -32,5 +32,8 @@ Type* get_load_from_type(Value*);
 void get_gep_indicies(GetElementPtrInst*, std::list<int>&);
 Value* get_value_from_composit(Value*, std::list<int>&);
 
+void dump_dbgstk(InstructionList&);
+void dump_gdblst(ValueList&);
+
 #endif //_GATLING_UTILITY_
 

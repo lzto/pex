@@ -6,6 +6,8 @@
 #include "utility.h"
 #include "color.h"
 
+static InstructionList dbgstk;
+static ValueList dbglst;
 /*
  * user can trace back to function argument?
  * only support simple wrapper
@@ -173,29 +175,55 @@ void get_gep_indicies(GetElementPtrInst* gep, std::list<int>& indices)
     }
 }
 
+extern Instruction* x_dbg_ins;
+extern std::list<int> x_dbg_idx;
 
 static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
 {
     //cv must be global value
     GlobalVariable* gi = dyn_cast<GlobalVariable>(cv);
-    assert(gi);
-    Constant* initializer = gi->getInitializer();
+    Constant* initializer = dyn_cast<Constant>(cv);
     Value* ret = NULL;
+
+    dbglst.push_back(cv);
+
+    if (gi!=NULL)
+        initializer = gi->getInitializer();
+
+    if (!indices.size())
+    {
+        dbglst.pop_back();
+        return NULL;
+    }
 
     int i = indices.front();
     indices.pop_front();
     if (initializer->isZeroValue())
+    {
+        dbglst.pop_back();
         return NULL;
+    }
 
     Value* v = initializer->getAggregateElement(i);
+    assert(v!=cv);
     if (v==NULL)
     {
-        cv->print(errs());
-        errs()<<"\n want ";
+        dump_gdblst(dbglst);
         for (auto xxx: indices)
             errs()<<","<<xxx;
         errs()<<"\n";
+
+    ////////////////////
+        x_dbg_ins->print(errs());
+        errs()<<"\n";
+        x_dbg_ins->getDebugLoc().print(errs());
+        errs()<<"\n";
+        for (auto xxx: x_dbg_idx)
+            errs()<<","<<xxx;
+        errs()<<"\n";
+    ///////////////////
         llvm_unreachable("!!!");
+
     }
     v = v->stripPointerCasts();
     assert(v);
@@ -205,8 +233,13 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
         goto end;
     }
     if (indices.size())
-        return _get_value_from_composit(cv, indices);
+    {
+        ret = _get_value_from_composit(v, indices);
+        dbglst.pop_back();
+        return ret;
+    }
 end:
+    dbglst.pop_back();
     return ret;
 }
 
@@ -214,5 +247,34 @@ Value* get_value_from_composit(Value* cv, std::list<int>& indices)
 {
     std::list<int> i = std::list<int>(indices);
     return _get_value_from_composit(cv, i);
+}
+
+void dump_dbgstk(InstructionList& dbgstk)
+{
+    errs()<<ANSI_COLOR_GREEN<<"Process Stack:"<<ANSI_COLOR_RESET<<"\n";
+    int cnt = 0;
+
+    for (auto* I: dbgstk)
+    {
+        errs()<<""<<cnt<<" "<<I->getFunction()->getName()<<" ";
+        I->getDebugLoc().print(errs());
+        errs()<<"\n";
+        cnt++;
+    }
+    errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
+}
+
+void dump_gdblst(ValueList& list)
+{
+    errs()<<ANSI_COLOR_GREEN<<"Process List:"<<ANSI_COLOR_RESET<<"\n";
+    int cnt = 0;
+    for (auto* I: list)
+    {
+        errs()<<"  "<<cnt<<":";
+        I->print(errs());
+        errs()<<"\n";
+        cnt++;
+    }
+    errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
 }
 

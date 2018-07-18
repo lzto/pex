@@ -97,6 +97,7 @@ class capchk : public ModulePass
         void collect_chkps(Module&);
         void identify_interesting_struct(Module&);
         void identify_logical_module(Module&);
+        void populate_indcall_list_through_kinterface(Module&);
         void cvf_resolve_all_indirect_callee(Module& module);
         void figure_out_gep_using_type_field(InstructionSet&,
                 const std::pair<Type*,std::unordered_set<int>>&, Module&);
@@ -181,8 +182,7 @@ class capchk : public ModulePass
         /*
          * for debug purpose
          */
-        InstructionList dbgstk;
-        void dump_dbgstk();
+
         void dump_as_good(InstructionList& callstk);
         void dump_as_bad(InstructionList& callstk);
         void dump_as_ignored(InstructionList& callstk);
