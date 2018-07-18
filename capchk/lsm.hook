@@ -29,8 +29,6 @@ security_file_permission
 security_file_receive
 security_file_send_sigiotask
 security_file_set_fowner
-security_fs_use
-security_genfs_sid
 security_ib_endport_sid
 security_ib_pkey_sid
 security_inet_conn_established
@@ -81,8 +79,6 @@ security_key_alloc
 security_key_free
 security_key_getsecurity
 security_key_permission
-security_member_sid
-security_mls_enabled
 security_mmap_addr
 security_mmap_file
 security_module_enable
@@ -102,8 +98,6 @@ security_net_peersid_resolve
 security_node_sid
 security_old_inode_init_security
 security_policycap_supported
-security_policydb_len
-security_port_sid
 security_prepare_creds
 security_ptrace_access_check
 security_ptrace_traceme

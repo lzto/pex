@@ -1,17 +1,523 @@
-* security_task_prctl
+security_kernel_read_file
 
-change process name using /proc/self/comm bypass prctl lsm hook
 
-* security_kernel_read_file
+--- Function Protected By Gating Function---
+kernel_read
+    security_kernel_read_file @ fs/exec.c:898:8
 
-several places called kernel_read without check including binfmt shlib firmware etc...
+Inspect Use of Function:kernel_read
 
-* security_file_mprotect
+ecryptfs_setattr
+coda_readdir
+load_elf_binary
+load_misc_binary
+load_script
+SyS_execve
 
-called mprotect_fixup in binfmt_elf without check
 
-* security_file_open
+================================================================================
+security_task_setpgid
 
-nfs open file without security check?
+--- Function Protected By Gating Function---
+change_pid
+    security_task_setpgid @ kernel/sys.c:1015:8 @[ kernel/sys.c:959:1 ]
+Inspect Use of Function:change_pid
+Use:fs/exec.c:1143:3 @[ fs/exec.c:1256:11 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 flush_old_exec fs/exec.c:1143:3 @[ fs/exec.c:1256:11 ]
+1 load_elf_binary.14742 fs/binfmt_elf.c:864:11
+-------------
+Use:fs/exec.c:1143:3 @[ fs/exec.c:1256:11 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 flush_old_exec fs/exec.c:1143:3 @[ fs/exec.c:1256:11 ]
+1 load_elf_binary fs/binfmt_elf.c:864:11
+-------------
+Use:kernel/sys.c:1103:3 @[ kernel/sys.c:1125:2 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 sys_setsid kernel/sys.c:1103:3 @[ kernel/sys.c:1125:2 ]
+-------------
+Use:kernel/sys.c:1100:3 @[ kernel/sys.c:1125:2 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 sys_setsid kernel/sys.c:1100:3 @[ kernel/sys.c:1125:2 ]
+-------------
+Good: 1 Bad: 4 Ignored: 7
+
+================================================================================
+security_task_setnice
+
+--- Function Protected By Gating Function---
+set_user_nice
+    security_task_setnice @ kernel/sched/core.c:3877:11 @[ kernel/sched/core.c:3861:1 ]
+    security_task_setnice @ kernel/sys.c:177:12
+
+Inspect Use of Function:set_user_nice
+Use:kernel/workqueue.c:1784:2
+=NO CHECK ON PATH=
+Call Stack:
+0 create_worker kernel/workqueue.c:1784:2
+1 alloc_unbound_pwq kernel/workqueue.c:3390:20 @[ kernel/workqueue.c:3539:9 ]
+2 apply_wqattrs_prepare kernel/workqueue.c:3695:25
+3 workqueue_set_unbound_cpumask kernel/workqueue.c:4922:9 @[ kernel/workqueue.c:4973:9 ]
+4 wq_unbound_cpumask_store kernel/workqueue.c:5239:9
+...
+
+
+================================================================================
+
+security_task_movememory
+
+--- Function Protected By Gating Function---
+migrate_pages
+    security_task_movememory @ mm/migrate.c:1786:9 @[ mm/migrate.c:1749:1 ]
+
+Inspect Use of Function:migrate_pages
+Use:mm/compaction.c:1613:9
+=NO CHECK ON PATH=
+Call Stack:
+0 compact_zone mm/compaction.c:1613:9
+1 compact_node mm/compaction.c:1843:3
+2 sysfs_compact_node mm/compaction.c:1897:3
+-------------
+Use:mm/mempolicy.c:1240:16 @[ mm/mempolicy.c:1342:9 @[ mm/mempolicy.c:1324:1 ] ]
+=NO CHECK ON PATH=
+Call Stack:
+0 SyS_mbind mm/mempolicy.c:1240:16 @[ mm/mempolicy.c:1342:9 @[ mm/mempolicy.c:1324:1 ] ]
+-------------
+Good: 1 Bad: 2 Ignored: 7
+
+================================================================================
+security_socket_bind
+
+--- Function Protected By Gating Function---
+rxrpc_bind
+    security_socket_bind @ net/socket.c:1452:10 @[ net/socket.c:1442:1 ]
+packet_bind
+    security_socket_bind @ net/socket.c:1452:10 @[ net/socket.c:1442:1 ]
+packet_bind_spkt
+    security_socket_bind @ net/socket.c:1452:10 @[ net/socket.c:1442:1 ]
+inet_bind
+    security_socket_bind @ net/socket.c:1452:10 @[ net/socket.c:1442:1 ]
+unix_bind
+    security_socket_bind @ net/socket.c:1452:10 @[ net/socket.c:1442:1 ]
+inet6_bind
+    security_socket_bind @ net/socket.c:1452:10 @[ net/socket.c:1442:1 ]
+netlink_bind
+    security_socket_bind @ net/socket.c:1452:10 @[ net/socket.c:1442:1 ]
+
+
+Inspect Use of Function:netlink_bind
+indirect call @ net/socket.c:3273:9
+Use:net/socket.c:3273:9
+=NO CHECK ON PATH=
+Call Stack:
+0 kernel_bind net/socket.c:3273:9
+1 rpc_localaddr net/sunrpc/clnt.c:1248:9 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+-------------
+================================================================================
+security_socket_connect
+
+--- Function Protected By Gating Function---
+sock_no_connect
+    security_socket_connect @ net/socket.c:1617:6 @[ net/socket.c:1602:1 ]
+inet_dgram_connect
+    security_socket_connect @ net/socket.c:1617:6 @[ net/socket.c:1602:1 ]
+rxrpc_connect
+    security_socket_connect @ net/socket.c:1617:6 @[ net/socket.c:1602:1 ]
+inet_stream_connect
+    security_socket_connect @ net/socket.c:1617:6 @[ net/socket.c:1602:1 ]
+unix_stream_connect
+    security_socket_connect @ net/socket.c:1617:6 @[ net/socket.c:1602:1 ]
+netlink_connect
+    security_socket_connect @ net/socket.c:1617:6 @[ net/socket.c:1602:1 ]
+unix_dgram_connect
+    security_socket_connect @ net/socket.c:1617:6 @[ net/socket.c:1602:1 ]
+
+Inspect Use of Function:unix_dgram_connect
+indirect call @ net/ceph/messenger.c:498:8 @[ net/ceph/messenger.c:2551:9 @[ net/ceph/messenger.c:2921:9 ] ]
+indirect call @ net/socket.c:1621:8 @[ net/socket.c:1602:1 ]
+indirect call @ fs/cifs/connect.c:3243:7
+indirect call @ net/socket.c:3311:9
+Use:net/socket.c:3311:9
+=NO CHECK ON PATH=
+Call Stack:
+0 kernel_connect net/socket.c:3311:9
+1 rpc_localaddr net/sunrpc/clnt.c:1266:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+-------------
+================================================================================
+security_socket_create
+
+sock_create...
+
+
+================================================================================
+
+security_socket_getpeername
+
+--- Function Protected By Gating Function---
+inet6_getname
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+packet_getname
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+inet_getname
+    security_socket_getpeername @ net/socket.c:1674:9 @[ net/socket.c:1665:1 ]
+
+
+Inspect Use of Function:inet_getname
+indirect call @ net/core/sock.c:1275:7
+Use:net/core/sock.c:1275:7
+=NO CHECK ON PATH=
+Call Stack:
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+-------------
+Use:net/core/sock.c:1275:7
+=NO CHECK ON PATH=
+Call Stack:
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+-------------
+indirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+Use:net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 SyS_getsockname net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+-------------
+indirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+indirect call @ net/socket.c:3318:9
+Use:net/socket.c:3318:9
+=NO CHECK ON PATH=
+Call Stack:
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+================================================================================
+security_socket_getsockname
+
+--- Function Protected By Gating Function---
+inet6_getname
+    security_socket_getsockname @ net/socket.c:1645:8 @[ net/socket.c:1634:1 ]
+packet_getname
+    security_socket_getsockname @ net/socket.c:1645:8 @[ net/socket.c:1634:1 ]
+inet_getname
+    security_socket_getsockname @ net/socket.c:1645:8 @[ net/socket.c:1634:1 ]
+
+
+Inspect Use of Function:inet_getname
+indirect call @ net/core/sock.c:1275:7
+Use:net/core/sock.c:1275:7
+=NO CHECK ON PATH=
+Call Stack:
+0 sock_getsockopt net/core/sock.c:1275:7
+1 compat_SyS_getsockopt net/compat.c:447:9 @[ net/compat.c:520:10 @[ net/compat.c:506:1 ] ]
+-------------
+Use:net/core/sock.c:1275:7
+=NO CHECK ON PATH=
+Call Stack:
+0 sock_getsockopt net/core/sock.c:1275:7
+1 kernel_getsockopt net/socket.c:3342:9
+2 SyS_getsockopt net/socket.c:1862:8 @[ net/socket.c:1844:1 ]
+-------------
+indirect call @ net/socket.c:3325:9
+indirect call @ net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+Use:net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 SyS_accept4 net/socket.c:1558:7 @[ net/socket.c:1504:1 ]
+-------------
+indirect call @ net/socket.c:1649:8 @[ net/socket.c:1634:1 ]
+indirect call @ net/socket.c:3318:9
+Use:net/socket.c:3318:9
+=NO CHECK ON PATH=
+Call Stack:
+0 kernel_getsockname net/socket.c:3318:9
+1 rpc_localaddr net/sunrpc/clnt.c:1272:8 @[ net/sunrpc/clnt.c:1356:8 ]
+2 nfs4_init_client fs/nfs/nfs4client.c:385:11
+-------------
+indirect call @ net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+Use:net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 SyS_getpeername net/socket.c:1681:7 @[ net/socket.c:1665:1 ]
+-------------
+Good: 1 Bad: 9 Ignored: 31
+================================================================================
+security_socket_sendmsg
+--- Function Protected By Gating Function---
+inet_sendmsg
+    security_socket_sendmsg @ net/socket.c:645:12 @[ net/socket.c:2028:8 ]
+    security_socket_sendmsg @ net/socket.c:645:12 @[ net/socket.c:656:9 ]
+    security_socket_sendmsg @ net/socket.c:645:12 @[ net/socket.c:917:8 ]
+    security_socket_sendmsg @ net/socket.c:645:12 @[ net/socket.c:1729:8 @[ net/socket.c:1697:1 ] ]
+    security_socket_sendmsg @ net/socket.c:645:12
+
+Inspect Use of Function:inet_sendmsg
+indirect call @ net/socket.c:638:12 @[ net/socket.c:648:16 @[ net/socket.c:656:9 ] ]
+indirect call @ net/socket.c:638:12 @[ net/socket.c:648:16 @[ net/socket.c:2028:8 ] ]
+indirect call @ net/socket.c:638:12 @[ net/socket.c:648:16 ]
+indirect call @ net/socket.c:638:12 @[ net/socket.c:648:16 @[ net/socket.c:1729:8 @[ net/socket.c:1697:1 ] ] ]
+indirect call @ net/socket.c:638:12 @[ net/socket.c:648:16 @[ net/socket.c:917:8 ] ]
+indirect call @ net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+Use:net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ___sys_sendmsg net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+1 __sys_sendmmsg net/socket.c:2118:10
+2 compat_SyS_sendmmsg net/compat.c:745:9 @[ net/compat.c:742:1 ]
+-------------
+Use:net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ___sys_sendmsg net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+1 __sys_sendmmsg net/socket.c:2118:10
+2 SyS_sendmmsg net/socket.c:2149:9 @[ net/socket.c:2144:1 ]
+-------------
+Use:net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ___sys_sendmsg net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+1 SyS_sendmsg net/socket.c:2062:8 @[ net/socket.c:2073:9 @[ net/socket.c:2069:1 ] ]
+-------------
+Use:net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ___sys_sendmsg net/socket.c:638:12 @[ net/socket.c:2025:9 ]
+1 __sys_sendmsg net/socket.c:2062:8
+2 compat_SyS_sendmsg net/compat.c:739:9 @[ net/compat.c:737:1 ]
+-------------
+Good: 5 Bad: 4 Ignored: 0
+
+
+================================================================================
+security_sb_mount
+
+--- Function Protected By Gating Function---
+do_add_mount
+    security_sb_mount @ fs/namespace.c:2786:11
+vfs_kern_mount
+    security_sb_mount @ fs/namespace.c:2786:11
+
+Inspect Use of Function:do_add_mount
+Use:fs/namespace.c:2547:8
+=NO CHECK ON PATH=
+Call Stack:
+0 finish_automount fs/namespace.c:2547:8
+1 follow_managed fs/namei.c:1167:8 @[ fs/namei.c:1238:10 ]
+2 path_openat fs/namei.c:3328:10 @[ fs/namei.c:3520:12 ]
+3 do_filp_open fs/namei.c:3558:10
+4 SyS_uselib fs/exec.c:136:9 @[ fs/exec.c:120:1 ]
+-------------
+Use:fs/namespace.c:2547:8
+=NO CHECK ON PATH=
+Call Stack:
+0 finish_automount fs/namespace.c:2547:8
+1 follow_managed fs/namei.c:1167:8 @[ fs/namei.c:1238:10 ]
+2 path_openat fs/namei.c:3328:10 @[ fs/namei.c:3520:12 ]
+3 do_filp_open fs/namei.c:3558:10
+4 do_open_execat fs/exec.c:849:9
+5 do_execveat_common fs/exec.c:1740:9
+6 compat_SyS_execveat fs/exec.c:1890:9 @[ fs/exec.c:1960:9 @[ fs/exec.c:1952:1 ] ]
+-------------
+...
+
+Inspect Use of Function:vfs_kern_mount
+Use:fs/nfs/nfs4super.c:145:13
+=NO CHECK ON PATH=
+Call Stack:
+0 nfs_do_root_mount fs/nfs/nfs4super.c:145:13
+1 nfs4_try_mount fs/nfs/nfs4super.c:250:13
+
+
+
+================================================================================
+security_ptrace_access_check
+--- Function Protected By Gating Function---
+proc_ptrace_connector
+    security_ptrace_access_check @ kernel/ptrace.c:331:9
+
+
+Inspect Use of Function:proc_ptrace_connector
+Use:kernel/ptrace.c:551:2 @[ kernel/ptrace.c:1023:9 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ptrace_request kernel/ptrace.c:551:2 @[ kernel/ptrace.c:1023:9 ]
+1 compat_ptrace_request kernel/ptrace.c:1264:9
+2 compat_arch_ptrace arch/x86/kernel/ptrace.c:1141:10 @[ arch/x86/kernel/ptrace.c:1245:9 ]
+3 compat_SyS_ptrace kernel/ptrace.c:1301:9 @[ kernel/ptrace.c:1270:1 ]
+-------------
+Use:kernel/ptrace.c:551:2 @[ kernel/ptrace.c:1023:9 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ptrace_request kernel/ptrace.c:551:2 @[ kernel/ptrace.c:1023:9 ]
+1 arch_ptrace arch/x86/kernel/ptrace.c:877:9
+2 SyS_ptrace kernel/ptrace.c:1156:8 @[ kernel/ptrace.c:1121:1 ]
+-------------
+Good: 1 Bad: 2 Ignored: 8
+
+================================================================================
+
+security_mmap_addr
+
+--- Function Protected By Gating Function---
+anon_vma_interval_tree_insert
+    security_mmap_addr @ mm/mmap.c:2337:10
+
+Use:mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 anon_vma_clone mm/rmap.c:143:2 @[ mm/rmap.c:278:3 ]
+1 __split_vma mm/mmap.c:2584:8
+2 do_munmap mm/mmap.c:2687:15
+3 SyS_mremap mm/mremap.c:465:8 @[ mm/mremap.c:560:9 @[ mm/mremap.c:523:1 ] ]
+-------------
+Good: 33 Bad: 7 Ignored: 58
+================================================================================
+
+security_mmap_file
+
+Inspect Use of Function:do_mmap
+Use:./include/linux/mm.h:2217:9 @[ mm/mmap.c:2846:8 @[ mm/mmap.c:2762:1 ] ]
+=NO CHECK ON PATH=
+Call Stack:
+0 SyS_remap_file_pages ./include/linux/mm.h:2217:9 @[ mm/mmap.c:2846:8 @[ mm/mmap.c:2762:1 ] ]
+-------------
+Good: 2 Bad: 3 Ignored: 0
+
+================================================================================
+security_inode_readlink
+
+several places where link policy is bypassed
+
+================================================================================
+
+Reiserfs have lots of problem..
+overlayfs have lots of problem...
+other fs
+no security_inode_* check
+call fs_op->? directly
+================================================================================
+security_inode_mknod
+
+Inspect Use of Function:shmem_mknod
+Use:mm/shmem.c:3050:9
+=NO CHECK ON PATH=
+Call Stack:
+0 shmem_create mm/shmem.c:3050:9
+-------------
+Use:mm/shmem.c:3041:15
+=NO CHECK ON PATH=
+Call Stack:
+0 shmem_mkdir mm/shmem.c:3041:15
+-------------
+Use:mm/shmem.c:3135:10 @[ mm/shmem.c:3175:11 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 shmem_rename2 mm/shmem.c:3135:10 @[ mm/shmem.c:3175:11 ]
+
+
+Inspect Use of Function:sysv_mknod
+Use:fs/sysv/namei.c:85:9
+=NO CHECK ON PATH=
+Call Stack:
+0 sysv_create fs/sysv/namei.c:85:9
+-------------
+Inspect Use of Function:ceph_mknod
+Use:fs/ceph/dir.c:860:9
+=NO CHECK ON PATH=
+Call Stack:
+0 ceph_create fs/ceph/dir.c:860:9
+-------------
+Inspect Use of Function:xfs_vn_mknod
+Use:fs/xfs/xfs_iops.c:244:9
+=NO CHECK ON PATH=
+Call Stack:
+0 xfs_vn_create fs/xfs/xfs_iops.c:244:9
+-------------
+Use:fs/xfs/xfs_iops.c:244:9
+=NO CHECK ON PATH=
+Call Stack:
+0 xfs_vn_create fs/xfs/xfs_iops.c:244:9
+-------------
+Use:fs/xfs/xfs_iops.c:253:9
+=NO CHECK ON PATH=
+Call Stack:
+0 xfs_vn_mkdir fs/xfs/xfs_iops.c:253:9
+-------------
+Use:fs/xfs/xfs_iops.c:253:9
+=NO CHECK ON PATH=
+Call Stack:
+0 xfs_vn_mkdir fs/xfs/xfs_iops.c:253:9
+================================================================================
+
+security_inode_listxattr
+
+Use:fs/ecryptfs/inode.c:1059:7
+=NO CHECK ON PATH=
+Call Stack:
+0 ecryptfs_listxattr fs/ecryptfs/inode.c:1059:7
+-------------
+
+
+================================================================================
+security_inode_getattr
+
+overlay fs xfs compat_SyS_open_by_handle_at SyS_open_by_handle_at
+
+================================================================================
+
+security_file_ioctl
+
+redudant check or missing check?
+
+do_ioctl
+SYSCALL ioctl
+
+
+================================================================================
+
+security_file_lock
+
+fcntl64 
+
+================================================================================
+security_file_mprotect
+
+--- Function Protected By Gating Function---
+mprotect_fixup
+    security_file_mprotect @ mm/mprotect.c:485:11
+
+Inspect Use of Function:mprotect_fixup
+Use:fs/exec.c:751:8
+=NO CHECK ON PATH=
+Call Stack:
+0 setup_arg_pages fs/exec.c:751:8
+1 load_elf_binary.14742 fs/binfmt_elf.c:882:11
+-------------
+Use:fs/exec.c:751:8
+=NO CHECK ON PATH=
+Call Stack:
+0 setup_arg_pages fs/exec.c:751:8
+1 load_elf_binary fs/binfmt_elf.c:882:11
+-------------
+Good: 1 Bad: 2 Ignored: 7
+
+================================================================================
+
+security_file_permission
+proc_reg_write no check?
+elf_core_dump no check?
+debug_fs_attr_read no check?
+
+================================================================================
+
+
+
+
 
 
