@@ -350,8 +350,64 @@ lots...
 
 
 
+--------------------------------------------------------------------------------
+block device driver ioctl()/compact_ioctl() can be invoked without check
+
+Inspect Use of Function:lo_ioctl
+Use:drivers/block/loop.c:1556:9
+=NO CHECK ON PATH=
+Call Stack:
+0 lo_compat_ioctl drivers/block/loop.c:1556:9
+-------------
+indirect call @ block/ioctl.c:303:10
+Use:block/ioctl.c:303:10
+=NO CHECK ON PATH=
+Call Stack:
+0 __blkdev_driver_ioctl block/ioctl.c:303:10
+1 dm_blk_ioctl drivers/md/dm.c:483:7
+-------------
+Use:block/ioctl.c:303:10
+=NO CHECK ON PATH=
+Call Stack:
+0 __blkdev_driver_ioctl block/ioctl.c:303:10
+1 compat_blkdev_ioctl block/compat_ioctl.c:173:9 @[ block/compat_ioctl.c:228:10 @[ block/compat_ioctl.c:408:10 ] ]
+-------------
+indirect call @ block/ioctl.c:303:10 @[ block/ioctl.c:432:8 @[ block/ioctl.c:521:10 ] ]
+indirect call @ block/ioctl.c:303:10 @[ block/ioctl.c:601:10 ]
+Use:block/ioctl.c:303:10 @[ block/ioctl.c:601:10 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 blkdev_ioctl block/ioctl.c:303:10 @[ block/ioctl.c:601:10 ]
+1 compat_blkdev_ioctl block/compat_ioctl.c:360:10
+-------------
+Use:block/ioctl.c:303:10 @[ block/ioctl.c:601:10 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 blkdev_ioctl block/ioctl.c:303:10 @[ block/ioctl.c:601:10 ]
+1 block_ioctl fs/block_dev.c:1860:9
+-------------
+indirect call @ block/ioctl.c:303:10 @[ block/ioctl.c:449:8 @[ block/ioctl.c:523:10 ] ]
+Good: 2 Bad: 5 Ignored: 34
 
 
+--------------------------------------------------------------------------------
+
+device can be enabled by writing into sysfs
+
+Inspect Use of Function:e1000e_phc_enable
+indirect call @ drivers/ptp/ptp_chardev.c:48:9 @[ drivers/ptp/ptp_chardev.c:103:3 ]
+Use:drivers/ptp/ptp_chardev.c:48:9 @[ drivers/ptp/ptp_chardev.c:103:3 ]
+=NO CHECK ON PATH=
+Call Stack:
+0 ptp_set_pinfunc drivers/ptp/ptp_chardev.c:48:9 @[ drivers/ptp/ptp_chardev.c:103:3 ]
+1 ptp_ioctl drivers/ptp/ptp_chardev.c:270:9
+-------------
+indirect call @ drivers/ptp/ptp_sysfs.c:127:8
+Use:drivers/ptp/ptp_sysfs.c:127:8
+=NO CHECK ON PATH=
+Call Stack:
+0 period_store drivers/ptp/ptp_sysfs.c:127:8
+-------------
 
 
 
