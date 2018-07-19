@@ -664,23 +664,11 @@ FunctionSet capchk::resolve_indirect_callee_using_kmi(CallInst* ci)
             ncvt = dyn_cast<PointerType>(ncvt)->getElementType();
         }else if (!ncvt->isStructTy())
         {
-            //what else can it be ?
-            cvt->print(errs());
-            errs()<<"\n";
-            ncvt->print(errs());
-            errs()<<"\n";
-            errs()<<ncvt->isAggregateType()<<":"
-                <<ncvt->isStructTy()<<"\n";
-            errs()<<"-----------\n";
-            x_dbg_ins->print(errs());
-            errs()<<"\n";
+            //bad cast! we lost type!
+            errs()<<ANSI_COLOR_RED<<"Bad cast! consider refactor code @ ";
             x_dbg_ins->getDebugLoc().print(errs());
-            errs()<<"\n";
-            for (auto xxx: x_dbg_idx)
-                errs()<<","<<xxx;
-            errs()<<"\n";
-
-            llvm_unreachable("!!!2");
+            errs()<<ANSI_COLOR_RESET<<"\n";
+            break;
         }
         cvt = ncvt;
         //cvt should be struct type!!!
@@ -754,18 +742,15 @@ void capchk::populate_indcall_list_using_cvf(Module& module)
 
 /*
  * need to populate idcs2callee before calling this function
+ * should not call into this function using direct call
  */
 FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
 {
     FunctionSet fs;
     if (ci->isInlineAsm())
         return fs;
-    if (Function* callee = get_callee_function_direct(ci))
-    {
-        //not indirect call
-        fs.insert(callee);
-        return fs;
-    }
+    if (get_callee_function_direct(ci))
+        llvm_unreachable("resolved into direct call!");
 
     auto _fs = idcs2callee.find(ci);
     if (_fs != idcs2callee.end())
