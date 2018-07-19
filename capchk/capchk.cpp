@@ -865,7 +865,68 @@ void capchk::identify_logical_module(Module& module)
         }
         ms->insert(gi);
     }
-
+    TypeList to_remove;
+    //resolve Annoymous type into known type
+    for (auto msi: mi2m)
+    {
+        StructType * stype = dyn_cast<StructType>(msi.first);
+        if (stype->hasName())
+            continue;
+        StructType *rstype = NULL;
+        for (auto m: (*msi.second))
+        {
+            //constant bitcast into struct
+            for (auto *_u: m->users())
+            {
+                ConstantExpr* u = dyn_cast<ConstantExpr>(_u);
+                BitCastInst* bciu = dyn_cast<BitCastInst>(_u);
+                PointerType* type = NULL;
+                if((u) && (u->isCast()))
+                {
+                    type = dyn_cast<PointerType>(u->getType());
+                    goto got_bitcast;
+                }
+                if (bciu)
+                {
+                    type = dyn_cast<PointerType>(bciu->getType());
+                    goto got_bitcast;
+                }
+                //what else???
+                continue;
+got_bitcast:
+                //struct object casted into non pointer type?
+                if (type==NULL)
+                    continue;
+                StructType* _stype = dyn_cast<StructType>(type->getElementType());
+                if ((!_stype) || (!_stype->hasName()))
+                    continue;
+                rstype = _stype;
+                goto out;
+            }
+        }
+out:
+        if (!rstype)
+            continue;
+        //resolved, merge with existing type
+        if (mi2m.find(rstype)!=mi2m.end())
+        {
+            ModuleSet* ms = mi2m[rstype];
+            for (auto m: (*msi.second))
+                ms->insert(m);
+        }
+        else
+        {
+            //does not exists? reuse current one!
+            mi2m[rstype] = msi.second;
+            mi2m[stype] = NULL;
+        }
+        to_remove.push_back(stype);
+    }
+    for (auto r: to_remove)
+    {
+        delete mi2m[r];
+        mi2m.erase(r);
+    }
 }
 
 void capchk::populate_indcall_list_through_kinterface(Module& module)

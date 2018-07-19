@@ -222,47 +222,38 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
     GlobalVariable* gi = dyn_cast<GlobalVariable>(cv);
     Constant* initializer = dyn_cast<Constant>(cv);
     Value* ret = NULL;
+    Value* v;
+    int i;
 
     dbglst.push_back(cv);
 
+    if (!indices.size())
+        goto end;
+
+    i = indices.front();
+    indices.pop_front();
+
     if (gi!=NULL)
         initializer = gi->getInitializer();
-
-    if (!indices.size())
-    {
-        dbglst.pop_back();
-        return NULL;
-    }
-
-    int i = indices.front();
-    indices.pop_front();
+    else
+        goto end;
+again:
+    /*
+     * no initializer? the member of struct in question does not have a
+     * concreat assignment, we can return now.
+     */
+    if (initializer==NULL)
+        goto end;
     if (initializer->isZeroValue())
-    {
-        dbglst.pop_back();
-        return NULL;
-    }
-
-    Value* v = initializer->getAggregateElement(i);
+        goto end;
+    v = initializer->getAggregateElement(i);
     assert(v!=cv);
     if (v==NULL)
     {
-        dump_gdblst(dbglst);
-        for (auto xxx: indices)
-            errs()<<","<<xxx;
-        errs()<<"\n";
-
-    ////////////////////
-        x_dbg_ins->print(errs());
-        errs()<<"\n";
-        x_dbg_ins->getDebugLoc().print(errs());
-        errs()<<"\n";
-        for (auto xxx: x_dbg_idx)
-            errs()<<","<<xxx;
-        errs()<<"\n";
-    ///////////////////
-        llvm_unreachable("!!!");
-
+        initializer = initializer->getAggregateElement((unsigned)0);
+        goto again;
     }
+
     v = v->stripPointerCasts();
     assert(v);
     if (isa<Function>(v))
@@ -273,8 +264,6 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
     if (indices.size())
     {
         ret = _get_value_from_composit(v, indices);
-        dbglst.pop_back();
-        return ret;
     }
 end:
     dbglst.pop_back();
