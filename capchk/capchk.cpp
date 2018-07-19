@@ -594,17 +594,167 @@ again:
     STOP_WATCH_STOP(WID_KINIT);
     STOP_WATCH_REPORT(WID_KINIT);
 
-
-#if 0
-//this is imprecise, clear it
-    errs()<<"clear NON-kernel-init functions\n";
-    non_kernel_init_functions.clear();
-#endif
     dump_kinit();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//resolve indirect callee
+/*
+ * resolve indirect callee
+ * method 1 suffers from accuracy issue
+ * method 2 is too slow
+ * method 3 use the fact that most indirect call use function pointer loaded
+ *          from struct(mi2m, kernel interface)
+ */
+
+//method 3, improved accuracy
+FunctionSet capchk::resolve_indirect_callee_using_kmi(CallInst* ci)
+{
+    FunctionSet fs;
+    Value* cv = ci->getCalledValue();
+    Type* cvt = get_load_from_type(cv);
+    GetElementPtrInst* gep;
+    std::list<int> indices;
+    if (!cvt || !cvt->isStructTy())
+    {
+        //not load+gep?
+        goto end;
+    }
+    //need to find till gep is exhausted and mi2m doesn't have a match
+    gep = get_load_from_gep(cv);
+    x_dbg_ins = gep;
+    get_gep_indicies(gep, indices);
+    x_dbg_idx = indices;
+    if (indices.size()==0)//non-constant in indicies
+        goto end;
+    //should remove first element because we already resolved it?
+    indices.pop_front();
+    while(1)
+    {
+        ModuleSet ms;
+        find_in_mi2m(cvt, ms);
+        if (ms.size())
+        {
+            for (auto m: ms)
+            {
+                Value* v = get_value_from_composit(m, indices);
+                if (v==NULL)
+                    continue;
+                Function *f = dyn_cast<Function>(v);
+                assert(f);
+                fs.insert(f);
+            }
+            break;
+        }
+        if (indices.size()<=1)
+        {
+            //no match!
+            break;
+        }
+        //no match, we can try inner element
+        int idc = indices.front();
+        indices.pop_front();
+        if (!cvt->isStructTy())
+        {
+            cvt->print(errs());
+            llvm_unreachable("!!!1");
+        }
+        Type* ncvt = cvt->getStructElementType(idc);
+        if (ncvt->isPointerTy())
+        {
+            ncvt = dyn_cast<PointerType>(ncvt)->getElementType();
+        }else if (!ncvt->isStructTy())
+        {
+            //what else can it be ?
+            cvt->print(errs());
+            errs()<<"\n";
+            ncvt->print(errs());
+            errs()<<"\n";
+            errs()<<ncvt->isAggregateType()<<":"
+                <<ncvt->isStructTy()<<"\n";
+            errs()<<"-----------\n";
+            x_dbg_ins->print(errs());
+            errs()<<"\n";
+            x_dbg_ins->getDebugLoc().print(errs());
+            errs()<<"\n";
+            for (auto xxx: x_dbg_idx)
+                errs()<<","<<xxx;
+            errs()<<"\n";
+
+            llvm_unreachable("!!!2");
+        }
+        cvt = ncvt;
+        //cvt should be struct type!!!
+    }
+end:
+    return fs;
+}
+
+void capchk::populate_indcall_list_through_kmi(Module& module)
+{
+    //indirect call is load+gep and can be found in mi2m?
+    for (auto* idc: idcs)
+    {
+        FunctionSet fs = resolve_indirect_callee_using_kmi(idc);
+        FunctionSet *funcs = idcs2callee[idc];
+        if (funcs==NULL)
+        {
+            funcs = new FunctionSet;
+            idcs2callee[idc] = funcs;
+        }
+        for (auto f:fs)
+            funcs->insert(f);
+    }
+}
+
+
+/*
+ * method 2: cvf: Complex Value Flow Analysis
+ * figure out candidate for indirect callee using value flow analysis
+ */
+void capchk::populate_indcall_list_using_cvf(Module& module)
+{
+    //create svf instance
+    CVFA cvfa;
+    //initialize, this will take some time
+    cvfa.initialize(module);
+
+    //do analysis(idcs=sink)
+    //find out all possible value of indirect callee
+    errs()<<ANSI_COLOR(BG_WHITE, FG_BLUE)
+        <<"SVF indirect call track:"
+        <<ANSI_COLOR_RESET<<"\n";
+    for (auto f: all_functions)
+    {
+        ConstInstructionSet css;
+        cvfa.get_callee_function_indirect(f, css);
+        if (css.size()==0)
+            continue;
+        errs()<<ANSI_COLOR(BG_CYAN, FG_WHITE)
+            <<"FUNC:"<<f->getName()
+            <<", found "<<css.size()
+            <<ANSI_COLOR_RESET<<"\n";
+        for (auto* _ci: css)
+        {
+            const CallInst* ci = dyn_cast<CallInst>(_ci);
+            FunctionSet* funcs = idcs2callee[ci];
+            if (funcs==NULL)
+            {
+                funcs = new FunctionSet;
+                idcs2callee[ci] = funcs;
+            }
+            funcs->insert(f);
+#if 1
+            errs()<<"CallSite: ";
+            ci->getDebugLoc().print(errs());
+            errs()<<"\n";
+#endif
+        }
+    }
+}
+
+/*
+ * need to populate idcs2callee before calling this function
+ */
 FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
 {
     FunctionSet fs;
@@ -617,15 +767,13 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
         return fs;
     }
 
-    /*
-     * method 1 suffers from accuracy issue
-     * method 2 is too slow
-     * method 3 use the fact that most indirect call use function pointer loaded
-     *          from struct(mi2m, kernel interface)
-     */
-
-    if (!knob_capchk_cvf)
+    auto _fs = idcs2callee.find(ci);
+    if (_fs != idcs2callee.end())
     {
+        for (auto* f: *(_fs->second))
+            fs.insert(f);
+    }
+
 #if 0
     //FUZZY MATCHING
     //method 1: signature based matching
@@ -639,101 +787,10 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
         FunctionSet *fl = t2fs[ft];
         for (auto* f: *fl)
             fs.insert(f);
-#else
-        //method 3, improved accuracy
-        Value* cv = ci->getCalledValue();
-        Type* cvt = get_load_from_type(cv);
-        std::list<int> indices;
-        if (!cvt || !cvt->isStructTy())
-        {
-            //not load+gep?
-            goto end;
-        }
-        //need to find till gep is exhausted and mi2m doesn't have a match
-        GetElementPtrInst *gep = get_load_from_gep(cv);
-        x_dbg_ins = gep;
-        get_gep_indicies(gep, indices);
-        x_dbg_idx = indices;
-        if (indices.size()==0)//non-constant in indicies
-            goto end;
-        //should remove first element because we already resolved it?
-        indices.pop_front();
-        while(1)
-        {
-            ModuleSet ms;
-            find_in_mi2m(cvt, ms);
-            if (ms.size())
-            {
-                for (auto m: ms)
-                {
-                    Value* v = get_value_from_composit(m, indices);
-                    if (v==NULL)
-                        continue;
-                    Function *f = dyn_cast<Function>(v);
-                    assert(f);
-                    fs.insert(f);
-                }
-                break;
-            }
-            if (indices.size()<=1)
-            {
-                //no match!
-                break;
-            }
-            //no match, we can try inner element
-            int idc = indices.front();
-            indices.pop_front();
-            if (!cvt->isStructTy())
-            {
-                cvt->print(errs());
-                llvm_unreachable("!!!1");
-            }
-            Type* ncvt = cvt->getStructElementType(idc);
-            if (ncvt->isPointerTy())
-            {
-                ncvt = dyn_cast<PointerType>(ncvt)->getElementType();
-            }else if (!ncvt->isStructTy())
-            {
-                if (ncvt->isAggregateType())
-                {
-                    //TODO:what to do with it?
-                    break;
-                }
-                //what else can it be ?
-                cvt->print(errs());
-                errs()<<"\n";
-                ncvt->print(errs());
-                errs()<<"\n";
-                errs()<<ncvt->isAggregateType()<<":"
-                    <<ncvt->isStructTy()<<"\n";
-                errs()<<"-----------\n";
-                x_dbg_ins->print(errs());
-                errs()<<"\n";
-                x_dbg_ins->getDebugLoc().print(errs());
-                errs()<<"\n";
-                for (auto xxx: x_dbg_idx)
-                    errs()<<","<<xxx;
-                errs()<<"\n";
-
-                llvm_unreachable("!!!2");
-            }
-            cvt = ncvt;
-            //cvt should be struct type!!!
-        }
 #endif
-    }else
-    {
-    //method 2: use svf to figure out
-        auto _fs = idcs2callee.find(ci);
-        if (_fs != idcs2callee.end())
-        {
-            for (auto* f: *(_fs->second))
-                fs.insert(f);
-        }
-    }
-end:
     return fs;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 /*
  * collect all gating function callsite
@@ -828,7 +885,7 @@ void capchk::identify_interesting_struct(Module& module)
  * by upper layer
  * collect all global struct variable who have function pointer field
  */
-void capchk::identify_logical_module(Module& module)
+void capchk::identify_kmi(Module& module)
 {
     //Module::GlobalListType &globals = module.getGlobalList();
     //not an interesting type
@@ -926,23 +983,6 @@ out:
     {
         delete mi2m[r];
         mi2m.erase(r);
-    }
-}
-
-void capchk::populate_indcall_list_through_kinterface(Module& module)
-{
-    //indirect call is load+gep and can be found in mi2m?
-    for (auto* idc: idcs)
-    {
-        FunctionSet fs = resolve_indirect_callee(idc);
-        FunctionSet *funcs = idcs2callee[idc];
-        if (funcs==NULL)
-        {
-            funcs = new FunctionSet;
-            idcs2callee[idc] = funcs;
-        }
-        for (auto f:fs)
-            funcs->insert(f);
     }
 }
 
@@ -1376,85 +1416,6 @@ bool capchk::backward_slice_using_indcs(Function* func,
         return match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
     }
     return match_cs_using_cvf(func, callgraph, visited, good, bad, ignored);
-}
-
-/*
- * Complex Value Flow Analysis
- * figure out candidate for indirect callee using value flow analysis
- */
-void capchk::cvf_resolve_all_indirect_callee(Module& module)
-{
-#if 0
-    //collect all function pointer assignment(fptrassign=source)
-    for (Module::iterator mi = module.begin(), me = module.end(); mi != me; ++mi)
-    {
-        Function *func = dyn_cast<Function>(mi);
-        if (func->isDeclaration() || func->isIntrinsic())
-            continue;
-        for (auto* U: func->users())
-        {
-            Value* u = dyn_cast<Value>(U);
-            if (isa<CallInst>(U))
-                continue;
-            //not interested in pure bitcast?
-            if (Instruction* i = dyn_cast<Instruction>(u))
-                fptrassign.insert(i);
-        }
-    }
-#endif
-
-    //create svf instance
-    CVFA cvfa;
-    //initialize, this will take some time
-    cvfa.initialize(module);
-
-    //do analysis(idcs=sink)
-    //method 1, simple type cast, they are actually direct call
-    for (auto* idc: idcs)
-    {
-        if (Function* func = get_callee_function_direct(idc))
-        {
-            FunctionSet* funcs = idcs2callee[idc];
-            if (funcs==NULL)
-            {
-                funcs = new FunctionSet;
-                idcs2callee[idc] = funcs;
-            }
-            funcs->insert(func);
-        }
-    }
-    //method 2, value flow
-    //find out all possible value of indirect callee
-    errs()<<ANSI_COLOR(BG_WHITE, FG_BLUE)
-        <<"SVF indirect call track:"
-        <<ANSI_COLOR_RESET<<"\n";
-    for (auto f: all_functions)
-    {
-        ConstInstructionSet css;
-        cvfa.get_callee_function_indirect(f, css);
-        if (css.size()==0)
-            continue;
-        errs()<<ANSI_COLOR(BG_CYAN, FG_WHITE)
-            <<"FUNC:"<<f->getName()
-            <<", found "<<css.size()
-            <<ANSI_COLOR_RESET<<"\n";
-        for (auto* _ci: css)
-        {
-            const CallInst* ci = dyn_cast<CallInst>(_ci);
-            FunctionSet* funcs = idcs2callee[ci];
-            if (funcs==NULL)
-            {
-                funcs = new FunctionSet;
-                idcs2callee[ci] = funcs;
-            }
-            funcs->insert(f);
-#if 1
-            errs()<<"CallSite: ";
-            ci->getDebugLoc().print(errs());
-            errs()<<"\n";
-#endif
-        }
-    }
 }
 
 /*
@@ -2184,18 +2145,18 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Identify interesting struct\n";
     STOP_WATCH_MON(WID_0, identify_interesting_struct(module));
 
-    errs()<<"Identify Logical Modules\n";
-    STOP_WATCH_MON(WID_0, identify_logical_module(module));
-
-    dump_kmi();
-
-    errs()<<"Populate indirect callsite using kernel module interface\n";
-    STOP_WATCH_MON(WID_0, populate_indcall_list_through_kinterface(module));
 
     if (knob_capchk_cvf)
     {
-        errs()<<"Resolving callee for indirect call.\n";
-        STOP_WATCH_MON(WID_0, cvf_resolve_all_indirect_callee(module));
+        errs()<<"Resolve indirect callsite.\n";
+        STOP_WATCH_MON(WID_0, populate_indcall_list_using_cvf(module));
+    }else
+    {
+        errs()<<"Identify Kernel Modules Interface\n";
+        STOP_WATCH_MON(WID_0, identify_kmi(module));
+        dump_kmi();
+        errs()<<"Populate indirect callsite using kernel module interface\n";
+        STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
     }
 
     errs()<<"Collecting Initialization Closure.\n";

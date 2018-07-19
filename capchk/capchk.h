@@ -98,9 +98,13 @@ class capchk : public ModulePass
         void collect_crits(Module& module);
         void collect_chkps(Module&);
         void identify_interesting_struct(Module&);
-        void identify_logical_module(Module&);
-        void populate_indcall_list_through_kinterface(Module&);
-        void cvf_resolve_all_indirect_callee(Module& module);
+        void identify_kmi(Module&);
+
+        void populate_indcall_list_using_cvf(Module&);
+        void populate_indcall_list_through_kmi(Module&);
+        FunctionSet resolve_indirect_callee_using_kmi(CallInst*);
+        FunctionSet resolve_indirect_callee(CallInst*);
+
         void figure_out_gep_using_type_field(InstructionSet&,
                 const std::pair<Type*,std::unordered_set<int>>&, Module&);
 
@@ -135,8 +139,6 @@ class capchk : public ModulePass
         bool match_cs_using_cvf(Function*,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored);
-
-        FunctionSet resolve_indirect_callee(CallInst*);
 
         InstructionSet& discover_chks(Function* f);
         InstructionSet& discover_chks(Function* f, FunctionSet& visited);
