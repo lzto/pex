@@ -91,10 +91,11 @@ class capchk : public ModulePass
         /*
          * prepare
          */
+        void preprocess(Module& module);
+
         void collect_kernel_init_functions(Module& module);
         void collect_wrappers(Module& module);
         void collect_crits(Module& module);
-        void collect_pp(Module& module);
         void collect_chkps(Module&);
         void identify_interesting_struct(Module&);
         void identify_logical_module(Module&);
@@ -121,7 +122,7 @@ class capchk : public ModulePass
         void backward_slice_reachable_to_chk_function(Instruction* I,
                 int& good, int& bad, int& ignored);
 
-        bool bs_using_indcs(Function*,
+        bool backward_slice_using_indcs(Function*,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored);
 
@@ -163,6 +164,7 @@ class capchk : public ModulePass
         void dump_tf2ci();
         void dump_kinit();
         void dump_non_kinit();
+        void dump_kmi();
     
         void my_debug(Module& module);
 

@@ -49,6 +49,7 @@ opt \
 * caw - print check functions and wrappers discovered, default 1
 * kinit - print kernel init functions, default 1
 * nkinit - print kernel non init functions, default 1
+* kmi - kernel interface, default 0
 * cvf - complex value flow, default 0
 * skipfun - list of functions don't care
 * skipvar - list of variables don't care

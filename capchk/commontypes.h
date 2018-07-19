@@ -6,11 +6,11 @@
 #define _COMMON_TYPES_
 
 #include <list>
-#include <map>
-#include <unordered_map>
 #include <stack>
 #include <queue>
+#include <map>
 #include <set>
+#include <unordered_map>
 #include <unordered_set>
 
 #include <llvm/IR/Function.h>
@@ -19,11 +19,11 @@ using namespace llvm;
 
 enum _REACHABLE
 {
-    RFULL,
-    RPARTIAL,
-    RNONE,
-    RKINIT,//hit kernel init functions
-    RUNRESOLVEABLE,
+    RCHKED,//fully checked
+    RPRCHK,//partically checked
+    RNOCHK,//no check at all
+    RKINIT,//hit kernel init functions, ignored
+    RUNRESOLVEABLE,//unable to resolve due to indirect call
     RNA,//not available
 };
 

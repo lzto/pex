@@ -61,6 +61,10 @@ cl::opt<bool> knob_capchk_nkinit("nkinit",
         cl::desc("print kernel non init functions - enabled by default"),
         cl::init(true));
 
+cl::opt<bool> knob_capchk_kmi("kmi",
+        cl::desc("print kernel interface - disabled by default"),
+        cl::init(false));
+
 cl::opt<bool> knob_capchk_cvf("cvf",
         cl::desc("complex value flow analysis - disabled by default"),
         cl::init(false));

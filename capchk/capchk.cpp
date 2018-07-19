@@ -248,6 +248,37 @@ void capchk::dump_gating()
     gating->dump();
 }
 
+void capchk::dump_kmi()
+{
+    if (!knob_capchk_kmi)
+        return;
+    errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
+        <<"=Kernel Module Interfaces="
+        <<ANSI_COLOR_RESET<<"\n";
+    for (auto msi: mi2m)
+    {
+        StructType * stype = dyn_cast<StructType>(msi.first);
+        if (stype->hasName())
+            errs()<<ANSI_COLOR_RED
+                <<stype->getName()
+                <<ANSI_COLOR_RESET<<"\n";
+        else
+            errs()<<ANSI_COLOR_RED
+                <<"AnnonymouseType"
+                <<ANSI_COLOR_RESET<<"\n";
+        for (auto m: (*msi.second))
+        {
+            if (m->hasName())
+                errs()<<"    "<<ANSI_COLOR_CYAN
+                    <<m->getName()<<ANSI_COLOR_RESET<<"\n";
+            else
+                errs()<<"    "<<ANSI_COLOR_CYAN
+                    <<"Annoymous"<<ANSI_COLOR_RESET<<"\n";
+        }
+    }
+    errs()<<"=o=\n";
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 /*
  * is this function type contains non-trivial(non-primary) type?
@@ -704,14 +735,16 @@ end:
     return fs;
 }
 
+/*
+ * collect all gating function callsite
+ * ----
+ * f2chks: Function to Gating Function CallSite
+ */
 void capchk::collect_chkps(Module& module)
 {
-    for (Module::iterator fi = module.begin(), f_end = module.end();
-            fi != f_end; ++fi)
+    for (auto func: all_functions)
     {
-        Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration() || func->isIntrinsic()
-                ||gating->is_gating_function(func))
+        if (gating->is_gating_function(func))
             continue;
         
         InstructionSet *chks = f2chks[func];
@@ -832,26 +865,7 @@ void capchk::identify_logical_module(Module& module)
         }
         ms->insert(gi);
     }
-    //debug
-#if 0
-    errs()<<"Kernel Module Interfaces:\n";
-    for (auto msi: mi2m)
-    {
-        StructType * stype = dyn_cast<StructType>(msi.first);
-        if (stype->hasName())
-            errs()<<stype->getName()<<"\n";
-        else
-            errs()<<"AnnonymouseType\n";
-        for (auto m: (*msi.second))
-        {
-            if (m->hasName())
-                errs()<<"    "<<m->getName()<<"\n";
-            else
-                errs()<<"    Annoymous\n";
-        }
-    }
-    errs()<<"\n";
-#endif
+
 }
 
 void capchk::populate_indcall_list_through_kinterface(Module& module)
@@ -859,17 +873,6 @@ void capchk::populate_indcall_list_through_kinterface(Module& module)
     //indirect call is load+gep and can be found in mi2m?
     for (auto* idc: idcs)
     {
-        if (Function* func = get_callee_function_direct(idc))
-        {
-            FunctionSet* funcs = idcs2callee[idc];
-            if (funcs==NULL)
-            {
-                funcs = new FunctionSet;
-                idcs2callee[idc] = funcs;
-            }
-            funcs->insert(func);
-            continue;
-        }
         FunctionSet fs = resolve_indirect_callee(idc);
         FunctionSet *funcs = idcs2callee[idc];
         if (funcs==NULL)
@@ -882,9 +885,17 @@ void capchk::populate_indcall_list_through_kinterface(Module& module)
     }
 }
 
-void capchk::collect_pp(Module& module)
+/*
+ * populate cache
+ * --------------
+ * all_functions
+ * t2fs(Type to FunctionSet)
+ * syscall_list
+ * f2csi_type0 (Function to BitCast CallSite)
+ * idcs(indirect call site)
+ */
+void capchk::preprocess(Module& module)
 {
-    errs()<<"Collect all functions and indirect callsites\n";
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
@@ -951,7 +962,7 @@ void capchk::collect_crits(Module& module)
     {
         Function* func = pair.first;
         InstructionSet* _chks = pair.second;
-        if ((_chks==NULL) || gating->is_gating_function(func)
+        if ((_chks==NULL) || (_chks->size()==0) || gating->is_gating_function(func)
                 || is_skip_function(func->getName()))
             continue;
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
@@ -1036,10 +1047,10 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
     {
         switch(fvisited[f])
         {
-            case(RFULL):
+            case(RCHKED):
                 good++;
                 break;
-            case(RNONE):
+            case(RNOCHK):
                 bad++;
                 break;
             case(RNA):
@@ -1160,7 +1171,7 @@ void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
         }
     }
     //Indirect CallSite(also user of current function)
-    bs_using_indcs(f, callgraph, fvisited, good, bad, ignored);
+    backward_slice_using_indcs(f, callgraph, fvisited, good, bad, ignored);
 
 //intermediate.. just return.
 ignored_out:
@@ -1168,13 +1179,13 @@ ignored_out:
     return;
 
 good_out:
-    fvisited[f] = RFULL;
+    fvisited[f] = RCHKED;
     dump_as_good(callgraph);
     callgraph.pop_back();
     return;
 
 bad_out:
-    fvisited[f] = RNONE;
+    fvisited[f] = RNOCHK;
     dump_as_bad(callgraph);
     callgraph.pop_back();
     return;
@@ -1240,11 +1251,6 @@ bool capchk::match_cs_using_fptr_method_1(Function* func,
     for (auto* idc: idcs)
     {
         Value* cv = idc->getCalledValue();
-        //or strip function pointer can do the trick?
-        Function* _func = dyn_cast<Function>(cv->stripPointerCasts());
-        if (_func==func)
-            continue;
-
         Type* ft = cv->getType()->getPointerElementType();
         Type* ft2 = cv->stripPointerCasts()->getType()->getPointerElementType();
         if ((func_type == ft) || (func_type == ft2))
@@ -1291,20 +1297,22 @@ bool capchk::match_cs_using_cvf(Function* func,
     return cnt!=0;
 }
 
-bool capchk::bs_using_indcs(Function* func,
+bool capchk::backward_slice_using_indcs(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored)
 {
     bool ret;
+    /*
+     * direct call using bitcast
+     * this is exact match don't need to look further
+     */
+    ret = match_cs_using_fptr_method_0(func, callgraph, visited, good, bad, ignored);
+    if (ret)
+        return ret;
 
     if (!knob_capchk_cvf)
     {
-        ret = match_cs_using_fptr_method_0(func, callgraph, visited, good, bad, ignored);
-        //exact match don't need to look further
-        if (ret)
-            return ret;
-        ret = match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
-        return ret;
+        return match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
     }
     return match_cs_using_cvf(func, callgraph, visited, good, bad, ignored);
 }
@@ -2071,31 +2079,31 @@ void capchk::process_cpgf(Module& module)
      * pre-process
      * generate resource/functions from syscall entry function
      */
-    errs()<<"Pre-processing...\n";
-
+    errs()<<"Load supplimental files...\n";
     StringList builtin_skip_functions(std::begin(_builtin_skip_functions),
             std::end(_builtin_skip_functions));
     skip_funcs = new SimpleSet(knob_skip_func_list, builtin_skip_functions);
     if (!skip_funcs->use_builtin())
-        errs()<<"Load skip function list, total:"<<skip_funcs->size()<<"\n";
+        errs()<<"    - Skip function list, total:"<<skip_funcs->size()<<"\n";
 
     StringList builtin_skip_var(std::begin(_builtin_skip_var),
             std::end(_builtin_skip_var));
     skip_vars = new SimpleSet(knob_skip_var_list, builtin_skip_var);
     if (!skip_vars->use_builtin())
-        errs()<<"Load skip var list, total:"<<skip_vars->size()<<"\n";
+        errs()<<"    - Skip var list, total:"<<skip_vars->size()<<"\n";
 
     StringList builtin_crit_symbol;
     crit_syms = new SimpleSet(knob_crit_symbol, builtin_crit_symbol);
     if (!crit_syms->use_builtin())
-        errs()<<"Load critical symbols, total:"<<crit_syms->size()<<"\n";
+        errs()<<"    - Critical symbols, total:"<<crit_syms->size()<<"\n";
 
     StringList builtin_kapi;
     kernel_api = new SimpleSet(knob_kernel_api, builtin_kapi);
     if (!kernel_api->use_builtin())
-        errs()<<"Load kernel api list, total:"<<kernel_api->size()<<"\n";
+        errs()<<"    - Kernel API list, total:"<<kernel_api->size()<<"\n";
 
-    STOP_WATCH_MON(WID_0, collect_pp(module));
+    errs()<<"Pre-processing...\n";
+    STOP_WATCH_MON(WID_0, preprocess(module));
 
     errs()<<"Process Gating Functions\n";
     STOP_WATCH_START(WID_0);
@@ -2118,6 +2126,9 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Identify Logical Modules\n";
     STOP_WATCH_MON(WID_0, identify_logical_module(module));
 
+    dump_kmi();
+
+    errs()<<"Populate indirect callsite using kernel module interface\n";
     STOP_WATCH_MON(WID_0, populate_indcall_list_through_kinterface(module));
 
     if (knob_capchk_cvf)
