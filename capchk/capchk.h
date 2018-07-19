@@ -106,12 +106,6 @@ class capchk : public ModulePass
         void forward_all_interesting_usage(Instruction* I, unsigned int depth,
                 bool checked, InstructionList &callgraph,
                 InstructionList& chks);
-
-        void collect_scope(Instruction*, FunctionSet&);
-        void collect_backward_scope(Instruction* i, FunctionSet& scope,
-            InstructionList& callgraph, FunctionSet& visited);
-        void augment_scope(FunctionSet& scope);
-
         /*
          * analyze
          */
@@ -169,7 +163,6 @@ class capchk : public ModulePass
         void dump_tf2ci();
         void dump_kinit();
         void dump_non_kinit();
-        void dump_scope(FunctionSet&);
     
         void my_debug(Module& module);
 

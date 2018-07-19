@@ -113,10 +113,9 @@ bool capchk::is_used_by_static_assign_to_interesting_type(Value* v)
     return _is_used_by_static_assign_to_interesting_type(v, duchain);
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 /*
- * debug function, track process progress internally
+ * debug function
  */
 void capchk::dump_as_good(InstructionList& callstk)
 {
@@ -125,8 +124,8 @@ void capchk::dump_as_good(InstructionList& callstk)
     errs()<<ANSI_COLOR_MAGENTA<<"Use:";
     callstk.front()->getDebugLoc().print(errs());
     errs()<<ANSI_COLOR_RESET;
-    errs()<<ANSI_COLOR_GREEN
-        <<"=Meet Check On PATH"<<"="
+    errs()<<"\n"<<ANSI_COLOR_GREEN
+        <<"=GOOD PATH="
         <<ANSI_COLOR_RESET<<"\n";
     dump_callstack(callstk);
 }
@@ -139,7 +138,7 @@ void capchk::dump_as_bad(InstructionList& callstk)
     callstk.front()->getDebugLoc().print(errs());
     errs()<<ANSI_COLOR_RESET;
     errs()<<"\n"<<ANSI_COLOR_RED
-        <<"=NO CHECK ON PATH="
+        <<"=BAD PATH="
         <<ANSI_COLOR_RESET<<"\n";
     dump_callstack(callstk);
 }
@@ -198,21 +197,6 @@ void capchk::dump_tf2ci()
     errs()<<ANSI_COLOR(BG_CYAN, FG_WHITE)
         <<"--- Interesting Type fields and checks ---"
         <<ANSI_COLOR_RESET<<"\n";
-#if 0
-    for (auto v: critical_typefields)
-    {
-        StructType* t = dyn_cast<StructType>(v.first);
-        std::set<int>& fields = v.second;
-        if (t->hasName())
-            errs()<<t->getName();
-        else
-            errs()<<"AnnonymouseType";
-        errs()<<":";
-        for (auto i: fields)
-            errs()<<i<<",";
-        errs()<<"\n";
-    }
-#else
     for(auto& cis: t2ci)
     {
         StructType* t = dyn_cast<StructType>(cis.first);
@@ -227,7 +211,6 @@ void capchk::dump_tf2ci()
         errs()<<ANSI_COLOR_RESET<<"\n";
         gating->dump_interesting(cis.second);
     }
-#endif
 }
 
 void capchk::dump_kinit()
@@ -265,15 +248,6 @@ void capchk::dump_gating()
     gating->dump();
 }
 
-void capchk::dump_scope(FunctionSet& scope)
-{
-    errs()<<" scope("<<scope.size()<<"): ";
-    for(auto *f: scope)
-    {
-        errs()<<f->getName()<<",";
-    }
-    errs()<<"\n";
-}
 ////////////////////////////////////////////////////////////////////////////////
 /*
  * is this function type contains non-trivial(non-primary) type?
@@ -968,18 +942,18 @@ void capchk::collect_pp(Module& module)
     }
 }
 
+/*
+ * collect critical resources
+ */
 void capchk::collect_crits(Module& module)
 {
-    STOP_WATCH_START(WID_CC);
-    for (Module::iterator fi = module.begin(), f_end = module.end();
-            fi != f_end; ++fi)
+    for (auto pair: f2chks)
     {
-        Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration() || func->isIntrinsic()
-                || gating->is_gating_function(func)
+        Function* func = pair.first;
+        InstructionSet* _chks = pair.second;
+        if ((_chks==NULL) || gating->is_gating_function(func)
                 || is_skip_function(func->getName()))
             continue;
-
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
         InstructionList callgraph;
         InstructionList chks;
@@ -987,9 +961,6 @@ void capchk::collect_crits(Module& module)
                0, false, callgraph, chks);
         dbgstk.pop_back();
     }
-
-    STOP_WATCH_STOP(WID_CC);
-    STOP_WATCH_REPORT(WID_CC);
 
     CRITFUNC = critical_functions.size();
     CRITVAR = critical_variables.size();
@@ -1477,111 +1448,6 @@ void capchk::check_critical_function_usage(Module& module)
 }
 
 /*
- * collect our scope for value flow analysis
- * first go backward to see if we can reach to interesting point
- * (interesting struct, or syscall)
- * then go forward to collect all def-use chain from current I
- * - I: from where we start working
- * - scope: the result, empty scope means that it is not interesting
- */
-void capchk::collect_backward_scope(Instruction* i, FunctionSet& scope,
-        InstructionList& callgraph, FunctionSet& visited)
-{
-    if (callgraph.size()>knob_bwd_depth)
-        return;
-    Function *f = i->getFunction();
-    if (visited.count(f))
-        return;
-    visited.insert(f);
-    //dont care kinit functions
-    if (is_kernel_init_functions(f))
-        return;
-    //reached interesting point
-    if (is_syscall(f))
-    {
-        errs()<<"Add scope because reached syscall\n";
-        dump_callstack(callgraph);
-        for (auto *I: callgraph)
-            scope.insert(I->getFunction());
-        return;
-    }
-    //have other use of this function in callsite?
-    for (auto* u: f->users())
-    {
-        if (CallInst* ci = dyn_cast<CallInst>(u))
-        {
-            //should call this function
-            if (ci->getCalledFunction()!=f)
-                continue;
-            callgraph.push_back(ci);
-            collect_backward_scope(ci, scope, callgraph, visited);
-            callgraph.pop_back();
-        }else
-        {
-            if (!isa<Instruction>(u))
-                if (is_interesting_type(u->getType()))
-                {
-                    errs()<<"Add scope because reached interesting use\n";
-                    dump_callstack(callgraph);
-                    for (auto*I:callgraph)
-                        scope.insert(I->getFunction());
-                }
-        }
-    }
-}
-
-void capchk::augment_scope(FunctionSet& scope)
-{
-    FunctionSet workscope;
-    FunctionSet newscope;
-    for (auto *f: scope)
-        workscope.insert(f);
-again:
-    for(auto* f: workscope)
-    {
-        for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
-        {
-            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
-            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
-            {
-                if (!isa<CallInst>(ii))
-                    continue;
-                CallInst* ci = dyn_cast<CallInst>(ii);
-                Function* f = get_callee_function_direct(ci);
-                if (!f)
-                {
-                    //this is a indirect call, need to resolve this 
-                    continue;
-                }
-                if (!scope.count(f))
-                    newscope.insert(f);
-            }
-        }
-    }
-    workscope.clear();
-    for (auto *f: newscope)
-    {
-        workscope.insert(f);
-        scope.insert(f);
-    }
-    if (workscope.size())
-    {
-        newscope.clear();
-        goto again;
-    }
-}
-
-void capchk::collect_scope(Instruction* i, FunctionSet& scope)
-{
-    InstructionList callgraph;
-    FunctionSet visited;
-    callgraph.push_back(i);
-    collect_backward_scope(i, scope, callgraph, visited);
-    callgraph.pop_back();
-    //augment_scope(scope);
-}
-
-/*
  * run inter-procedural backward analysis to figure out whether the use of
  * critical variable can be reached from entry point without running check
  */
@@ -1609,22 +1475,7 @@ void capchk::check_critical_variable_usage(Module& module)
             //make sure this is not inside a kernel init function
             if (is_kernel_init_functions(f))
                 continue;
-#if 0
             //TODO: value flow
-            //collect our scope, which function can be reached from here
-            //go forward and backward
-            FunctionSet scope;
-            collect_scope(ui, scope);
-            //use unable to reach interesting point is discarded
-            if (scope.size()==0)
-                continue;
-            //InstructionList* IL = run_complex_value_flow(scope);
-            //for(auto* i:IL)
-            //{
-            //  workset.insert(i);
-            //}
-            dump_scope(scope);
-#endif
             workset.insert(ui);
         }
         for (auto* U: workset)
@@ -1817,6 +1668,9 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
     }
 }
 
+/*
+ * collect critical variable usage, if it uses global
+ */
 void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_variables,
         InstructionList& chks)
 {
@@ -1979,8 +1833,7 @@ goodret:
  * @chks: which checks are protecting us?
  */
 void capchk::forward_all_interesting_usage(Instruction* I, unsigned int depth,
-        bool checked, InstructionList& callgraph,
-        InstructionList& chks)
+        bool checked, InstructionList& callgraph, InstructionList& chks)
 {
     Function *func = I->getFunction();
     DominatorTree dt(*func);
@@ -2109,52 +1962,49 @@ add:
             crit_type_field_collect(si, current_critical_type_fields, chks);
         }
     }
-    /**********
-     * merge 
+    //still not checked???
+    if (!is_function_permission_checked)
+        goto out;
+    /*
+     * checked, merge forward slicing result(intra-) and collect more(inter-)
      */
-    if (is_function_permission_checked)
+    for (auto i: current_crit_funcs)
+        critical_functions.insert(i);
+    for (auto v: current_critical_variables)
+        critical_variables.insert(v);
+    for (auto v: current_critical_type_fields)
     {
-        //merge forward slicing result
-        for (auto i: current_crit_funcs)
-            critical_functions.insert(i);
-        for (auto v: current_critical_variables)
-            critical_variables.insert(v);
-        for (auto v: current_critical_type_fields)
+        Type* t = v.first;
+        std::unordered_set<int>& sset = v.second;
+        std::unordered_set<int>& dset = critical_typefields[t];
+        for (auto x: sset)
+            dset.insert(x);
+    }
+    //FIXME: handle indirect callsite
+    for (auto *U: func->users())
+    {
+        if (CallInst* cs = dyn_cast<CallInst>(U))
         {
-            Type* t = v.first;
-            std::unordered_set<int>& sset = v.second;
-            std::unordered_set<int>& dset = critical_typefields[t];
-            for (auto x: sset)
-                dset.insert(x);
-        }
-
-        //if functions is permission checked, we need to 
-        //and we need to check all use of this function
-        for (auto *U: func->users())
-        {
-            if (CallInst* cs = dyn_cast<CallInst>(U))
+            Function* pfunc = cs->getFunction();
+            if (pfunc->isIntrinsic())
+                continue;
+            if (is_kernel_init_functions(pfunc))
             {
-                Function* pfunc = cs->getFunction();
-                if (pfunc->isIntrinsic())
-                    continue;
-                if (is_kernel_init_functions(pfunc))
+                if (knob_warn_capchk_during_kinit)
                 {
-                    if (knob_warn_capchk_during_kinit)
-                    {
-                        dbgstk.push_back(cs);
-                        errs()<<ANSI_COLOR_YELLOW
-                            <<"capability check used during kernel initialization\n"
-                            <<ANSI_COLOR_RESET;
-                        dump_dbgstk(dbgstk);
-                        dbgstk.pop_back();
-                    }
-                    continue;
+                    dbgstk.push_back(cs);
+                    errs()<<ANSI_COLOR_YELLOW
+                        <<"capability check used during kernel initialization\n"
+                        <<ANSI_COLOR_RESET;
+                    dump_dbgstk(dbgstk);
+                    dbgstk.pop_back();
                 }
-
-                dbgstk.push_back(cs);
-                forward_all_interesting_usage(cs, depth+1, true, callgraph, chks);
-                dbgstk.pop_back();
+                continue;
             }
+
+            dbgstk.push_back(cs);
+            forward_all_interesting_usage(cs, depth+1, true, callgraph, chks);
+            dbgstk.pop_back();
         }
     }
 out:
