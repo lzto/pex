@@ -677,6 +677,11 @@ end:
     return fs;
 }
 
+/*
+ * create mapping for
+ *  indirect call site -> callee
+ *  callee -> indirect call site
+ */
 void capchk::populate_indcall_list_through_kmi(Module& module)
 {
     //indirect call is load+gep and can be found in mi2m?
@@ -690,7 +695,16 @@ void capchk::populate_indcall_list_through_kmi(Module& module)
             idcs2callee[idc] = funcs;
         }
         for (auto f:fs)
+        {
             funcs->insert(f);
+            InstructionSet* csis = f2csi_type1[f];
+            if (csis==NULL)
+            {
+                csis = new InstructionSet;
+                f2csi_type1[f] = csis;
+            }
+            csis->insert(idc);
+        }
     }
 }
 
@@ -1409,8 +1423,14 @@ bool capchk::backward_slice_using_indcs(Function* func,
 void capchk::check_critical_function_usage(Module& module)
 {
     FunctionList processed_flist;
-    //for each critical function find out all callsite(use)
-    //process one critical function at a time
+    /*
+     * collect critical indirect call site and check them in one shot
+     */
+    InstructionSet indirect_callsite_set;
+
+    /*
+     * for each critical function find out all callsite(use)
+     */
     for (Function* func:critical_functions)
     {
         if (!crit_syms->use_builtin())//means that not knob specified
@@ -1420,7 +1440,7 @@ void capchk::check_critical_function_usage(Module& module)
             continue;
 
         errs()<<ANSI_COLOR_YELLOW
-            <<"Inspect Use of Function:"
+            <<"Check Use of Function:"
             <<func->getName()
             <<ANSI_COLOR_RESET
             <<"\n";
@@ -1435,6 +1455,7 @@ void capchk::check_critical_function_usage(Module& module)
                 backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
         }
         //indirect call
+#if 0
         for (auto& callees: idcs2callee)
         {
             CallInst *cs = const_cast<CallInst*>
@@ -1442,12 +1463,15 @@ void capchk::check_critical_function_usage(Module& module)
             for (auto* f: *callees.second)
                 if (f==func)
                 {
-                    errs()<<ANSI_COLOR_RED<<"indirect call @ ";
-                    cs->getDebugLoc().print(errs());
-                    errs()<<"\n";
-                    backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
+                    indirect_callsite_set.insert(cs);
+                    break;
                 }
         }
+#else
+        if (f2csi_type1.find(func)!=f2csi_type1.end())
+            for (auto cs: *f2csi_type1[func])
+                indirect_callsite_set.insert(cs);
+#endif
         //summary
         if (bad!=0)
         {
@@ -1460,6 +1484,38 @@ void capchk::check_critical_function_usage(Module& module)
         GoodPath+=good;
         IgnPath+=ignored;
     }
+    //critical indirect call site
+    errs()<<ANSI_COLOR_YELLOW
+        <<"Check all other indirect call sites"
+        <<ANSI_COLOR_RESET<<"\n";
+    int good=0, bad=0, ignored=0;
+    for (auto cs: indirect_callsite_set)
+    {
+        errs()<<ANSI_COLOR_YELLOW<<"Check callee group:"
+            <<ANSI_COLOR_RESET<<"\n";
+        for(auto func: *idcs2callee[cs])
+        {
+            if (!crit_syms->use_builtin())//means that not knob specified
+                if (!crit_syms->exists(func->getName()))//means that symbol not matched
+                    continue;
+            if (is_skip_function(func->getName())
+                    || (critical_functions.find(func)==critical_functions.end()))
+                continue;
+            errs()<<"    "<<func->getName()<<"\n";
+        }
+        backward_slice_reachable_to_chk_function(cs, good, bad, ignored);
+    }
+    //summary
+    if (bad!=0)
+    {
+        errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
+              <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
+              <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
+              <<ANSI_COLOR_RESET<<"\n";
+    }
+    BadPath+=bad;
+    GoodPath+=good;
+    IgnPath+=ignored;
 }
 
 /*
