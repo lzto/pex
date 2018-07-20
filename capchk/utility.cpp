@@ -7,6 +7,8 @@
 #include "color.h"
 #include "internal.h"
 
+#include "llvm/Support/raw_ostream.h"
+
 static InstructionList dbgstk;
 static ValueList dbglst;
 /*
