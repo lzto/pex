@@ -7,10 +7,16 @@
 
 #include <fstream>
 
+/*
+ * _f: file name
+ * sl: builtin set
+ */
 SimpleSet::SimpleSet(const std::string& _f, const StringList sl)
-    :f(_f),builtin(sl)
+    :f(_f)
 {
     _use_builtin = false;
+    for (auto n: sl)
+        builtin.insert(n);
     load(f);
 }
 

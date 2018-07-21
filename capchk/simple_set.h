@@ -8,6 +8,8 @@
 
 #include "commontypes.h"
 
+#include <iterator>
+
 using namespace std;
 
 class SimpleSet
@@ -15,7 +17,7 @@ class SimpleSet
     private:
         void load(const string&);
         std::string f;
-        StringList builtin;
+        StringSet builtin;
         bool _use_builtin;
         StringSet vars;
 
@@ -25,6 +27,27 @@ class SimpleSet
         bool use_builtin();
         bool exists(const std::string&);
         size_t size();
+
+        /*
+         * iterator stuff
+         */
+        using iterator = StringSet::iterator;
+        using const_iterator = StringSet::const_iterator;
+
+        iterator begin()
+        {
+            if (_use_builtin)
+                return builtin.begin();
+            return vars.begin();
+        }
+
+        iterator end()
+        {
+            if (_use_builtin)
+                return builtin.end();
+            return vars.end();
+        }
+
 };
 
 #endif //_SIMPLE_SET_

@@ -25,6 +25,8 @@ using namespace llvm;
 #include "knobs.h"
 #include "capstat.h"
 
+#include "module_duplicator.h"
+
 char capchk::ID;
 Instruction* x_dbg_ins;
 std::list<int> x_dbg_idx;
@@ -717,8 +719,32 @@ void capchk::populate_indcall_list_using_cvf(Module& module)
 {
     //create svf instance
     CVFA cvfa;
-    //initialize, this will take some time
-    cvfa.initialize(module);
+
+    /*
+     * shrink our analyse scope
+     */
+    FunctionSet keep;
+    FunctionSet remove;
+    //add skip functions to remove
+    //add kernel_api to remove
+    for (auto n: *skip_funcs)
+        remove.insert(module.getFunction(n));
+    for (auto n: *kernel_api)
+        remove.insert(module.getFunction(n));
+    //add kernel_init_functions, syscall to keep
+    for (auto n: kernel_init_functions)
+        keep.insert(n);
+    for (auto n: syscall_list)
+        keep.insert(n);
+    ModuleDuplicator md(module, keep, remove);
+    Module& sm = md.getResult();
+
+    //CVF: Initialize, this will take some time
+    //cvfa.initialize(module);
+    cvfa.initialize(sm);
+    
+    //TODO:FIXME: map result from sm back to module
+    llvm_unreachable("TODO:FIXME");
 
     //do analysis(idcs=sink)
     //find out all possible value of indirect callee
@@ -2186,6 +2212,8 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Identify interesting struct\n";
     STOP_WATCH_MON(WID_0, identify_interesting_struct(module));
 
+    errs()<<"Collecting Initialization Closure.\n";
+    STOP_WATCH_MON(WID_0, collect_kernel_init_functions(module));
 
     if (knob_capchk_cvf)
     {
@@ -2199,9 +2227,6 @@ void capchk::process_cpgf(Module& module)
         errs()<<"Populate indirect callsite using kernel module interface\n";
         STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
     }
-
-    errs()<<"Collecting Initialization Closure.\n";
-    STOP_WATCH_MON(WID_0, collect_kernel_init_functions(module));
 
     errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_MON(WID_0, collect_crits(module));
