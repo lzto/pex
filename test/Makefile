@@ -7,7 +7,7 @@ OPT_FLAGS=-stats
 
 LINKER=$(TOOL_PREFIX)clang++
 
-SOPATH=../build/capchk/libcapchk.so
+SOPATH=../build/gatlin/libgatlin.so
 
 all:
 	$(TOOL_PREFIX)clang -O0 -c -emit-llvm chknchk.c -o test.bc ${CFLAGS}
@@ -15,7 +15,7 @@ all:
 	$(TOOL_PREFIX)opt \
 					-load=${SOPATH} \
 					test.bc \
-					-capchk \
+					-gatlin \
 					${OPT_FLAGS}
 	
 bin: all

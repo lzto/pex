@@ -1,6 +1,6 @@
 /*
- * This is capstat.h for capchk
- * This file should only be included in capchk.cpp
+ * This is capstat.h for gatlin
+ * This file should only be included in gatlin.cpp
  * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
  */
 #ifndef _CAPCHK_STAT_
@@ -28,7 +28,7 @@ STATISTIC(UnMatchCallCriticalFuncPtr, "# of times indirect call site failed to m
 STATISTIC(CapChkInFPTR, "found capability check inside call using function ptr\n");
 
 #ifdef CUSTOM_STATISTICS
-void capchk::dump_statistics()
+void gatlin::dump_statistics()
 {
     errs()<<"------------STATISTICS---------------\n";
     STATISTICS_DUMP(FuncCounter);

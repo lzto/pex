@@ -48,7 +48,7 @@
 #include "gating_function_base.h"
 #include "internal.h"
 
-#define DEBUG_TYPE "capchk"
+#define DEBUG_TYPE "gatlin"
 
 #if defined(DEBUG)
 #undef DEBUG
@@ -79,11 +79,11 @@ const char* X##_desc = Y;
 
 #endif
 
-class capchk : public ModulePass
+class gatlin : public ModulePass
 {
     private:
         virtual bool runOnModule(Module &) override;
-        bool capchkPass(Module &);
+        bool gatlinPass(Module &);
 
         //capability checker
         void process_cpgf(Module& module);
@@ -172,11 +172,11 @@ class capchk : public ModulePass
 
     public:
         static char ID;
-        capchk() : ModulePass(ID){};
+        gatlin() : ModulePass(ID){};
 
         virtual StringRef getPassName() const override
         {
-            return "capchk";
+            return "gatlin";
         }
 
         virtual void print(raw_ostream &OS, const Module *M)

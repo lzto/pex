@@ -4,7 +4,7 @@
  * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
  */
 
-#include "capchk.h"
+#include "gatlin.h"
 
 #include "cvfa.h"
 //my aux headers
@@ -27,7 +27,7 @@ using namespace llvm;
 
 #include "module_duplicator.h"
 
-char capchk::ID;
+char gatlin::ID;
 Instruction* x_dbg_ins;
 std::list<int> x_dbg_idx;
 
@@ -36,7 +36,7 @@ std::list<int> x_dbg_idx;
 /*
  * deal with struct name alias
  */
-void capchk::find_in_mi2m(Type* t, ModuleSet& ms)
+void gatlin::find_in_mi2m(Type* t, ModuleSet& ms)
 {
     ms.clear();
     StructType *st = dyn_cast<StructType>(t);
@@ -68,7 +68,7 @@ void capchk::find_in_mi2m(Type* t, ModuleSet& ms)
 /*
  * interesting type which contains functions pointers to deal with user request
  */
-bool capchk::is_interesting_type(Type* ty)
+bool gatlin::is_interesting_type(Type* ty)
 {
     if (!ty->isStructTy())
         return false;
@@ -84,7 +84,7 @@ bool capchk::is_interesting_type(Type* ty)
         return true;
     return false;
 }
-bool capchk::_is_used_by_static_assign_to_interesting_type(Value* v,
+bool gatlin::_is_used_by_static_assign_to_interesting_type(Value* v,
         std::unordered_set<Value*>& duchain)
 {
     if (duchain.count(v))
@@ -109,7 +109,7 @@ bool capchk::_is_used_by_static_assign_to_interesting_type(Value* v,
     return false;
 }
 
-bool capchk::is_used_by_static_assign_to_interesting_type(Value* v)
+bool gatlin::is_used_by_static_assign_to_interesting_type(Value* v)
 {
     std::unordered_set<Value*> duchain;
     return _is_used_by_static_assign_to_interesting_type(v, duchain);
@@ -119,7 +119,7 @@ bool capchk::is_used_by_static_assign_to_interesting_type(Value* v)
 /*
  * debug function
  */
-void capchk::dump_as_good(InstructionList& callstk)
+void gatlin::dump_as_good(InstructionList& callstk)
 {
     if (!knob_dump_good_path)
         return;
@@ -132,7 +132,7 @@ void capchk::dump_as_good(InstructionList& callstk)
     dump_callstack(callstk);
 }
 
-void capchk::dump_as_bad(InstructionList& callstk)
+void gatlin::dump_as_bad(InstructionList& callstk)
 {
     if (!knob_dump_bad_path)
         return;
@@ -145,7 +145,7 @@ void capchk::dump_as_bad(InstructionList& callstk)
     dump_callstack(callstk);
 }
 
-void capchk::dump_as_ignored(InstructionList& callstk)
+void gatlin::dump_as_ignored(InstructionList& callstk)
 {
     if (!knob_dump_ignore_path)
         return;
@@ -158,9 +158,9 @@ void capchk::dump_as_ignored(InstructionList& callstk)
     dump_callstack(callstk);
 }
 
-void capchk::dump_v2ci()
+void gatlin::dump_v2ci()
 {
-    if (!knob_capchk_v2c)
+    if (!knob_gatlin_v2c)
         return;
     errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
         <<"--- Variables Protected By Gating Function---"
@@ -173,9 +173,9 @@ void capchk::dump_v2ci()
     }
 }
 
-void capchk::dump_f2ci()
+void gatlin::dump_f2ci()
 {
-    if (!knob_capchk_f2c)
+    if (!knob_gatlin_f2c)
         return;
     errs()<<ANSI_COLOR(BG_BLUE,FG_WHITE)
         <<"--- Function Protected By Gating Function---"
@@ -191,9 +191,9 @@ void capchk::dump_f2ci()
 /*
  * dump interesting type field and guarding checks
  */
-void capchk::dump_tf2ci()
+void gatlin::dump_tf2ci()
 {
-    if (!knob_capchk_t2c)
+    if (!knob_gatlin_t2c)
         return;
 
     errs()<<ANSI_COLOR(BG_CYAN, FG_WHITE)
@@ -215,9 +215,9 @@ void capchk::dump_tf2ci()
     }
 }
 
-void capchk::dump_kinit()
+void gatlin::dump_kinit()
 {
-    if (!knob_capchk_kinit)
+    if (!knob_gatlin_kinit)
         return;
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
             <<"=Kernel Init Functions="
@@ -229,9 +229,9 @@ void capchk::dump_kinit()
     errs()<<"=o=\n";
 }
 
-void capchk::dump_non_kinit()
+void gatlin::dump_non_kinit()
 {
-    if (!knob_capchk_nkinit)
+    if (!knob_gatlin_nkinit)
         return;
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
             <<"=NON-Kernel Init Functions="
@@ -243,16 +243,16 @@ void capchk::dump_non_kinit()
     errs()<<"=o=\n";
 }
 
-void capchk::dump_gating()
+void gatlin::dump_gating()
 {
-    if (!knob_capchk_caw)
+    if (!knob_gatlin_caw)
         return;
     gating->dump();
 }
 
-void capchk::dump_kmi()
+void gatlin::dump_kmi()
 {
-    if (!knob_capchk_kmi)
+    if (!knob_gatlin_kmi)
         return;
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
         <<"=Kernel Module Interfaces="
@@ -285,7 +285,7 @@ void capchk::dump_kmi()
 /*
  * is this function type contains non-trivial(non-primary) type?
  */
-bool capchk::is_complex_type(Type* t)
+bool gatlin::is_complex_type(Type* t)
 {
     if (!t->isFunctionTy())
         return false;
@@ -333,7 +333,7 @@ again://to strip pointer
  * def/use global?
  * take care of phi node using `visited'
  */
-Value* capchk::get_global_def(Value* val, ValueSet& visited)
+Value* gatlin::get_global_def(Value* val, ValueSet& visited)
 {
     if (visited.count(val)!=0)
         return NULL;
@@ -355,13 +355,13 @@ Value* capchk::get_global_def(Value* val, ValueSet& visited)
     return NULL;
 }
 
-Value* capchk::get_global_def(Value* val)
+Value* gatlin::get_global_def(Value* val)
 {
     ValueSet visited;
     return get_global_def(val, visited);
 }
 
-bool capchk::is_rw_global(Value* val)
+bool gatlin::is_rw_global(Value* val)
 {
     ValueSet visited;
     return get_global_def(val, visited)!=NULL;
@@ -372,7 +372,7 @@ bool capchk::is_rw_global(Value* val)
  * if function f has single user which goes to start_kernel(),
  * then this is a init function
  */
-bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
+bool gatlin::is_kernel_init_functions(Function* f, FunctionSet& visited)
 {
     if (kernel_init_functions.count(f)!=0)
         return true;
@@ -419,13 +419,13 @@ bool capchk::is_kernel_init_functions(Function* f, FunctionSet& visited)
     return true;
 }
 
-bool capchk::is_kernel_init_functions(Function* f)
+bool gatlin::is_kernel_init_functions(Function* f)
 {
     FunctionSet visited;
     return is_kernel_init_functions(f, visited);
 }
 
-void capchk::collect_kernel_init_functions(Module& module)
+void gatlin::collect_kernel_init_functions(Module& module)
 {
     //kstart is the first function in boot sequence
     Function *kstart = NULL;
@@ -609,7 +609,7 @@ again:
  */
 
 //method 3, improved accuracy
-FunctionSet capchk::resolve_indirect_callee_using_kmi(CallInst* ci)
+FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
@@ -684,7 +684,7 @@ end:
  *  indirect call site -> callee
  *  callee -> indirect call site
  */
-void capchk::populate_indcall_list_through_kmi(Module& module)
+void gatlin::populate_indcall_list_through_kmi(Module& module)
 {
     //indirect call is load+gep and can be found in mi2m?
     for (auto* idc: idcs)
@@ -715,7 +715,7 @@ void capchk::populate_indcall_list_through_kmi(Module& module)
  * method 2: cvf: Complex Value Flow Analysis
  * figure out candidate for indirect callee using value flow analysis
  */
-void capchk::populate_indcall_list_using_cvf(Module& module)
+void gatlin::populate_indcall_list_using_cvf(Module& module)
 {
     //create svf instance
     CVFA cvfa;
@@ -784,7 +784,7 @@ void capchk::populate_indcall_list_using_cvf(Module& module)
  * need to populate idcs2callee before calling this function
  * should not call into this function using direct call
  */
-FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
+FunctionSet gatlin::resolve_indirect_callee(CallInst* ci)
 {
     FunctionSet fs;
     if (ci->isInlineAsm())
@@ -822,7 +822,7 @@ FunctionSet capchk::resolve_indirect_callee(CallInst* ci)
  * ----
  * f2chks: Function to Gating Function CallSite
  */
-void capchk::collect_chkps(Module& module)
+void gatlin::collect_chkps(Module& module)
 {
     for (auto func: all_functions)
     {
@@ -872,7 +872,7 @@ Value* find_struct_use(Value* f, ValueSet& visited)
 }
 
 
-void capchk::identify_interesting_struct(Module& module)
+void gatlin::identify_interesting_struct(Module& module)
 {
     for(auto& pair: f2chks)
     {
@@ -910,7 +910,7 @@ void capchk::identify_interesting_struct(Module& module)
  * by upper layer
  * collect all global struct variable who have function pointer field
  */
-void capchk::identify_kmi(Module& module)
+void gatlin::identify_kmi(Module& module)
 {
     //Module::GlobalListType &globals = module.getGlobalList();
     //not an interesting type
@@ -1020,7 +1020,7 @@ out:
  * f2csi_type0 (Function to BitCast CallSite)
  * idcs(indirect call site)
  */
-void capchk::preprocess(Module& module)
+void gatlin::preprocess(Module& module)
 {
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
@@ -1082,7 +1082,7 @@ void capchk::preprocess(Module& module)
 /*
  * collect critical resources
  */
-void capchk::collect_crits(Module& module)
+void gatlin::collect_crits(Module& module)
 {
     for (auto pair: f2chks)
     {
@@ -1106,7 +1106,7 @@ void capchk::collect_crits(Module& module)
 /*
  * discover checks inside functions f, including checks inside other callee
  */
-InstructionSet& capchk::discover_chks(Function* f, FunctionSet& visited)
+InstructionSet& gatlin::discover_chks(Function* f, FunctionSet& visited)
 {
     InstructionSet* ret;
     if (visited.count(f))
@@ -1145,7 +1145,7 @@ InstructionSet& capchk::discover_chks(Function* f, FunctionSet& visited)
     return *ret;
 }
 
-InstructionSet& capchk::discover_chks(Function* f)
+InstructionSet& gatlin::discover_chks(Function* f)
 {
     if (f2chks_disc.count(f)!=0)
         return *f2chks_disc[f];
@@ -1155,7 +1155,7 @@ InstructionSet& capchk::discover_chks(Function* f)
     return ret;
 }
 
-void capchk::backward_slice_build_callgraph(InstructionList &callgraph,
+void gatlin::backward_slice_build_callgraph(InstructionList &callgraph,
             Instruction* I, FunctionToCheckResult& fvisited, int& good, int& bad, int& ignored)
 {
     //we've reached the limit
@@ -1317,7 +1317,7 @@ bad_out:
     return;
 }
 
-void capchk::_backward_slice_reachable_to_chk_function(Instruction* I,
+void gatlin::_backward_slice_reachable_to_chk_function(Instruction* I,
         int& good, int& bad, int& ignored)
 {
     InstructionList callgraph;
@@ -1326,7 +1326,7 @@ void capchk::_backward_slice_reachable_to_chk_function(Instruction* I,
     return backward_slice_build_callgraph(callgraph, I, fvisited, good, bad, ignored);
 }
 
-void capchk::backward_slice_reachable_to_chk_function(Instruction* cs,
+void gatlin::backward_slice_reachable_to_chk_function(Instruction* cs,
         int& good, int& bad, int& ignored)
 {
     //collect all path and meet condition
@@ -1336,7 +1336,7 @@ void capchk::backward_slice_reachable_to_chk_function(Instruction* cs,
 /*
  * exact match with bitcast
  */
-bool capchk::match_cs_using_fptr_method_0(Function* func,
+bool gatlin::match_cs_using_fptr_method_0(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored)
 {
@@ -1360,7 +1360,7 @@ end:
 /*
  * signature based method to find out indirect callee
  */
-bool capchk::match_cs_using_fptr_method_1(Function* func,
+bool gatlin::match_cs_using_fptr_method_1(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored)
 {
@@ -1397,7 +1397,7 @@ end:
 /*
  * get result from value flow analysis result
  */
-bool capchk::match_cs_using_cvf(Function* func,
+bool gatlin::match_cs_using_cvf(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored)
 {
@@ -1423,7 +1423,7 @@ bool capchk::match_cs_using_cvf(Function* func,
     return cnt!=0;
 }
 
-bool capchk::backward_slice_using_indcs(Function* func,
+bool gatlin::backward_slice_using_indcs(Function* func,
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored)
 {
@@ -1436,7 +1436,7 @@ bool capchk::backward_slice_using_indcs(Function* func,
     if (ret)
         return ret;
 
-    if (!knob_capchk_cvf)
+    if (!knob_gatlin_cvf)
     {
         return match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
     }
@@ -1446,7 +1446,7 @@ bool capchk::backward_slice_using_indcs(Function* func,
 /*
  * check possible critical function path 
  */
-void capchk::check_critical_function_usage(Module& module)
+void gatlin::check_critical_function_usage(Module& module)
 {
     FunctionList processed_flist;
     /*
@@ -1548,7 +1548,7 @@ void capchk::check_critical_function_usage(Module& module)
  * run inter-procedural backward analysis to figure out whether the use of
  * critical variable can be reached from entry point without running check
  */
-void capchk::check_critical_variable_usage(Module& module)
+void gatlin::check_critical_variable_usage(Module& module)
 {
     for (auto *V: critical_variables)
     {
@@ -1600,7 +1600,7 @@ void capchk::check_critical_variable_usage(Module& module)
     }
 }
 
-void capchk::figure_out_gep_using_type_field(InstructionSet& workset,
+void gatlin::figure_out_gep_using_type_field(InstructionSet& workset,
         const std::pair<Type*,std::unordered_set<int>>& v, Module& module)
 {
     for (Module::iterator f = module.begin(), f_end = module.end();
@@ -1638,7 +1638,7 @@ void capchk::figure_out_gep_using_type_field(InstructionSet& workset,
     }
 }
 
-void capchk::check_critical_type_field_usage(Module& module)
+void gatlin::check_critical_type_field_usage(Module& module)
 {
     for (auto V: critical_typefields)
     {
@@ -1686,7 +1686,7 @@ void capchk::check_critical_type_field_usage(Module& module)
  * callee of direct call is collected directly,
  * callee of indirect call is reasoned by its type or struct
  */
-void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
+void gatlin::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         InstructionList& chks)
 {
     //ignore inline asm
@@ -1700,7 +1700,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
             return;
         current_crit_funcs.insert(csf);
 
-        if (knob_capchk_ccfv)
+        if (knob_gatlin_ccfv)
         {
             errs()<<"Add call<direct> "<<csf->getName()<<" use @ ";
             cs->getDebugLoc().print(errs());
@@ -1720,7 +1720,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
     }//else if (Value* csv = cs->getCalledValue())
     else if (cs->getCalledValue()!=NULL)
     {
-        if (knob_capchk_ccfv)
+        if (knob_gatlin_ccfv)
         {
             errs()<<"Resolve indirect call @ ";
             cs->getDebugLoc().print(errs());
@@ -1730,12 +1730,12 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         FunctionSet fs = resolve_indirect_callee(cs);
         if (!fs.size())
         {
-            if (knob_capchk_ccfv)
+            if (knob_gatlin_ccfv)
                 errs()<<ANSI_COLOR_RED<<"[NO MATCH]"<<ANSI_COLOR_RESET<<"\n";
             CPUnResolv++;
             return;
         }
-        if (knob_capchk_ccfv)
+        if (knob_gatlin_ccfv)
             errs()<<ANSI_COLOR_GREEN<<"[FOUND "<<fs.size()<<" MATCH]"<<ANSI_COLOR_RESET<<"\n";
         CPResolv++;
         for (auto* csf: fs)
@@ -1745,7 +1745,7 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
                 continue;
 
             current_crit_funcs.insert(csf);
-            if (knob_capchk_ccfv)
+            if (knob_gatlin_ccfv)
             {
                 errs()<<"Add call<indirect> "<<csf->getName()<<" use @ ";
                 cs->getDebugLoc().print(errs());
@@ -1768,13 +1768,13 @@ void capchk::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
 /*
  * collect critical variable usage, if it uses global
  */
-void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_variables,
+void gatlin::crit_vars_collect(Instruction* ii, ValueList& current_critical_variables,
         InstructionList& chks)
 {
     Value* gv = get_global_def(ii);
     if (gv && (!isa<Function>(gv)) && (!is_skip_var(gv->getName())))
     {
-        if (knob_capchk_ccvv)
+        if (knob_gatlin_ccvv)
         {
             errs()<<"Add "<<gv->getName()<<" use @ ";
             ii->getDebugLoc().print(errs());
@@ -1797,7 +1797,7 @@ void capchk::crit_vars_collect(Instruction* ii, ValueList& current_critical_vari
  * figure whether this instruction is reading/writing any struct field
  * inter-procedural
  */
-void capchk::crit_type_field_collect(Instruction* i, Type2Fields& current_t2fmaps,
+void gatlin::crit_type_field_collect(Instruction* i, Type2Fields& current_t2fmaps,
         InstructionList& chks)
 {
     StructType *t = NULL;
@@ -1906,7 +1906,7 @@ goodret:
     }
     for (auto i: chks)
         ill->insert(i);
-    if (knob_capchk_cctv)
+    if (knob_gatlin_cctv)
     {
         errs()<<"Add struct "<<t->getStructName()<<" use @ ";
         i->getDebugLoc().print(errs());
@@ -1929,7 +1929,7 @@ goodret:
  * @callgraph: how do we get here
  * @chks: which checks are protecting us?
  */
-void capchk::forward_all_interesting_usage(Instruction* I, unsigned int depth,
+void gatlin::forward_all_interesting_usage(Instruction* I, unsigned int depth,
         bool checked, InstructionList& callgraph, InstructionList& chks)
 {
     Function *func = I->getFunction();
@@ -2087,7 +2087,7 @@ add:
                 continue;
             if (is_kernel_init_functions(pfunc))
             {
-                if (knob_warn_capchk_during_kinit)
+                if (knob_warn_gatlin_during_kinit)
                 {
                     dbgstk.push_back(cs);
                     errs()<<ANSI_COLOR_YELLOW
@@ -2109,7 +2109,7 @@ out:
     return;
 }
 
-void capchk::my_debug(Module& module)
+void gatlin::my_debug(Module& module)
 {
 #if 0
     Function* f;
@@ -2161,7 +2161,7 @@ void capchk::my_debug(Module& module)
 /*
  * process capability protected globals and functions
  */
-void capchk::process_cpgf(Module& module)
+void gatlin::process_cpgf(Module& module)
 {
     //my_debug(module);
     /*
@@ -2217,7 +2217,7 @@ void capchk::process_cpgf(Module& module)
     errs()<<"Collecting Initialization Closure.\n";
     STOP_WATCH_MON(WID_0, collect_kernel_init_functions(module));
 
-    if (knob_capchk_cvf)
+    if (knob_gatlin_cvf)
     {
         errs()<<"Resolve indirect callsite.\n";
         STOP_WATCH_MON(WID_0, populate_indcall_list_using_cvf(module));
@@ -2242,17 +2242,17 @@ void capchk::process_cpgf(Module& module)
 
     errs()<<"Run Analysis\n";
 
-    if (knob_capchk_critical_var)
+    if (knob_gatlin_critical_var)
     {
         errs()<<"Critical variables\n";
         STOP_WATCH_MON(WID_0, check_critical_variable_usage(module));
     }
-    if (knob_capchk_critical_fun)
+    if (knob_gatlin_critical_fun)
     {
         errs()<<"Critical functions\n";
         STOP_WATCH_MON(WID_0, check_critical_function_usage(module));
     }
-    if (knob_capchk_critical_type_field)
+    if (knob_gatlin_critical_type_field)
     {
         errs()<<"Critical Type Field\n";
         STOP_WATCH_MON(WID_0, check_critical_type_field_usage(module));
@@ -2265,13 +2265,13 @@ void capchk::process_cpgf(Module& module)
     delete gating;
 }
 
-bool capchk::runOnModule(Module &module)
+bool gatlin::runOnModule(Module &module)
 {
     m = &module;
-    return capchkPass(module);
+    return gatlinPass(module);
 }
 
-bool capchk::capchkPass(Module &module)
+bool gatlin::gatlinPass(Module &module)
 {
     errs()<<ANSI_COLOR_CYAN
         <<"--- PROCESS FUNCTIONS ---"
@@ -2287,6 +2287,6 @@ bool capchk::capchkPass(Module &module)
     return false;
 }
 
-static RegisterPass<capchk>
-XXX("capchk", "capchk Pass (with getAnalysisUsage implemented)");
+static RegisterPass<gatlin>
+XXX("gatlin", "gatlin Pass (with getAnalysisUsage implemented)");
 

@@ -19,7 +19,7 @@ function build
 }
 
 codedir=(
-capchk
+gatlin
 include
 libsvf
 )

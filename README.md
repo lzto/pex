@@ -20,8 +20,8 @@ those check.
 ```
 opt \
     -analyze \
-    -load=build/capchk/libcapchk.so \
-    -capchk \
+    -load=build/gatlin/libgatlin.so \
+    -gatlin \
     -gating=cap \
     -ccv=0 -ccf=1 -cct=0\
     -ccvv=0 -ccfv=0 -cctv=0\

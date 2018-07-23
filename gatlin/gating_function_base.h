@@ -52,7 +52,7 @@ class GatingCap : public GatingFunctionBase
         FunctionData chk_func_cap_position;
 
     private:
-        bool is_builtin_capchk_function(const std::string&);
+        bool is_builtin_gatlin_function(const std::string&);
     public:
         GatingCap(Module&);
         ~GatingCap(){};

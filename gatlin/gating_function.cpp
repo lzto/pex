@@ -31,7 +31,7 @@ void GatingFunctionBase::dump_interesting(InstructionSet* cis)
 ////////////////////////////////////////////////////////////////////////////////
 //GatingCap
 
-bool GatingCap::is_builtin_capchk_function(const std::string& str)
+bool GatingCap::is_builtin_gatlin_function(const std::string& str)
 {
     if (std::find(std::begin(_builtin_check_functions),
                 std::end(_builtin_check_functions),

@@ -1,6 +1,6 @@
 /*
- * This is knobs for capchk
- * This file should only be included in capchk.cpp
+ * This is knobs for gatlin
+ * This file should only be included in gatlin.cpp
  * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
  */
 #ifndef _CAPCHK_KNOBS_
@@ -13,59 +13,59 @@ cl::opt<std::string> knob_gating_type("gating",
         cl::desc("gating function: cap/lsm - default: cap"),
         cl::init("cap"));
 
-cl::opt<bool> knob_capchk_critical_var("ccv",
+cl::opt<bool> knob_gatlin_critical_var("ccv",
         cl::desc("check critical variable usage - disabled by default"),
         cl::init(false));
 
-cl::opt<bool> knob_capchk_critical_fun("ccf",
+cl::opt<bool> knob_gatlin_critical_fun("ccf",
         cl::desc("check critical function usage - enabled by default"),
         cl::init(true));
 
-cl::opt<bool> knob_capchk_critical_type_field("cct",
+cl::opt<bool> knob_gatlin_critical_type_field("cct",
         cl::desc("check critical type field usage - disable by default"),
         cl::init(false));
 
-cl::opt<bool> knob_capchk_ccfv("ccfv",
+cl::opt<bool> knob_gatlin_ccfv("ccfv",
         cl::desc("print path to critical function(collect phase) - disabled by default"),
         cl::init(false));
 
-cl::opt<bool> knob_capchk_ccvv("ccvv",
+cl::opt<bool> knob_gatlin_ccvv("ccvv",
         cl::desc("print path to critical variable(collect phase) - disabled by default"),
         cl::init(false));
 
-cl::opt<bool> knob_capchk_cctv("cctv",
+cl::opt<bool> knob_gatlin_cctv("cctv",
         cl::desc("print path to critical type field(collect phase) - disabled by default"),
         cl::init(false));
 
-cl::opt<bool> knob_capchk_f2c("f2c",
+cl::opt<bool> knob_gatlin_f2c("f2c",
         cl::desc("print critical function to gating function mapping - enabled by default"),
         cl::init(true));
 
-cl::opt<bool> knob_capchk_v2c("v2c",
+cl::opt<bool> knob_gatlin_v2c("v2c",
         cl::desc("print critical variable to gating function mapping - enabled by default"),
         cl::init(true));
 
-cl::opt<bool> knob_capchk_t2c("t2c",
+cl::opt<bool> knob_gatlin_t2c("t2c",
         cl::desc("print critical type field to gating function mapping - enable by default"),
         cl::init(true));
 
-cl::opt<bool> knob_capchk_caw("caw",
+cl::opt<bool> knob_gatlin_caw("caw",
         cl::desc("print check functions and wrappers discovered - enabled by default"),
         cl::init(true));
 
-cl::opt<bool> knob_capchk_kinit("kinit",
+cl::opt<bool> knob_gatlin_kinit("kinit",
         cl::desc("print kernel init functions - enabled by default"),
         cl::init(true));
 
-cl::opt<bool> knob_capchk_nkinit("nkinit",
+cl::opt<bool> knob_gatlin_nkinit("nkinit",
         cl::desc("print kernel non init functions - enabled by default"),
         cl::init(true));
 
-cl::opt<bool> knob_capchk_kmi("kmi",
+cl::opt<bool> knob_gatlin_kmi("kmi",
         cl::desc("print kernel interface - disabled by default"),
         cl::init(false));
 
-cl::opt<bool> knob_capchk_cvf("cvf",
+cl::opt<bool> knob_gatlin_cvf("cvf",
         cl::desc("complex value flow analysis - disabled by default"),
         cl::init(false));
 
@@ -101,7 +101,7 @@ cl::opt<bool> knob_dump_ignore_path("prt-ign",
         cl::desc("print ignored path - disabled by default"),
         cl::init(false));
 
-cl::opt<bool> knob_warn_capchk_during_kinit("wcapchk-kinit",
+cl::opt<bool> knob_warn_gatlin_during_kinit("wcapchk-kinit",
         cl::desc("warn capability check during kernel boot process - disabled by default"),
         cl::init(false));
 
