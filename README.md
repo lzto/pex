@@ -1,10 +1,10 @@
-Linux Kernel Capability Checker
+Gatlin: Gating Function Checker for Linux Kernel
 -------
 
 This checker figures out critical resource(callee of direct/indirect callsite,
 global variable use, interesting struct type and field use) by looking at existing
-capable() check, then check which path that uses those resources is not guarded by
-capable() check.
+CAP/LSM/DAC check, then explore which path that uses such resource is not guarded by
+those check.
 
 #prerequisites
 
@@ -36,7 +36,7 @@ opt \
 ```
 
 #options
-* gating - gating function: cap/lsm, default: cap
+* gating - gating function: cap/lsm/dac, default: cap
 * ccv - check critical variables, default: 0
 * ccf - check critical functions, default: 1
 * cct - check critical type fields, default 0

@@ -2200,6 +2200,8 @@ void capchk::process_cpgf(Module& module)
         gating = new GatingCap(module);
     else if (knob_gating_type=="lsm")
         gating = new GatingLSM(module, knob_lsm_function_list);
+    else if (knob_gating_type=="dac")
+        gating = new GatingDAC(module);
     else
         llvm_unreachable("invalid setting!");
     STOP_WATCH_STOP(WID_0);

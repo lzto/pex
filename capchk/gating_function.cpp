@@ -13,6 +13,21 @@
 
 #include <fstream>
 
+void GatingFunctionBase::dump_interesting(InstructionSet* cis)
+{
+    for (auto *ci: *cis)
+    {
+        CallInst* cs = dyn_cast<CallInst>(ci);
+        Function* cf = get_callee_function_direct(cs);
+        if (is_gating_function(cf))
+        {
+            errs()<<"    "<<cf->getName()<<" @ ";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n";
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //GatingCap
 
@@ -246,18 +261,50 @@ void GatingLSM::dump()
     errs()<<"=o=\n";
 }
 
-void GatingLSM::dump_interesting(InstructionSet* cis)
+////////////////////////////////////////////////////////////////////////////////
+//DAC
+GatingDAC::GatingDAC(Module& module) : GatingFunctionBase(module)
 {
-    for (auto *ci: *cis)
+    for (Module::iterator fi = module.begin(), f_end = module.end();
+            fi != f_end; ++fi)
     {
-        CallInst* cs = dyn_cast<CallInst>(ci);
-        Function* cf = get_callee_function_direct(cs);
-        if (is_gating_function(cf))
+        Function *func = dyn_cast<Function>(fi);
+        StringRef fname = func->getName();
+        if ((fname=="inode_permission") || 
+            (fname=="inode_owner_or_capable"))
         {
-            errs()<<"    "<<cf->getName()<<" @ ";
-            cs->getDebugLoc().print(errs());
-            errs()<<"\n";
+            dac_functions.insert(func);
         }
+        if (dac_functions.size()==2)
+            break;//we are done here
     }
+}
+
+bool GatingDAC::is_gating_function(Function* f)
+{
+    return dac_functions.find(f)!=dac_functions.end();
+}
+
+bool GatingDAC::is_gating_function(std::string& str)
+{
+    for (auto& f: dac_functions)
+    {
+        if (f->getName()==str)
+            return true;
+    }
+    return false;
+}
+
+void GatingDAC::dump()
+{
+    errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
+        <<"=chk functions and wrappers="
+        <<ANSI_COLOR_RESET<<"\n";
+    for (auto &f: dac_functions)
+    {
+        errs()<<". "<<f->getName()
+            <<"\n";
+    }
+    errs()<<"=o=\n";
 }
 

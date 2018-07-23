@@ -36,7 +36,7 @@ class GatingFunctionBase
             return false;
         };
         virtual void dump(){};
-        virtual void dump_interesting(InstructionSet*){};
+        virtual void dump_interesting(InstructionSet*);
 };
 
 
@@ -77,8 +77,24 @@ class GatingLSM : public GatingFunctionBase
         virtual bool is_gating_function(Function*);
         virtual bool is_gating_function(std::string&);
         virtual void dump();
-        virtual void dump_interesting(InstructionSet*);
 };
+
+class GatingDAC : public GatingFunctionBase
+{
+    protected:
+        FunctionSet dac_functions;
+
+    private:
+        bool is_dac_function(StringRef&);
+
+    public:
+        GatingDAC(Module&);
+        ~GatingDAC(){};
+        virtual bool is_gating_function(Function*);
+        virtual bool is_gating_function(std::string&);
+        virtual void dump();
+};
+
 #endif //_GATING_FUNCTION_BASE_
 
 
