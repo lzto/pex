@@ -742,9 +742,6 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
     //CVF: Initialize, this will take some time
     //cvfa.initialize(module);
     cvfa.initialize(sm);
-    
-    //TODO:FIXME: map result from sm back to module
-    llvm_unreachable("TODO:FIXME");
 
     //do analysis(idcs=sink)
     //find out all possible value of indirect callee
@@ -754,7 +751,8 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
     for (auto f: all_functions)
     {
         ConstInstructionSet css;
-        cvfa.get_callee_function_indirect(f, css);
+        Function* df = dyn_cast<Function>(md.map_to_duplicated(f));
+        cvfa.get_callee_function_indirect(df, css);
         if (css.size()==0)
             continue;
         errs()<<ANSI_COLOR(BG_CYAN, FG_WHITE)
@@ -763,7 +761,7 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
             <<ANSI_COLOR_RESET<<"\n";
         for (auto* _ci: css)
         {
-            const CallInst* ci = dyn_cast<CallInst>(_ci);
+            const CallInst* ci = dyn_cast<CallInst>(md.map_to_origin(_ci));
             FunctionSet* funcs = idcs2callee[ci];
             if (funcs==NULL)
             {

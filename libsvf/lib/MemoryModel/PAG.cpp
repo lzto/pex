@@ -443,8 +443,14 @@ NodeBS PAG::getFieldsAfterCollapse(NodeID id) {
  * Get a base pointer given a pointer
  * Return the source node of its connected gep edge if this pointer has
  * Otherwise return the node id itself
+ *
+ * BUG: Calling this twice will result in different nodeId and will trigger 
+ * assert when later adding the same edge(nested gep).
+ * example: gep gep
+ *
  */
 NodeID PAG::getBaseValNode(NodeID nodeId) {
+#if 0
     PAGNode* node  = getPAGNode(nodeId);
     if (node->hasIncomingEdges(PAGEdge::NormalGep) ||  node->hasIncomingEdges(PAGEdge::VariantGep)) {
         PAGEdge::PAGEdgeSetTy& ngeps = node->getIncomingEdges(PAGEdge::NormalGep);
@@ -463,6 +469,9 @@ NodeID PAG::getBaseValNode(NodeID nodeId) {
     }
     else
         return nodeId;
+#else
+    return nodeId;
+#endif
 }
 
 /*!

@@ -8,7 +8,6 @@
 #include "module_duplicator.h"
 
 #include "llvm/Transforms/Utils/Cloning.h"
-#include "llvm/Transforms/Utils/ValueMapper.h"
 #include "llvm/IR/Verifier.h"
 
 using namespace llvm;
@@ -16,11 +15,12 @@ using namespace llvm;
 
 ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &remove)
 {
-    ValueToValueMapTy vmap;
     res_mod = CloneModule(m, vmap).release();
     int cnt = 0;
     FunctionSet to_erase;
     FunctionSet dst_func_keep_set;
+#if 0
+    //FIXME:dont use KEEP now
     for (auto f: keep)
     {
         auto nf = vmap[f];
@@ -40,6 +40,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         //otherwise erase
         to_erase.insert(func);
     }
+#endif
     for (auto f: remove)
     {
         auto nf = vmap[f];
@@ -66,6 +67,9 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         n.append(f->getName());
         auto* nf = res_mod->getOrInsertFunction(n, f->getFunctionType(), f->getAttributes());
         //erase function
+        //also remove everthing inside f from vmap
+        vmap.erase(f);
+
         f->replaceAllUsesWith(nf);
         f->eraseFromParent();
         //fix use
@@ -80,6 +84,13 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
     {
         llvm_unreachable("Failed!\n");
     }
+
+    for (auto p: vmap)
+    {
+        Value * v = const_cast<Value*>
+                            (static_cast<const Value*>(p.first));
+        rvmap[p.second] = v;
+    }
 }
 
 ModuleDuplicator::~ModuleDuplicator()
@@ -90,5 +101,15 @@ ModuleDuplicator::~ModuleDuplicator()
 Module& ModuleDuplicator::getResult()
 {
     return *res_mod;
+}
+
+Value* ModuleDuplicator::map_to_duplicated(const Value* v)
+{
+    return vmap[v];
+}
+
+Value* ModuleDuplicator::map_to_origin(const Value* v)
+{
+    return rvmap[v];
 }
 

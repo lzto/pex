@@ -13,6 +13,7 @@
 #include "llvm/Transforms/Instrumentation.h"
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
 #include "llvm/Transforms/Utils/ModuleUtils.h"
+#include "llvm/Transforms/Utils/ValueMapper.h"
 #include "llvm/Analysis/MemoryBuiltins.h"
 #include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/ValueTracking.h"
@@ -52,7 +53,13 @@ class ModuleDuplicator
         ModuleDuplicator(Module&, FunctionSet&, FunctionSet&);
         ~ModuleDuplicator();
         Module& getResult();
+        Value* map_to_origin(const Value*);
+        Value* map_to_duplicated(const Value*);
     private:
+        //map from orig to duplicated
+        ValueToValueMapTy vmap;
+        //map from duplicated to orig
+        ValueToValueMapTy rvmap;
         Module* res_mod;
 };
 
