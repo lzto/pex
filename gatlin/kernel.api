@@ -1063,6 +1063,11 @@ lru_add_drain_all
 list_lru_destroy
 percpu_free_rwsem
 __percpu_init_rwsem
+__percpu_down_read
+percpu_up_write
+percpu_down_write
+__percpu_up_read
+__percpu_down_read
 locks_free_lock
 __init_rwsem
 cn_printf
