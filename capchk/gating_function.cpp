@@ -54,8 +54,21 @@ GatingCap::GatingCap(Module& module) : GatingFunctionBase(module)
         }else if (fname=="ns_capable")
         {
             chk_func_cap_position[func] = 1;
+        }else if (fname=="has_ns_capability")
+        {
+            chk_func_cap_position[func] = 2;
+        }else if (fname=="has_capability")
+        {
+            chk_func_cap_position[func] = 1;
+        }else if (fname=="file_ns_capable")
+        {
+            chk_func_cap_position[func] = 2;
+        }else if (fname=="capable_wrt_inode_uidgid")
+        {
+            chk_func_cap_position[func] = 1;
         }
-        if (chk_func_cap_position.size()==2)
+
+        if (chk_func_cap_position.size()==6)
             break;//we are done here
     }
 
