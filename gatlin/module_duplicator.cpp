@@ -15,7 +15,11 @@ using namespace llvm;
 
 ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &remove)
 {
+#if (LLVM_VERSION_MAJOR>=7)
     res_mod = CloneModule(m, vmap).release();
+#elif (LLVM_VERSION_MAJOR<=6)
+    res_mod = CloneModule(&m, vmap).release();
+#endif
     int cnt = 0;
     FunctionSet to_erase;
     FunctionSet dst_func_keep_set;
