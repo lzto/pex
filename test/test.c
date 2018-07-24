@@ -1,3 +1,17 @@
+void bar_ioctl();
+void bar_open();
+void bar_private(){};
+
+struct file_operations {
+   void (*ioctl) ();
+   void (*open)();
+   void (*private)();
+} bar_file = 
+{
+    .ioctl = bar_ioctl,
+    .open = bar_open,
+    .private = bar_private,
+};
 
 struct non_trivial_struct 
 {
@@ -70,6 +84,7 @@ void bar_ioctl()
 		bar();
 		fun_ptr(1);
 		xxx(&a);
+        bar_file.private();
 		return;
 	}
 	zoo();//external symbol
@@ -93,13 +108,20 @@ void dummy()
     xxx_ptr(&b);
 }
 
-struct file_operations {
-   void (*ioctl) ();
-   void (*open)();
-} bar_file = 
+void SyS_private()
 {
-    .ioctl = bar_ioctl,
-    .open = bar_open
-};
+    bar_file.private();
+}
+
+void SyS_ioctl()
+{
+    bar_file.ioctl();
+}
+
+void SyS_open()
+{
+    bar_file.open();
+}
+
 
 

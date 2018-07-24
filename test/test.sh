@@ -7,7 +7,7 @@ opt \
     -ccfv=1 -ccvv=0 -cctv=0\
     -ccf=1 -ccv=0 -cct=0\
 	-cvf=1 \
-    -prt-good=0 -prt-bad=1 -prt-ign=0 \
+    -prt-good=1 -prt-bad=1 -prt-ign=1 \
     -kinit=0 -nkinit=0 \
 	test.bc -o /dev/null 2>&1
 
