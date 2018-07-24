@@ -19,7 +19,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
     int cnt = 0;
     FunctionSet to_erase;
     FunctionSet dst_func_keep_set;
-#if 0
+#if 1
     //FIXME:dont use KEEP now
     for (auto f: keep)
     {
@@ -91,6 +91,21 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
                             (static_cast<const Value*>(p.first));
         rvmap[p.second] = v;
     }
+    //errs()<<"=======DM=======\n";
+    cnt = 0;
+    for (Module::iterator fi = res_mod->begin(), f_end = res_mod->end();
+            fi != f_end; ++fi)
+    {
+        Function *func = dyn_cast<Function>(fi);
+        if (func->isDeclaration())
+            continue;
+        if (func->isIntrinsic())
+            continue;
+        cnt++;
+        //errs()<<" - "<<func->getName()<<"\n";
+    }
+    errs()<<"Duplicated module function cnt="<<cnt<<"\n";
+    //errs()<<"=o=\n";
 }
 
 ModuleDuplicator::~ModuleDuplicator()
