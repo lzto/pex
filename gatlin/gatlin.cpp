@@ -808,6 +808,7 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
             <<ANSI_COLOR_RESET<<"\n";
         for (auto* _ci: css)
         {
+            //indirect call sites->function
             const CallInst* ci = dyn_cast<CallInst>(md.map_to_origin(_ci));
             FunctionSet* funcs = idcs2callee[ci];
             if (funcs==NULL)
@@ -816,6 +817,18 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
                 idcs2callee[ci] = funcs;
             }
             funcs->insert(f);
+            //func->indirect callsites
+            InstructionSet* csis = f2csi_type1[f];
+            if (csis==NULL)
+            {
+                csis = new InstructionSet;
+                f2csi_type1[f] = csis;
+            }
+            CallInst *non_const_ci = const_cast<CallInst*>
+                            (static_cast<const CallInst*>(ci));
+
+            csis->insert(non_const_ci);
+
 #if 1
             errs()<<"CallSite: ";
             ci->getDebugLoc().print(errs());
