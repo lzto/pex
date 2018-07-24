@@ -242,6 +242,9 @@ class gatlin : public ModulePass
         //all syscall is listed here
         FunctionSet syscall_list;
 
+        //functions have address taken by struct(kmi)
+        FunctionSet kmi_funcs;
+
         //all discovered interesting type(have struct member points to function with check)
         TypeSet discovered_interesting_type;
 
