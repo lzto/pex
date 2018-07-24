@@ -158,7 +158,7 @@ public:
         Data data = data_list.front();
         data_list.pop_front();
         //BUG?
-        //data_set.erase(data);
+        data_set.erase(data);
         total_item_processed++;
         return data;
     }

@@ -284,7 +284,13 @@ GatingDAC::GatingDAC(Module& module) : GatingFunctionBase(module)
         Function *func = dyn_cast<Function>(fi);
         StringRef fname = func->getName();
         if ((fname=="inode_permission") || 
-            (fname=="inode_owner_or_capable"))
+            (fname=="inode_owner_or_capable") ||
+            (fname=="sb_permission") ||
+            (fname=="__inode_permission") ||
+            (fname=="generic_permission") ||
+            (fname=="do_inode_permission") ||
+            (fname=="acl_permission_check") ||
+            (fname=="check_acl"))
         {
             dac_functions.insert(func);
         }
