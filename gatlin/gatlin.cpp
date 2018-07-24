@@ -1424,18 +1424,15 @@ bool gatlin::match_cs_using_fptr_method_0(Function* func,
                 int& good, int& bad, int& ignored)
 {
     bool ret = false;
-    InstructionSet *csis = f2csi_type0[func];
+    InstructionSet * csis;
 
-    if (csis==NULL)
-    {
-        UnMatchCallCriticalFuncPtr++;
+    if (f2csi_type0.find(func)==f2csi_type0.end())
         goto end;
-    }
+    csis = f2csi_type0[func];
+
     ret = true;
-    MatchCallCriticalFuncPtr += csis->size();
     for (auto* csi: *csis)
         backward_slice_build_callgraph(callgraph, csi, visited, good, bad, ignored);
-
 end:
     return ret;
 }
@@ -1471,9 +1468,6 @@ bool gatlin::match_cs_using_fptr_method_1(Function* func,
         }
     }
 end:
-    MatchCallCriticalFuncPtr+=cnt;
-    if (cnt==0)
-        UnMatchCallCriticalFuncPtr++;
     return cnt!=0;
 }
 
@@ -1500,9 +1494,6 @@ bool gatlin::match_cs_using_cvf(Function* func,
             break;
         }
     }
-    MatchCallCriticalFuncPtr+=cnt;
-    if (cnt==0)
-        UnMatchCallCriticalFuncPtr++;
     return cnt!=0;
 }
 
@@ -1521,9 +1512,19 @@ bool gatlin::backward_slice_using_indcs(Function* func,
 
     if (!knob_gatlin_cvf)
     {
-        return match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
+        ret = match_cs_using_fptr_method_1(func, callgraph, visited, good, bad, ignored);
+        if (ret)
+            MatchCallCriticalFuncPtr++;
+        else
+            UnMatchCallCriticalFuncPtr++;
+        return ret;
     }
-    return match_cs_using_cvf(func, callgraph, visited, good, bad, ignored);
+    ret = match_cs_using_cvf(func, callgraph, visited, good, bad, ignored);
+    if (ret)
+        MatchCallCriticalFuncPtr++;
+    else
+        UnMatchCallCriticalFuncPtr++;
+    return ret;
 }
 
 /*
