@@ -244,6 +244,8 @@ class gatlin : public ModulePass
 
         //functions have address taken by struct(kmi)
         FunctionSet kmi_funcs;
+        //trace event functions
+        FunctionSet trace_event_funcs;
 
         //all discovered interesting type(have struct member points to function with check)
         TypeSet discovered_interesting_type;

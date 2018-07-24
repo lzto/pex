@@ -722,15 +722,20 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
 
     /*
      * shrink our analyse scope
+     * TODO: remove all functions which don't have function pointer use and
+     * function pointer propagation, because we only interested in getting 
+     * indirect callee here, this will help us make cvf run faster
      */
     FunctionSet keep;
     FunctionSet remove;
     //add skip functions to remove
     //add kernel_api to remove
-    for (auto n: *skip_funcs)
-        remove.insert(module.getFunction(n));
-    for (auto n: *kernel_api)
-        remove.insert(module.getFunction(n));
+    for (auto f: *skip_funcs)
+        remove.insert(module.getFunction(f));
+    for (auto f: *kernel_api)
+        remove.insert(module.getFunction(f));
+    for (auto f: trace_event_funcs)
+        remove.insert(f);
 
     FunctionList new_add;
     //add syscall_list to keep
@@ -746,6 +751,7 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
         keep.insert(n);
         new_add.push_back(n);
     }
+
     errs()<<"Total Size:"<<keep.size()<<"\n";
 
     //collect all user for keep
@@ -944,11 +950,25 @@ void gatlin::identify_interesting_struct(Module& module)
 
     for (auto f: all_functions)
     {
+        if (f->getName().startswith("trace_event"))
+        {
+            trace_event_funcs.insert(f);
+            continue;
+        }
+
         ValueSet visited;
         Value* u = find_struct_use(f, visited);
-        if (u && visited.size()<2)
+        if (u)
         {
-            kmi_funcs.insert(f);
+            bool skip = false;
+            for (Value* v: visited)
+                if (isa<Instruction>(v))
+                {
+                    skip = true;
+                    break;
+                }
+            if (!skip)
+                kmi_funcs.insert(f);
         }
     }
 

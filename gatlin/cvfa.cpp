@@ -43,6 +43,7 @@ void CVFA::initialize(Module& module)
             <<"CVFA::initialize cost(0):"
             <<ANSI_COLOR_RESET;
     STOP_WATCH_REPORT(WID_INIT);
+#if 0
     errs()<<"Build SVFG\n";
     STOP_WATCH_START(WID_INIT);
     SVFGBuilder memSSA(true);
@@ -52,6 +53,7 @@ void CVFA::initialize(Module& module)
         <<"CVFA::initialize cost(1):"
         <<ANSI_COLOR_RESET;
     STOP_WATCH_REPORT(WID_INIT);
+#endif
 }
 
 void CVFA::get_callee_function_indirect(Function* callee, ConstInstructionSet& css)
