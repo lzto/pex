@@ -20,11 +20,20 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
 #elif (LLVM_VERSION_MAJOR<=6)
     res_mod = CloneModule(&m, vmap).release();
 #endif
+    //generate reverse mapping from duplicated function to original function
+    for (auto p: vmap)
+    {
+        Value * v = const_cast<Value*>
+                            (static_cast<const Value*>(p.first));
+        rvmap[p.second] = v;
+    }
+
     int cnt = 0;
+    //all functions to be erased from res_mod
     FunctionSet to_erase;
     FunctionSet dst_func_keep_set;
-#if 1
-    //FIXME:dont use KEEP now
+
+    //keep set
     for (auto f: keep)
     {
         auto nf = vmap[f];
@@ -44,7 +53,8 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         //otherwise erase
         to_erase.insert(func);
     }
-#endif
+////////////////////////////////////////////////////////////////////////////////
+    //remove set
     for (auto f: remove)
     {
         auto nf = vmap[f];
@@ -64,6 +74,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
             to_erase.erase(f);
     }
 
+    //do actual erase
     for (auto f: to_erase)
     {
         //create declaration
@@ -71,9 +82,17 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         n.append(f->getName());
         errs()<<" erase "<<f->getName()<<"\n";
         auto* nf = res_mod->getOrInsertFunction(n, f->getFunctionType(), f->getAttributes());
-        //erase function
-        //also remove everthing inside f from vmap
+        /*
+         * erase function
+         * also remove everthing inside f from vmap
+         * and create new mapping from dummy function to original function
+         * so that they can be mapped back to original function
+         */
+        Value* origf = rvmap[f];
         vmap.erase(f);
+        rvmap.erase(origf);
+        vmap[origf] = nf;
+        rvmap[nf] = origf;
 
         f->replaceAllUsesWith(nf);
         f->eraseFromParent();
@@ -90,12 +109,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         llvm_unreachable("Failed!\n");
     }
 
-    for (auto p: vmap)
-    {
-        Value * v = const_cast<Value*>
-                            (static_cast<const Value*>(p.first));
-        rvmap[p.second] = v;
-    }
+
     //errs()<<"=======DM=======\n";
     cnt = 0;
     for (Module::iterator fi = res_mod->begin(), f_end = res_mod->end();

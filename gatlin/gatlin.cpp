@@ -810,6 +810,7 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
         {
             //indirect call sites->function
             const CallInst* ci = dyn_cast<CallInst>(md.map_to_origin(_ci));
+            assert(ci!=NULL);
             FunctionSet* funcs = idcs2callee[ci];
             if (funcs==NULL)
             {
