@@ -107,7 +107,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
     if (verifyModule(*res_mod, debugos))
         llvm_unreachable("Failed!\n");
 
-    errs()<<"=======DM=======\n";
+    //errs()<<"=======DM=======\n";
     cnt = 0;
     for (Module::iterator fi = res_mod->begin(), f_end = res_mod->end();
             fi != f_end; ++fi)
@@ -118,10 +118,10 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         if (func->isIntrinsic())
             continue;
         cnt++;
-        errs()<<" - "<<func->getName()<<"\n";
+        //errs()<<" - "<<func->getName()<<"\n";
     }
     errs()<<"Duplicated module function cnt="<<cnt<<"\n";
-    errs()<<"=o=\n";
+    //errs()<<"=o=\n";
 }
 
 ModuleDuplicator::~ModuleDuplicator()
