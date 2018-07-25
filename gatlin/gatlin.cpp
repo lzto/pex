@@ -721,8 +721,8 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
     CVFA cvfa;
 
     /*
-     * shrink our analyse scope
-     * TODO: remove all functions which don't have function pointer use and
+     * NOTE: shrink our analyse scope so that we can run faster
+     * remove all functions which don't have function pointer use and
      * function pointer propagation, because we only interested in getting 
      * indirect callee here, this will help us make cvf run faster
      */
@@ -738,56 +738,14 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
         remove.insert(f);
 
     FunctionList new_add;
-    //add syscall_list to keep
-    errs()<<"Adding "<<syscall_list.size()<<" from syscall list\n";
-    for (auto n: syscall_list)
-    {
-        keep.insert(n);
-        new_add.push_back(n);
-    }
-    errs()<<"Adding "<<kmi_funcs.size()<<" from kmi funcs\n";
-    for (auto n: kmi_funcs)
-    {
-        keep.insert(n);
-        new_add.push_back(n);
-    }
-
-    errs()<<"Total Size:"<<keep.size()<<"\n";
-
-    //collect all user for keep
-    while(new_add.size())
-    {
-        Function *f = new_add.front();
-        assert(f);
-        new_add.pop_front();
-        for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
-        {
-            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
-            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
-            {
-                for (auto &i: ii->operands())
-                {
-                    Function* _f = dyn_cast<Function>(i);
-                    if (_f && (keep.find(_f)==keep.end()))
-                    {
-                        keep.insert(_f);
-                        new_add.push_back(_f);
-                    }
-                }
-            }
-        }
-    }
-    errs()<<"Augmented to : "<< keep.size()<<"\n";
-    
-    //add kernel_init_functions to keep
-    for (auto n: kernel_init_functions)
-        keep.insert(n);
+    for (auto f: all_functions)
+        if (is_using_function_ptr(f))
+            keep.insert(f);
 
     ModuleDuplicator md(module, keep, remove);
     Module& sm = md.getResult();
 
     //CVF: Initialize, this will take some time
-    //cvfa.initialize(module);
     cvfa.initialize(sm);
 
     //do analysis(idcs=sink)

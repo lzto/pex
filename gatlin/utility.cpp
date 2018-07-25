@@ -277,6 +277,68 @@ Value* get_value_from_composit(Value* cv, std::list<int>& indices)
     std::list<int> i = std::list<int>(indices);
     return _get_value_from_composit(cv, i);
 }
+
+bool is_using_function_ptr(Function* f)
+{
+    bool ret = false;
+    Instruction* cause;
+    for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
+    {
+        BasicBlock* bb = dyn_cast<BasicBlock>(fi);
+        for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+        {
+            if (CallInst *ci = dyn_cast<CallInst>(ii))
+            {
+                if (get_callee_function_direct(ci))
+                {
+                    //parameters have function pointer in it?
+                    for (auto &i: ci->arg_operands())
+                    {
+                        //if (isa<Function>(i->stripPointerCasts()))
+                        if (PointerType *pty = dyn_cast<PointerType>(i->getType()))
+                        {
+                            if (isa<FunctionType>(pty->getElementType()))
+                            {
+                                cause = ci;
+                                ret = true;
+                                goto end;
+                            }
+                        }
+                    }
+                }else
+                {
+                    //indirect call
+                    cause = ci;
+                    ret = true;
+                    goto end;
+                }
+            }
+            //any other use of function is considered using function pointer
+            for (auto &i: ii->operands())
+            {
+                //if (isa<Function>(i->stripPointerCasts()))
+                if (PointerType *pty = dyn_cast<PointerType>(i->getType()))
+                {
+                    if (isa<FunctionType>(pty->getElementType()))
+                    {
+                        cause = dyn_cast<Instruction>(ii);
+                        ret = true;
+                        goto end;
+                    }
+                }
+            }
+        }
+    }
+end:
+    if (ret)
+    {
+        errs()<<" "<<f->getName()<<" use fptr @ ";
+        cause->getDebugLoc().print(errs());
+        errs()<<"\n";
+    }
+    return ret;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void dump_callstack(InstructionList& callstk)
 {

@@ -105,10 +105,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
     errs()<<"erase:"<<cnt<<" Functions \n";
     raw_ostream *debugos = &errs();
     if (verifyModule(*res_mod, debugos))
-    {
         llvm_unreachable("Failed!\n");
-    }
-
 
     //errs()<<"=======DM=======\n";
     cnt = 0;
