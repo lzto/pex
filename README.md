@@ -66,12 +66,42 @@ opt \
 
 #vmlinux.bc
 
-You may need to install wllvm and then use the following command to generate
-a single bc file.
+You need to install wllvm(https://github.com/travitch/whole-program-llvm)
+and then use the following command to generate a single bc file.
 
 ```
 ~/linux: make defconfig
 ~/linux: make CC=wllvm
 ~/linux: extract-bc vmlinux
 ```
+
+#Misc: where are the checks, which module should be builtin
+
+* DAC: they are mainly used in file systems(vfs),
+       stage/luster and net/sunrpc also have some checks
+* LSM: those LSM hooks are scattered around in net/fs/mm/core
+* CAP: capability checks are also scattered in different parts of the kernel,
+       besides net/fs/mm/core, lots of device drivers also use capability checks
+
+#I want debug info
+
+```
+CONFIG_DEBUG_INFO=y
+```
+
+#resolve indirect call: KMI or CVF
+
+There are two ways to resolve indirect call: KMI and CVF
+
+* KMI: kernel module interface, is built upon human knowledge of linux kernel,
+the observation is that most of the callee of indirect callsite is read from
+a constant struct which statically stores a function pointer, 
+by matching those struct type and indicies we can match indirect call
+fairly accurate(over approximate)
+
+* CVF: this is built upon SVF, and can accurately figure out callee for indirect call,
+however this is very slow and memory hungry.
+
+
+
 
