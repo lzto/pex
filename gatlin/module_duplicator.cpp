@@ -80,7 +80,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         //create declaration
         std::string n = "_dummy_";
         n.append(f->getName());
-        errs()<<" erase "<<f->getName()<<"\n";
+        //errs()<<" erase "<<f->getName()<<"\n";
         auto* nf = res_mod->getOrInsertFunction(n, f->getFunctionType(), f->getAttributes());
         /*
          * erase function
