@@ -1,3 +1,46 @@
+btrfs with capability can send snapshot without dac permission check.
+
+Check Use of Function:btrfs_commit_transaction
+Use:fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+=BAD PATH=
+Call Stack:
+0 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+1 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+2 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+-------------
+Use:fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+=BAD PATH=
+Call Stack:
+0 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+1 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+2 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+-------------
+Use:fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+=BAD PATH=
+Call Stack:
+0 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+1 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+-------------
+Use:fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+=BAD PATH=
+Call Stack:
+0 btrfs_dev_replace_cancel fs/btrfs/dev-replace.c:738:8 @[ fs/btrfs/dev-replace.c:694:17 ]
+1 btrfs_ioctl fs/btrfs/ioctl.c:4441:9 @[ fs/btrfs/ioctl.c:5664:10 ]
+-------------
+Use:fs/btrfs/send.c:6439:9 @[ fs/btrfs/send.c:6666:8 ]
+=BAD PATH=
+Call Stack:
+0 btrfs_ioctl_send fs/btrfs/send.c:6439:9 @[ fs/btrfs/send.c:6666:8 ]
+1 btrfs_ioctl fs/btrfs/ioctl.c:5530:8 @[ fs/btrfs/ioctl.c:5645:10 ]
+2 btrfs_compat_ioctl fs/btrfs/ioctl.c:5699:9
+-------------
+
+================================================================================
+
+overlay fs may override lower fs dac permission check
+
+
+================================================================================
 Add call<direct> __vfs_removexattr use @ fs/xattr.c:398:10
  cause:Process Stack:
 0 xattr_permission fs/xattr.c:86:32
@@ -39,5 +82,21 @@ Call Stack:
 -------------
 ================================================================================
 
+Add call<direct> get_acl use @ fs/nfsd/nfs3acl.c:51:9
+ cause:Process Stack:
+0 nfsd_acceptable fs/nfsd/nfsfh.c:27:34
+1 fh_verify fs/nfsd/nfsfh.c:257:12 @[ fs/nfsd/nfsfh.c:320:11 ]
+2 nfsd3_proc_getacl fs/nfsd/nfs3acl.c:40:11
+
+Check Use of Function:get_acl
+Use:fs/overlayfs/inode.c:338:8
+=BAD PATH=
+Call Stack:
+0 ovl_get_acl fs/overlayfs/inode.c:338:8
+-------------
+Use:fs/nfs/nfs3acl.c:262:20
+=BAD PATH=
+Call Stack:
+0 nfs3_set_acl fs/nfs/nfs3acl.c:262:20
 
 
