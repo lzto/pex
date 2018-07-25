@@ -101,7 +101,5 @@ fairly accurate(over approximate)
 
 * CVF: this is built upon SVF, and can accurately figure out callee for indirect call,
 however this is very slow and memory hungry.
-
-
-
+CVF can process a module with ~40k functions in one hour on an Intel Xeon 6132 2.6GHz CPU.
 
