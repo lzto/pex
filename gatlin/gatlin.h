@@ -246,6 +246,10 @@ class gatlin : public ModulePass
         FunctionSet kmi_funcs;
         //trace event functions
         FunctionSet trace_event_funcs;
+        //bpf stuff
+        FunctionSet bpf_funcs;
+        //irq stuff
+        FunctionSet irq_funcs;
 
         //all discovered interesting type(have struct member points to function with check)
         TypeSet discovered_interesting_type;

@@ -736,6 +736,10 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
         remove.insert(module.getFunction(f));
     for (auto f: trace_event_funcs)
         remove.insert(f);
+    for (auto f: bpf_funcs)
+        remove.insert(f);
+    for (auto f: irq_funcs)
+        remove.insert(f);
 
     FunctionList new_add;
     for (auto f: all_functions)
@@ -922,9 +926,24 @@ void gatlin::identify_interesting_struct(Module& module)
 
     for (auto f: all_functions)
     {
-        if (f->getName().startswith("trace_event"))
+        StringRef fname = f->getName();
+        if (fname.startswith("trace_event") ||
+                fname.startswith("perf_trace") ||
+                fname.startswith("trace_raw"))
         {
             trace_event_funcs.insert(f);
+            continue;
+        }
+        if (fname.startswith("bpf") || 
+                fname.startswith("__bpf") ||
+                fname.startswith("___bpf"))
+        {
+            bpf_funcs.insert(f);
+            continue;
+        }
+        if (fname.startswith("irq"))
+        {
+            irq_funcs.insert(f);
             continue;
         }
 
