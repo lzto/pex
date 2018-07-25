@@ -1,0 +1,43 @@
+Add call<direct> __vfs_removexattr use @ fs/xattr.c:398:10
+ cause:Process Stack:
+0 xattr_permission fs/xattr.c:86:32
+1 vfs_removexattr fs/xattr.c:389:10
+
+Check Use of Function:__vfs_removexattr
+Use:fs/ecryptfs/inode.c:1079:7 @[ fs/ecryptfs/inode.c:1131:10 ]
+=BAD PATH=
+Call Stack:
+0 ecryptfs_xattr_set fs/ecryptfs/inode.c:1079:7 @[ fs/ecryptfs/inode.c:1131:10 ]
+-------------
+Good: 1 Bad: 1 Ignored: 1
+================================================================================
+
+Add call<direct> touch_atime use @ net/unix/af_unix.c:931:4
+ cause:Process Stack:
+0 unix_find_other 
+
+Check Use of Function:touch_atime
+Use:./include/linux/fs.h:2065:3 @[ fs/orangefs/file.c:384:4 ]
+=BAD PATH=
+Call Stack:
+0 do_readv_writev ./include/linux/fs.h:2065:3 @[ fs/orangefs/file.c:384:4 ]
+1 orangefs_file_read_iter fs/orangefs/file.c:464:7
+-------------
+Use:./include/linux/fs.h:2065:3 @[ fs/orangefs/file.c:384:4 ]
+=BAD PATH=
+Call Stack:
+0 do_readv_writev ./include/linux/fs.h:2065:3 @[ fs/orangefs/file.c:384:4 ]
+1 orangefs_file_write_iter fs/orangefs/file.c:510:7
+-------------
+Use:./include/linux/fs.h:2065:3 @[ fs/splice.c:991:2 ]
+=BAD PATH=
+Call Stack:
+0 splice_direct_to_actor ./include/linux/fs.h:2065:3 @[ fs/splice.c:991:2 ]
+1 do_splice_direct fs/splice.c:1061:8
+2 do_sendfile fs/read_write.c:1413:11
+3 compat_SyS_sendfile64 fs/read_write.c:1513:9 @[ fs/read_write.c:1498:1 ]
+-------------
+================================================================================
+
+
+
