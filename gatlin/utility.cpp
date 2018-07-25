@@ -281,7 +281,6 @@ Value* get_value_from_composit(Value* cv, std::list<int>& indices)
 bool is_using_function_ptr(Function* f)
 {
     bool ret = false;
-    Instruction* cause;
     for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
     {
         BasicBlock* bb = dyn_cast<BasicBlock>(fi);
@@ -299,7 +298,6 @@ bool is_using_function_ptr(Function* f)
                         {
                             if (isa<FunctionType>(pty->getElementType()))
                             {
-                                cause = ci;
                                 ret = true;
                                 goto end;
                             }
@@ -308,7 +306,6 @@ bool is_using_function_ptr(Function* f)
                 }else
                 {
                     //indirect call
-                    cause = ci;
                     ret = true;
                     goto end;
                 }
@@ -321,7 +318,6 @@ bool is_using_function_ptr(Function* f)
                 {
                     if (isa<FunctionType>(pty->getElementType()))
                     {
-                        cause = dyn_cast<Instruction>(ii);
                         ret = true;
                         goto end;
                     }
@@ -330,12 +326,6 @@ bool is_using_function_ptr(Function* f)
         }
     }
 end:
-    if (ret)
-    {
-        errs()<<" "<<f->getName()<<" use fptr @ ";
-        cause->getDebugLoc().print(errs());
-        errs()<<"\n";
-    }
     return ret;
 }
 
