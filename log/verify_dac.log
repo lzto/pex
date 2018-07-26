@@ -99,4 +99,45 @@ Use:fs/nfs/nfs3acl.c:262:20
 Call Stack:
 0 nfs3_set_acl fs/nfs/nfs3acl.c:262:20
 
+================================================================================
+
+may change xattr access time with autofs?
+
+Use:./include/linux/fsnotify.h:26:9 @[ ./include/linux/fsnotify.h:206:3 @[ fs/read_write.c:504:3 ] ]
+=BAD PATH=
+Call Stack:
+0 __kernel_write ./include/linux/fsnotify.h:26:9 @[ ./include/linux/fsnotify.h:206:3 @[ fs/read_write.c:504:3 ] ]
+1 autofs4_wait fs/autofs4/waitq.c:66:8 @[ fs/autofs4/waitq.c:173:16 @[ fs/autofs4/waitq.c:475:3 ] ]
+2 autofs4_do_expire_multi fs/autofs4/expire.c:604:9
+3 autofs_dev_ioctl_expire fs/autofs4/dev-ioctl.c:492:9
+4 autofs_dev_ioctl fs/autofs4/dev-ioctl.c:697:8 @[ fs/autofs4/dev-ioctl.c:713:8 ]
+5 autofs_dev_ioctl_compat fs/autofs4/dev-ioctl.c:721:9
+-------------
+Use:./include/linux/fsnotify.h:26:9 @[ ./include/linux/fsnotify.h:206:3 @[ fs/read_write.c:504:3 ] ]
+=BAD PATH=
+Call Stack:
+0 __kernel_write ./include/linux/fsnotify.h:26:9 @[ ./include/linux/fsnotify.h:206:3 @[ fs/read_write.c:504:3 ] ]
+1 autofs4_wait fs/autofs4/waitq.c:66:8 @[ fs/autofs4/waitq.c:173:16 @[ fs/autofs4/waitq.c:475:3 ] ]
+2 autofs4_do_expire_multi fs/autofs4/expire.c:604:9
+3 autofs_dev_ioctl_expire fs/autofs4/dev-ioctl.c:492:9
+4 autofs_dev_ioctl fs/autofs4/dev-ioctl.c:697:8 @[ fs/autofs4/dev-ioctl.c:713:8 ]
+-------------
+
+ecryptfs can also change atime?
+
+Use:./include/linux/fsnotify.h:26:9 @[ ./include/linux/fsnotify.h:188:3 @[ fs/read_write.c:449:4 ] ]
+=BAD PATH=
+Call Stack:
+0 vfs_read ./include/linux/fsnotify.h:26:9 @[ ./include/linux/fsnotify.h:188:3 @[ fs/read_write.c:449:4 ] ]
+1 kernel_read fs/read_write.c:426:11
+2 ecryptfs_read_lower fs/ecryptfs/read_write.c:240:9
+3 ecryptfs_read_metadata fs/ecryptfs/crypto.c:1423:7
+4 ecryptfs_setattr fs/ecryptfs/inode.c:904:8
+-------------
+
+
+
+================================================================================
+
+
 
