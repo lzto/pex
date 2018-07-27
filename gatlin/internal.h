@@ -9,11 +9,18 @@
  * check functions
  */
 
-[[maybe_unused]]
-static const char* _builtin_check_functions [] = 
+struct str2int
 {
-    "capable",
-    "ns_capable",
+    std::string k;
+    int v;
+};
+
+#define BUILTIN_CAP_FUNC_LIST_SIZE 2
+[[maybe_unused]]
+static const struct str2int _builtin_cap_functions [] = 
+{
+    {"capable", 0},
+    {"ns_capable", 1}
 };
 
 /*

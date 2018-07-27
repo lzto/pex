@@ -53,6 +53,7 @@ opt \
 * cvf - complex value flow, default 0
 * skipfun - list of functions don't care
 * skipvar - list of variables don't care
+* capfunc - list of capability check functions
 * lsmhook - list of LSM hook
 * critsym - list of symbols to be treated as critical and ignore others
 * kapi - list of kernel api

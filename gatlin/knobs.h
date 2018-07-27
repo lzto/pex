@@ -77,6 +77,10 @@ cl::opt<string> knob_skip_var_list("skipvar",
         cl::desc("non-critical variable name list"),
         cl::init("skip.var"));
 
+cl::opt<string> knob_cap_function_list("capfunc",
+        cl::desc("capability check function name list"),
+        cl::init("cap.func"));
+
 cl::opt<string> knob_lsm_function_list("lsmhook",
         cl::desc("lsm hook function name list"),
         cl::init("lsm.hook"));

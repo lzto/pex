@@ -1,0 +1,6 @@
+capable 0
+ns_capable 1
+has_ns_capability 2
+has_capability 1
+file_ns_capable 2
+capable_wrt_inode_uidgid 1

@@ -50,11 +50,14 @@ class GatingCap : public GatingFunctionBase
      * This data is available after calling collect_wrappers()
      */
         FunctionData chk_func_cap_position;
+        Str2Int cap_func_name2cap_arg_pos;
 
     private:
+        void load_cap_func_list(std::string&);
         bool is_builtin_gatlin_function(const std::string&);
+
     public:
-        GatingCap(Module&);
+        GatingCap(Module&, std::string&);
         ~GatingCap(){};
         virtual bool is_gating_function(Function*);
         virtual bool is_gating_function(std::string&);

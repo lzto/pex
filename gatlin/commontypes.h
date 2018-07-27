@@ -57,6 +57,7 @@ typedef std::unordered_map<Type*, ModuleSet*> ModuleInterface2Modules;
 typedef std::unordered_map<Value*, InstructionSet*> Value2ChkInst;
 typedef std::unordered_map<Instruction*, FunctionSet*> Inst2Func;
 typedef std::unordered_map<const Instruction*, FunctionSet*> ConstInst2Func;
+typedef std::unordered_map<std::string, int> Str2Int;
 
 
 

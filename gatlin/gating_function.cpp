@@ -31,45 +31,60 @@ void GatingFunctionBase::dump_interesting(InstructionSet* cis)
 ////////////////////////////////////////////////////////////////////////////////
 //GatingCap
 
+void GatingCap::load_cap_func_list(std::string& file)
+{
+    std::ifstream input(file);
+    if (!input.is_open())
+    {
+        //TODO:load builtin list into cap_func_name2cap_arg_pos
+        for (int i=0;i<BUILTIN_CAP_FUNC_LIST_SIZE;i++)
+        {
+            const struct str2int *p = &_builtin_cap_functions[i];
+            cap_func_name2cap_arg_pos[p->k] = p->v;
+        }
+        return;
+    }
+    std::string line;
+    while(std::getline(input,line))
+    {
+        std::size_t found = line.find(" ");
+        assert(found!=std::string::npos);
+        std::string name = line.substr(0, found);
+        int pos = stoi(line.substr(found+1));
+        cap_func_name2cap_arg_pos[name] = pos;
+    }
+    input.close();
+    errs()<<"Load CAP FUNC list, total:"<<cap_func_name2cap_arg_pos.size()<<"\n";
+}
+
 bool GatingCap::is_builtin_gatlin_function(const std::string& str)
 {
-    if (std::find(std::begin(_builtin_check_functions),
-                std::end(_builtin_check_functions),
-                str) != std::end(_builtin_check_functions))
-        return true;
+    for (int i=0;i<BUILTIN_CAP_FUNC_LIST_SIZE;i++)
+    {
+        const struct str2int *p = &_builtin_cap_functions[i];
+        if (p->k==str)
+            return true;
+    }
     return false;                                  
 }
 
-GatingCap::GatingCap(Module& module) : GatingFunctionBase(module)
+GatingCap::GatingCap(Module& module, std::string& capfile)
+    : GatingFunctionBase(module)
 {
+    load_cap_func_list(capfile);
     //add capable and ns_capable to chk_func_cap_position so that we can use them
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
         StringRef fname = func->getName();
-        if (fname=="capable")
-        {
-            chk_func_cap_position[func] = 0;
-        }else if (fname=="ns_capable")
-        {
-            chk_func_cap_position[func] = 1;
-        }else if (fname=="has_ns_capability")
-        {
-            chk_func_cap_position[func] = 2;
-        }else if (fname=="has_capability")
-        {
-            chk_func_cap_position[func] = 1;
-        }else if (fname=="file_ns_capable")
-        {
-            chk_func_cap_position[func] = 2;
-        }else if (fname=="capable_wrt_inode_uidgid")
-        {
-            chk_func_cap_position[func] = 1;
-        }
 
-        if (chk_func_cap_position.size()==6)
-            break;//we are done here
+        if (cap_func_name2cap_arg_pos.find(fname)!=cap_func_name2cap_arg_pos.end())
+        {
+            chk_func_cap_position[func] = cap_func_name2cap_arg_pos[fname];
+            if (chk_func_cap_position.size()==cap_func_name2cap_arg_pos.size())
+                break;//we are done here
+        }
     }
 
     //last time discovered functions

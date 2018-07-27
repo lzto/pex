@@ -2259,7 +2259,7 @@ void gatlin::process_cpgf(Module& module)
     errs()<<"Process Gating Functions\n";
     STOP_WATCH_START(WID_0);
     if (knob_gating_type=="cap")
-        gating = new GatingCap(module);
+        gating = new GatingCap(module, knob_cap_function_list);
     else if (knob_gating_type=="lsm")
         gating = new GatingLSM(module, knob_lsm_function_list);
     else if (knob_gating_type=="dac")
