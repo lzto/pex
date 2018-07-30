@@ -743,8 +743,11 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
 
     FunctionList new_add;
     for (auto f: all_functions)
-        if (is_using_function_ptr(f))
+        if (is_using_function_ptr(f) || is_address_taken(f))
             keep.insert(f);
+
+    for (auto f: syscall_list)
+        keep.insert(f);
 
     ModuleDuplicator md(module, keep, remove);
     Module& sm = md.getResult();
@@ -2173,30 +2176,16 @@ out:
 
 void gatlin::my_debug(Module& module)
 {
-#if 0
-    Function* f;
+#if 1
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
         if (func->isDeclaration() || func->isIntrinsic())
             continue;
-        if (func->hasName())
+        if (is_address_taken(func))
         {
-            StringRef fname = func->getName();
-            if (fname=="mix_pool_bytes")
-            {
-                f = func;
-                break;
-            }
-        }
-    }
-    for (auto* u: f->users())
-    {
-        if (Instruction*i = dyn_cast<Instruction>(u))
-        {
-            Function* xf = i->getFunction();
-            errs()<<xf->getName()<<"\n";
+            errs()<<" at: "<< func->getName()<<"\n";
         }
     }
 #else

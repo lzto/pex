@@ -6,8 +6,11 @@
 #include "utility.h"
 #include "color.h"
 #include "internal.h"
+#include "llvm/IR/InlineAsm.h"
 
 #include "llvm/Support/raw_ostream.h"
+
+using namespace llvm;
 
 static InstructionList dbgstk;
 static ValueList dbglst;
@@ -278,6 +281,73 @@ Value* get_value_from_composit(Value* cv, std::list<int>& indices)
     return _get_value_from_composit(cv, i);
 }
 
+/*
+ * is this function's address taken?
+ * ignore all use by EXPORT_SYMBOL and perf probe trace defs.
+ */
+bool is_address_taken(Function* f)
+{
+    bool ret = false;
+    for (auto& u: f->uses())
+    {
+        auto* user = u.getUser();
+        if (CallInst* ci = dyn_cast<CallInst>(user))
+        {
+            //used inside inline asm?
+            if (ci->isInlineAsm())
+                continue;
+            //used as direct call, or parameter inside llvm.*
+            if (Function* _f = get_callee_function_direct(ci))
+            {
+                if ((_f==f) || (_f->isIntrinsic()))
+                    continue;
+                //used as function parameter
+                ret = true;
+                goto end;
+            }else
+            {
+                //used as function parameter
+                ret = true;
+                goto end;
+            }
+            llvm_unreachable("should not reach here");
+        }
+        //not call instruction
+        ValueList vs;
+        ValueSet visited;
+        vs.push_back(dyn_cast<Value>(user));
+        while(vs.size())
+        {
+            Value* v = vs.front();
+            vs.pop_front();
+            if (v->hasName())
+            {
+               auto name = v->getName();
+               if (name.startswith("__ksymtab") || 
+                       name.startswith("trace_event") ||
+                       name.startswith("perf_trace") ||
+                       name.startswith("trace_raw") || 
+                       name.startswith("llvm.") ||
+                       name.startswith("event_class"))
+                   continue;
+               ret = true;
+               goto end;
+            }
+            for (auto&u: v->uses())
+            {
+                auto* user = dyn_cast<Value>(u.getUser());
+                if (!visited.count(user))
+                {
+                    visited.insert(user);
+                    vs.push_back(user);
+                }
+            }
+        }
+    }
+end:
+    return ret;
+}
+
 bool is_using_function_ptr(Function* f)
 {
     bool ret = false;
@@ -288,8 +358,11 @@ bool is_using_function_ptr(Function* f)
         {
             if (CallInst *ci = dyn_cast<CallInst>(ii))
             {
-                if (get_callee_function_direct(ci))
+                if (Function* f = get_callee_function_direct(ci))
                 {
+                    //should skip those...
+                    if (f->isIntrinsic())
+                      continue;
                     //parameters have function pointer in it?
                     for (auto &i: ci->arg_operands())
                     {
@@ -303,9 +376,16 @@ bool is_using_function_ptr(Function* f)
                             }
                         }
                     }
+                    //means that direct call is not using a function pointer
+                    //in the parameter
+                    continue;
+                }else if (ci->isInlineAsm())
+                {
+                    //ignore inlineasm
+                    //InlineAsm* iasm = dyn_cast<InlinAsm>(ci->getCalledValue());
+                    continue;
                 }else
                 {
-                    //indirect call
                     ret = true;
                     goto end;
                 }

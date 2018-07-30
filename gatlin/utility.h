@@ -35,6 +35,7 @@ bool function_has_gv_initcall_use(Function*);
 void str_truncate_dot_number(std::string&);
 bool is_skip_struct(StringRef);
 bool is_using_function_ptr(Function*);
+bool is_address_taken(Function* f);
 
 extern Instruction* x_dbg_ins;
 extern std::list<int> x_dbg_idx;
