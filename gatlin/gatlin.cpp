@@ -2258,7 +2258,7 @@ void gatlin::process_cpgf(Module& module)
     STOP_WATCH_STOP(WID_0);
     STOP_WATCH_REPORT(WID_0);
     dump_gating();
-
+    //pass 0
     errs()<<"Collect Checkpoints\n";
     STOP_WATCH_MON(WID_0, collect_chkps(module));
 
@@ -2281,6 +2281,7 @@ void gatlin::process_cpgf(Module& module)
         STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
     }
 
+    //pass 1
     errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_MON(WID_0, collect_crits(module));
     errs()<<"Collected "<<critical_functions.size()<<" critical functions\n";
@@ -2291,6 +2292,7 @@ void gatlin::process_cpgf(Module& module)
     dump_f2ci();
     dump_tf2ci();
 
+    //pass 2
     errs()<<"Run Analysis\n";
 
     if (knob_gatlin_critical_var)
