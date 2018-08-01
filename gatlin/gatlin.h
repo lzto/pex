@@ -311,11 +311,12 @@ class gatlin : public ModulePass
 
         inline bool is_skip_var(const std::string& str)
         {
-            return skip_vars->exists(str);
+            return skip_vars->exists_ignore_dot_number(str);
         };
         inline bool is_skip_function(const std::string& str)
         {
-            return skip_funcs->exists(str) || kernel_api->exists(str);
+            return skip_funcs->exists_ignore_dot_number(str)
+                || kernel_api->exists_ignore_dot_number(str);
         };
 };
 
