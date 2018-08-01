@@ -31,6 +31,8 @@ __alloc_skb
 alloc_swapdev_block
 alloc_uid
 anon_inode_getfile
+__arch_copy_from_user
+__arch_copy_to_user
 arch_dma_alloc_attrs
 assoc_array_apply_edit
 assoc_array_cancel_edit
@@ -63,10 +65,13 @@ build_skb
 bvec_alloc
 bvec_free
 __cachefiles_printk_object
+call_rcu
 call_rcu_bh
 call_rcu_sched
 capable
+cb_lock
 cleanup_entry
+clear_bit
 clear_user
 clock_t_to_jiffies
 complete
@@ -86,6 +91,7 @@ copy_siginfo_from_user32
 copy_siginfo_to_user
 _copy_to_user
 copy_to_user_fromio
+copy_tree
 count_swap_pages
 cpumask_next
 cpumask_next_and
@@ -94,6 +100,8 @@ create_kmalloc_cache
 create_kmalloc_caches
 current_time
 dax_copy_from_iter
+debug_lockdep_rcu_enabled
+debug_locks
 dec_ucount
 delete_node
 del_timer
@@ -115,6 +123,7 @@ dm_dax_copy_from_iter
 do_add_counters
 do_exit
 do_migrate_pages
+__do_once_done
 do_remount_sb
 __do_replace
 do_send_sig_info
@@ -163,6 +172,7 @@ from_kuid_munged
 __get_free_pages
 get_info
 getname
+__getnstimeofday64
 get_pid_task
 get_task_mm
 get_task_pid
@@ -235,7 +245,13 @@ kvmalloc_node
 lc_destroy
 linear_dax_copy_from_iter
 load_module
+lock_acquire
+lockdep_init_map
+lockdep_rcu_suspicious
+lockdep_rtnl_is_held
+lock_is_held_type
 lockref_get
+__lock_sock
 lock_sock_nested
 machine_kexec_prepare
 make_kgid
@@ -248,6 +264,7 @@ __memcpy
 memdup_user
 memset
 microcode_open
+__might_fault
 __mmdrop
 __mm_populate
 mmput
@@ -267,6 +284,7 @@ msleep
 __mutex_init
 mutex_lock
 mutex_lock_interruptible
+mutex_lock_nested
 mutex_trylock
 mutex_unlock
 netdev_err
@@ -286,6 +304,7 @@ path_get
 path_noexec
 path_put
 percpu_counter_add_batch
+__percpu_counter_init
 __percpu_counter_sum
 __percpu_down_read
 __percpu_up_read
@@ -298,8 +317,10 @@ plist_requeue
 pm_restore_gfp_mask
 posix_acl_fix_xattr_to_user
 prandom_u32
+preempt_count_add
 prepare_creds
 prepare_to_wait_event
+print_hex_dump
 printk
 proc_free_inum
 proc_vmalloc_init
@@ -340,13 +361,18 @@ ___rate_limit
 _raw_read_lock
 _raw_read_lock_bh
 _raw_read_lock_irqsave
+_raw_read_unlock
 _raw_read_unlock_bh
 _raw_read_unlock_irqrestore
 _raw_spin_lock
 _raw_spin_lock_bh
+__raw_spin_lock_init
 _raw_spin_lock_irq
 _raw_spin_lock_irqsave
+_raw_spin_lock_nested
+_raw_spin_unlock
 _raw_spin_unlock_bh
+_raw_spin_unlock_irq
 _raw_spin_unlock_irqrestore
 _raw_write_lock
 _raw_write_lock_bh
@@ -393,8 +419,12 @@ rcu_irq_enter_disabled
 rcu_irq_enter_irqson
 rcu_irq_exit
 rcu_irq_exit_irqson
+rcu_is_watching
 rcu_iw_handler
 rcu_jiffies_till_stall_check
+rcu_lock_acquire
+rcu_lock_map
+rcu_lock_release
 rcu_needs_cpu
 rcu_nmi_enter
 rcu_nmi_exit
@@ -404,6 +434,10 @@ rcu_panic
 rcupdate_announce_bootup_oddness
 rcu_pm_notify
 rcu_process_callbacks
+__rcu_read_lock
+rcu_read_lock_held
+rcu_read_lock_sched_held
+__rcu_read_unlock
 rcu_report_dead
 rcu_report_exp_cpu_mult
 rcu_report_qs_rnp
@@ -454,6 +488,7 @@ __request_module
 round_jiffies_up
 rtnl_is_locked
 rtnl_lock
+rtnl_trylock
 rtnl_unlock
 schedule
 schedule_timeout
@@ -475,6 +510,7 @@ seq_buf_vprintf
 seq_printf
 seq_putc
 seq_puts
+set_bit
 __set_current_blocked
 set_current_groups
 setup_kmalloc_cache_index_table
@@ -514,11 +550,13 @@ strncpy
 strncpy_from_user
 strnlen
 strsep
+synchronize_rcu
 synchronize_sched
 __sysfs_match_string
 task_active_pid_ns
 __task_pid_nr_ns
 task_work_add
+test_and_set_bit
 thaw_bdev
 thaw_kernel_threads
 thaw_processes

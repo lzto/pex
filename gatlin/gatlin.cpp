@@ -1257,7 +1257,7 @@ void gatlin::backward_slice_build_callgraph(InstructionList &callgraph,
     DominatorTree dt(*f);
     InstructionSet chks;
 
-    if (is_kernel_init_functions(f))
+    if (is_kernel_init_functions(f) || kernel_api->exists(f->getName()))
     {
         //kernel init function?
         ignored++;
