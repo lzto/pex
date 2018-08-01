@@ -77,6 +77,7 @@ clock_t_to_jiffies
 complete
 _cond_resched
 __const_udelay
+context_switch
 copy_ctl_value_from_user
 copy_fpstate_to_sigframe
 copy_from_early_mem
@@ -251,6 +252,7 @@ lockdep_rcu_suspicious
 lockdep_rtnl_is_held
 lock_is_held_type
 lockref_get
+lock_release
 __lock_sock
 lock_sock_nested
 machine_kexec_prepare
@@ -284,6 +286,7 @@ msleep
 __mutex_init
 mutex_lock
 mutex_lock_interruptible
+mutex_lock_interruptible_nested
 mutex_lock_nested
 mutex_trylock
 mutex_unlock
@@ -318,6 +321,7 @@ pm_restore_gfp_mask
 posix_acl_fix_xattr_to_user
 prandom_u32
 preempt_count_add
+preempt_schedule_notrace
 prepare_creds
 prepare_to_wait_event
 print_hex_dump
@@ -382,6 +386,7 @@ _raw_write_unlock_bh
 _raw_write_unlock_irqrestore
 rb_erase
 rb_first
+rb_insert_color
 rb_next
 rcu_accelerate_cbs
 rcu_barrier_callback
@@ -560,6 +565,7 @@ test_and_set_bit
 thaw_bdev
 thaw_kernel_threads
 thaw_processes
+trace_preempt_on
 try_module_get
 up
 up_read

@@ -1153,7 +1153,8 @@ void gatlin::collect_crits(Module& module)
         Function* func = pair.first;
         InstructionSet* _chks = pair.second;
         if ((_chks==NULL) || (_chks->size()==0) || gating->is_gating_function(func)
-                || is_skip_function(func->getName()))
+                || is_skip_function(func->getName())
+                || kernel_api->exists(func->getName()))
             continue;
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
         InstructionList callgraph;
@@ -1527,7 +1528,7 @@ void gatlin::check_critical_function_usage(Module& module)
         if (!crit_syms->use_builtin())//means that not knob specified
             if (!crit_syms->exists(func->getName()))//means that symbol not matched
                 continue;
-        if (is_skip_function(func->getName()))
+        if (is_skip_function(func->getName()) || kernel_api->exists(func->getName()))
             continue;
 
         errs()<<ANSI_COLOR_YELLOW
@@ -1590,6 +1591,7 @@ void gatlin::check_critical_function_usage(Module& module)
                 if (!crit_syms->exists(func->getName()))//means that symbol not matched
                     continue;
             if (is_skip_function(func->getName())
+                    || kernel_api->exists(func->getName())
                     || (critical_functions.find(func)==critical_functions.end()))
                 continue;
             errs()<<"    "<<func->getName()<<"\n";
@@ -1761,7 +1763,8 @@ void gatlin::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
     {
         if (csf->isIntrinsic()
                 ||is_skip_function(csf->getName())
-                ||gating->is_gating_function(csf))
+                ||gating->is_gating_function(csf)
+                ||kernel_api->exists(csf->getName()))
             return;
         current_crit_funcs.insert(csf);
 
@@ -1806,6 +1809,7 @@ void gatlin::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         for (auto* csf: fs)
         {
             if (csf->isIntrinsic() || is_skip_function(csf->getName())
+                    ||kernel_api->exists(csf->getName())
                     ||gating->is_gating_function(csf) ||(csf==cs->getFunction()))
                 continue;
 
@@ -2000,7 +2004,7 @@ void gatlin::forward_all_interesting_usage(Instruction* I, unsigned int depth,
     Function *func = I->getFunction();
     DominatorTree dt(*func);
 
-    if (is_skip_function(func->getName()))
+    if (is_skip_function(func->getName()) || kernel_api->exists(func->getName()))
         return;
 
     bool is_function_permission_checked = checked;
