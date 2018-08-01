@@ -26,6 +26,7 @@ class SimpleSet
         ~SimpleSet(){};
         bool use_builtin();
         bool exists(const std::string&);
+        bool exists_ignore_dot_number(const std::string&);
         size_t size();
 
         /*

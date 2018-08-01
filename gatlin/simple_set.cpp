@@ -4,6 +4,7 @@
  */
 
 #include "simple_set.h"
+#include "utility.h"
 
 #include <fstream>
 
@@ -43,6 +44,13 @@ bool SimpleSet::exists(const std::string &str)
         return std::find(builtin.begin(), builtin.end(), str)
             != builtin.end();
     return vars.count(str)!=0;
+}
+
+bool SimpleSet::exists_ignore_dot_number(const std::string &str)
+{
+    std::string _str = std::string(str);
+    str_truncate_dot_number(_str);
+    return exists(_str);
 }
 
 size_t SimpleSet::size()

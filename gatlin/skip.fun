@@ -321,6 +321,9 @@ pm_restore_gfp_mask
 posix_acl_fix_xattr_to_user
 prandom_u32
 preempt_count_add
+preempt_count_sub
+preempt_schedule
+preempt_schedule_common
 preempt_schedule_notrace
 prepare_creds
 prepare_to_wait_event
@@ -338,6 +341,7 @@ put_itimerspec64
 putname
 __put_page
 put_pid
+put_task_stack
 __put_task_struct
 put_unused_fd
 __put_user_ns
@@ -496,6 +500,7 @@ rtnl_lock
 rtnl_trylock
 rtnl_unlock
 schedule
+__schedule
 schedule_timeout
 schedule_timeout_interruptible
 schedule_timeout_killable
@@ -565,6 +570,7 @@ test_and_set_bit
 thaw_bdev
 thaw_kernel_threads
 thaw_processes
+time_hardirqs_on
 trace_preempt_on
 try_module_get
 up
