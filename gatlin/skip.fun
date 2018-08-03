@@ -589,6 +589,8 @@ __vmalloc_node_flags_caller
 vmalloc_open
 vmalloc_sync_all
 vmalloc_to_page
+vsnprintf
+vsprintf
 vzalloc
 wait_for_completion
 wait_for_completion_killable
