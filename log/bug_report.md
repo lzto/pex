@@ -87,5 +87,33 @@ efivar_store_raw()->efivar_entry_set()
 user might want to drop capability later in time and don’t want to allow modify
  of such variable.
 
+# 7 missing ```capable()``` check for ```rfkill_set_block()```
+
+In file ```net/rfkill/core.c```,
+```rfkill_set_block()``` is checked for ```CAP_NET_ADMIN``` in ```state_store()```
+and ```soft_store()```. However, in ```rfkill_fop_write()```, user can also call
+```rfkill_set_block()``` without ```CAP_NET_ADMIN```.
+
+
+# 8 missing ```capable()/blk_verify_command()``` check in ```mmc_rpmb_ioctl()```
+
+in ```sg_scsi_ioctl()``` (file: ```block/scsi_ioctl.c```)
+```blk_execute_rq()``` is protected by ```blk_verify_command()```,
+
+```
+sg_scsi_ioctl()-> blk_verify_command()
+                        `-> blk_execute_rq()
+```
+
+However, such check does not exist in ```mmc_rpmb_ioctl()```, file: ```drivers/mmc/core/block.c```
+
+```
+mmc_rpmb_ioctl()->mmc_blk_ioctl_cmd()->blk_execute_rq()
+                            `->mmc_blk_ioctl_multi_cmd()->blk_execute_rq()
+```
+
+We speculate that similar check need to be added to this path also.
+
+
 
 
