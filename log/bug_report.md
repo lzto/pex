@@ -114,6 +114,40 @@ mmc_rpmb_ioctl()->mmc_blk_ioctl_cmd()->blk_execute_rq()
 
 We speculate that similar check need to be added to this path also.
 
+# 9 Possible ```missing capable()``` check in ```thinkpad_acpi.c```
+
+In file ```drivers/platform/x86/thinkpad_acpi.c```,
+
+```acpi_evalf()``` is called by multiple wrapper functions like 
+```video_read()/video_write()/hotkey_mask_get()/kbdlight_set_level()``` etc.
+
+In ```video_read()/video_write()```, use of ```acpi_evalf()``` is protected by
+```capable(CAP_SYS_ADMIN)```,
+
+However, in other path like ```kbdlight_set_level()/light_set_status()```,
+the check is missing.
+
+We speculate that there should have been checks along other paths.
+
+# 10 Possible missing ```capable()``` check in ```dm_blk_ioctl()```
+
+We noticed that ```__blkdev_driver_ioctl()``` is called by ```dm_blk_ioctl()``` in
+```drivers/md/dm.c```, and there’s a check for ```CAP_SYS_RAWIO``` only when ```r>0```,
+in case of ```r==0```, there’s no capability check.
+
+We also noticed the use of ```__blkdev_driver_ioctl()``` requires ```CAP_SYS_ADMIN```
+privilege in other places, (see ```blkdev_roset(), block/ioctl.c```)
+
+We suspect that those places should have required same privilege.
+
+# 11 Possible missing capable() check in ```add_store()/remove_store()```
+
+We noticed that in ```drivers/block/pktcdvd.c```, ```pkt_setup_dev/pkt_remove_dev```
+are used in ```pkt_ctl_ioctl()``` and protected by ```capable(CAP_SYS_ADMIN)```,
+
+However, these two functions are also used in ```add_store()``` and ```remove_store()```,
+where there are no requirement for ```CAP_SYS_ADMIN```.
+
 
 
 
