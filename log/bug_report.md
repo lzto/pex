@@ -1,6 +1,22 @@
 #reported bugs
 
 
+# Summary
+
+| No.  | comments         |
+|------|------------------|
+| 1    | reported         |
+| 2    | confirmed/fixing |
+| 3    | confirmed/ignored|
+| 4    | reported         |
+| 5    | reported         |
+| 6    | confirmed/ignored|
+| 7    | confirmed/ignored|
+| 8    | reported/ignored |
+| 9    | reported/ignored |
+| 10   | reported/ignored |
+| 11   | reported         |
+
 # 1 btrfs send snapshot bypass DAC check
 btrfs with proper capability can allow non-root to read snapshot contains file
 not accessible to the user, thus can bypass DAC check
