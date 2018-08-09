@@ -5,10 +5,10 @@
 
 | No.  | comments         |
 |------|------------------|
-| 1    | reported         |
+| 1    | confirmed/ignored|
 | 2    | confirmed/fixing |
 | 3    | confirmed/ignored|
-| 4    | reported         |
+| 4    | confirmed/ignored|
 | 5    | reported         |
 | 6    | confirmed/ignored|
 | 7    | confirmed/ignored|
@@ -16,6 +16,7 @@
 | 9    | reported/ignored |
 | 10   | reported/ignored |
 | 11   | reported         |
+| 12   | confirmed/fixing |
 
 # 1 btrfs send snapshot bypass DAC check
 btrfs with proper capability can allow non-root to read snapshot contains file
@@ -163,6 +164,25 @@ are used in ```pkt_ctl_ioctl()``` and protected by ```capable(CAP_SYS_ADMIN)```,
 
 However, these two functions are also used in ```add_store()``` and ```remove_store()```,
 where there are no requirement for ```CAP_SYS_ADMIN```.
+
+# 12 Possible missing check(DAC/LSM) in ecryptfs
+
+We noticed an inconsistency in ```ecryptfs_xattr_set(), (fs/ecryptfs/inode.c)```
+
+The callgraph is shown below:
+
+```
+ecryptfs_xattr_set()
+         |-> ecryptfs_setxattr() -> vfs_setxattr()
+         `-> ecryptfs_removexattr()-> __vfs_removexattr()
+```
+
+In ```ecryptfs_setxattr()```, it calls ```vfs_setxattr()```, which checks
+lower_dentry permission(DAC and LSM), using ```xattr_permission()``` and 
+```security_inode_removexattr()```,
+
+In ```ecryptfs_removexattr()```, it calls ```__vfs_removexattr()```,
+which does not have such check.
 
 
 
