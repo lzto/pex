@@ -184,13 +184,13 @@ which does not have such check.
 
 
 
-# LSM-13 security_mmap_file() in remap_file_pages syscall 
+# LSM-13 ```security_mmap_file()``` in ```remap_file_pages``` syscall 
 
 We noticed ```remap_file_pages syscall``` uses ```do_mmap_pgoff``` without LSM check: ```security_mmap_file()```.  This system call passed user controllable parameters to ```do_mmap_pgoff()```.  We think that this LSM check should be added in order to be consistent with other cases, for example: in system call ```mmap_pgoff()```, ```shmat()```, they all have ```security_mmap_file()``` check before calling ```do_mmap_pgoff()```. 
 
 
 
-# LSM-14 Possible missing LSM check in load_elf_binary() 
+# LSM-14 Possible missing LSM check in ```load_elf_binary()```
 
 We noticed a use of ```kernel_read()``` in ```load_elf_binary()```, which doesn’t have LSM check ```security_kernel_read_file()/kernel_post_read_file()``` along the path. 
 
@@ -203,7 +203,7 @@ We noticed a use of ```kernel_read()``` in ```load_elf_binary()```, which doesn�
 
 We think that these LSM checks should exist because the file may be specified by userspace. Note that this is different from other LSM checks, each LSM check has its own purpose. 
 
-# LSM-15 Possible missing LSM check in load_elf_library() 
+# LSM-15 Possible missing LSM check in ```load_elf_library()```
 
 We noticed a use of ```kernel_read()``` in ```load_elf_library()```, which doesn’t have LSM check ```security_kernel_read_file()/kernel_post_read_file()``` along the path. 
 
@@ -215,7 +215,7 @@ We noticed a use of ```kernel_read()``` in ```load_elf_library()```, which doesn
 
 We think that these LSM checks should exist because the file may be specified by userspace. Note that this is different from other LSM checks, each LSM check has its own purpose.  
 
-# LSM-16 Missing security_inode_readlink() in xfs_file_ioctl() 
+# LSM-16 Missing ```security_inode_readlink()``` in ```xfs_file_ioctl()```
 
 We noticed a use of ```vfs_readlink()``` in ```xfs_file_ioctl()```, which should have been checked by  ```security_inode_readlink()```. 
 
@@ -229,7 +229,7 @@ The callgraph is:
 
 
 
-# LSM-17 Missing security_task_setnice() check in wq_nice_store() 
+# LSM-17 Missing ```security_task_setnice()``` check in ```wq_nice_store()``` 
 
 We noticed a path which calls ```set_user_nice()``` (the nice value is user controllable), and this path does not have ```security_task_setnice()``` check.  The problematic functions and call graph is shown below:  
 
