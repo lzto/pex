@@ -6,6 +6,10 @@ global variable use, interesting struct type and field use) by looking at existi
 CAP/LSM/DAC check, then explore which path that uses such resource is not guarded by
 those check.
 
+#bugs discovered 
+
+see ```log/bug_report.md```
+
 #prerequisites
 
 * LLVM-6/7
