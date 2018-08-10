@@ -7,7 +7,7 @@
 | ------ | ----------------- | ------ | ----------------- | ------ | ----------------- |
 | CAP-2  | confirmed/fixing  | DAC-1  | confirmed/ignored | LSM-12 | confirmed/fixing  |
 | CAP-3  | confirmed/ignored | DAC-12 | confirmed/fixing  | LSM-13 | reported          |
-| CAP-4  | confirmed/ignored |        |                   | LSM-14 | reported/ignored  |
+| CAP-4  | confirmed/ignored | DAC-18 | reported          | LSM-14 | reported/ignored  |
 | CAP-5  | reported          |        |                   | LSM-15 | reported/ignored  |
 | CAP-6  | confirmed/ignored |        |                   | LSM-16 | reported          |
 | CAP-7  | confirmed/ignored |        |                   | LSM-17 | confirmed/ignored |
@@ -239,7 +239,7 @@ wq_nice_store()  ->apply_wqattrs_prepare()  ->alloc_unbound_pwq()  ->create_w
 
 Similar check exists in: ```kernel/sched/core.c```, ```SYSCALL_DEFINE1(nice, int, increment) set_user_nice() ```function is guarded by ```security_task_setnice()```  We think this LSM hook is necessary because this behavior should have been checked LSM hook(even for root), however, this is the one that definitely escaped the check. 
 
-#LSM-18 Possible missing check LSM in ecryptfs 
+#LSM-18 DAC-18 Possible missing check DAC/LSM in ecryptfs 
 
 While looking at the code, we found out more inconsistencies in ecryptfs, please see below:  ```ecryptfs_listxattr()```
 
