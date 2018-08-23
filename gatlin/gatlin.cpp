@@ -1009,9 +1009,11 @@ void gatlin::identify_kmi(Module& module)
             ms = new ModuleSet;
             mi2m[mod_interface] = ms;
         }
+        assert(ms);
         ms->insert(gi);
     }
     TypeList to_remove;
+    ModuleInterface2Modules to_add;
     //resolve Annoymous type into known type
     for (auto msi: mi2m)
     {
@@ -1019,6 +1021,7 @@ void gatlin::identify_kmi(Module& module)
         if (stype->hasName())
             continue;
         StructType *rstype = NULL;
+        assert(msi.second);
         for (auto m: (*msi.second))
         {
             //constant bitcast into struct
@@ -1063,7 +1066,8 @@ out:
         else
         {
             //does not exists? reuse current one!
-            mi2m[rstype] = msi.second;
+            to_add[rstype] = msi.second;
+            //this should not cause crash as we already parsed current element
             mi2m[stype] = NULL;
         }
         to_remove.push_back(stype);
@@ -1073,6 +1077,8 @@ out:
         delete mi2m[r];
         mi2m.erase(r);
     }
+    for (auto r: to_add)
+        mi2m[r.first] = r.second;
 }
 
 /*
