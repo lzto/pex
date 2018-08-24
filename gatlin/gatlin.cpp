@@ -1062,12 +1062,19 @@ out:
             ModuleSet* ms = mi2m[rstype];
             for (auto m: (*msi.second))
                 ms->insert(m);
-        }
-        else
+        }else if (to_add.find(rstype)!=to_add.end())
+        {
+            ModuleSet* ms = to_add[rstype];
+            for (auto m: (*msi.second)
+                    to_add->insert(m);
+        }else
         {
             //does not exists? reuse current one!
             to_add[rstype] = msi.second;
-            //this should not cause crash as we already parsed current element
+            /*
+             * this should not cause crash as we already parsed current element
+             * and this should be set to NULL in order to not be deleted later
+             */
             mi2m[stype] = NULL;
         }
         to_remove.push_back(stype);
