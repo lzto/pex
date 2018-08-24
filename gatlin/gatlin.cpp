@@ -1228,6 +1228,9 @@ InstructionSet& gatlin::discover_chks(Function* f)
 void gatlin::backward_slice_build_callgraph(InstructionList &callgraph,
             Instruction* I, FunctionToCheckResult& fvisited, int& good, int& bad, int& ignored)
 {
+    //I should be an instruction
+    if (!I)
+        return;
     //we've reached the limit
     if (callgraph.size()>knob_bwd_depth)
     {
