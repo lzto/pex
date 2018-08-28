@@ -1065,8 +1065,8 @@ out:
         }else if (to_add.find(rstype)!=to_add.end())
         {
             ModuleSet* ms = to_add[rstype];
-            for (auto m: (*msi.second)
-                    to_add->insert(m);
+            for (auto m: (*msi.second))
+                    ms->insert(m);
         }else
         {
             //does not exists? reuse current one!
