@@ -109,8 +109,9 @@ however this is very slow and memory hungry.
 CVF can process a module with ~40k functions in one hour on an Intel Xeon 6132 2.6GHz CPU.
 
 #kernel config
+--------------
 
-configuration files generated for kernel v4.18
+##Kernel v4.18
 
 1) ```kernel_config/allyesconfig1.config```
 
@@ -147,4 +148,13 @@ inlinable function call in a function with debug info must have a !dbg location
 
 you can use ```opt -strip-debug``` to remove debug info from module completely, 
 so that it won't complain
+
+## Kernel 4.18.5
+
+1) allyesconfig1: 9975 yes
+
+2) allyesconfig3: 9939 yes
+
+* \+ DEBUG_INFO
+* \- AMDGPU, I915, KCOV, KEXEC_FILE
 
