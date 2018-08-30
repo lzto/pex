@@ -708,3 +708,9 @@ warn_slowpath_null
 xdr_partial_copy_from_skb
 xt_copy_counters_from_user
 zerocopy_sg_from_iter
+down
+up
+down_interruptible
+down_killable
+down_trylock
+down_timeout
