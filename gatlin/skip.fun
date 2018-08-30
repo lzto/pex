@@ -1,6 +1,7 @@
 I_BDEV
 ___alloc_bootmem_node_nopanic
 ___might_sleep
+__might_sleep
 ___rate_limit
 ___ratelimit
 __alias_free_mem
@@ -778,3 +779,7 @@ skb_vlan_push
 alloc_skb_with_frags
 pskb_extract
 kfree_skb
+inc_nlink
+set_nlink
+clear_nlink
+drop_nlink
