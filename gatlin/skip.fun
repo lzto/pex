@@ -783,3 +783,5 @@ inc_nlink
 set_nlink
 clear_nlink
 drop_nlink
+kstrndup
+__mlog_printk
