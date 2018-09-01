@@ -12,6 +12,5 @@ netlink_net_capable 1
 netlink_ns_capable 2
 ns_capable 1
 ns_capable_noaudit 1
-rtnl_link_get_net_capable 3
 security_capable_noaudit 2
 sk_ns_capable 2

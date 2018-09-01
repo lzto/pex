@@ -2349,6 +2349,9 @@ bool gatlin::gatlinPass(Module &module)
 #if CUSTOM_STATISTICS
     dump_statistics();
 #endif
+    a//just quit
+    exit(0);
+    //never reach here
     return false;
 }
 

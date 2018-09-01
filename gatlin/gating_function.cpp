@@ -108,6 +108,13 @@ again:
             if (cs==NULL)
                 continue;//how come?
             assert(cs->getCalledFunction()==func);
+            if (cap_pos>=cs->getNumArgOperands())
+            {
+                func->print(errs());
+                llvm_unreachable(ANSI_COLOR_RED
+                        "Check capability parameter"
+                        ANSI_COLOR_RESET);
+            }
             Value* capv = cs->getArgOperand(cap_pos);
             if (isa<ConstantInt>(capv))
                 continue;
