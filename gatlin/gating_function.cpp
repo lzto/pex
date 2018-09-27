@@ -104,7 +104,11 @@ again:
         //find all use without Constant Value and add them to wrapper
         for (auto u: func->users())
         {
-            InstructionSet uis = get_user_instruction(dyn_cast<Value>(u));
+            InstructionSet uis;
+            if (Instruction *i = dyn_cast<Instruction>(u))
+                uis.insert(i);
+            else
+                uis = get_user_instruction(dyn_cast<Value>(u));
             if (uis.size()==0)
             {
                 u->print(errs());
@@ -344,7 +348,11 @@ again:
         for (auto* u: dacf->users())
         {
             //should be call instruction and the callee is dacf
-            InstructionSet uis = get_user_instruction(dyn_cast<Value>(u));
+            InstructionSet uis;
+            if (Instruction *i = dyn_cast<Instruction>(u))
+                uis.insert(i);
+            else
+                uis = get_user_instruction(dyn_cast<Value>(u));
             if (uis.size()==0)
             {
                 u->print(errs());
