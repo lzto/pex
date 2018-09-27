@@ -33,6 +33,45 @@ int use_parent_func_arg(Value* v, Function* f)
     return -1;
 }
 
+static bool any_user_of_av_is_v(Value* av, Value* v, ValueSet& visited)
+{
+    if (av==v)
+        return true;
+    if (visited.count(av))
+        return false;
+    visited.insert(av);
+    for (auto* u: av->users())
+    {
+        if (dyn_cast<Value>(u)==v)
+        {
+            return true;
+        }
+        if (any_user_of_av_is_v(u, v, visited))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
+ * full def-use chain
+ */
+int use_parent_func_arg_deep(Value* v, Function* f)
+{
+    int cnt = 0;
+    for (auto a = f->arg_begin(), b = f->arg_end(); a!=b; ++a)
+    {
+        Value* av = dyn_cast<Value>(a);
+        ValueSet visited;
+        if (any_user_of_av_is_v(av,v,visited))
+            return cnt;
+        cnt++;
+    }
+    return -1;
+}
+
+
 Instruction* GetNextInstruction(Instruction* i)
 {
     if (isa<TerminatorInst>(i))
@@ -66,6 +105,41 @@ StringRef get_callee_function_name(Instruction* i)
     if (Function* f = get_callee_function_direct(i))
         return f->getName();
     return "";
+}
+
+InstructionSet get_user_instruction(Value* v)
+{
+    InstructionSet ret;
+    ValueSet vset;
+    ValueSet visited;
+    visited.insert(v);
+    for (auto* u: v->users())
+    {
+        vset.insert(u);
+    }
+    while (vset.size())
+    {
+        for (auto x: vset)
+        {
+            v = x;
+            break;
+        }
+        visited.insert(v);
+        vset.erase(v);
+        //if a user is a instruction add it to ret and remove from vset
+        if (Instruction *i = dyn_cast<Instruction>(v))
+        {
+            ret.insert(i);
+            continue;
+        }
+        //otherwise add all user of current one
+        for (auto* _u: v->users())
+        {
+            if (visited.count(_u)==0)
+                vset.insert(_u);
+        }
+    }
+    return ret;
 }
 
 /*

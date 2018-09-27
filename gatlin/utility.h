@@ -21,10 +21,12 @@
 using namespace llvm;
 
 int use_parent_func_arg(Value* v, Function* f);
+int use_parent_func_arg_deep(Value* v, Function* f);
 Instruction* GetNextInstruction(Instruction* i);
 Instruction* GetNextNonPHIInstruction(Instruction* i);
 Function* get_callee_function_direct(Instruction* i);
 StringRef get_callee_function_name(Instruction* i);
+InstructionSet get_user_instruction(Value*);
 void get_callsite_inst(Value*, CallInstSet&);
 bool has_function_pointer_type(Type*);
 GetElementPtrInst* get_load_from_gep(Value*);

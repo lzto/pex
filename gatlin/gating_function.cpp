@@ -102,34 +102,47 @@ again:
         assert(cap_pos>=0);
         //we got a capability check function or a wrapper function,
         //find all use without Constant Value and add them to wrapper
-        for (auto U: func->users())
+        for (auto u: func->users())
         {
-            CallInst* cs = dyn_cast<CallInst>(U);
-            if (cs==NULL)
-                continue;//how come?
-            assert(cs->getCalledFunction()==func);
-            if (cap_pos>=cs->getNumArgOperands())
+            InstructionSet uis = get_user_instruction(dyn_cast<Value>(u));
+            if (uis.size()==0)
             {
-                func->print(errs());
-                llvm_unreachable(ANSI_COLOR_RED
-                        "Check capability parameter"
-                        ANSI_COLOR_RESET);
-            }
-            Value* capv = cs->getArgOperand(cap_pos);
-            if (isa<ConstantInt>(capv))
+                u->print(errs());
+                errs()<<"\n";
                 continue;
-            Function* parent_func = cs->getFunction();
-            //we have a wrapper,
-            int pos = use_parent_func_arg(capv, parent_func);
-            if (pos>=0)
+            }
+            for (auto ui: uis)
             {
-                //type 1 wrapper, cap is from parent function argument
-                pass_data_next[parent_func] = pos;
-            }else
-            {
-                //type 2 wrapper, cap is from inside this function
-                //what to do with this?
-                //llvm_unreachable("What??");
+                CallInst* cs = dyn_cast<CallInst>(ui);
+                if (cs==NULL)
+                    continue;//how come?
+                Function* callee = get_callee_function_direct(cs);
+                if (callee!=func)
+                    continue;
+                //assert(cs->getCalledFunction()==func);
+                if (cap_pos>=cs->getNumArgOperands())
+                {
+                    func->print(errs());
+                    llvm_unreachable(ANSI_COLOR_RED
+                            "Check capability parameter"
+                            ANSI_COLOR_RESET);
+                }
+                Value* capv = cs->getArgOperand(cap_pos);
+                if (isa<ConstantInt>(capv))
+                    continue;
+                Function* parent_func = cs->getFunction();
+                //we have a wrapper,
+                int pos = use_parent_func_arg(capv, parent_func);
+                if (pos>=0)
+                {
+                    //type 1 wrapper, cap is from parent function argument
+                    pass_data_next[parent_func] = pos;
+                }else
+                {
+                    //type 2 wrapper, cap is from inside this function
+                    //what to do with this?
+                    //llvm_unreachable("What??");
+                }
             }
         }
     }
@@ -317,31 +330,60 @@ GatingDAC::GatingDAC(Module& module) : GatingFunctionBase(module)
         if (dac_functions.size()==6)
             break;//we are done here
     }
+#if 1
     //discover wrapper
     //for all user of dac function, find whether the parameter comes from
     //out layer wrapper parameter?
+    //inline function may cause problem here...
+    FunctionSet wrappers;
+    int loop_cnt = 0;
+again:
     for (auto *dacf: dac_functions)
     {
+        errs()<<" dacf - "<<dacf->getName()<<"\n";
         for (auto* u: dacf->users())
         {
             //should be call instruction and the callee is dacf
-            CallInst *ci = dyn_cast<CallInst>(u);
-            if (!ci)
-                continue;
-            if (ci->getCalledFunction()!=dacf)
-                continue;
-            Function* userf = ci->getFunction();
-            //parameters comes from wrapper's parameter?
-            for (int i = 0;i<ci->getNumOperands();i++)
+            InstructionSet uis = get_user_instruction(dyn_cast<Value>(u));
+            if (uis.size()==0)
             {
-                Value* a = ci->getOperand(i);
-                if (use_parent_func_arg(a, userf))
+                u->print(errs());
+                errs()<<"\n";
+                continue;
+            }
+            for (auto ui: uis)
+            {
+                CallInst *ci = dyn_cast<CallInst>(ui);
+                if (!ci)
+                    continue;
+                Function* callee = get_callee_function_direct(ci);
+                if (callee!=dacf)
+                    continue;
+                Function* userf = ci->getFunction();
+                errs()<<"    used by - "<<userf->getName()<<"\n";
+                //parameters comes from wrapper's parameter?
+                for (int i = 0;i<ci->getNumOperands();i++)
                 {
-                    dac_functions.insert(userf);
+                    Value* a = ci->getOperand(i);
+                    if (use_parent_func_arg_deep(a, userf)>=0)
+                    {
+                        wrappers.insert(userf);
+                        break;
+                    }
                 }
             }
         }
     }
+    if (wrappers.size())
+    {
+        for (auto *wf: wrappers)
+            dac_functions.insert(wf);
+        wrappers.clear();
+        loop_cnt++;
+        if (loop_cnt<1)
+            goto again;
+    }
+#endif
 }
 
 bool GatingDAC::is_gating_function(Function* f)
