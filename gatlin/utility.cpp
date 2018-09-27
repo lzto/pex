@@ -18,6 +18,7 @@ static ValueList dbglst;
  * user can trace back to function argument?
  * only support simple wrapper
  * return the cap parameter position in parameter list
+ * TODO: track full def-use chain
  * return -1 for not found
  */
 int use_parent_func_arg(Value* v, Function* f)

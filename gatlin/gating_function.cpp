@@ -305,18 +305,42 @@ GatingDAC::GatingDAC(Module& module) : GatingFunctionBase(module)
     {
         Function *func = dyn_cast<Function>(fi);
         StringRef fname = func->getName();
-        if ((fname=="inode_permission") || 
-            (fname=="sb_permission") ||
-            (fname=="__inode_permission") ||
-            (fname=="generic_permission") ||
-            (fname=="do_inode_permission") ||
+        if ((fname=="posix_acl_permission") || 
+            (fname=="check_acl") ||
             (fname=="acl_permission_check") ||
-            (fname=="check_acl"))
+            (fname=="generic_permission") ||
+            (fname=="sb_permission") ||
+            (fname=="inode_permission"))
         {
             dac_functions.insert(func);
         }
-        if (dac_functions.size()==7)
+        if (dac_functions.size()==6)
             break;//we are done here
+    }
+    //discover wrapper
+    //for all user of dac function, find whether the parameter comes from
+    //out layer wrapper parameter?
+    for (auto *dacf: dac_functions)
+    {
+        for (auto* u: dacf->users())
+        {
+            //should be call instruction and the callee is dacf
+            CallInst *ci = dyn_cast<CallInst>(u);
+            if (!ci)
+                continue;
+            if (ci->getCalledFunction()!=dacf)
+                continue;
+            Function* userf = ci->getFunction();
+            //parameters comes from wrapper's parameter?
+            for (int i = 0;i<ci->getNumOperands();i++)
+            {
+                Value* a = ci->getOperand(i);
+                if (use_parent_func_arg(a, userf))
+                {
+                    dac_functions.insert(userf);
+                }
+            }
+        }
     }
 }
 
