@@ -613,11 +613,27 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
-    Type* cvt = get_load_from_type(cv);
+    Type* cvt;
     GetElementPtrInst* gep;
     std::list<int> indices;
+    if (is_tracepoint_func(cv))
+    {
+        //special condition, ignore tracepoint, we are not interested in them.
+        fs.insert(NULL);
+        return fs;
+    }
+    cvt = get_load_from_type(cv);
     if (!cvt || !cvt->isStructTy())
     {
+        if (dyn_cast<Instruction>(cv))
+        {
+            errs()<<"fptr passed in as a argument\n";
+        }else
+        {
+            errs()<<" unknown pattern:";
+            //cv->print(errs());
+            errs()<<"\n";
+        }
         //not load+gep?
         goto end;
     }
@@ -627,7 +643,10 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
     get_gep_indicies(gep, indices);
     x_dbg_idx = indices;
     if (indices.size()==0)//non-constant in indicies
+    {
+        errs()<<"non-constant in indicies\n";
         goto end;
+    }
     //should remove first element because we already resolved it?
     indices.pop_front();
     while(1)
@@ -649,7 +668,22 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
         }
         if (indices.size()<=1)
         {
-            //no match!
+            //no match! we are also done here, mark it as resolved anyway
+            //TODO: we are actually able to solved this by looking at what 
+            //function pointer is saved into KMI in earlier pass
+            /*
+            cvt = get_load_from_type(cv);
+            errs()<<"!!!  : ";
+            cvt->print(errs());
+            errs()<<"\n";
+            
+            errs()<<"idcs:";
+            for (auto i: x_dbg_idx)
+                errs()<<","<<i;
+            errs()<<"\n";
+            //gep->print(errs());
+            errs()<<"\n";*/
+            fs.insert(NULL);
             break;
         }
         //no match, we can try inner element
@@ -687,9 +721,31 @@ end:
 void gatlin::populate_indcall_list_through_kmi(Module& module)
 {
     //indirect call is load+gep and can be found in mi2m?
+    int count = 0;
     for (auto* idc: idcs)
     {
         FunctionSet fs = resolve_indirect_callee_using_kmi(idc);
+        if (fs.size()!=0)
+        {
+            bool is_tp = false;
+            if (fs.size()==1)
+            {
+                for (auto f:fs)
+                {
+                    if (f==NULL)
+                        is_tp = true;
+                }
+            }
+            if (is_tp)
+                fs.clear();
+            count++;
+        }
+        /*else
+        {
+            errs()<<"unable to resolve @ ";
+            idc->getDebugLoc().print(errs());
+            errs()<<"\n";
+        }*/
         FunctionSet *funcs = idcs2callee[idc];
         if (funcs==NULL)
         {
@@ -708,6 +764,9 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             csis->insert(idc);
         }
     }
+    errs()<<"# of indirect call sites: "<< idcs.size()<<"\n";
+    errs()<<"# resolved by KMI:"<< count<<"\n";
+    //exit(0);
 }
 
 
@@ -874,6 +933,16 @@ void gatlin::collect_chkps(Module& module)
             }
         }
     }
+    for(auto& pair: f2chks)
+    {
+        ValueSet visited;
+        Function* f = pair.first;
+        InstructionSet* chkins = pair.second;
+        if (chkins->size()==0)
+            continue;
+        gating->dump_interesting(chkins);
+    }
+    //exit(0);
 }
 
 /*
@@ -2189,17 +2258,41 @@ out:
 void gatlin::my_debug(Module& module)
 {
 #if 1
+    errs()<<"For caps\n";
+    gating = new GatingCap(module, knob_cap_function_list);
+    int count = 0;
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
         Function *func = dyn_cast<Function>(fi);
         if (func->isDeclaration() || func->isIntrinsic())
             continue;
-        if (is_address_taken(func))
+        if (gating->is_gating_function(func))
         {
-            errs()<<" at: "<< func->getName()<<"\n";
+            InstructionSet ins_set;
+            for (auto *u: func->users())
+            {
+                count++;
+                Instruction* i = dyn_cast<Instruction>(u);
+                if (i)
+                {
+                    Function *fp = i->getFunction();
+                    if (fp->getName()=="ksys_chroot")
+                    {
+                        fp->print(errs());
+                    }
+                    ins_set.insert(i);
+                }else
+                {
+                    //may cast?
+                }
+            }
+            errs()<<" "<<func->getName()<<" used "<<count<<" times\n";
+            count = 0;
+            gating->dump_interesting(&ins_set);
         }
     }
+
 #else
     for(GlobalVariable &gvi: module.globals())
     {
@@ -2273,7 +2366,6 @@ void gatlin::process_cpgf(Module& module)
     //pass 0
     errs()<<"Collect Checkpoints\n";
     STOP_WATCH_MON(WID_0, collect_chkps(module));
-
     errs()<<"Identify interesting struct\n";
     STOP_WATCH_MON(WID_0, identify_interesting_struct(module));
 

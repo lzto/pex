@@ -141,6 +141,37 @@ bool has_function_pointer_type(Type* type)
     TypeSet visited;
     return _has_function_pointer_type(type, visited);
 }
+
+/*
+ * trace point function as callee?
+ * similar to load+gep
+ */
+bool is_tracepoint_func(Value* v)
+{
+    LoadInst* li = dyn_cast<LoadInst>(v);
+    if (!li)
+        return false;
+    Value* addr = li->getPointerOperand()->stripPointerCasts();
+    //should be pointer type
+    if (PointerType* pt = dyn_cast<PointerType>(addr->getType()))
+    {
+        Type* et = pt->getElementType();
+        if (StructType *st = dyn_cast<StructType>(et))
+        {
+            //resolved!, they are trying to load the first function pointer
+            //from a struct type we already know!
+            //errs()<<"Found:"<<st->getStructName()<<"\n";
+            if (st->getStructName()=="struct.tracepoint_func")
+            {
+                return true;
+            }
+            return true;
+        }
+    }
+    //something else?
+    return false;
+}
+
 /*
  * get the type where the function pointer is stored
  * could be combined with bitcast/gep
@@ -154,8 +185,16 @@ GetElementPtrInst* get_load_from_gep(Value* v)
     if (!li)
         return NULL;
     Value* addr = li->getPointerOperand()->stripPointerCasts();
+    //could also load from constant expr
+    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
+    {
+        addr = ce->getAsInstruction();
+    }
     if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
         return gep;
+    errs()<<"non gep:";
+    //addr->print(errs());
+    errs()<<"\n";
     return NULL;
 }
 
