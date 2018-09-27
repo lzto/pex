@@ -284,6 +284,61 @@ GatingLSM::GatingLSM(Module& module, std::string& lsmfile)
             lsm_hook_functions.insert(func);
         }
     }
+
+    //also try to discover wrapper function for LSM hooks
+    FunctionSet wrappers;
+    int loop_cnt = 0;
+again:
+    for (auto *lsmh: lsm_hook_functions)
+    {
+        errs()<<" lsmh - "<<lsmh->getName()<<"\n";
+        for (auto* u: lsmh->users())
+        {
+            //should be call instruction and the callee is dacf
+            InstructionSet uis;
+            if (Instruction *i = dyn_cast<Instruction>(u))
+                uis.insert(i);
+            else
+                uis = get_user_instruction(dyn_cast<Value>(u));
+            if (uis.size()==0)
+            {
+                u->print(errs());
+                errs()<<"\n";
+                continue;
+            }
+            for (auto ui: uis)
+            {
+                CallInst *ci = dyn_cast<CallInst>(ui);
+                if (!ci)
+                    continue;
+                Function* callee = get_callee_function_direct(ci);
+                if (callee!=lsmh)
+                    continue;
+                Function* userf = ci->getFunction();
+                errs()<<"    used by - "<<userf->getName()<<"\n";
+                //parameters comes from wrapper's parameter?
+                for (int i = 0;i<ci->getNumOperands();i++)
+                {
+                    Value* a = ci->getOperand(i);
+                    if (use_parent_func_arg_deep(a, userf)>=0)
+                    {
+                        wrappers.insert(userf);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    if (wrappers.size())
+    {
+        for (auto *wf: wrappers)
+            lsm_hook_functions.insert(wf);
+        wrappers.clear();
+        loop_cnt++;
+        if (loop_cnt<1)
+            goto again;
+    }
+
 }
 
 bool GatingLSM::is_gating_function(Function* f)
