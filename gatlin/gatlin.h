@@ -239,6 +239,9 @@ class gatlin : public ModulePass
         //all functions in the kernel
         FunctionSet all_functions;
 
+        //functions which has unresolved indirect calls
+        FunctionSet fuidcs;
+
         //all syscall is listed here
         FunctionSet syscall_list;
 

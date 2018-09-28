@@ -745,6 +745,9 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
                 fs.clear();
             }
             count++;
+        }else
+        {
+            fuidcs.insert(idc->getFunction());
         }
         /*else
         {
@@ -808,9 +811,11 @@ void gatlin::populate_indcall_list_using_cvf(Module& module)
         remove.insert(f);
 
     FunctionList new_add;
-    for (auto f: all_functions)
-        if (is_using_function_ptr(f) || is_address_taken(f))
-            keep.insert(f);
+    //for (auto f: all_functions)
+    //    if (is_using_function_ptr(f) || is_address_taken(f))
+    //        keep.insert(f);
+    for (auto f: fuidcs)
+        keep.insert(f);
 
     for (auto f: syscall_list)
         keep.insert(f);
@@ -2371,17 +2376,16 @@ void gatlin::process_cpgf(Module& module)
     errs()<<"Collecting Initialization Closure.\n";
     STOP_WATCH_MON(WID_0, collect_kernel_init_functions(module));
 
+    errs()<<"Identify Kernel Modules Interface\n";
+    STOP_WATCH_MON(WID_0, identify_kmi(module));
+    dump_kmi();
+    errs()<<"Populate indirect callsite using kernel module interface\n";
+    STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
+
     if (knob_gatlin_cvf)
     {
         errs()<<"Resolve indirect callsite.\n";
         STOP_WATCH_MON(WID_0, populate_indcall_list_using_cvf(module));
-    }else
-    {
-        errs()<<"Identify Kernel Modules Interface\n";
-        STOP_WATCH_MON(WID_0, identify_kmi(module));
-        dump_kmi();
-        errs()<<"Populate indirect callsite using kernel module interface\n";
-        STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
     }
 
     //pass 1
