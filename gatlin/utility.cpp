@@ -267,9 +267,9 @@ GetElementPtrInst* get_load_from_gep(Value* v)
     }
     if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
         return gep;
-    errs()<<"non gep:";
+    //errs()<<"non gep:";
     //addr->print(errs());
-    errs()<<"\n";
+    //errs()<<"\n";
     return NULL;
 }
 

@@ -644,7 +644,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
     x_dbg_idx = indices;
     if (indices.size()==0)//non-constant in indicies
     {
-        errs()<<"non-constant in indicies\n";
+        //errs()<<"non-constant in indicies\n";
         goto end;
     }
     //should remove first element because we already resolved it?
@@ -671,7 +671,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             //no match! we are also done here, mark it as resolved anyway
             //TODO: we are actually able to solved this by looking at what 
             //function pointer is saved into KMI in earlier pass
-            /*
+            
             cvt = get_load_from_type(cv);
             errs()<<"!!!  : ";
             cvt->print(errs());
@@ -682,8 +682,8 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
                 errs()<<","<<i;
             errs()<<"\n";
             //gep->print(errs());
-            errs()<<"\n";*/
-            fs.insert(NULL);
+            errs()<<"\n";
+            //fs.insert(NULL);
             break;
         }
         //no match, we can try inner element
@@ -722,9 +722,11 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
 {
     //indirect call is load+gep and can be found in mi2m?
     int count = 0;
+    int targets = 0;
     for (auto* idc: idcs)
     {
         FunctionSet fs = resolve_indirect_callee_using_kmi(idc);
+        targets += fs.size();
         if (fs.size()!=0)
         {
             bool is_tp = false;
@@ -737,7 +739,9 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
                 }
             }
             if (is_tp)
+            {
                 fs.clear();
+            }
             count++;
         }
         /*else
@@ -766,6 +770,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     }
     errs()<<"# of indirect call sites: "<< idcs.size()<<"\n";
     errs()<<"# resolved by KMI:"<< count<<"\n";
+    errs()<<"# (total) of callee:"<<targets<<"\n";
     //exit(0);
 }
 
@@ -933,6 +938,8 @@ void gatlin::collect_chkps(Module& module)
             }
         }
     }
+#if 0
+    //dump all checks
     for(auto& pair: f2chks)
     {
         ValueSet visited;
@@ -942,7 +949,7 @@ void gatlin::collect_chkps(Module& module)
             continue;
         gating->dump_interesting(chkins);
     }
-    //exit(0);
+#endif
 }
 
 /*
@@ -1027,6 +1034,7 @@ void gatlin::identify_interesting_struct(Module& module)
             for (Value* v: visited)
                 if (isa<Instruction>(v))
                 {
+                    assert("this is impossible\n");
                     skip = true;
                     break;
                 }
@@ -2273,61 +2281,6 @@ out:
 
 void gatlin::my_debug(Module& module)
 {
-#if 1
-    errs()<<"For caps\n";
-    gating = new GatingCap(module, knob_cap_function_list);
-    int count = 0;
-    for (Module::iterator fi = module.begin(), f_end = module.end();
-            fi != f_end; ++fi)
-    {
-        Function *func = dyn_cast<Function>(fi);
-        if (func->isDeclaration() || func->isIntrinsic())
-            continue;
-        if (gating->is_gating_function(func))
-        {
-            InstructionSet ins_set;
-            for (auto *u: func->users())
-            {
-                count++;
-                Instruction* i = dyn_cast<Instruction>(u);
-                if (i)
-                {
-                    Function *fp = i->getFunction();
-                    if (fp->getName()=="ksys_chroot")
-                    {
-                        fp->print(errs());
-                    }
-                    ins_set.insert(i);
-                }else
-                {
-                    //may cast?
-                }
-            }
-            errs()<<" "<<func->getName()<<" used "<<count<<" times\n";
-            count = 0;
-            gating->dump_interesting(&ins_set);
-        }
-    }
-
-#else
-    for(GlobalVariable &gvi: module.globals())
-    {
-        GlobalVariable* gi = &gvi;
-        if (gi->isDeclaration())
-            continue;
-        if (!isa<Value>(gi))
-            continue;
-        Value* gv = dyn_cast<Value>(gi);
-        StringRef gvname = gv->getName();
-        if (gvname.startswith("llvm."))
-            continue;
-        //bool gv_use_func = false;
-        if (!gi->hasInitializer())
-            continue;
-        errs()<<"GV:"<<gvname<<"\n";
-    }
-#endif
-    exit(0);
 }
 
 /*
@@ -2335,7 +2288,7 @@ void gatlin::my_debug(Module& module)
  */
 void gatlin::process_cpgf(Module& module)
 {
-    //my_debug(module);
+    my_debug(module);
     /*
      * pre-process
      * generate resource/functions from syscall entry function
