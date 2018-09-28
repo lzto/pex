@@ -323,6 +323,9 @@ class gatlin : public ModulePass
             return skip_funcs->exists_ignore_dot_number(str)
                 || kernel_api->exists_ignore_dot_number(str);
         };
+
+        FunctionSet function_signature_match(CallInst* ci);
+
 };
 
 #endif//_CAPCHK_H_

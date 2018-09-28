@@ -2316,8 +2316,35 @@ out:
     return;
 }
 
+FunctionSet gatlin::function_signature_match(CallInst* ci)
+{
+    FunctionSet fs;
+    Value* cv = ci->getCalledValue();
+    Type *ft = cv->getType()->getPointerElementType();
+    if (t2fs.find(ft)==t2fs.end())
+        return fs;
+    FunctionSet *fl = t2fs[ft];
+    for (auto* f: *fl)
+        fs.insert(f);
+    return fs;
+}
+
 void gatlin::my_debug(Module& module)
 {
+    int resolved = 0;
+    int targets = 0;
+    for (auto* idc: idcs)
+    {
+        FunctionSet fs = function_signature_match(idc);
+        if (fs.size()!=0)
+        {
+            resolved++;
+        }
+        targets+=fs.size();
+    }
+    errs()<<"# fsm total idcs to resolve:"<< idcs.size()<<"\n";
+    errs()<<"# fsm resolved:"<<resolved<<"\n";
+    errs()<<"# fsm targets:"<<targets<<"\n";
 }
 
 /*
@@ -2325,7 +2352,7 @@ void gatlin::my_debug(Module& module)
  */
 void gatlin::process_cpgf(Module& module)
 {
-    my_debug(module);
+    //my_debug(module);
     /*
      * pre-process
      * generate resource/functions from syscall entry function
@@ -2377,6 +2404,10 @@ void gatlin::process_cpgf(Module& module)
 
     errs()<<"Collecting Initialization Closure.\n";
     STOP_WATCH_MON(WID_0, collect_kernel_init_functions(module));
+
+    //statistics for function signature based approache
+    //STOP_WATCH_MON(WID_0, my_debug(module));
+    //exit (0);
 
     errs()<<"Identify Kernel Modules Interface\n";
     STOP_WATCH_MON(WID_0, identify_kmi(module));
