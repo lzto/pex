@@ -725,7 +725,8 @@ string CHGraph::getClassNameOfThisPtr(CallSite cs) const {
     }
     if (thisPtrClassName.size() == 0) {
         const Value *thisPtr = getVCallThisPtr(cs);
-        thisPtrClassName = getClassNameFromType(thisPtr->getType());
+        if (thisPtr!=NULL)
+            thisPtrClassName = getClassNameFromType(thisPtr->getType());
     }
 
     size_t found = thisPtrClassName.find_last_not_of("0123456789");

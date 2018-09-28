@@ -683,8 +683,8 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             errs()<<"\n";
             //gep->print(errs());
             errs()<<"\n";
-            //fs.insert(NULL);
 #endif
+            fs.insert(NULL);
             break;
         }
         //no match, we can try inner element
@@ -1010,6 +1010,7 @@ void gatlin::identify_interesting_struct(Module& module)
             discovered_interesting_type.insert(type);
         }
     }
+#if 0
     //second... all functions
     for (auto f: all_functions)
     {
@@ -1037,6 +1038,7 @@ void gatlin::identify_interesting_struct(Module& module)
 
         }
     }
+#endif
     //sort functions
     for (auto f: all_functions)
     {
