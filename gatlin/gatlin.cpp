@@ -671,7 +671,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             //no match! we are also done here, mark it as resolved anyway
             //TODO: we are actually able to solved this by looking at what 
             //function pointer is saved into KMI in earlier pass
-            
+#if 1
             cvt = get_load_from_type(cv);
             errs()<<"!!!  : ";
             cvt->print(errs());
@@ -684,6 +684,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             //gep->print(errs());
             errs()<<"\n";
             //fs.insert(NULL);
+#endif
             break;
         }
         //no match, we can try inner element
@@ -974,6 +975,7 @@ Value* find_struct_use(Value* f, ValueSet& visited)
 
 void gatlin::identify_interesting_struct(Module& module)
 {
+    //first... functions which have checks in them
     for(auto& pair: f2chks)
     {
         ValueSet visited;
@@ -1002,7 +1004,34 @@ void gatlin::identify_interesting_struct(Module& module)
             discovered_interesting_type.insert(type);
         }
     }
+    //second... all functions
+    for (auto f: all_functions)
+    {
+        ValueSet visited;
+        if (Value* u = find_struct_use(f, visited))
+        {
+            StructType* type = dyn_cast<StructType>(u->getType());
+            if (type->isLiteral())
+                continue;
+            if (!type->hasName())
+                continue;
+            if (type->getStructName().startswith("struct.kernel_symbol"))
+                continue;
+            bool already_exists = is_interesting_type(type);
+            errs()<<"Function: "<<f->getName()
+                <<" used by ";
+            if (!already_exists)
+                errs()<<ANSI_COLOR_GREEN<<" new discover:";
+            if (type->getStructName().size()==0)
+                errs()<<ANSI_COLOR_RED<<"Annonymouse Type";
+            else
+                errs()<<type->getStructName();
+            errs()<<ANSI_COLOR_RESET<<"\n";
+            discovered_interesting_type.insert(type);
 
+        }
+    }
+    //sort functions
     for (auto f: all_functions)
     {
         StringRef fname = f->getName();

@@ -232,7 +232,7 @@ static const char* interesting_keyword [] =
 /*
  * sysfs stuff
  */
-#define BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE 63
+#define BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE 64
 [[maybe_unused]]
 static const char* _builtin_interesting_type_word [] = 
 {
@@ -299,6 +299,7 @@ static const char* _builtin_interesting_type_word [] =
     "struct.uhci_hcd",
     "struct.uart_port",
     "struct.scsi_device_handler",
+    "struct.hid_device",
 };
 
 /*
