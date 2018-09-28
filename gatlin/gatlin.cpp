@@ -671,7 +671,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             //no match! we are also done here, mark it as resolved anyway
             //TODO: we are actually able to solved this by looking at what 
             //function pointer is saved into KMI in earlier pass
-#if 1
+#if 0
             cvt = get_load_from_type(cv);
             errs()<<"!!!  : ";
             cvt->print(errs());
@@ -741,6 +741,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             }
             if (is_tp)
             {
+                count--;
                 fs.clear();
             }
             count++;
