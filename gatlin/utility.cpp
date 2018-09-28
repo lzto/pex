@@ -236,6 +236,9 @@ bool is_tracepoint_func(Value* v)
             //resolved!, they are trying to load the first function pointer
             //from a struct type we already know!
             //errs()<<"Found:"<<st->getStructName()<<"\n";
+            //no name ...
+            if (!st->hasName())
+                return false;
             if (st->getStructName()=="struct.tracepoint_func")
             {
                 return true;
