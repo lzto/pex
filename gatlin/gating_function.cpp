@@ -233,7 +233,16 @@ void GatingCap::dump_interesting(InstructionSet* cis)
             if (last_cap_chk_func!=cf)
                 mismatched_chk_func = true;
         }
-        assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
+        if (!((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP)))
+        {
+            cs->print(errs());
+            errs()<<"\n";
+            errs()<<"cap_no="<<cap_no<<"\n";
+            cs->getDebugLoc().print(errs());
+            errs()<<"\n";
+            //assert((cap_no>=CAP_CHOWN) && (cap_no<=CAP_LAST_CAP));
+            continue;
+        }
         errs()<<"    "<<cap2string[cap_no]<<" @ "<<cf->getName()<<" ";
         cs->getDebugLoc().print(errs());
         errs()<<"\n";

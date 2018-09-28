@@ -627,12 +627,12 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
     {
         if (dyn_cast<Instruction>(cv))
         {
-            errs()<<"fptr passed in as a argument\n";
+            //errs()<<"fptr passed in as a argument\n";
         }else
         {
-            errs()<<" unknown pattern:";
+            //errs()<<" unknown pattern:";
             //cv->print(errs());
-            errs()<<"\n";
+            //errs()<<"\n";
         }
         //not load+gep?
         goto end;
@@ -1236,7 +1236,9 @@ void gatlin::collect_crits(Module& module)
         InstructionSet* _chks = pair.second;
         if ((_chks==NULL) || (_chks->size()==0) || gating->is_gating_function(func)
                 || is_skip_function(func->getName()))
+        {
             continue;
+        }
         dbgstk.push_back(func->getEntryBlock().getFirstNonPHI());
         InstructionList callgraph;
         InstructionList chks;
@@ -1247,6 +1249,9 @@ void gatlin::collect_crits(Module& module)
 
     CRITFUNC = critical_functions.size();
     CRITVAR = critical_variables.size();
+    CritFuncSkip = skipped_functions.size();
+    errs()<<"Critical functions skipped because of skip func list: "
+        <<CritFuncSkip<<"\n";
 }
 
 /*
@@ -1843,7 +1848,11 @@ void gatlin::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         if (csf->isIntrinsic()
                 ||is_skip_function(csf->getName())
                 ||gating->is_gating_function(csf))
+        {
+            if (is_skip_function(csf->getName()))
+                skipped_functions.insert(csf);
             return;
+        }
         current_crit_funcs.insert(csf);
 
         if (knob_gatlin_ccfv)
@@ -1888,7 +1897,11 @@ void gatlin::crit_func_collect(CallInst* cs, FunctionSet& current_crit_funcs,
         {
             if (csf->isIntrinsic() || is_skip_function(csf->getName())
                     ||gating->is_gating_function(csf) ||(csf==cs->getFunction()))
+            {
+                if (is_skip_function(csf->getName()))
+                    skipped_functions.insert(csf);
                 continue;
+            }
 
             current_crit_funcs.insert(csf);
             if (knob_gatlin_ccfv)
@@ -2082,7 +2095,10 @@ void gatlin::forward_all_interesting_usage(Instruction* I, unsigned int depth,
     DominatorTree dt(*func);
 
     if (is_skip_function(func->getName()))
+    {
+        skipped_functions.insert(func);
         return;
+    }
 
     bool is_function_permission_checked = checked;
     /*

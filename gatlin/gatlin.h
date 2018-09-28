@@ -260,6 +260,8 @@ class gatlin : public ModulePass
         FunctionSet kernel_init_functions;
         FunctionSet non_kernel_init_functions;
 
+        //store all skipped critical functions here
+        FunctionSet skipped_functions;
 /*
  * all critical functions and variables should be permission checked before use
  * generate critical functions on-the-fly
