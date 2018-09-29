@@ -478,8 +478,38 @@ bool has_function_pointer_type(Type* type)
 }
 
 /*
+ * return global value if this is loaded from global value, otherwise return NULL
+ */
+GlobalValue* get_loaded_from_gv(Value* v)
+{
+    GlobalValue* ret = NULL;
+    IntToPtrInst* i2ptr = dyn_cast<IntToPtrInst>(v);
+    LoadInst* li;
+    Value* addr;
+    if (!i2ptr)
+        goto end;
+    //next I am expectnig a load instruction
+    li = dyn_cast<LoadInst>(i2ptr->getOperand(0));
+    if (!li)
+        goto end;
+    addr = li->getPointerOperand()->stripPointerCasts();
+    //could be a constant expr of gep?
+    if (ConstantExpr* cxpr = dyn_cast<ConstantExpr>(addr))
+    {
+        GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(cxpr->getAsInstruction());
+        if (Value* tpobj = gep->getPointerOperand())
+            ret = dyn_cast<GlobalValue>(tpobj);
+    }
+end:
+    return ret;
+}
+
+/*
  * trace point function as callee?
- * similar to load+gep
+ * similar to load+gep, we can not know callee statically, because it is not defined
+ * trace point is a special case where the indirect callee is defined at runtime,
+ * we simply mark it as resolved since we can find where the callee fptr is loaded
+ * from
  */
 bool is_tracepoint_func(Value* v)
 {
@@ -495,12 +525,36 @@ bool is_tracepoint_func(Value* v)
         {
             //resolved!, they are trying to load the first function pointer
             //from a struct type we already know!
-            //errs()<<"Found:"<<st->getStructName()<<"\n";
+            errs()<<"Found:";
+            if (st->isLiteral())
+                errs()<<"Literal\n";
+            else
+                errs()<<st->getStructName()<<"\n";
             //no name ...
             if (!st->hasName())
                 return false;
-            if (st->getStructName()=="struct.tracepoint_func")
+            StringRef name = st->getStructName();
+            if (name=="struct.tracepoint_func")
             {
+                //errs()<<" ^ a tpfunc:";
+                //addr->print(errs());
+
+                //addr should be a phi
+                PHINode * phi = dyn_cast<PHINode>(addr);
+                assert(phi);
+                //one of the incomming value should be a load
+                for (int i=0;i<phi->getNumIncomingValues();i++)
+                {
+                    Value* iv = phi->getIncomingValue(i);
+                    //should be a load from a global defined object
+                    if (GlobalValue* gv = get_loaded_from_gv(iv))
+                    {
+                        //gv->print(errs());
+                        //errs()<<(gv->getName());
+                        break;
+                    }
+                }
+                //errs()<<"\n";
                 return true;
             }
             return false;

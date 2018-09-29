@@ -754,28 +754,30 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     //indirect call is load+gep and can be found in mi2m?
     int count = 0;
     int targets = 0;
+    errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)<<"indirect callsite, match"<<ANSI_COLOR_RESET<<"\n";
     for (auto* idc: idcs)
     {
+        errs()<<ANSI_COLOR_YELLOW<<" * ";
+        idc->getDebugLoc().print(errs());
+        errs()<<ANSI_COLOR_RESET<<"\n";
         FunctionSet fs = resolve_indirect_callee_using_kmi(idc);
         if (fs.size()!=0)
         {
+            count++;
             bool is_tp = false;
             if (fs.size()==1)
-            {
                 for (auto f:fs)
-                {
                     if (f==NULL)
                         is_tp = true;
-                }
-            }
             if (is_tp)
             {
                 //count--;
                 //tp is very specific, one callsite one target
                 targets += 1;
                 fs.clear();
+                errs()<<" [tracepoint] \n";
+                continue;
             }
-            count++;
         }
         //try dkmi
         if (fs.size()==0)
@@ -803,6 +805,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         }
         for (auto f:fs)
         {
+            errs()<<"     - "<<f->getName()<<"\n";
             funcs->insert(f);
             InstructionSet* csis = f2csi_type1[f];
             if (csis==NULL)
