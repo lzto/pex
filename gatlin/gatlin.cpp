@@ -770,7 +770,9 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             }
             if (is_tp)
             {
-                count--;
+                //count--;
+                //tp is very specific, one callsite one target
+                targets += 1;
                 fs.clear();
             }
             count++;
@@ -2540,13 +2542,13 @@ void gatlin::process_cpgf(Module& module)
 
     errs()<<"Populate indirect callsite using kernel module interface\n";
     STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
-    exit(0);
+
     if (knob_gatlin_cvf)
     {
         errs()<<"Resolve indirect callsite.\n";
         STOP_WATCH_MON(WID_0, populate_indcall_list_using_cvf(module));
     }
-
+    //exit(0);
     //pass 1
     errs()<<"Collect all permission-checked variables and functions\n";
     STOP_WATCH_MON(WID_0, collect_crits(module));

@@ -503,7 +503,7 @@ bool is_tracepoint_func(Value* v)
             {
                 return true;
             }
-            return true;
+            return false;
         }
     }
     //something else?
