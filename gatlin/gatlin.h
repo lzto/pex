@@ -99,6 +99,7 @@ class gatlin : public ModulePass
         void collect_chkps(Module&);
         void identify_interesting_struct(Module&);
         void identify_kmi(Module&);
+        void identify_dynamic_kmi(Module&);
 
         void populate_indcall_list_using_cvf(Module&);
         void populate_indcall_list_through_kmi(Module&);
@@ -167,6 +168,7 @@ class gatlin : public ModulePass
         void dump_kinit();
         void dump_non_kinit();
         void dump_kmi();
+        void dump_dkmi();
     
         void my_debug(Module& module);
 
@@ -259,6 +261,9 @@ class gatlin : public ModulePass
 
         //all module interface to corresponding module mapping
         ModuleInterface2Modules mi2m;
+        //dynamic KMI
+        DMInterface dmi;
+
 
         FunctionSet kernel_init_functions;
         FunctionSet non_kernel_init_functions;

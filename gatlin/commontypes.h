@@ -34,6 +34,7 @@ typedef std::list<CallInst*> CallInstList;
 typedef std::list<BasicBlock*> BasicBlockList;
 typedef std::list<Function*> FunctionList;
 typedef std::list<Type*> TypeList;
+typedef std::list<int> Indices;
 
 typedef std::unordered_set<std::string> StringSet;
 typedef std::unordered_set<Value*> ValueSet;
@@ -59,7 +60,13 @@ typedef std::unordered_map<Instruction*, FunctionSet*> Inst2Func;
 typedef std::unordered_map<const Instruction*, FunctionSet*> ConstInst2Func;
 typedef std::unordered_map<std::string, int> Str2Int;
 
-
+//dynamic KMI
+//pair between indices and function set(fptr stored into this position)
+typedef std::pair<Indices*,FunctionSet*> IFPair;
+//all those pairs
+typedef std::list<IFPair*> IFPairs;
+//map struct type to pairs
+typedef std::unordered_map<StructType*, IFPairs*> DMInterface;
 
 #endif//_COMMON_TYPES_
 

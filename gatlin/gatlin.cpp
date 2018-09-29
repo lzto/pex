@@ -683,8 +683,8 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             errs()<<"\n";
             //gep->print(errs());
             errs()<<"\n";
-#endif
             fs.insert(NULL);
+#endif
             break;
         }
         //no match, we can try inner element
@@ -1083,6 +1083,87 @@ void gatlin::identify_interesting_struct(Module& module)
 }
 
 /*
+ * this is used to identify any assignment of fptr to struct field, and we 
+ * collect this in complementary of identify_kmi
+ */
+void gatlin::identify_dynamic_kmi(Module& module)
+{
+    int cnt_resolved = 0;
+    for (auto *f: all_functions)
+    {
+        errs()<<"== "<<f->getName()<<"\n";
+        for (auto *u: f->users())
+        {
+            //skip all call instruction
+            if (dyn_cast<CallInst>(u))
+                continue;
+            //u->print(errs());
+            //errs()<<"\n";
+            //errs()<<"-------------------------\n";
+            //is u assigned to struct field?
+            Value* v = dyn_cast<Value>(u);
+            Indices inds;
+            ValueSet visited;
+            StructType *t = find_assignment_to_struct_type(v, inds, visited);
+            if (!t)
+                continue;
+            //Great! we got one! merge to know list or creat new
+            errs()<<"Store to type:";
+            if (!t->isLiteral())
+                errs()<<t->getStructName()<<" [";
+            else
+                errs()<<" literal [";
+            for (auto i: inds)
+                errs()<<i<<",";
+            errs()<<"]";
+            errs()<<ANSI_COLOR_GREEN<<"[Resolved]"<<ANSI_COLOR_RESET<<"\n";
+            cnt_resolved++;
+            add_function_to_dmi(f, t, inds, dmi);
+        }
+    }
+    errs()<<"#dyn kmi resolved:"<<cnt_resolved<<"\n";
+    dump_dkmi();
+    exit(0);
+}
+
+void gatlin::dump_dkmi()
+{
+    errs()<<ANSI_COLOR(BG_WHITE,FG_CYAN)<<"=dynamic KMI="<<ANSI_COLOR_RESET<<"\n";
+    for (auto tp: dmi)
+    {
+        //type to metadata mapping
+        StructType* t = tp.first;
+        errs()<<"Type:";
+        if (t->isLiteral())
+            errs()<<"Literal\n";
+        else
+            errs()<<t->getStructName()<<"\n";
+        //here comes the pairs
+        IFPairs* ifps = tp.second;
+        for (auto ifp: *ifps)
+        {
+            //indicies
+            Indices* idcs = ifp->first;
+            FunctionSet* fset = ifp->second;
+            errs()<<"  @ [";
+            for (auto i: *idcs)
+            {
+                errs()<<i<<",";
+            }
+            errs()<<"]\n";
+            //function names
+            for (Function* f: *fset)
+            {
+                errs()<<"        - ";
+                errs()<<f->getName();
+                errs()<<"\n";
+            }
+        }
+    }
+    errs()<<"\n";
+}
+
+/*
  * identify logical kernel module
  * kernel module usually connect its functions to a struct that can be called 
  * by upper layer
@@ -1091,7 +1172,8 @@ void gatlin::identify_interesting_struct(Module& module)
 void gatlin::identify_kmi(Module& module)
 {
     //Module::GlobalListType &globals = module.getGlobalList();
-    //not an interesting type
+    //not an interesting type, no function ptr inside this struct
+    //FIXME?: may have fptr inside it? 
     TypeSet nomo;
     for(GlobalVariable &gvi: module.globals())
     {
@@ -2412,6 +2494,9 @@ void gatlin::process_cpgf(Module& module)
     errs()<<"Identify Kernel Modules Interface\n";
     STOP_WATCH_MON(WID_0, identify_kmi(module));
     dump_kmi();
+    errs()<<"dynamic KMI\n";
+    STOP_WATCH_MON(WID_0, identify_dynamic_kmi(module));
+
     errs()<<"Populate indirect callsite using kernel module interface\n";
     STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
 

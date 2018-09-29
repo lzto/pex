@@ -27,14 +27,19 @@ Instruction* GetNextNonPHIInstruction(Instruction* i);
 Function* get_callee_function_direct(Instruction* i);
 StringRef get_callee_function_name(Instruction* i);
 InstructionSet get_user_instruction(Value*);
+StructType* find_assignment_to_struct_type(Value*, Indices&, ValueSet&);
 void get_callsite_inst(Value*, CallInstSet&);
 bool has_function_pointer_type(Type*);
 GetElementPtrInst* get_load_from_gep(Value*);
 Type* get_load_from_type(Value*);
 void get_gep_indicies(GetElementPtrInst*, std::list<int>&);
 Value* get_value_from_composit(Value*, std::list<int>&);
+
+void add_function_to_dmi(Function*, StructType*, Indices&, DMInterface&);
+
 bool function_has_gv_initcall_use(Function*);
 void str_truncate_dot_number(std::string&);
+
 bool is_skip_struct(StringRef);
 bool is_using_function_ptr(Function*);
 bool is_address_taken(Function* f);

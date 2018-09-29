@@ -107,6 +107,226 @@ StringRef get_callee_function_name(Instruction* i)
     return "";
 }
 
+//compare two indices
+bool indices_equal(Indices* a, Indices* b)
+{
+    if (a->size()!=b->size())
+        return false;
+    auto ai = a->begin();
+    auto bi = b->begin();
+    while(ai!=a->end())
+    {
+        if (*ai!=*bi)
+            return false;
+        bi++;
+        ai++;
+    }
+    return true;
+}
+
+/*
+ * store dyn KMI result into DMInterface so that we can use it later
+ */
+void add_function_to_dmi(Function* f, StructType* t, Indices& idcs, DMInterface& dmi)
+{
+    IFPairs* ifps = dmi[t];
+    if (ifps==NULL)
+    {
+        ifps = new IFPairs;
+        dmi[t] = ifps;
+    }
+    FunctionSet* fset = NULL;
+    for (auto* p: *ifps)
+    {
+        if (indices_equal(&idcs, p->first))
+        {
+            fset = p->second;
+        }
+    }
+    if (fset==NULL)
+    {
+        fset = new FunctionSet;
+        Indices* idc = new Indices;
+        for (auto i: idcs)
+            idc->push_back(i);
+        IFPair* ifp = new IFPair(idc,fset);
+        ifps->push_back(ifp);
+    }
+    fset->insert(f);
+}
+
+/*
+ * only handle high level type info right now.
+ * maybe we can extend this to global variable as well
+ */
+static StructType* resolve_where_is_it_stored_to(StoreInst* si, Indices& idcs)
+{
+    Value* po = si->getPointerOperand();
+    //the pointer operand should point to a field in a struct type
+    Instruction* i = dyn_cast<Instruction>(po);
+    ConstantExpr* cxpr;
+    Instruction* cxpri;
+    if (i)
+    {
+        //i could be bitcast or phi or select, what else?
+again:
+        switch(i->getOpcode())
+        {
+            case(Instruction::PHI):
+                break;
+            case(Instruction::Select):
+                break;
+            case(BitCastInst::BitCast):
+            {
+                BitCastInst *bci = dyn_cast<BitCastInst>(i);
+                //FIXME:sometimes struct name is not kept.. we don't know why,
+                //but we are not able to resolve those since they are translated
+                //to gep of byte directly without using any struct type/member/field info
+                //example: alloc_buffer, drivers/usb/host/ohci-dbg.c
+                i = dyn_cast<Instruction>(bci->getOperand(0));
+                assert(i!=NULL);
+                goto again;
+                break;
+            }
+            case(Instruction::GetElementPtr):
+            {
+                GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(i);
+                errs()<<ANSI_COLOR_GREEN<<"Resolved a dyn gep:"<<ANSI_COLOR_RESET;
+                Type* t = gep->getSourceElementType();
+                t->print(errs());
+                errs()<<"\n";
+                get_gep_indicies(gep, idcs);
+                if (idcs.size()==0)
+                    return NULL;
+                StructType* st = dyn_cast<StructType>(t);
+                return st;
+                break;
+            }
+            case(Instruction::Call):
+            {
+                //must be memory allocation
+                return NULL;
+                break;
+            }
+            default:
+                errs()<<"unable to handle instruction:"
+                    <<ANSI_COLOR_RED;
+                i->print(errs());
+                errs()<<ANSI_COLOR_RESET<<"\n";
+                goto eout;
+        }
+        //TODO: track du chain
+        errs()<<"stored to ";
+        po->print(errs());
+        errs()<<"\n";
+        errs()<<"Current I:";
+        i->print(errs());
+        errs()<<"\n";
+        return NULL;
+    }
+    //pointer operand is global variable?
+    if (dyn_cast<GlobalVariable>(po))
+    {
+        //dont care... we can extend this to support fine grind global-aa, since
+        //we already know the target
+        return NULL;
+    }
+    // a constant expr: gep?
+    cxpr = dyn_cast<ConstantExpr>(po);
+    if (cxpr==NULL)
+    {
+        //a function parameter
+        goto eout;
+    }
+    assert(cxpr!=NULL);
+    cxpri = cxpr->getAsInstruction();
+    if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(cxpri))
+    {
+        //only able to handle 1 leve of gep right now
+        errs()<<ANSI_COLOR_GREEN<<"Resolved a constant gep:"<<ANSI_COLOR_RESET;
+        Type* t = gep->getSourceElementType();
+        t->print(errs());
+        errs()<<"\n";
+        get_gep_indicies(gep, idcs);
+        if (idcs.size()==0)
+            return NULL;
+        StructType* st = dyn_cast<StructType>(t);
+        return st;
+    }else if (BitCastInst* bci = dyn_cast<BitCastInst>(cxpri))
+    {
+        errs()<<"this is a bitcast\n";
+        return NULL;
+    }else
+    {
+    }
+eout:
+    //what else?
+    errs()<<ANSI_COLOR_RED<<"ERR:"<<ANSI_COLOR_RESET;
+    si->print(errs());
+    errs()<<"\n";
+    po->print(errs());
+    errs()<<"\n";
+    si->getDebugLoc().print(errs());
+    errs()<<"\n";
+    llvm_unreachable("can not handle");
+}
+
+/*
+ * part of dynamic KMI
+ * for value v, we want to know whether it is assigned to a struct field, and 
+ * we want to know indices and return the struct type
+ * NULL is returned if not assigned to struct
+ *
+ * ! there should be a store instruction in the du-chain
+ *
+ */
+StructType* find_assignment_to_struct_type(Value* v, Indices& idcs, ValueSet& visited)
+{
+    //skip all global variables, the address is statically assigned to global variable
+    if (GlobalVariable* gv = dyn_cast<GlobalVariable>(v))
+        return NULL;
+    if (Instruction* i = dyn_cast<Instruction>(v))
+    {
+        errs()<<" * "<<ANSI_COLOR_YELLOW;
+        i->getDebugLoc().print(errs());
+        errs()<<ANSI_COLOR_RESET<<"\n";
+    }
+    if (visited.count(v))
+        return NULL;
+    visited.insert(v);
+    //* ! there should be a store instruction in the du-chain
+    StoreInst* si = dyn_cast<StoreInst>(v);
+    if (si)
+        return resolve_where_is_it_stored_to(si, idcs);
+    //ignore call instruction
+    if (CallInst* ci = dyn_cast<CallInst>(v))
+        return NULL;
+    //not store instruction?
+    //ignore all constant expr, which is a static allocation...
+    if (ConstantExpr* cxpr = dyn_cast<ConstantExpr>(v))
+        return NULL;
+    //or something else?
+    for (auto* u: v->users())
+    {
+        if (GlobalVariable* gv = dyn_cast<GlobalVariable>(u))
+            continue;
+        //only can be bitcast
+        if ((!isa<BitCastInst>(u)) && (!isa<StoreInst>(u)))
+        {
+            errs()<<ANSI_COLOR_RED<<"XXX not a bitcast not a store!"
+                <<ANSI_COLOR_RESET<<"\n";
+            //u->print(errs());
+            //errs()<<"\n";
+            continue;
+        }
+        if (StructType* st = find_assignment_to_struct_type(u, idcs, visited))
+            return st;
+    }
+    return NULL;
+}
+
+
+
 InstructionSet get_user_instruction(Value* v)
 {
     InstructionSet ret;
