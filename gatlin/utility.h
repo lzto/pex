@@ -36,6 +36,7 @@ void get_gep_indicies(GetElementPtrInst*, std::list<int>&);
 Value* get_value_from_composit(Value*, std::list<int>&);
 
 void add_function_to_dmi(Function*, StructType*, Indices&, DMInterface&);
+FunctionSet* dmi_exists(StructType*, Indices&, DMInterface&);
 
 bool function_has_gv_initcall_use(Function*);
 void str_truncate_dot_number(std::string&);

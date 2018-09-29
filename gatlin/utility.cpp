@@ -156,6 +156,25 @@ void add_function_to_dmi(Function* f, StructType* t, Indices& idcs, DMInterface&
 }
 
 /*
+ * given StructType and indices, return FunctionSet or NULL
+ */
+FunctionSet* dmi_exists(StructType* t, Indices& idcs, DMInterface& dmi)
+{
+    auto ifps = dmi.find(t);
+    if (ifps==dmi.end())
+        return NULL;
+    //cool we have a matching type
+    for (auto* p: *ifps->second)
+    {
+        if (&idcs, p->first)
+        {
+            return p->second;
+        }
+    }
+    return NULL;
+}
+
+/*
  * only handle high level type info right now.
  * maybe we can extend this to global variable as well
  */

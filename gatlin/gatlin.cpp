@@ -715,6 +715,36 @@ end:
 }
 
 /*
+ * this is also kmi, but dynamic one
+ */
+FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
+{
+    FunctionSet fs;
+    Value* cv = ci->getCalledValue();
+    Type* cvt;
+    GetElementPtrInst* gep;
+    std::list<int> indices;
+
+    cvt = get_load_from_type(cv);
+    if (!cvt || !cvt->isStructTy())
+        goto end;
+    //need to find till gep is exhausted and mi2m doesn't have a match
+    gep = get_load_from_gep(cv);
+    x_dbg_ins = gep;
+    get_gep_indicies(gep, indices);
+    x_dbg_idx = indices;
+    if (indices.size()==0)//non-constant in indicies
+        goto end;
+    //OK. now we match through struct type and indices
+    if (FunctionSet* _fs = dmi_exists(dyn_cast<StructType>(cvt), indices, dmi))
+    {
+        fs = *_fs;
+    }
+end:
+    return fs;
+}
+
+/*
  * create mapping for
  *  indirect call site -> callee
  *  callee -> indirect call site
@@ -727,7 +757,6 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     for (auto* idc: idcs)
     {
         FunctionSet fs = resolve_indirect_callee_using_kmi(idc);
-        targets += fs.size();
         if (fs.size()!=0)
         {
             bool is_tp = false;
@@ -745,10 +774,19 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
                 fs.clear();
             }
             count++;
+        }
+        //try dkmi
+        if (fs.size()==0)
+            fs = resolve_indirect_callee_using_dkmi(idc);
+        
+        if (fs.size()!=0)
+        {
+            count++;
         }else
         {
             fuidcs.insert(idc->getFunction());
         }
+        targets += fs.size();
         /*else
         {
             errs()<<"unable to resolve @ ";
@@ -1124,8 +1162,6 @@ void gatlin::identify_dynamic_kmi(Module& module)
         }
     }
     errs()<<"#dyn kmi resolved:"<<cnt_resolved<<"\n";
-    dump_dkmi();
-    exit(0);
 }
 
 void gatlin::dump_dkmi()
@@ -2500,10 +2536,11 @@ void gatlin::process_cpgf(Module& module)
     dump_kmi();
     errs()<<"dynamic KMI\n";
     STOP_WATCH_MON(WID_0, identify_dynamic_kmi(module));
+    dump_dkmi();
 
     errs()<<"Populate indirect callsite using kernel module interface\n";
     STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
-
+    exit(0);
     if (knob_gatlin_cvf)
     {
         errs()<<"Resolve indirect callsite.\n";

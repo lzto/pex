@@ -104,6 +104,7 @@ class gatlin : public ModulePass
         void populate_indcall_list_using_cvf(Module&);
         void populate_indcall_list_through_kmi(Module&);
         FunctionSet resolve_indirect_callee_using_kmi(CallInst*);
+        FunctionSet resolve_indirect_callee_using_dkmi(CallInst*);
         FunctionSet resolve_indirect_callee(CallInst*);
 
         void figure_out_gep_using_type_field(InstructionSet&,
