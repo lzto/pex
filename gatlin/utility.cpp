@@ -173,7 +173,10 @@ again:
         switch(i->getOpcode())
         {
             case(Instruction::PHI):
+            {
+                //TODO: need to handle both incoming value of PHI
                 break;
+            }
             case(Instruction::Select):
                 break;
             case(BitCastInst::BitCast):
@@ -191,10 +194,10 @@ again:
             case(Instruction::GetElementPtr):
             {
                 GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(i);
-                errs()<<ANSI_COLOR_GREEN<<"Resolved a dyn gep:"<<ANSI_COLOR_RESET;
+                //errs()<<ANSI_COLOR_GREEN<<"Resolved a dyn gep:"<<ANSI_COLOR_RESET;
                 Type* t = gep->getSourceElementType();
-                t->print(errs());
-                errs()<<"\n";
+                //t->print(errs());
+                //errs()<<"\n";
                 get_gep_indicies(gep, idcs);
                 if (idcs.size()==0)
                     return NULL;
@@ -215,13 +218,15 @@ again:
                 errs()<<ANSI_COLOR_RESET<<"\n";
                 goto eout;
         }
-        //TODO: track du chain
+        //TODO: track all du chain
+#if 0
         errs()<<"stored to ";
         po->print(errs());
         errs()<<"\n";
         errs()<<"Current I:";
         i->print(errs());
         errs()<<"\n";
+#endif
         return NULL;
     }
     //pointer operand is global variable?
@@ -243,10 +248,10 @@ again:
     if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(cxpri))
     {
         //only able to handle 1 leve of gep right now
-        errs()<<ANSI_COLOR_GREEN<<"Resolved a constant gep:"<<ANSI_COLOR_RESET;
+        //errs()<<ANSI_COLOR_GREEN<<"Resolved a constant gep:"<<ANSI_COLOR_RESET;
         Type* t = gep->getSourceElementType();
-        t->print(errs());
-        errs()<<"\n";
+        //t->print(errs());
+        //errs()<<"\n";
         get_gep_indicies(gep, idcs);
         if (idcs.size()==0)
             return NULL;
@@ -254,7 +259,8 @@ again:
         return st;
     }else if (BitCastInst* bci = dyn_cast<BitCastInst>(cxpri))
     {
-        errs()<<"this is a bitcast\n";
+        //TODO: handle me 
+        //errs()<<"this is a bitcast\n";
         return NULL;
     }else
     {
@@ -285,12 +291,14 @@ StructType* find_assignment_to_struct_type(Value* v, Indices& idcs, ValueSet& vi
     //skip all global variables, the address is statically assigned to global variable
     if (GlobalVariable* gv = dyn_cast<GlobalVariable>(v))
         return NULL;
+#if 0
     if (Instruction* i = dyn_cast<Instruction>(v))
     {
         errs()<<" * "<<ANSI_COLOR_YELLOW;
         i->getDebugLoc().print(errs());
         errs()<<ANSI_COLOR_RESET<<"\n";
     }
+#endif
     if (visited.count(v))
         return NULL;
     visited.insert(v);
@@ -313,8 +321,8 @@ StructType* find_assignment_to_struct_type(Value* v, Indices& idcs, ValueSet& vi
         //only can be bitcast
         if ((!isa<BitCastInst>(u)) && (!isa<StoreInst>(u)))
         {
-            errs()<<ANSI_COLOR_RED<<"XXX not a bitcast not a store!"
-                <<ANSI_COLOR_RESET<<"\n";
+            //errs()<<ANSI_COLOR_RED<<"XXX not a bitcast not a store!"
+            //    <<ANSI_COLOR_RESET<<"\n";
             //u->print(errs());
             //errs()<<"\n";
             continue;

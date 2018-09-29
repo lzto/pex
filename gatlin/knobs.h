@@ -65,6 +65,10 @@ cl::opt<bool> knob_gatlin_kmi("kmi",
         cl::desc("print kernel interface - disabled by default"),
         cl::init(false));
 
+cl::opt<bool> knob_gatlin_dkmi("dkmi",
+        cl::desc("print dkmi result - disabled by default"),
+        cl::init(false));
+
 cl::opt<bool> knob_gatlin_cvf("cvf",
         cl::desc("complex value flow analysis - disabled by default"),
         cl::init(false));

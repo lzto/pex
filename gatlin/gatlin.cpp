@@ -1091,7 +1091,7 @@ void gatlin::identify_dynamic_kmi(Module& module)
     int cnt_resolved = 0;
     for (auto *f: all_functions)
     {
-        errs()<<"== "<<f->getName()<<"\n";
+        //errs()<<"== "<<f->getName()<<"\n";
         for (auto *u: f->users())
         {
             //skip all call instruction
@@ -1108,6 +1108,7 @@ void gatlin::identify_dynamic_kmi(Module& module)
             if (!t)
                 continue;
             //Great! we got one! merge to know list or creat new
+#if 0
             errs()<<"Store to type:";
             if (!t->isLiteral())
                 errs()<<t->getStructName()<<" [";
@@ -1117,6 +1118,7 @@ void gatlin::identify_dynamic_kmi(Module& module)
                 errs()<<i<<",";
             errs()<<"]";
             errs()<<ANSI_COLOR_GREEN<<"[Resolved]"<<ANSI_COLOR_RESET<<"\n";
+#endif
             cnt_resolved++;
             add_function_to_dmi(f, t, inds, dmi);
         }
@@ -1128,6 +1130,8 @@ void gatlin::identify_dynamic_kmi(Module& module)
 
 void gatlin::dump_dkmi()
 {
+    if (!knob_gatlin_dkmi)
+        return;
     errs()<<ANSI_COLOR(BG_WHITE,FG_CYAN)<<"=dynamic KMI="<<ANSI_COLOR_RESET<<"\n";
     for (auto tp: dmi)
     {
