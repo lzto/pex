@@ -772,11 +772,14 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             if (is_tp)
             {
                 //count--;
-                //tp is very specific, one callsite one target
+                //tp is very specific, one target per callsite
                 targets += 1;
                 fs.clear();
                 errs()<<" [tracepoint] \n";
                 continue;
+            }else
+            {
+                errs()<<" [KMI]\n";
             }
         }
         //try dkmi
@@ -784,11 +787,15 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         {
             fs = resolve_indirect_callee_using_dkmi(idc);
             if (fs.size()!=0)
+            {
+                errs()<<" [DKMI]\n";
                 count++;
+            }
         }
         if (fs.size()==0)
         {
             fuidcs.insert(idc->getFunction());
+            errs()<<" [UNKNOWN]\n";
         }
         targets += fs.size();
         /*else
@@ -819,7 +826,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     errs()<<"# of indirect call sites: "<< idcs.size()<<"\n";
     errs()<<"# resolved by KMI:"<< count<<"\n";
     errs()<<"# (total) of callee:"<<targets<<"\n";
-    //exit(0);
+    exit(0);
 }
 
 

@@ -141,6 +141,7 @@ void add_function_to_dmi(Function* f, StructType* t, Indices& idcs, DMInterface&
         if (indices_equal(&idcs, p->first))
         {
             fset = p->second;
+            break;
         }
     }
     if (fset==NULL)
@@ -166,7 +167,7 @@ FunctionSet* dmi_exists(StructType* t, Indices& idcs, DMInterface& dmi)
     //cool we have a matching type
     for (auto* p: *ifps->second)
     {
-        if (&idcs, p->first)
+        if (indices_equal(&idcs, p->first))
         {
             return p->second;
         }
