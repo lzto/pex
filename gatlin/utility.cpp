@@ -230,12 +230,24 @@ again:
                 return NULL;
                 break;
             }
+            case(Instruction::Load):
+            {
+                //we are not able to handle load
+                break;
+            }
+            case(Instruction::Store):
+            {
+                //how come we have a store???
+                break;
+            }
             default:
                 errs()<<"unable to handle instruction:"
                     <<ANSI_COLOR_RED;
                 i->print(errs());
                 errs()<<ANSI_COLOR_RESET<<"\n";
-                goto eout;
+
+                //FIXME
+                //goto eout;
         }
         //TODO: track all du chain
 #if 0
@@ -259,8 +271,9 @@ again:
     cxpr = dyn_cast<ConstantExpr>(po);
     if (cxpr==NULL)
     {
-        //a function parameter
-        goto eout;
+        //we got a function parameter
+        return NULL;
+        //goto eout;
     }
     assert(cxpr!=NULL);
     cxpri = cxpr->getAsInstruction();

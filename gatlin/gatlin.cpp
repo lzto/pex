@@ -777,12 +777,12 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         }
         //try dkmi
         if (fs.size()==0)
-            fs = resolve_indirect_callee_using_dkmi(idc);
-        
-        if (fs.size()!=0)
         {
-            count++;
-        }else
+            fs = resolve_indirect_callee_using_dkmi(idc);
+            if (fs.size()!=0)
+                count++;
+        }
+        if (fs.size()==0)
         {
             fuidcs.insert(idc->getFunction());
         }
