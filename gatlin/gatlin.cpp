@@ -615,25 +615,14 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
     Value* cv = ci->getCalledValue();
     Type* cvt;
     GetElementPtrInst* gep;
-    std::list<int> indices;
-    if (is_tracepoint_func(cv))
-    {
-        //special condition, ignore tracepoint, we are not interested in them.
-        fs.insert(NULL);
-        return fs;
-    }
+    Indices indices;
+
     cvt = get_load_from_type(cv);
     if (!cvt || !cvt->isStructTy())
     {
-        if (dyn_cast<Instruction>(cv))
-        {
-            //errs()<<"fptr passed in as a argument\n";
-        }else
-        {
-            //errs()<<" unknown pattern:";
-            //cv->print(errs());
-            //errs()<<"\n";
-        }
+        errs()<<" unknown pattern:";
+        //cv->print(errs());
+        errs()<<"\n";
         //not load+gep?
         goto end;
     }
@@ -644,7 +633,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
     x_dbg_idx = indices;
     if (indices.size()==0)//non-constant in indicies
     {
-        //errs()<<"non-constant in indicies\n";
+        errs()<<"non-constant in indicies\n";
         goto end;
     }
     //should remove first element because we already resolved it?
@@ -655,15 +644,34 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
         find_in_mi2m(cvt, ms);
         if (ms.size())
         {
+            bool not_implemented = false;
             for (auto m: ms)
             {
                 Value* v = get_value_from_composit(m, indices);
                 if (v==NULL)
+                {
+                    /*
+                     * NOTE: some of the method may not be implemented
+                     *       it is ok to ignore them
+                     * for example: .release method in
+                     *      struct tcp_congestion_ops
+                     */
+#if 0
+                    errs()<<m->getName();
+                    errs()<<" - can not get value from composit [ ";
+                    for (auto i: indices)
+                        errs()<<","<<i;
+                    errs()<<"], this method may not implemented yet.\n";
+#endif
+                    not_implemented = true;
                     continue;
+                }
                 Function *f = dyn_cast<Function>(v);
                 assert(f);
                 fs.insert(f);
             }
+            if ((fs.size()==0) && (not_implemented))
+                fs.insert(NULL);
             break;
         }
         if (indices.size()<=1)
@@ -671,6 +679,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             //no match! we are also done here, mark it as resolved anyway
             //TODO: we are actually able to solved this by looking at what 
             //function pointer is saved into KMI in earlier pass
+            errs()<<" MIDC err\n";
 #if 0
             cvt = get_load_from_type(cv);
             errs()<<"!!!  : ";
@@ -683,7 +692,6 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             errs()<<"\n";
             //gep->print(errs());
             errs()<<"\n";
-            fs.insert(NULL);
 #endif
             break;
         }
@@ -740,8 +748,28 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
     {
         fs = *_fs;
     }
+    //TODO:iteratively explore basic element type if current one is not found
 end:
     return fs;
+}
+
+void gatlin::dump_kmi_info(CallInst* ci)
+{
+    Value* cv = ci->getCalledValue();
+    Type* cvt;
+    //GetElementPtrInst* gep;
+    Indices indices;
+
+    cvt = get_load_from_type(cv);
+    if (!cvt)
+    {
+        //non-load+gep
+        return;
+    }
+    //ci->print(errs());
+    //errs()<<"\n";
+    cvt->print(errs());
+    errs()<<"\n";
 }
 
 /*
@@ -754,56 +782,53 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     //indirect call is load+gep and can be found in mi2m?
     int count = 0;
     int targets = 0;
-    errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)<<"indirect callsite, match"<<ANSI_COLOR_RESET<<"\n";
+    errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
+        <<"indirect callsite, match"
+        <<ANSI_COLOR_RESET<<"\n";
     for (auto* idc: idcs)
     {
         errs()<<ANSI_COLOR_YELLOW<<" * ";
         idc->getDebugLoc().print(errs());
-        errs()<<ANSI_COLOR_RESET<<"\n";
+        errs()<<ANSI_COLOR_RESET<<"";
+        //is this a trace point?
+        //special condition, ignore tracepoint, we are not interested in them.
+        if (is_tracepoint_func(idc->getCalledValue()))
+        {
+            count++;
+            targets++;
+            errs()<<" [tracepoint] \n";
+            continue;
+        }
+        //try kmi
         FunctionSet fs = resolve_indirect_callee_using_kmi(idc);
         if (fs.size()!=0)
         {
-            count++;
-            bool is_tp = false;
-            if (fs.size()==1)
-                for (auto f:fs)
-                    if (f==NULL)
-                        is_tp = true;
-            if (is_tp)
+            errs()<<" [KMI]\n";
+            //using a fptr not implemented yet
+            if (*fs.begin()==NULL)
             {
-                //count--;
-                //tp is very specific, one target per callsite
-                targets += 1;
-                fs.clear();
-                errs()<<" [tracepoint] \n";
+                count++;
+                targets++;
                 continue;
-            }else
-            {
-                errs()<<" [KMI]\n";
             }
+            goto resolved;
         }
         //try dkmi
-        if (fs.size()==0)
+        fs = resolve_indirect_callee_using_dkmi(idc);
+        if (fs.size()!=0)
         {
-            fs = resolve_indirect_callee_using_dkmi(idc);
-            if (fs.size()!=0)
-            {
-                errs()<<" [DKMI]\n";
-                count++;
-            }
+            errs()<<" [DKMI]\n";
+            goto resolved;
         }
-        if (fs.size()==0)
-        {
-            fuidcs.insert(idc->getFunction());
-            errs()<<" [UNKNOWN]\n";
-        }
+        //can not resolve
+        fuidcs.insert(idc->getFunction());
+        errs()<<" [UNKNOWN]\n";
+        //dump the struct
+        dump_kmi_info(idc);
+        continue;
+resolved:
+        count++;
         targets += fs.size();
-        /*else
-        {
-            errs()<<"unable to resolve @ ";
-            idc->getDebugLoc().print(errs());
-            errs()<<"\n";
-        }*/
         FunctionSet *funcs = idcs2callee[idc];
         if (funcs==NULL)
         {
@@ -1225,7 +1250,6 @@ void gatlin::identify_kmi(Module& module)
 {
     //Module::GlobalListType &globals = module.getGlobalList();
     //not an interesting type, no function ptr inside this struct
-    //FIXME?: may have fptr inside it? 
     TypeSet nomo;
     for(GlobalVariable &gvi: module.globals())
     {
