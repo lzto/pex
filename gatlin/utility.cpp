@@ -219,8 +219,7 @@ again:
                 //t->print(errs());
                 //errs()<<"\n";
                 get_gep_indicies(gep, idcs);
-                if (idcs.size()==0)
-                    return NULL;
+                assert(idcs.size()!=0);
                 StructType* st = dyn_cast<StructType>(t);
                 return st;
                 break;
@@ -286,8 +285,7 @@ again:
         //t->print(errs());
         //errs()<<"\n";
         get_gep_indicies(gep, idcs);
-        if (idcs.size()==0)
-            return NULL;
+        assert(idcs.size()!=0);
         StructType* st = dyn_cast<StructType>(t);
         return st;
     }else if (BitCastInst* bci = dyn_cast<BitCastInst>(cxpri))
@@ -566,6 +564,41 @@ bool is_tracepoint_func(Value* v)
 }
 
 /*
+ * FIXME: we are currently not able to handle container_of, which is expanded
+ * into gep with negative index and high level type information is removed
+ */
+bool is_container_of(Value* cv)
+{
+    Type* cvt;
+    LoadInst* li = dyn_cast<LoadInst>(cv);
+    if (!li)
+        return false;
+    Value* addr;
+    addr = li->getPointerOperand();
+    if (addr!=addr->stripPointerCasts())
+        addr = addr->stripPointerCasts();
+    //could also load from constant expr
+    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
+    {
+        addr = ce->getAsInstruction();
+    }
+    if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
+    {
+        //container_of has gep source type of i8*
+        Type* pty = gep->getSourceElementType();
+        if(pty->isIntegerTy())
+        {
+            //and must have negative index in the first element
+            auto i = gep->idx_begin();
+            ConstantInt* idc = dyn_cast<ConstantInt>(i);
+            if (idc && (idc->getSExtValue()<0))
+                return true;
+        }
+    }
+    return false;
+}
+
+/*
  * get the type where the function pointer is stored
  * could be combined with bitcast/gep
  *
@@ -577,12 +610,19 @@ GetElementPtrInst* get_load_from_gep(Value* v)
     LoadInst* li = dyn_cast<LoadInst>(v);
     if (!li)
         return NULL;
-    Value* addr = li->getPointerOperand()->stripPointerCasts();
+    Value* addr = li->getPointerOperand();
+
+strip_ptr_cast:
     //could also load from constant expr
     if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
-    {
         addr = ce->getAsInstruction();
+    //only deal with bitcast, stripPointerCasts() will also strip gep(0,0)
+    if (isa<BitCastInst>(addr))
+    {
+        addr = dyn_cast<BitCastInst>(addr)->getOperand(0);
+        goto strip_ptr_cast;
     }
+
     if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
         return gep;
     //errs()<<"non gep:";
@@ -604,12 +644,18 @@ Type* get_load_from_type(Value* v)
 //only care about case where all indices are constantint
 void get_gep_indicies(GetElementPtrInst* gep, std::list<int>& indices)
 {
-    if ((!gep) || (!gep->hasAllConstantIndices()))
+    if (!gep)
         return;
+    //replace all non-constant with zero
+    //because they are literally an array...
+    //and we are only interested in the type info
     for (auto i = gep->idx_begin(); i!=gep->idx_end(); ++i)
     {
         ConstantInt* idc = dyn_cast<ConstantInt>(i);
-        indices.push_back(idc->getSExtValue());
+        if (idc)
+            indices.push_back(idc->getSExtValue());
+        else
+            indices.push_back(0);
     }
 }
 

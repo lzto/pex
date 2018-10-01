@@ -40,6 +40,12 @@ void gatlin::find_in_mi2m(Type* t, ModuleSet& ms)
 {
     ms.clear();
     StructType *st = dyn_cast<StructType>(t);
+    if (!st)
+    {
+        t->print(errs());
+        errs()<<"\n";
+    }
+    assert(st);
     if (!st->hasName())
     {
         if (mi2m.find(t)!=mi2m.end())
@@ -609,7 +615,7 @@ again:
  */
 
 //method 3, improved accuracy
-FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
+FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
@@ -617,12 +623,21 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
     GetElementPtrInst* gep;
     Indices indices;
 
+    err = 0;
+
     cvt = get_load_from_type(cv);
     if (!cvt || !cvt->isStructTy())
     {
-        errs()<<" unknown pattern:";
-        //cv->print(errs());
-        errs()<<"\n";
+        if (!isa<Instruction>(cv))
+        {
+            err = 3;
+            errs()<<"Func Para?\n";
+            goto end;
+        }
+        //FIXME: unable to handle container_of, which has negative index
+        //detect load from global fptr?
+        errs()<<" unknown pattern:\n";
+        //dump_kmi_info(ci);
         //not load+gep?
         goto end;
     }
@@ -631,12 +646,8 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
     x_dbg_ins = gep;
     get_gep_indicies(gep, indices);
     x_dbg_idx = indices;
-    if (indices.size()==0)//non-constant in indicies
-    {
-        errs()<<"non-constant in indicies\n";
-        goto end;
-    }
-    //should remove first element because we already resolved it?
+    assert(indices.size()!=0);
+    //should remove first element because it is array index
     indices.pop_front();
     while(1)
     {
@@ -671,15 +682,15 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
                 fs.insert(f);
             }
             if ((fs.size()==0) && (not_implemented))
-                fs.insert(NULL);
+                err = 1;
             break;
         }
+        //not found in mi2m
         if (indices.size()<=1)
         {
             //no match! we are also done here, mark it as resolved anyway
-            //TODO: we are actually able to solved this by looking at what 
-            //function pointer is saved into KMI in earlier pass
-            errs()<<" MIDC err\n";
+            //try dkmi if possible
+            errs()<<" MIDC err, try DKMI\n";
 #if 0
             cvt = get_load_from_type(cv);
             errs()<<"!!!  : ";
@@ -693,6 +704,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
             //gep->print(errs());
             errs()<<"\n";
 #endif
+            err = 2;
             break;
         }
         //no match, we can try inner element
@@ -707,16 +719,20 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci)
         if (ncvt->isPointerTy())
         {
             ncvt = dyn_cast<PointerType>(ncvt)->getElementType();
-        }else if (!ncvt->isStructTy())
+        }
+        //cvt should be struct type!!!
+        if (!ncvt->isStructTy())
         {
-            //bad cast! we lost type!
-            errs()<<ANSI_COLOR_RED<<"Bad cast! consider refactor code @ ";
-            x_dbg_ins->getDebugLoc().print(errs());
-            errs()<<ANSI_COLOR_RESET<<"\n";
+            //errs()<<"Can not resolve\n";
+            //x_dbg_ins->getDebugLoc().print(errs());
+            //errs()<<"\n";
+            //errs()<<"Type:";
+            //ncvt->print(errs());
+            //errs()<<"\n";
+            //dump_kmi_info(ci);
             break;
         }
         cvt = ncvt;
-        //cvt should be struct type!!!
     }
 end:
     return fs;
@@ -741,8 +757,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
     x_dbg_ins = gep;
     get_gep_indicies(gep, indices);
     x_dbg_idx = indices;
-    if (indices.size()==0)//non-constant in indicies
-        goto end;
+    assert(indices.size()!=0);
     //OK. now we match through struct type and indices
     if (FunctionSet* _fs = dmi_exists(dyn_cast<StructType>(cvt), indices, dmi))
     {
@@ -760,14 +775,53 @@ void gatlin::dump_kmi_info(CallInst* ci)
     //GetElementPtrInst* gep;
     Indices indices;
 
+    ci->print(errs());
+    errs()<<"\n";
+    cv->print(errs());
+    errs()<<"\n";
+
+    LoadInst* li = dyn_cast<LoadInst>(cv);
+    if (!li)
+        return;
+    Value* addr;
+    //handle two levels of load?
+load_again:
+    addr = li->getPointerOperand();
+    errs()<<"LOAD ADDR:";
+    addr->print(errs());
+    errs()<<"\n";
+    if (addr!=addr->stripPointerCasts())
+    {
+        addr = addr->stripPointerCasts();
+        errs()<<"Strip PTRCast:";
+        addr->print(errs());
+        errs()<<"\n";
+    }
+    //could also load from constant expr
+    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
+    {
+        addr = ce->getAsInstruction();
+        addr->print(errs());
+        errs()<<"\n";
+    }
+    if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
+    {
+        gep->print(errs());
+        errs()<<"\n";
+    }
+    //try to resolve load chain:
+    if (isa<LoadInst>(addr))
+    {
+        li = dyn_cast<LoadInst>(addr);
+        goto load_again;
+    }
+    //////////////
     cvt = get_load_from_type(cv);
     if (!cvt)
     {
         //non-load+gep
         return;
     }
-    //ci->print(errs());
-    //errs()<<"\n";
     cvt->print(errs());
     errs()<<"\n";
 }
@@ -782,6 +836,8 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     //indirect call is load+gep and can be found in mi2m?
     int count = 0;
     int targets = 0;
+    int fpar_cnt = 0;
+    int container_of_cnt = 0;;
     errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
         <<"indirect callsite, match"
         <<ANSI_COLOR_RESET<<"\n";
@@ -796,22 +852,56 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         {
             count++;
             targets++;
-            errs()<<" [tracepoint] \n";
+            errs()<<" [tracepoint]\n";
             continue;
         }
+        if (is_container_of(idc->getCalledValue()))
+        {
+            container_of_cnt++;
+            errs()<<" [container_of]\n";
+            //dump_kmi_info(idc);
+            continue;
+        }
+
         //try kmi
-        FunctionSet fs = resolve_indirect_callee_using_kmi(idc);
+        //err - 0 no error
+        //    - 1 undefined fptr, mark as resolved
+        //    - 2 undefined module, mark as resolved(may try dkmi, ok to fail)
+        int err;
+
+        FunctionSet fs = resolve_indirect_callee_using_kmi(idc, err);
         if (fs.size()!=0)
         {
             errs()<<" [KMI]\n";
-            //using a fptr not implemented yet
-            if (*fs.begin()==NULL)
+            goto resolved;
+        }
+        //using a fptr not implemented yet
+        switch(err)
+        {
+            case(0):
             {
+                goto unresolvable;
+            }
+            case(1):
+            {
+                errs()<<" [UNDEFINED1]\n";
                 count++;
                 targets++;
                 continue;
             }
-            goto resolved;
+            case(2)://try dkmi
+            {
+                //try dkmi
+                break;
+            }
+            case(3):
+            {
+                //function parameter, unable to be solved by kmi and dkmi, try SVF
+                fpar_cnt++;
+                goto unresolvable;
+            }
+            default:
+            llvm_unreachable("no way!");
         }
         //try dkmi
         fs = resolve_indirect_callee_using_dkmi(idc);
@@ -820,11 +910,26 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             errs()<<" [DKMI]\n";
             goto resolved;
         }
+        if (err==2)
+        {
+            errs()<<" [UNDEFINED2]\n";
+            count++;
+            targets++;
+            continue;
+        }
+unresolvable:
         //can not resolve
         fuidcs.insert(idc->getFunction());
-        errs()<<" [UNKNOWN]\n";
-        //dump the struct
-        dump_kmi_info(idc);
+        if (err==3)
+        {
+            //function parameter
+            errs()<<" [UPARA]\n";
+        }else
+        {
+            errs()<<" [UNKNOWN]\n";
+            //dump the struct
+            //dump_kmi_info(idc);
+        }
         continue;
 resolved:
         count++;
@@ -850,7 +955,10 @@ resolved:
     }
     errs()<<"# of indirect call sites: "<< idcs.size()<<"\n";
     errs()<<"# resolved by KMI:"<< count<<"\n";
-    errs()<<"# (total) of callee:"<<targets<<"\n";
+    errs()<<"# (total target) of callee:"<<targets<<"\n";
+    errs()<<"# fpara(KMI can not handle, try SVF?): "<<fpar_cnt<<"\n";
+    errs()<<"# call use container_of(), high level type info stripped: "
+                <<container_of_cnt<<"\n";
     exit(0);
 }
 
