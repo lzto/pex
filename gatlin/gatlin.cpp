@@ -681,14 +681,15 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
                 assert(f);
                 fs.insert(f);
             }
-            if ((fs.size()==0) && (not_implemented))
-                err = 1;
+            if ((fs.size()==0))// && (not_implemented))
+                err = 1;//found interface type but function is not implemented.
             break;
         }
         //not found in mi2m
         if (indices.size()<=1)
         {
             //no match! we are also done here, mark it as resolved anyway
+            //this object may be dynamically allocated,
             //try dkmi if possible
             errs()<<" MIDC err, try DKMI\n";
 #if 0
@@ -723,13 +724,18 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
         //cvt should be struct type!!!
         if (!ncvt->isStructTy())
         {
+            //bad cast!!!
+            //struct sk_buff { cb[48] }
+            //XFRM_TRANS_SKB_CB(__skb) ((struct xfrm_trans_cb *)&((__skb)->cb[0]))
             //errs()<<"Can not resolve\n";
             //x_dbg_ins->getDebugLoc().print(errs());
             //errs()<<"\n";
-            //errs()<<"Type:";
-            //ncvt->print(errs());
-            //errs()<<"\n";
+            errs()<<ANSI_COLOR_RED<<"Bad cast from type:"<<ANSI_COLOR_RESET;
+            ncvt->print(errs());
+            errs()<<" we can not resolve this\n";
+            err = 0;
             //dump_kmi_info(ci);
+            //llvm_unreachable("NOT POSSIBLE!");
             break;
         }
         cvt = ncvt;
@@ -838,6 +844,8 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     int targets = 0;
     int fpar_cnt = 0;
     int container_of_cnt = 0;;
+    int undefined_1 = 0;
+    int undefined_2 = 0;
     errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
         <<"indirect callsite, match"
         <<ANSI_COLOR_RESET<<"\n";
@@ -859,7 +867,6 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         {
             container_of_cnt++;
             errs()<<" [container_of]\n";
-            //dump_kmi_info(idc);
             continue;
         }
 
@@ -883,12 +890,6 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
                 goto unresolvable;
             }
             case(1):
-            {
-                errs()<<" [UNDEFINED1]\n";
-                count++;
-                targets++;
-                continue;
-            }
             case(2)://try dkmi
             {
                 //try dkmi
@@ -910,11 +911,21 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             errs()<<" [DKMI]\n";
             goto resolved;
         }
-        if (err==2)
+        if (err==1)
+        {
+                errs()<<" [UNDEFINED1]\n";
+                count++;
+                targets++;
+                undefined_1++;
+                //dump_kmi_info(idc);
+                continue;
+        }else if (err==2)
         {
             errs()<<" [UNDEFINED2]\n";
             count++;
             targets++;
+            undefined_2++;
+            //dump_kmi_info(idc);
             continue;
         }
 unresolvable:
@@ -954,11 +965,18 @@ resolved:
         }
     }
     errs()<<"# of indirect call sites: "<< idcs.size()<<"\n";
-    errs()<<"# resolved by KMI:"<< count<<"\n";
+    errs()<<"# resolved by KMI:"<< count<<" "<<(100*count/idcs.size())<<"%\n";
     errs()<<"# (total target) of callee:"<<targets<<"\n";
-    errs()<<"# fpara(KMI can not handle, try SVF?): "<<fpar_cnt<<"\n";
+    errs()<<"# undefined_1 : "<<undefined_1<<" "<<(100*undefined_1/idcs.size())<<"%\n";
+    errs()<<"# undefined_2 : "<<undefined_2<<" "<<(100*undefined_2/idcs.size())<<"%\n";
+    errs()<<"# fpara(KMI can not handle, try SVF?): "
+                <<fpar_cnt
+                <<" "<<(100*fpar_cnt/idcs.size())
+                <<"%\n";
     errs()<<"# call use container_of(), high level type info stripped: "
-                <<container_of_cnt<<"\n";
+                <<container_of_cnt
+                <<" "<<(100*container_of_cnt/idcs.size())
+                <<"%\n";
     exit(0);
 }
 
@@ -1365,12 +1383,39 @@ void gatlin::identify_kmi(Module& module)
         if (gi->isDeclaration())
             continue;
         assert(isa<Value>(gi));
+
+        StringRef gvn = gi->getName();
+        if (gvn.startswith("__kstrtab") || 
+                gvn.startswith("__tpstrtab") || 
+                gvn.startswith(".str") ||
+                gvn.startswith("llvm.") ||
+                gvn.startswith("__setup_str"))
+            continue;
+
+        bool array_type = false;
         Type* mod_interface = gi->getType();
+
         if (mod_interface->isPointerTy())
             mod_interface = mod_interface->getPointerElementType();
-
-        if (!mod_interface->isStructTy())
+        if (!mod_interface->isAggregateType())
             continue;
+        if (mod_interface->isArrayTy())
+        {
+            mod_interface
+                = dyn_cast<ArrayType>(mod_interface)->getTypeAtIndex((unsigned)0);
+            array_type = true;
+        }
+        if (!mod_interface->isStructTy())
+        {
+            if (mod_interface->isFirstClassType())
+                continue;
+            //report any non-first class type
+            errs()<<"IDKMI: aggregate type not struct?\n";
+            mod_interface->print(errs());
+            errs()<<"\n";
+            errs()<<gi->getName()<<"\n";
+            continue;
+        }
         if (nomo.find(mod_interface)!=nomo.end())
             continue;
         //function pointer inside struct?
@@ -1391,6 +1436,8 @@ void gatlin::identify_kmi(Module& module)
         }
         assert(ms);
         ms->insert(gi);
+        //if (array_type)
+        //    errs()<<"Added ArrayType:"<<gvn<<"\n";
     }
     TypeList to_remove;
     ModuleInterface2Modules to_add;

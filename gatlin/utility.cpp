@@ -577,6 +577,8 @@ bool is_container_of(Value* cv)
     addr = li->getPointerOperand();
     if (addr!=addr->stripPointerCasts())
         addr = addr->stripPointerCasts();
+    if (BitCastInst* bci = dyn_cast<BitCastInst>(addr))
+        addr = bci->getOperand(0);
     //could also load from constant expr
     if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
     {
@@ -584,9 +586,9 @@ bool is_container_of(Value* cv)
     }
     if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
     {
-        //container_of has gep source type of i8*
-        Type* pty = gep->getSourceElementType();
-        if(pty->isIntegerTy())
+        //container_of has gep with negative index
+        //Type* pty = gep->getSourceElementType();
+        //if(pty->isIntegerTy())
         {
             //and must have negative index in the first element
             auto i = gep->idx_begin();
@@ -698,6 +700,9 @@ bool is_skip_struct(StringRef str)
     return false;
 }
 
+/*
+ * FIXME: handle array 
+ */
 
 static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
 {
@@ -707,7 +712,6 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
     Value* ret = NULL;
     Value* v;
     int i;
-
     dbglst.push_back(cv);
 
     if (!indices.size())
@@ -716,10 +720,9 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
     i = indices.front();
     indices.pop_front();
 
-    if (gi!=NULL)
+    if (gi)
         initializer = gi->getInitializer();
-    else
-        goto end;
+    assert(initializer && "must have a initializer!");
 again:
     /*
      * no initializer? the member of struct in question does not have a
@@ -733,8 +736,17 @@ again:
     assert(v!=cv);
     if (v==NULL)
     {
+        goto end;//means that this field is not initialized
+#if 0
+        dump_gdblst(dbglst);
+        errs()<<"Current i="<<i<<"\n";
+        errs()<<"initializer=";
+        initializer->print(errs());
+        errs()<<"\n";
         initializer = initializer->getAggregateElement((unsigned)0);
+        llvm_unreachable("no possible!");
         goto again;
+#endif
     }
 
     v = v->stripPointerCasts();
@@ -756,6 +768,26 @@ end:
 Value* get_value_from_composit(Value* cv, std::list<int>& indices)
 {
     std::list<int> i = std::list<int>(indices);
+
+    bool array_type = false;
+    Type* mod_interface = NULL;
+    GlobalVariable* gi = dyn_cast<GlobalVariable>(cv);
+    Constant* initializer = gi->getInitializer();
+
+    //is this an array?
+    mod_interface = gi->getType();
+    if (mod_interface->isPointerTy())
+        mod_interface = mod_interface->getPointerElementType();
+    assert(mod_interface->isAggregateType());
+    if (mod_interface->isArrayTy())
+        array_type = true;
+
+    if (array_type)
+    {
+        //FIXME: iterate through all elements
+        cv = initializer->getAggregateElement((unsigned)0);
+    }
+    
     return _get_value_from_composit(cv, i);
 }
 
