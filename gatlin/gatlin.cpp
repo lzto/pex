@@ -631,7 +631,19 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
         if (!isa<Instruction>(cv))
         {
             err = 3;
-            errs()<<"Func Para?\n";
+            //errs()<<"Func Para?\n";
+            goto end;
+        }
+        if (load_from_global_fptr(cv))
+        {
+            err = 4;
+            //errs()<<"Global fptr\n";
+            goto end;
+        }
+        if ((cvt) && (!cvt->isStructTy()))
+        {
+            err = 5;
+            //errs()<<"cast\n";
             goto end;
         }
         //FIXME: unable to handle container_of, which has negative index
@@ -774,6 +786,31 @@ end:
     return fs;
 }
 
+bool gatlin::load_from_global_fptr(Value* cv)
+{
+    LoadInst* li = dyn_cast<LoadInst>(cv);
+    if (!li)
+        return false;
+    Value* addr;
+    //handle two levels of load?
+load_again:
+    addr = li->getPointerOperand();
+    if (isa<GlobalVariable>(addr))
+        return true;
+    if (addr!=addr->stripPointerCasts())
+        addr = addr->stripPointerCasts();
+    //could also load from constant expr
+    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
+        addr = ce->getAsInstruction();
+    //try to resolve load chain:
+    if (isa<LoadInst>(addr))
+    {
+        li = dyn_cast<LoadInst>(addr);
+        goto load_again;
+    }
+    return false;
+}
+
 void gatlin::dump_kmi_info(CallInst* ci)
 {
     Value* cv = ci->getCalledValue();
@@ -843,6 +880,8 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     int count = 0;
     int targets = 0;
     int fpar_cnt = 0;
+    int gptr_cnt = 0;
+    int cast_cnt = 0;
     int container_of_cnt = 0;;
     int undefined_1 = 0;
     int undefined_2 = 0;
@@ -874,6 +913,8 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         //err - 0 no error
         //    - 1 undefined fptr, mark as resolved
         //    - 2 undefined module, mark as resolved(may try dkmi, ok to fail)
+        //    - 3 fptr comes from function parameter
+        //    - 4 fptr comes from global fptr
         int err;
 
         FunctionSet fs = resolve_indirect_callee_using_kmi(idc, err);
@@ -899,6 +940,16 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             {
                 //function parameter, unable to be solved by kmi and dkmi, try SVF
                 fpar_cnt++;
+                goto unresolvable;
+            }
+            case(4):
+            {
+                gptr_cnt++;
+                goto unresolvable;
+            }
+            case(5):
+            {
+                cast_cnt++;
                 goto unresolvable;
             }
             default:
@@ -931,15 +982,31 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
 unresolvable:
         //can not resolve
         fuidcs.insert(idc->getFunction());
-        if (err==3)
+        switch(err)
         {
-            //function parameter
-            errs()<<" [UPARA]\n";
-        }else
-        {
-            errs()<<" [UNKNOWN]\n";
-            //dump the struct
-            //dump_kmi_info(idc);
+            case (3):
+            {
+                //function parameter
+                errs()<<" [UPARA]\n";
+                break;
+            }
+            case (4):
+            {
+                //global fptr
+                errs()<<" [GFPTR]\n";
+                break;
+            }
+            case (5):
+            {
+                errs()<<" [BAD CAST]\n";
+                break;
+            }
+            default:
+            {
+                errs()<<" [UNKNOWN]\n";
+                //dump the struct
+                //dump_kmi_info(idc);
+            }
         }
         continue;
 resolved:
@@ -972,6 +1039,14 @@ resolved:
     errs()<<"# fpara(KMI can not handle, try SVF?): "
                 <<fpar_cnt
                 <<" "<<(100*fpar_cnt/idcs.size())
+                <<"%\n";
+    errs()<<"# global fptr(try SVF?): "
+                <<gptr_cnt
+                <<" "<<(100*gptr_cnt/idcs.size())
+                <<"%\n";
+    errs()<<"# cast fptr(try SVF?): "
+                <<cast_cnt
+                <<" "<<(100*cast_cnt/idcs.size())
                 <<"%\n";
     errs()<<"# call use container_of(), high level type info stripped: "
                 <<container_of_cnt

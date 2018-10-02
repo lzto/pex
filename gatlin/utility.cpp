@@ -162,16 +162,40 @@ void add_function_to_dmi(Function* f, StructType* t, Indices& idcs, DMInterface&
 FunctionSet* dmi_exists(StructType* t, Indices& idcs, DMInterface& dmi)
 {
     auto ifps = dmi.find(t);
-    if (ifps==dmi.end())
-        return NULL;
-    //cool we have a matching type
-    for (auto* p: *ifps->second)
+    std::string stname;
+    IFPairs* ifpairs;
+    if (ifps!=dmi.end())
     {
-        if (indices_equal(&idcs, p->first))
+        ifpairs = ifps->second;
+        goto found;
+    }
+    //try again using name
+    //FIXME: may fix dmi.find also...
+    if (t->isLiteral())
+        goto end;
+    stname = t->getStructName();
+    str_truncate_dot_number(stname);
+    for (auto& ifpsp: dmi)
+    {
+        StructType* cst = ifpsp.first;
+        if (cst->isLiteral())
+            continue;
+        std::string cstn = cst->getStructName();
+        str_truncate_dot_number(cstn);
+        if (cstn==stname)
         {
-            return p->second;
+            ifpairs = ifpsp.second;
+            goto found;
+            break;
         }
     }
+    goto end;
+    //cool we have a matching type
+found:
+    for (auto* p: *ifpairs)
+        if (indices_equal(&idcs, p->first))
+            return p->second;
+end:
     return NULL;
 }
 
@@ -711,34 +735,93 @@ bool is_container_of(Value* cv)
 
 /*
  * get the type where the function pointer is stored
- * could be combined with bitcast/gep
+ * could be combined with bitcast/gep/select/phi
  *
  *   addr = (may bit cast) gep(struct addr, field)
  *   ptr = load(addr)
  */
 GetElementPtrInst* get_load_from_gep(Value* v)
 {
-    LoadInst* li = dyn_cast<LoadInst>(v);
-    if (!li)
+    //handle non load instructions first
+    //might be gep/phi/select/bitcast
+    //collect all load instruction into loads
+    InstructionSet loads;
+    ValueSet visited;
+    ValueList worklist;
+
+    if (!isa<Instruction>(v))
         return NULL;
-    Value* addr = li->getPointerOperand();
+    //Find all interesting load
+    worklist.push_back(dyn_cast<Instruction>(v));
+    while(worklist.size())
+    {
+        Value* i = worklist.front();
+        worklist.pop_front();
+        if (visited.count(i))
+            continue;
+        visited.insert(i);
+        if (LoadInst* li = dyn_cast<LoadInst>(i))
+        {
+            loads.insert(li);
+            continue;
+        }
+        if (BitCastInst * bci = dyn_cast<BitCastInst>(i))
+        {
+            worklist.push_back(bci->getOperand(0));
+            continue;
+        }
+        if (PHINode* phi = dyn_cast<PHINode>(i))
+        {
+            for (int k=0; k<phi->getNumIncomingValues(); k++)
+            {
+                worklist.push_back(phi->getIncomingValue(k));
+            }
+            continue;
+        }
+        if (SelectInst* sli = dyn_cast<SelectInst>(i))
+        {
+            worklist.push_back(sli->getTrueValue());
+            worklist.push_back(sli->getFalseValue());
+            continue;
+        }
+        if (IntToPtrInst* itptr = dyn_cast<IntToPtrInst>(i))
+        {
+            worklist.push_back(itptr->getOperand(0));
+            continue;
+        }
+        if (isa<GlobalValue>(i) || isa<ConstantExpr>(i) ||
+            isa<GetElementPtrInst>(i) || isa<BinaryOperator>(i)||
+            isa<CallInst>(i))
+            continue;
+        if (!isa<Instruction>(i))
+            continue;
+        i->print(errs());
+        errs()<<"\n";
+        llvm_unreachable("no possible");
+    }
+    //////////////////////////
+    for (auto* lv: loads)
+    {
+        LoadInst* li = dyn_cast<LoadInst>(lv);
+        Value* addr = li->getPointerOperand();
 
 strip_ptr_cast:
-    //could also load from constant expr
-    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
-        addr = ce->getAsInstruction();
-    //only deal with bitcast, stripPointerCasts() will also strip gep(0,0)
-    if (isa<BitCastInst>(addr))
-    {
-        addr = dyn_cast<BitCastInst>(addr)->getOperand(0);
-        goto strip_ptr_cast;
-    }
+        //could also load from constant expr
+        if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
+            addr = ce->getAsInstruction();
+        //only deal with bitcast, stripPointerCasts() will also strip gep(0,0)
+        if (isa<BitCastInst>(addr))
+        {
+            addr = dyn_cast<BitCastInst>(addr)->getOperand(0);
+            goto strip_ptr_cast;
+        }
 
-    if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
-        return gep;
-    //errs()<<"non gep:";
-    //addr->print(errs());
-    //errs()<<"\n";
+        if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
+            return gep;
+        //errs()<<"non gep:";
+        //addr->print(errs());
+        //errs()<<"\n";
+    }
     return NULL;
 }
 
