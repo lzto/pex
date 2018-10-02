@@ -238,6 +238,14 @@ again:
             case(Instruction::Store):
             {
                 //how come we have a store???
+                dump_gdblst(dbglst);
+                llvm_unreachable("Store to Store?");
+                break;
+            }
+            case(Instruction::Alloca):
+            {
+                //store to a stack variable
+                //maybe interesting to explore who used this.
                 break;
             }
             default:
@@ -309,62 +317,163 @@ eout:
 }
 
 /*
- * part of dynamic KMI
+ * part of dynamic KMI - a data flow analysis
  * for value v, we want to know whether it is assigned to a struct field, and 
  * we want to know indices and return the struct type
  * NULL is returned if not assigned to struct
  *
  * ! there should be a store instruction in the du-chain
- *
+ * TODO: extend this to inter-procedural analysis
  */
+//known interesting
+inline bool stub_fatst_is_interesting_value(Value* v)
+{
+
+    if (isa<BitCastInst>(v)||
+        isa<CallInst>(v)||
+        isa<ConstantExpr>(v)||
+        isa<StoreInst>(v) ||
+        isa<Function>(v))
+        return true;
+    if (SelectInst* si = dyn_cast<SelectInst>(v))
+    {
+        //result of select shoule be the same as v
+        if (si->getType()==v->getType())
+            return true;
+    }
+    if (PHINode *phi = dyn_cast<PHINode>(v))
+    {
+        if (phi->getType()==v->getType())
+            return true;
+    }
+    //okay if this is a function parameter
+    //a value that is not global and not an instruction/phi
+    if ((!isa<GlobalValue>(v))
+            && (!isa<Instruction>(v)))
+    {
+        return true;
+    }
+
+    return false;
+}
+//known uninteresting
+inline bool stub_fatst_is_uninteresting_value(Value*v)
+{
+    if (isa<GlobalVariable>(v) ||
+        isa<Constant>(v) ||
+        isa<ICmpInst>(v) ||
+        isa<PtrToIntInst>(v))
+        return true;
+    return false;
+}
+
 StructType* find_assignment_to_struct_type(Value* v, Indices& idcs, ValueSet& visited)
 {
-    //skip all global variables, the address is statically assigned to global variable
-    if (GlobalVariable* gv = dyn_cast<GlobalVariable>(v))
-        return NULL;
-#if 0
-    if (Instruction* i = dyn_cast<Instruction>(v))
-    {
-        errs()<<" * "<<ANSI_COLOR_YELLOW;
-        i->getDebugLoc().print(errs());
-        errs()<<ANSI_COLOR_RESET<<"\n";
-    }
-#endif
     if (visited.count(v))
         return NULL;
     visited.insert(v);
+
+    dbglst.push_back(v);
+
+    //FIXME: it is possible to assign to global variable!
+    //       but currently we are not handling them
+    //skip all global variables,
+    //the address is statically assigned to global variable
+    if (!stub_fatst_is_interesting_value(v))
+    {
+#if 0
+        if (!stub_fatst_is_uninteresting_value(v))
+        {
+            errs()<<ANSI_COLOR_RED<<"XXX:"
+                <<ANSI_COLOR_RESET<<"\n";
+            dump_gdblst(dbglst);
+        }
+#endif
+        dbglst.pop_back();
+        return NULL;
+    }
+
     //* ! there should be a store instruction in the du-chain
-    StoreInst* si = dyn_cast<StoreInst>(v);
-    if (si)
-        return resolve_where_is_it_stored_to(si, idcs);
-    //ignore call instruction
-    if (CallInst* ci = dyn_cast<CallInst>(v))
-        return NULL;
-    //not store instruction?
-    //ignore all constant expr, which is a static allocation...
-    if (ConstantExpr* cxpr = dyn_cast<ConstantExpr>(v))
-        return NULL;
-    //or something else?
+    if (StoreInst* si = dyn_cast<StoreInst>(v))
+    {
+        StructType* ret = resolve_where_is_it_stored_to(si, idcs);
+        dbglst.pop_back();
+        return ret;
+    }
+
     for (auto* u: v->users())
     {
-        if (GlobalVariable* gv = dyn_cast<GlobalVariable>(u))
-            continue;
-        //only can be bitcast
-        if ((!isa<BitCastInst>(u)) && (!isa<StoreInst>(u)))
+        Value* tu = u;
+        Type* t = u->getType();
+        if (StructType* t_st = dyn_cast<StructType>(t))
+            if ((t_st->hasName())
+                && t_st->getStructName().startswith("struct.kernel_symbol"))
+                    continue;
+        //inter-procedural analysis
+        //we are interested if it is used as a function parameter
+        if (CallInst* ci = dyn_cast<CallInst>(tu))
         {
-            //errs()<<ANSI_COLOR_RED<<"XXX not a bitcast not a store!"
-            //    <<ANSI_COLOR_RESET<<"\n";
-            //u->print(errs());
-            //errs()<<"\n";
-            continue;
+            //currently only deal with direct call...
+            Function* cif = get_callee_function_direct(ci);
+            if ((ci->getCalledValue()==v) || (cif==u))
+            {
+                //ignore calling myself..
+                continue;
+            }else if (cif==NULL)
+            {
+                //indirect call...
+#if 0
+                errs()<<"fptr used in indirect call";
+                ci->print(errs());errs()<<"\n";
+                errs()<<"arg v=";
+                v->print(errs());errs()<<"\n";
+#endif
+                continue;
+            } else if (!cif->isVarArg())
+            {
+                //try to figure out which argument is u corresponds to
+                int argidx = -1;
+                for (int ai = 0; ai<ci->getNumArgOperands(); ai++)
+                {
+                    if (ci->getArgOperand(ai)==v)
+                    {
+                        argidx = ai;
+                        break;
+                    }
+                }
+                //argidx should not ==-1
+                if (argidx==-1)
+                {
+                    errs()<<"Calling "<<cif->getName()<<"\n";
+                    ci->print(errs());errs()<<"\n";
+                    errs()<<"arg v=";
+                    v->print(errs());
+                    errs()<<"\n";
+                }
+                assert(argidx!=-1);
+                //errs()<<"Into "<<cif->getName()<<"\n";
+                //now are are in the callee function
+                //figure out the argument
+                auto targ = cif->arg_begin();
+                for (int i=0;i<argidx;i++)
+                    targ++;
+                tu = targ;
+            }else
+            {
+                //means that this is a vararg
+                continue;
+            }
         }
-        if (StructType* st = find_assignment_to_struct_type(u, idcs, visited))
+        //FIXME: visited?
+        if (StructType* st = find_assignment_to_struct_type(tu, idcs, visited))
+        {
+            dbglst.pop_back();
             return st;
+        }
     }
+    dbglst.pop_back();
     return NULL;
 }
-
-
 
 InstructionSet get_user_instruction(Value* v)
 {
@@ -958,7 +1067,17 @@ void dump_gdblst(ValueList& list)
     for (auto* I: list)
     {
         errs()<<"  "<<cnt<<":";
-        I->print(errs());
+        if (Function*f = dyn_cast<Function>(I))
+            errs()<<f->getName();
+        else
+        {
+            I->print(errs());
+            if (Instruction* i = dyn_cast<Instruction>(I))
+            {
+                errs()<<"  ";
+                i->getDebugLoc().print(errs());
+            }
+        }
         errs()<<"\n";
         cnt++;
     }

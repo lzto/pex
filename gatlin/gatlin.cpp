@@ -1292,37 +1292,16 @@ void gatlin::identify_dynamic_kmi(Module& module)
     int cnt_resolved = 0;
     for (auto *f: all_functions)
     {
-        //errs()<<"== "<<f->getName()<<"\n";
-        for (auto *u: f->users())
-        {
-            //skip all call instruction
-            if (dyn_cast<CallInst>(u))
-                continue;
-            //u->print(errs());
-            //errs()<<"\n";
-            //errs()<<"-------------------------\n";
-            //is u assigned to struct field?
-            Value* v = dyn_cast<Value>(u);
-            Indices inds;
-            ValueSet visited;
-            StructType *t = find_assignment_to_struct_type(v, inds, visited);
-            if (!t)
-                continue;
-            //Great! we got one! merge to know list or creat new
-#if 0
-            errs()<<"Store to type:";
-            if (!t->isLiteral())
-                errs()<<t->getStructName()<<" [";
-            else
-                errs()<<" literal [";
-            for (auto i: inds)
-                errs()<<i<<",";
-            errs()<<"]";
-            errs()<<ANSI_COLOR_GREEN<<"[Resolved]"<<ANSI_COLOR_RESET<<"\n";
-#endif
-            cnt_resolved++;
-            add_function_to_dmi(f, t, inds, dmi);
-        }
+        Value* v = dyn_cast<Value>(f);
+        Indices inds;
+        ValueSet visited;
+        StructType *t = find_assignment_to_struct_type(v, inds, visited);
+        if (!t)
+            continue;
+        //Great! we got one! merge to know list or creat new
+
+        cnt_resolved++;
+        add_function_to_dmi(f, t, inds, dmi);
     }
     errs()<<"#dyn kmi resolved:"<<cnt_resolved<<"\n";
 }
