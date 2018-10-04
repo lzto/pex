@@ -729,9 +729,16 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
             llvm_unreachable("!!!1");
         }
         Type* ncvt = cvt->getStructElementType(idc);
-        if (ncvt->isPointerTy())
+        if (PointerType* pty = dyn_cast<PointerType>(ncvt))
         {
-            ncvt = dyn_cast<PointerType>(ncvt)->getElementType();
+            ncvt = pty->getElementType();
+        }
+        //deal with array of struct here
+        if (ArrayType *aty = dyn_cast<ArrayType>(ncvt))
+        {
+            ncvt = aty->getElementType();
+            //need to remove another one index
+            indices.pop_front();
         }
         //cvt should be struct type!!!
         if (!ncvt->isStructTy())
