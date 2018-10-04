@@ -319,6 +319,12 @@ static StructType* resolve_where_is_it_stored_to(StoreInst* si, Indices& idcs)
                         worklist.push_back(bop->getOperand(i));
                     break;
                 }
+                case(Instruction::PtrToInt):
+                {
+                    PtrToIntInst* p2int = dyn_cast<PtrToIntInst>(i);
+                    worklist.push_back(p2int->getOperand(0));
+                    break;
+                }
                 default:
                     errs()<<"unable to handle instruction:"
                         <<ANSI_COLOR_RED;
