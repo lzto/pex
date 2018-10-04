@@ -795,6 +795,11 @@ GetElementPtrInst* get_load_from_gep(Value* v)
             worklist.push_back(itptr->getOperand(0));
             continue;
         }
+        if (ZExtInst* izext = dyn_cast<ZExtInst>(i))
+        {
+            worklist.push_back(izext->getOperand(0));
+            continue;
+        }
         if (isa<GlobalValue>(i) || isa<ConstantExpr>(i) ||
             isa<GetElementPtrInst>(i) || isa<BinaryOperator>(i)||
             isa<CallInst>(i))
