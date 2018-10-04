@@ -759,6 +759,15 @@ bool is_container_of(Value* cv)
  *
  *   addr = (may bit cast) gep(struct addr, field)
  *   ptr = load(addr)
+ *
+ *  may have other form like:
+ *  addr1 = gep
+ *  addr2 = gep
+ *  ptr0 = phi/select addr1, addr2
+ *  ptr1 = bitcast ptr0
+ *  fptr = load(ptr1)
+ *
+ * TODO: return a list of GEP instead of only one
  */
 GetElementPtrInst* get_load_from_gep(Value* v)
 {
@@ -771,7 +780,7 @@ GetElementPtrInst* get_load_from_gep(Value* v)
 
     if (!isa<Instruction>(v))
         return NULL;
-    //Find all interesting load
+    //first, find all interesting load
     worklist.push_back(dyn_cast<Instruction>(v));
     while(worklist.size())
     {
@@ -792,10 +801,8 @@ GetElementPtrInst* get_load_from_gep(Value* v)
         }
         if (PHINode* phi = dyn_cast<PHINode>(i))
         {
-            for (int k=0; k<phi->getNumIncomingValues(); k++)
-            {
+            for (int k=0; k<(int)phi->getNumIncomingValues(); k++)
                 worklist.push_back(phi->getIncomingValue(k));
-            }
             continue;
         }
         if (SelectInst* sli = dyn_cast<SelectInst>(i))
@@ -809,13 +816,30 @@ GetElementPtrInst* get_load_from_gep(Value* v)
             worklist.push_back(itptr->getOperand(0));
             continue;
         }
+        if (PtrToIntInst* ptint = dyn_cast<PtrToIntInst>(i))
+        {
+            worklist.push_back(ptint->getOperand(0));
+            continue;
+        }
+        //binary operand for pointer manupulation
+        if (BinaryOperator *bop = dyn_cast<BinaryOperator>(i))
+        {
+            for (int i=0;i<(int)bop->getNumOperands();i++)
+                worklist.push_back(bop->getOperand(i));
+            continue;
+        }
         if (ZExtInst* izext = dyn_cast<ZExtInst>(i))
         {
             worklist.push_back(izext->getOperand(0));
             continue;
         }
+        if (SExtInst* isext = dyn_cast<SExtInst>(i))
+        {
+            worklist.push_back(isext->getOperand(0));
+            continue;
+        }
         if (isa<GlobalValue>(i) || isa<ConstantExpr>(i) ||
-            isa<GetElementPtrInst>(i) || isa<BinaryOperator>(i)||
+            isa<GetElementPtrInst>(i) || //isa<BinaryOperator>(i)||
             isa<CallInst>(i))
             continue;
         if (!isa<Instruction>(i))
@@ -825,31 +849,95 @@ GetElementPtrInst* get_load_from_gep(Value* v)
         llvm_unreachable("no possible");
     }
     //////////////////////////
+    //For each load instruction's pointer operand, we want to know whether
+    //it is derived from gep or not..
+    ValueSet lots_of_geps;
     for (auto* lv: loads)
     {
         LoadInst* li = dyn_cast<LoadInst>(lv);
         Value* addr = li->getPointerOperand();
 
-strip_ptr_cast:
-        //could also load from constant expr
-        if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
-            addr = ce->getAsInstruction();
-        //only deal with bitcast, stripPointerCasts() will also strip gep(0,0)
-        if (isa<BitCastInst>(addr))
+        //track def-use chain
+        worklist.push_back(addr);
+        visited.clear();
+        while (worklist.size())
         {
-            addr = dyn_cast<BitCastInst>(addr)->getOperand(0);
-            goto strip_ptr_cast;
-        }
+            Value* i = worklist.front();
+            worklist.pop_front();
+            if (visited.count(i))
+                continue;
+            visited.insert(i);
+            if (isa<GetElementPtrInst>(i))
+            {
+                lots_of_geps.insert(i);
+                continue;
+            }
+            if (BitCastInst * bci = dyn_cast<BitCastInst>(i))
+            {
+                worklist.push_back(bci->getOperand(0));
+                continue;
+            }
+            if (PHINode* phi = dyn_cast<PHINode>(i))
+            {
+                for (int k=0; k<(int)phi->getNumIncomingValues(); k++)
+                    worklist.push_back(phi->getIncomingValue(k));
+                continue;
+            }
+            if (SelectInst* sli = dyn_cast<SelectInst>(i))
+            {
+                worklist.push_back(sli->getTrueValue());
+                worklist.push_back(sli->getFalseValue());
+                continue;
+            }
+            if (IntToPtrInst* itptr = dyn_cast<IntToPtrInst>(i))
+            {
+                worklist.push_back(itptr->getOperand(0));
+                continue;
+            }
+            if (PtrToIntInst* ptint = dyn_cast<PtrToIntInst>(i))
+            {
+                worklist.push_back(ptint->getOperand(0));
+                continue;
+            }
+            //binary operand for pointer manupulation
+            if (BinaryOperator *bop = dyn_cast<BinaryOperator>(i))
+            {
+                for (int i=0;i<(int)bop->getNumOperands();i++)
+                    worklist.push_back(bop->getOperand(i));
+                continue;
+            }
+            if (ZExtInst* izext = dyn_cast<ZExtInst>(i))
+            {
+                worklist.push_back(izext->getOperand(0));
+                continue;
+            }
+            if (SExtInst* isext = dyn_cast<SExtInst>(i))
+            {
+                worklist.push_back(isext->getOperand(0));
+                continue;
+            }
 
-        if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
-            return gep;
-        //errs()<<"non gep:";
-        //addr->print(errs());
-        //errs()<<"\n";
+            if (isa<GlobalValue>(i) || isa<ConstantExpr>(i) ||
+                isa<GetElementPtrInst>(i) || isa<LoadInst>(i) ||
+                //isa<BinaryOperator>(i)||
+                isa<CallInst>(i))
+                continue;
+            if (!isa<Instruction>(i))
+                continue;
+            //what else?
+            i->print(errs());
+            errs()<<"\n";
+            llvm_unreachable("what else?");
+        }
     }
+    if (lots_of_geps.size())
+        return dyn_cast<GetElementPtrInst>(*lots_of_geps.begin());
     return NULL;
 }
 
+/*
+ * we are actually only interested in load+gep
+ */
 Type* get_load_from_type(Value* v)
 {
     GetElementPtrInst* gep = get_load_from_gep(v);

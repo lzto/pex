@@ -649,7 +649,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
         //FIXME: unable to handle container_of, which has negative index
         //detect load from global fptr?
         errs()<<" unknown pattern:\n";
-        dump_kmi_info(ci);
+        //dump_kmi_info(ci);
         //not load+gep?
         goto end;
     }
