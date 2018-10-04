@@ -619,147 +619,131 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
-    Type* cvt;
-    GetElementPtrInst* gep;
-    Indices indices;
-
+    //need to find till gep is exhausted and mi2m doesn't have a match
+    InstructionSet geps = get_load_from_gep(cv);
     err = 0;
+    for(auto _gep: geps)
+    {
+        GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(_gep);
+        Type* cvt = dyn_cast<PointerType>(gep->getPointerOperandType())
+            ->getElementType();
+        if (!cvt->isStructTy())
+            continue;
 
-    cvt = get_load_from_type(cv);
-    if (!cvt || !cvt->isStructTy())
+        Indices indices;
+        x_dbg_ins = gep;
+        get_gep_indicies(gep, indices);
+        x_dbg_idx = indices;
+        assert(indices.size()!=0);
+        //should remove first element because it is an array index
+        //the actual match
+        indices.pop_front();
+        while(1)
+        {
+            ModuleSet ms;
+            find_in_mi2m(cvt, ms);
+            if (ms.size())
+            {
+                bool not_implemented = false;
+                for (auto m: ms)
+                {
+                    Value* v = get_value_from_composit(m, indices);
+                    if (v==NULL)
+                    {
+                        /*
+                         * NOTE: some of the method may not be implemented
+                         *       it is ok to ignore them
+                         * for example: .release method in
+                         *      struct tcp_congestion_ops
+                         */
+#if 0
+                        errs()<<m->getName();
+                        errs()<<" - can not get value from composit [ ";
+                        for (auto i: indices)
+                            errs()<<","<<i;
+                        errs()<<"], this method may not implemented yet.\n";
+#endif
+                        not_implemented = true;
+                        continue;
+                    }
+                    Function *f = dyn_cast<Function>(v);
+                    assert(f);
+                    fs.insert(f);
+                }
+                if ((fs.size()==0) && (err==0))
+                    err = 1;//found interface type but function is not implemented.
+                break;
+            }
+            //not found in mi2m
+            if (indices.size()<=1)
+            {
+                //no match! we are also done here, mark it as resolved anyway
+                //this object may be dynamically allocated,
+                //try dkmi if possible
+#if 0
+                errs()<<" MIDC err, try DKMI\n";
+                cvt = get_load_from_type(cv);
+                errs()<<"!!!  : ";
+                cvt->print(errs());
+                errs()<<"\n";
+                
+                errs()<<"idcs:";
+                for (auto i: x_dbg_idx)
+                    errs()<<","<<i;
+                errs()<<"\n";
+                //gep->print(errs());
+                errs()<<"\n";
+#endif
+                err = 2;
+                break;
+            }
+            //no match, we can try inner element
+            int idc = indices.front();
+            indices.pop_front();
+            if (!cvt->isStructTy())
+            {
+                cvt->print(errs());
+                llvm_unreachable("!!!1");
+            }
+            Type* ncvt = cvt->getStructElementType(idc);
+            if (PointerType* pty = dyn_cast<PointerType>(ncvt))
+            {
+                ncvt = pty->getElementType();
+            }
+            //deal with array of struct here
+            if (ArrayType *aty = dyn_cast<ArrayType>(ncvt))
+            {
+                ncvt = aty->getElementType();
+                //need to remove another one index
+                indices.pop_front();
+            }
+            //cvt should be struct type!!!
+            if (!ncvt->isStructTy())
+            {
+                //bad cast!!!
+                //struct sk_buff { cb[48] }
+                //XFRM_TRANS_SKB_CB(__skb) ((struct xfrm_trans_cb *)&((__skb)->cb[0]))
+                //errs()<<"Can not resolve\n";
+                //x_dbg_ins->getDebugLoc().print(errs());
+                //errs()<<"\n";
+                errs()<<ANSI_COLOR_RED<<"Bad cast from type:"<<ANSI_COLOR_RESET;
+                ncvt->print(errs());
+                errs()<<" we can not resolve this\n";
+                //dump_kmi_info(ci);
+                //llvm_unreachable("NOT POSSIBLE!");
+                err = 5;
+                break;
+            }
+            cvt = ncvt;
+        }
+    }
+    if (fs.size()==0)
     {
         if (!isa<Instruction>(cv))
-        {
             err = 3;
-            //errs()<<"Func Para?\n";
-            goto end;
-        }
-        if (load_from_global_fptr(cv))
-        {
+        else if (load_from_global_fptr(cv))
             err = 4;
-            //errs()<<"Global fptr\n";
-            goto end;
-        }
-        if ((cvt) && (!cvt->isStructTy()))
-        {
-            err = 5;
-            //errs()<<"cast\n";
-            goto end;
-        }
-        //FIXME: unable to handle container_of, which has negative index
-        //detect load from global fptr?
-        errs()<<" unknown pattern:\n";
-        //dump_kmi_info(ci);
-        //not load+gep?
-        goto end;
     }
-    //need to find till gep is exhausted and mi2m doesn't have a match
-    gep = get_load_from_gep(cv);
-    x_dbg_ins = gep;
-    get_gep_indicies(gep, indices);
-    x_dbg_idx = indices;
-    assert(indices.size()!=0);
-    //should remove first element because it is array index
-    indices.pop_front();
-    while(1)
-    {
-        ModuleSet ms;
-        find_in_mi2m(cvt, ms);
-        if (ms.size())
-        {
-            bool not_implemented = false;
-            for (auto m: ms)
-            {
-                Value* v = get_value_from_composit(m, indices);
-                if (v==NULL)
-                {
-                    /*
-                     * NOTE: some of the method may not be implemented
-                     *       it is ok to ignore them
-                     * for example: .release method in
-                     *      struct tcp_congestion_ops
-                     */
-#if 0
-                    errs()<<m->getName();
-                    errs()<<" - can not get value from composit [ ";
-                    for (auto i: indices)
-                        errs()<<","<<i;
-                    errs()<<"], this method may not implemented yet.\n";
-#endif
-                    not_implemented = true;
-                    continue;
-                }
-                Function *f = dyn_cast<Function>(v);
-                assert(f);
-                fs.insert(f);
-            }
-            if ((fs.size()==0))// && (not_implemented))
-                err = 1;//found interface type but function is not implemented.
-            break;
-        }
-        //not found in mi2m
-        if (indices.size()<=1)
-        {
-            //no match! we are also done here, mark it as resolved anyway
-            //this object may be dynamically allocated,
-            //try dkmi if possible
-            errs()<<" MIDC err, try DKMI\n";
-#if 0
-            cvt = get_load_from_type(cv);
-            errs()<<"!!!  : ";
-            cvt->print(errs());
-            errs()<<"\n";
-            
-            errs()<<"idcs:";
-            for (auto i: x_dbg_idx)
-                errs()<<","<<i;
-            errs()<<"\n";
-            //gep->print(errs());
-            errs()<<"\n";
-#endif
-            err = 2;
-            break;
-        }
-        //no match, we can try inner element
-        int idc = indices.front();
-        indices.pop_front();
-        if (!cvt->isStructTy())
-        {
-            cvt->print(errs());
-            llvm_unreachable("!!!1");
-        }
-        Type* ncvt = cvt->getStructElementType(idc);
-        if (PointerType* pty = dyn_cast<PointerType>(ncvt))
-        {
-            ncvt = pty->getElementType();
-        }
-        //deal with array of struct here
-        if (ArrayType *aty = dyn_cast<ArrayType>(ncvt))
-        {
-            ncvt = aty->getElementType();
-            //need to remove another one index
-            indices.pop_front();
-        }
-        //cvt should be struct type!!!
-        if (!ncvt->isStructTy())
-        {
-            //bad cast!!!
-            //struct sk_buff { cb[48] }
-            //XFRM_TRANS_SKB_CB(__skb) ((struct xfrm_trans_cb *)&((__skb)->cb[0]))
-            //errs()<<"Can not resolve\n";
-            //x_dbg_ins->getDebugLoc().print(errs());
-            //errs()<<"\n";
-            errs()<<ANSI_COLOR_RED<<"Bad cast from type:"<<ANSI_COLOR_RESET;
-            ncvt->print(errs());
-            errs()<<" we can not resolve this\n";
-            err = 0;
-            //dump_kmi_info(ci);
-            //llvm_unreachable("NOT POSSIBLE!");
-            break;
-        }
-        cvt = ncvt;
-    }
-end:
     return fs;
 }
 
@@ -770,35 +754,41 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
-    Type* cvt;
-    GetElementPtrInst* gep;
-    std::list<int> indices;
+    Indices indices;
+    InstructionSet geps = get_load_from_gep(cv);
 
-    cvt = get_load_from_type(cv);
-    if (!cvt || !cvt->isStructTy())
-        goto end;
-    //need to find till gep is exhausted and mi2m doesn't have a match
-    gep = get_load_from_gep(cv);
-    x_dbg_ins = gep;
-    get_gep_indicies(gep, indices);
-    x_dbg_idx = indices;
-    assert(indices.size()!=0);
-    //OK. now we match through struct type and indices
-    if (FunctionSet* _fs = dmi_exists(dyn_cast<StructType>(cvt), indices, dmi))
-        fs = *_fs;
-    //TODO:iteratively explore basic element type if current one is not found
-    if (fs.size()==0)
+    for (auto * _gep: geps)
     {
-        //dump_kmi_info(ci);
-        errs()<<"uk-idcs:";
-        if(!dyn_cast<StructType>(cvt)->isLiteral())
-            errs()<<cvt->getStructName();
-        errs()<<" [";
-        for (auto i: x_dbg_idx)
-            errs()<<","<<i;
-        errs()<<"]\n";
+        GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(_gep);
+        Type* cvt = dyn_cast<PointerType>(gep->getPointerOperandType())
+            ->getElementType();
+        if (!cvt->isStructTy())
+            continue;
+        //need to find till gep is exhausted and mi2m doesn't have a match
+        x_dbg_ins = gep;
+        get_gep_indicies(gep, indices);
+        x_dbg_idx = indices;
+        assert(indices.size()!=0);
+        //OK. now we match through struct type and indices
+        if (FunctionSet* _fs = dmi_exists(dyn_cast<StructType>(cvt), indices, dmi))
+        {
+            //TODO:iteratively explore basic element type if current one is not found
+            if (_fs->size()==0)
+            {
+                //dump_kmi_info(ci);
+                errs()<<"uk-idcs:";
+                if(!dyn_cast<StructType>(cvt)->isLiteral())
+                    errs()<<cvt->getStructName();
+                errs()<<" [";
+                for (auto i: x_dbg_idx)
+                    errs()<<","<<i;
+                errs()<<"]\n";
+            }
+            //merge _fs into fs
+            for (auto *f:*_fs)
+                fs.insert(f);
+        }
     }
-end:
     return fs;
 }
 
@@ -830,7 +820,6 @@ load_again:
 void gatlin::dump_kmi_info(CallInst* ci)
 {
     Value* cv = ci->getCalledValue();
-    Type* cvt;
     //GetElementPtrInst* gep;
     Indices indices;
 
@@ -874,15 +863,6 @@ load_again:
         li = dyn_cast<LoadInst>(addr);
         goto load_again;
     }
-    //////////////
-    cvt = get_load_from_type(cv);
-    if (!cvt)
-    {
-        //non-load+gep
-        return;
-    }
-    cvt->print(errs());
-    errs()<<"\n";
 }
 
 /*
@@ -1462,7 +1442,6 @@ void gatlin::identify_kmi(Module& module)
                 gvn.startswith("__setup_str"))
             continue;
 
-        bool array_type = false;
         Type* mod_interface = gi->getType();
 
         if (mod_interface->isPointerTy())
@@ -1473,7 +1452,6 @@ void gatlin::identify_kmi(Module& module)
         {
             mod_interface
                 = dyn_cast<ArrayType>(mod_interface)->getTypeAtIndex((unsigned)0);
-            array_type = true;
         }
         if (!mod_interface->isStructTy())
         {

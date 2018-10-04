@@ -711,43 +711,29 @@ bool is_tracepoint_func(Value* v)
 
 /*
  * FIXME: we are currently not able to handle container_of, which is expanded
- * into gep with negative index and high level type information is removed
+ * into gep with negative index and high level type information is stripped
  */
 bool is_container_of(Value* cv)
 {
-    LoadInst* li = dyn_cast<LoadInst>(cv);
-    if (!li)
-        return false;
-    Value* addr;
-    addr = li->getPointerOperand();
-    if (addr!=addr->stripPointerCasts())
-        addr = addr->stripPointerCasts();
-    if (BitCastInst* bci = dyn_cast<BitCastInst>(addr))
-        addr = bci->getOperand(0);
-    //could also load from constant expr
-    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
+    InstructionSet geps = get_load_from_gep(cv);
+    for (auto _gep: geps)
     {
-        addr = ce->getAsInstruction();
-    }
-    if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
-    {
+        GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(_gep);
         //container_of has gep with negative index
+        //and must have negative or non-zero index in the first element
+        auto i = gep->idx_begin();
+        ConstantInt* idc = dyn_cast<ConstantInt>(i);
+        if (idc && (idc->getSExtValue()!=0))
         {
-            //and must have negative or non-zero index in the first element
-            auto i = gep->idx_begin();
-            ConstantInt* idc = dyn_cast<ConstantInt>(i);
-            if (idc && (idc->getSExtValue()!=0))
-            {
 #if 0
-                Type* pty = gep->getSourceElementType();
-                if(StructType* sty = dyn_cast<StructType>(pty))
-                {
-                    if (!sty->isLiteral())
-                        errs()<<sty->getStructName()<<" ";
-                }
-#endif
-                return true;
+            Type* pty = gep->getSourceElementType();
+            if(StructType* sty = dyn_cast<StructType>(pty))
+            {
+                if (!sty->isLiteral())
+                    errs()<<sty->getStructName()<<" ";
             }
+#endif
+            return true;
         }
     }
     return false;
@@ -767,10 +753,10 @@ bool is_container_of(Value* cv)
  *  ptr1 = bitcast ptr0
  *  fptr = load(ptr1)
  *
- * TODO: return a list of GEP instead of only one
  */
-GetElementPtrInst* get_load_from_gep(Value* v)
+InstructionSet get_load_from_gep(Value* v)
 {
+    InstructionSet lots_of_geps;
     //handle non load instructions first
     //might be gep/phi/select/bitcast
     //collect all load instruction into loads
@@ -779,7 +765,7 @@ GetElementPtrInst* get_load_from_gep(Value* v)
     ValueList worklist;
 
     if (!isa<Instruction>(v))
-        return NULL;
+        return lots_of_geps;
     //first, find all interesting load
     worklist.push_back(dyn_cast<Instruction>(v));
     while(worklist.size())
@@ -851,7 +837,6 @@ GetElementPtrInst* get_load_from_gep(Value* v)
     //////////////////////////
     //For each load instruction's pointer operand, we want to know whether
     //it is derived from gep or not..
-    ValueSet lots_of_geps;
     for (auto* lv: loads)
     {
         LoadInst* li = dyn_cast<LoadInst>(lv);
@@ -867,9 +852,9 @@ GetElementPtrInst* get_load_from_gep(Value* v)
             if (visited.count(i))
                 continue;
             visited.insert(i);
-            if (isa<GetElementPtrInst>(i))
+            if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(i))
             {
-                lots_of_geps.insert(i);
+                lots_of_geps.insert(gep);
                 continue;
             }
             if (BitCastInst * bci = dyn_cast<BitCastInst>(i))
@@ -930,22 +915,24 @@ GetElementPtrInst* get_load_from_gep(Value* v)
             llvm_unreachable("what else?");
         }
     }
-    if (lots_of_geps.size())
-        return dyn_cast<GetElementPtrInst>(*lots_of_geps.begin());
-    return NULL;
+    return lots_of_geps;
 }
 
 /*
  * we are actually only interested in load+gep
  */
-Type* get_load_from_type(Value* v)
+TypeSet get_load_from_type(Value* v)
 {
-    GetElementPtrInst* gep = get_load_from_gep(v);
-    if (gep==NULL)
-        return NULL;
-    Type* ty = dyn_cast<PointerType>(gep->getPointerOperandType())
+    InstructionSet geps = get_load_from_gep(v);
+    TypeSet ret;
+    for (auto* i: geps)
+    {
+        GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(i);
+        Type* ty = dyn_cast<PointerType>(gep->getPointerOperandType())
             ->getElementType();
-    return ty;
+        ret.insert(ty);
+    }
+    return ret;
 }
 
 //only care about case where all indices are constantint

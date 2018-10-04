@@ -31,9 +31,8 @@ StructType* find_assignment_to_struct_type(Value*, Indices&, ValueSet&);
 void get_callsite_inst(Value*, CallInstSet&);
 bool has_function_pointer_type(Type*);
 
-GetElementPtrInst* get_load_from_gep(Value*);
+InstructionSet get_load_from_gep(Value*);
 
-Type* get_load_from_type(Value*);
 void get_gep_indicies(GetElementPtrInst*, std::list<int>&);
 Value* get_value_from_composit(Value*, std::list<int>&);
 
