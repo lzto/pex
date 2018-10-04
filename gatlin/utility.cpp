@@ -200,134 +200,130 @@ end:
 }
 
 /*
+ * intra-procedural analysis
+ *
  * only handle high level type info right now.
  * maybe we can extend this to global variable as well
+ *
+ * see if store instruction actually store the value to some field of a struct
+ * return non NULL if found, and indices is stored in idcs
+ *
  */
 static StructType* resolve_where_is_it_stored_to(StoreInst* si, Indices& idcs)
 {
+    StructType* ret = NULL;
+    //po is the place where we want to store to
     Value* po = si->getPointerOperand();
-    //the pointer operand should point to a field in a struct type
-    Instruction* i = dyn_cast<Instruction>(po);
-    ConstantExpr* cxpr;
-    Instruction* cxpri;
-    if (i)
-    {
-        //i could be bitcast or phi or select, what else?
-again:
-        switch(i->getOpcode())
-        {
-            case(Instruction::PHI):
-            {
-                //TODO: need to handle both incoming value of PHI
-                break;
-            }
-            case(Instruction::Select):
-                break;
-            case(BitCastInst::BitCast):
-            {
-                BitCastInst *bci = dyn_cast<BitCastInst>(i);
-                //FIXME:sometimes struct name is not kept.. we don't know why,
-                //but we are not able to resolve those since they are translated
-                //to gep of byte directly without using any struct type/member/field info
-                //example: alloc_buffer, drivers/usb/host/ohci-dbg.c
-                i = dyn_cast<Instruction>(bci->getOperand(0));
-                assert(i!=NULL);
-                goto again;
-                break;
-            }
-            case(Instruction::GetElementPtr):
-            {
-                GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(i);
-                //errs()<<ANSI_COLOR_GREEN<<"Resolved a dyn gep:"<<ANSI_COLOR_RESET;
-                Type* t = gep->getSourceElementType();
-                //t->print(errs());
-                //errs()<<"\n";
-                get_gep_indicies(gep, idcs);
-                assert(idcs.size()!=0);
-                StructType* st = dyn_cast<StructType>(t);
-                return st;
-                break;
-            }
-            case(Instruction::Call):
-            {
-                //must be memory allocation
-                return NULL;
-                break;
-            }
-            case(Instruction::Load):
-            {
-                //we are not able to handle load
-                break;
-            }
-            case(Instruction::Store):
-            {
-                //how come we have a store???
-                dump_gdblst(dbglst);
-                llvm_unreachable("Store to Store?");
-                break;
-            }
-            case(Instruction::Alloca):
-            {
-                //store to a stack variable
-                //maybe interesting to explore who used this.
-                break;
-            }
-            default:
-                errs()<<"unable to handle instruction:"
-                    <<ANSI_COLOR_RED;
-                i->print(errs());
-                errs()<<ANSI_COLOR_RESET<<"\n";
+    ValueList worklist;
+    ValueSet visited;
+    worklist.push_back(po);
 
-                //FIXME
-                //goto eout;
+    //use worklist to track what du-chain
+    while (worklist.size())
+    {
+        //fetch an item and skip if visited
+        po = worklist.front();
+        worklist.pop_front();
+        if (visited.count(po))
+            continue;
+        visited.insert(po);
+
+        /*
+         * pointer operand is global variable?
+         * dont care... we can extend this to support fine grind global-aa, since
+         * we already know the target
+         */
+        if (dyn_cast<GlobalVariable>(po))
+            continue;
+        if (ConstantExpr* cxpr = dyn_cast<ConstantExpr>(po))
+        {
+            Instruction* cxpri = cxpr->getAsInstruction();
+            worklist.push_back(cxpri);
+            continue;
         }
-        //TODO: track all du chain
+        if (Instruction* i = dyn_cast<Instruction>(po))
+        {
+            switch(i->getOpcode())
+            {
+                case(Instruction::PHI):
+                {
+                    PHINode* phi = dyn_cast<PHINode>(i);
+                    for (int i=0;i<phi->getNumIncomingValues();i++)
+                        worklist.push_back(phi->getIncomingValue(i));
+                    break;
+                }
+                case(Instruction::Select):
+                {
+                    SelectInst* sli = dyn_cast<SelectInst>(i);
+                    worklist.push_back(sli->getTrueValue());
+                    worklist.push_back(sli->getFalseValue());
+                    break;
+                }
+                case(BitCastInst::BitCast):
+                {
+                    BitCastInst *bci = dyn_cast<BitCastInst>(i);
+//FIXME:sometimes struct name is purged into i8.. we don't know why,
+//but we are not able to resolve those since they are translated
+//to gep of byte directly without using any struct type/member/field info
+//example: alloc_buffer, drivers/usb/host/ohci-dbg.c
+                    worklist.push_back(bci->getOperand(0));
+                    break;
+                }
+                case(Instruction::IntToPtr):
+                {
+                    IntToPtrInst* i2ptr = dyn_cast<IntToPtrInst>(i);
+                    worklist.push_back(i2ptr->getOperand(0));
+                    break;
+                }
+                case(Instruction::GetElementPtr):
+                {
+                    //only GEP is meaningful
+                    GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(i);
+                    Type* t = gep->getSourceElementType();
+                    get_gep_indicies(gep, idcs);
+                    assert(idcs.size()!=0);
+                    ret = dyn_cast<StructType>(t);
+                    goto out;
+                    break;
+                }
+                case(Instruction::Call):
+                {
+                    //ignore interprocedural...
+                    break;
+                }
+                case(Instruction::Load):
+                {
+                    //we are not able to handle load
+                    break;
+                }
+                case(Instruction::Store):
+                {
+                    //how come we have a store???
+                    dump_gdblst(dbglst);
+                    llvm_unreachable("Store to Store?");
+                    break;
+                }
+                case(Instruction::Alloca):
+                {
+                    //store to a stack variable
+                    //maybe interesting to explore who used this.
+                    break;
+                }
+                default:
+                    errs()<<"unable to handle instruction:"
+                        <<ANSI_COLOR_RED;
+                    i->print(errs());
+                    errs()<<ANSI_COLOR_RESET<<"\n";
+                    break;
+            }
+        }else
+        {
+            //we got a function parameter
+        }
+    }
+out:
+    return ret;
 #if 0
-        errs()<<"stored to ";
-        po->print(errs());
-        errs()<<"\n";
-        errs()<<"Current I:";
-        i->print(errs());
-        errs()<<"\n";
-#endif
-        return NULL;
-    }
-    //pointer operand is global variable?
-    if (dyn_cast<GlobalVariable>(po))
-    {
-        //dont care... we can extend this to support fine grind global-aa, since
-        //we already know the target
-        return NULL;
-    }
-    // a constant expr: gep?
-    cxpr = dyn_cast<ConstantExpr>(po);
-    if (cxpr==NULL)
-    {
-        //we got a function parameter
-        return NULL;
-        //goto eout;
-    }
-    assert(cxpr!=NULL);
-    cxpri = cxpr->getAsInstruction();
-    if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(cxpri))
-    {
-        //only able to handle 1 leve of gep right now
-        //errs()<<ANSI_COLOR_GREEN<<"Resolved a constant gep:"<<ANSI_COLOR_RESET;
-        Type* t = gep->getSourceElementType();
-        //t->print(errs());
-        //errs()<<"\n";
-        get_gep_indicies(gep, idcs);
-        assert(idcs.size()!=0);
-        StructType* st = dyn_cast<StructType>(t);
-        return st;
-    }else if (BitCastInst* bci = dyn_cast<BitCastInst>(cxpri))
-    {
-        //TODO: handle me 
-        //errs()<<"this is a bitcast\n";
-        return NULL;
-    }else
-    {
-    }
 eout:
     //what else?
     errs()<<ANSI_COLOR_RED<<"ERR:"<<ANSI_COLOR_RESET;
@@ -338,6 +334,7 @@ eout:
     si->getDebugLoc().print(errs());
     errs()<<"\n";
     llvm_unreachable("can not handle");
+#endif
 }
 
 /*
@@ -702,7 +699,6 @@ bool is_tracepoint_func(Value* v)
  */
 bool is_container_of(Value* cv)
 {
-    Type* cvt;
     LoadInst* li = dyn_cast<LoadInst>(cv);
     if (!li)
         return false;
@@ -915,7 +911,7 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
     if (gi)
         initializer = gi->getInitializer();
     assert(initializer && "must have a initializer!");
-again:
+//again:
     /*
      * no initializer? the member of struct in question does not have a
      * concreat assignment, we can return now.
