@@ -311,6 +311,14 @@ static StructType* resolve_where_is_it_stored_to(StoreInst* si, Indices& idcs)
                     //maybe interesting to explore who used this.
                     break;
                 }
+                case(BinaryOperator::Add):
+                {
+                    //adjust pointer using arithmatic, seems to be weired
+                    BinaryOperator *bop = dyn_cast<BinaryOperator>(i);
+                    for (int i=0;i<bop->getNumOperands();i++)
+                        worklist.push_back(bop->getOperand(i));
+                    break;
+                }
                 default:
                     errs()<<"unable to handle instruction:"
                         <<ANSI_COLOR_RED;
