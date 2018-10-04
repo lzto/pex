@@ -161,18 +161,24 @@ void add_function_to_dmi(Function* f, StructType* t, Indices& idcs, DMInterface&
  */
 FunctionSet* dmi_exists(StructType* t, Indices& idcs, DMInterface& dmi)
 {
+//first method
     auto ifps = dmi.find(t);
     std::string stname;
     IFPairs* ifpairs;
-    if (ifps!=dmi.end())
-    {
-        ifpairs = ifps->second;
-        goto found;
-    }
-    //try again using name
-    //FIXME: may fix dmi.find also...
+    //only use this for literal
     if (t->isLiteral())
+    {
+        if (ifps!=dmi.end())
+        {
+            ifpairs = ifps->second;
+            for (auto* p: *ifpairs)
+                if (indices_equal(&idcs, p->first))
+                    return p->second;
+        }
         goto end;
+    }
+
+    //match using name
     stname = t->getStructName();
     str_truncate_dot_number(stname);
     for (auto& ifpsp: dmi)
@@ -185,16 +191,12 @@ FunctionSet* dmi_exists(StructType* t, Indices& idcs, DMInterface& dmi)
         if (cstn==stname)
         {
             ifpairs = ifpsp.second;
-            goto found;
-            break;
+            for (auto* p: *ifpairs)
+                if (indices_equal(&idcs, p->first))
+                    return p->second;
         }
     }
-    goto end;
-    //cool we have a matching type
-found:
-    for (auto* p: *ifpairs)
-        if (indices_equal(&idcs, p->first))
-            return p->second;
+
 end:
     return NULL;
 }

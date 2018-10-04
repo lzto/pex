@@ -778,10 +778,19 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
     assert(indices.size()!=0);
     //OK. now we match through struct type and indices
     if (FunctionSet* _fs = dmi_exists(dyn_cast<StructType>(cvt), indices, dmi))
-    {
         fs = *_fs;
-    }
     //TODO:iteratively explore basic element type if current one is not found
+    if (fs.size()==0)
+    {
+        //dump_kmi_info(ci);
+        errs()<<"uk-idcs:";
+        if(!dyn_cast<StructType>(cvt)->isLiteral())
+            errs()<<cvt->getStructName();
+        errs()<<" [";
+        for (auto i: x_dbg_idx)
+            errs()<<","<<i;
+        errs()<<"]\n";
+    }
 end:
     return fs;
 }
