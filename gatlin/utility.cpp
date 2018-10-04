@@ -718,14 +718,22 @@ bool is_container_of(Value* cv)
     if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
     {
         //container_of has gep with negative index
-        //Type* pty = gep->getSourceElementType();
-        //if(pty->isIntegerTy())
         {
-            //and must have negative index in the first element
+            //and must have negative or non-zero index in the first element
             auto i = gep->idx_begin();
             ConstantInt* idc = dyn_cast<ConstantInt>(i);
-            if (idc && (idc->getSExtValue()<0))
+            if (idc && (idc->getSExtValue()!=0))
+            {
+#if 0
+                Type* pty = gep->getSourceElementType();
+                if(StructType* sty = dyn_cast<StructType>(pty))
+                {
+                    if (!sty->isLiteral())
+                        errs()<<sty->getStructName()<<" ";
+                }
+#endif
                 return true;
+            }
         }
     }
     return false;
