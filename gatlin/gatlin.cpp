@@ -44,6 +44,7 @@ void gatlin::find_in_mi2m(Type* t, ModuleSet& ms)
     {
         t->print(errs());
         errs()<<"\n";
+        return;
     }
     assert(st);
     if (!st->hasName())
@@ -627,7 +628,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
         GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(_gep);
         Type* cvt = dyn_cast<PointerType>(gep->getPointerOperandType())
             ->getElementType();
-        if (!cvt->isStructTy())
+        if (!cvt->isAggregateType())
             continue;
 
         Indices indices;
@@ -698,41 +699,45 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
                 break;
             }
             //no match, we can try inner element
-            int idc = indices.front();
-            indices.pop_front();
-            if (!cvt->isStructTy())
-            {
-                cvt->print(errs());
-                llvm_unreachable("!!!1");
-            }
-            Type* ncvt = cvt->getStructElementType(idc);
-            if (PointerType* pty = dyn_cast<PointerType>(ncvt))
-            {
-                ncvt = pty->getElementType();
-            }
             //deal with array of struct here
-            if (ArrayType *aty = dyn_cast<ArrayType>(ncvt))
+            Type* ncvt;
+            if (ArrayType *aty = dyn_cast<ArrayType>(cvt))
             {
                 ncvt = aty->getElementType();
                 //need to remove another one index
                 indices.pop_front();
-            }
-            //cvt should be struct type!!!
-            if (!ncvt->isStructTy())
+            }else
             {
-                //bad cast!!!
-                //struct sk_buff { cb[48] }
-                //XFRM_TRANS_SKB_CB(__skb) ((struct xfrm_trans_cb *)&((__skb)->cb[0]))
-                //errs()<<"Can not resolve\n";
-                //x_dbg_ins->getDebugLoc().print(errs());
-                //errs()<<"\n";
-                errs()<<ANSI_COLOR_RED<<"Bad cast from type:"<<ANSI_COLOR_RESET;
-                ncvt->print(errs());
-                errs()<<" we can not resolve this\n";
-                //dump_kmi_info(ci);
-                //llvm_unreachable("NOT POSSIBLE!");
-                err = 5;
-                break;
+                int idc = indices.front();
+                indices.pop_front();
+                if (!cvt->isStructTy())
+                {
+                    cvt->print(errs());
+                    llvm_unreachable("!!!1");
+                }
+                ncvt = cvt->getStructElementType(idc);
+                //FIXME! is this correct?
+                if (PointerType* pty = dyn_cast<PointerType>(ncvt))
+                    ncvt = pty->getElementType();
+
+                //cvt should be struct type!!!
+                if (!ncvt->isStructTy())
+                {
+                    /* bad cast!!!
+                     * struct sk_buff { cb[48] }
+                     * XFRM_TRANS_SKB_CB(__skb) ((struct xfrm_trans_cb *)&((__skb)->cb[0]))
+                     */
+                    //errs()<<"Can not resolve\n";
+                    //x_dbg_ins->getDebugLoc().print(errs());
+                    //errs()<<"\n";
+                    errs()<<ANSI_COLOR_RED<<"Bad cast from type:"<<ANSI_COLOR_RESET;
+                    ncvt->print(errs());
+                    errs()<<" we can not resolve this\n";
+                    //dump_kmi_info(ci);
+                    //llvm_unreachable("NOT POSSIBLE!");
+                    err = 5;
+                    break;
+                }
             }
             cvt = ncvt;
         }
@@ -754,7 +759,6 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
-    Indices indices;
     InstructionSet geps = get_load_from_gep(cv);
 
     for (auto * _gep: geps)
@@ -762,13 +766,37 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
         GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(_gep);
         Type* cvt = dyn_cast<PointerType>(gep->getPointerOperandType())
             ->getElementType();
-        if (!cvt->isStructTy())
+        if (!cvt->isAggregateType())
             continue;
+
+        Indices indices;
         //need to find till gep is exhausted and mi2m doesn't have a match
         x_dbg_ins = gep;
         get_gep_indicies(gep, indices);
         x_dbg_idx = indices;
         assert(indices.size()!=0);
+        //dig till we are at struct type
+        while (1)
+        {
+            if (isa<StructType>(cvt))
+                break;
+            //must be an array
+            if (ArrayType *aty = dyn_cast<ArrayType>(cvt))
+            {
+                cvt = aty->getElementType();
+                //need to remove another one index
+                indices.pop_front();
+            }else
+            {
+                //no struct inside it and all of them are array?
+                errs()<<"All array?:";
+                cvt->print(errs());
+                errs()<<"\n";
+                break;
+            }
+        }
+        if (!dyn_cast<StructType>(cvt))
+            continue;
         //OK. now we match through struct type and indices
         if (FunctionSet* _fs = dmi_exists(dyn_cast<StructType>(cvt), indices, dmi))
         {
@@ -881,6 +909,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     int container_of_cnt = 0;;
     int undefined_1 = 0;
     int undefined_2 = 0;
+    int unknown = 0;
     errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
         <<"indirect callsite, match"
         <<ANSI_COLOR_RESET<<"\n";
@@ -1000,6 +1029,7 @@ unresolvable:
             default:
             {
                 errs()<<" [UNKNOWN]\n";
+                unknown++;
                 //dump the struct
                 //dump_kmi_info(idc);
             }
@@ -1047,6 +1077,10 @@ resolved:
     errs()<<"# call use container_of(), high level type info stripped: "
                 <<container_of_cnt
                 <<" "<<(100*container_of_cnt/idcs.size())
+                <<"%\n";
+    errs()<<"# unknown pattern:"
+                <<unknown
+                <<" "<<(100*unknown/idcs.size())
                 <<"%\n";
     exit(0);
 }

@@ -339,18 +339,6 @@ static StructType* resolve_where_is_it_stored_to(StoreInst* si, Indices& idcs)
     }
 out:
     return ret;
-#if 0
-eout:
-    //what else?
-    errs()<<ANSI_COLOR_RED<<"ERR:"<<ANSI_COLOR_RESET;
-    si->print(errs());
-    errs()<<"\n";
-    po->print(errs());
-    errs()<<"\n";
-    si->getDebugLoc().print(errs());
-    errs()<<"\n";
-    llvm_unreachable("can not handle");
-#endif
 }
 
 /*
@@ -712,6 +700,8 @@ bool is_tracepoint_func(Value* v)
 /*
  * FIXME: we are currently not able to handle container_of, which is expanded
  * into gep with negative index and high level type information is stripped
+ * maybe we can define a function to repalce container_of... so that high level
+ * type information won't be stripped during compilation
  */
 bool is_container_of(Value* cv)
 {
@@ -764,10 +754,10 @@ InstructionSet get_load_from_gep(Value* v)
     ValueSet visited;
     ValueList worklist;
 
-    if (!isa<Instruction>(v))
-        return lots_of_geps;
+    //if (!isa<Instruction>(v))
+    //    return lots_of_geps;
     //first, find all interesting load
-    worklist.push_back(dyn_cast<Instruction>(v));
+    worklist.push_back(v);
     while(worklist.size())
     {
         Value* i = worklist.front();
@@ -775,6 +765,7 @@ InstructionSet get_load_from_gep(Value* v)
         if (visited.count(i))
             continue;
         visited.insert(i);
+        assert(i!=NULL);
         if (LoadInst* li = dyn_cast<LoadInst>(i))
         {
             loads.insert(li);
@@ -901,10 +892,14 @@ InstructionSet get_load_from_gep(Value* v)
                 worklist.push_back(isext->getOperand(0));
                 continue;
             }
+            //gep in constantexpr?
+            if (ConstantExpr* cxpr = dyn_cast<ConstantExpr>(i))
+            {
+                worklist.push_back(cxpr->getAsInstruction());
+                continue;
+            }
 
-            if (isa<GlobalValue>(i) || isa<ConstantExpr>(i) ||
-                isa<GetElementPtrInst>(i) || isa<LoadInst>(i) ||
-                //isa<BinaryOperator>(i)||
+            if (isa<GlobalValue>(i) || isa<LoadInst>(i) ||
                 isa<AllocaInst>(i) || isa<CallInst>(i))
                 continue;
             if (!isa<Instruction>(i))
@@ -918,25 +913,8 @@ InstructionSet get_load_from_gep(Value* v)
     return lots_of_geps;
 }
 
-/*
- * we are actually only interested in load+gep
- */
-TypeSet get_load_from_type(Value* v)
-{
-    InstructionSet geps = get_load_from_gep(v);
-    TypeSet ret;
-    for (auto* i: geps)
-    {
-        GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(i);
-        Type* ty = dyn_cast<PointerType>(gep->getPointerOperandType())
-            ->getElementType();
-        ret.insert(ty);
-    }
-    return ret;
-}
-
 //only care about case where all indices are constantint
-void get_gep_indicies(GetElementPtrInst* gep, std::list<int>& indices)
+void get_gep_indicies(GetElementPtrInst* gep, Indices& indices)
 {
     if (!gep)
         return;

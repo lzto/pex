@@ -33,8 +33,8 @@ bool has_function_pointer_type(Type*);
 
 InstructionSet get_load_from_gep(Value*);
 
-void get_gep_indicies(GetElementPtrInst*, std::list<int>&);
-Value* get_value_from_composit(Value*, std::list<int>&);
+void get_gep_indicies(GetElementPtrInst*, Indices&);
+Value* get_value_from_composit(Value*, Indices&);
 
 void add_function_to_dmi(Function*, StructType*, Indices&, DMInterface&);
 FunctionSet* dmi_exists(StructType*, Indices&, DMInterface&);
