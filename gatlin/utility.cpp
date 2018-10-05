@@ -816,8 +816,7 @@ InstructionSet get_load_from_gep(Value* v)
             continue;
         }
         if (isa<GlobalValue>(i) || isa<ConstantExpr>(i) ||
-            isa<GetElementPtrInst>(i) || //isa<BinaryOperator>(i)||
-            isa<CallInst>(i))
+            isa<GetElementPtrInst>(i) || isa<CallInst>(i))
             continue;
         if (!isa<Instruction>(i))
             continue;

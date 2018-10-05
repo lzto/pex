@@ -718,10 +718,13 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
                 ncvt = cvt->getStructElementType(idc);
                 //FIXME! is this correct?
                 if (PointerType* pty = dyn_cast<PointerType>(ncvt))
+                {
                     ncvt = pty->getElementType();
+                    llvm_unreachable("can't be a pointer!");
+                }
 
-                //cvt should be struct type!!!
-                if (!ncvt->isStructTy())
+                //cvt should be aggregated type!
+                if (!ncvt->isAggregateType())
                 {
                     /* bad cast!!!
                      * struct sk_buff { cb[48] }
