@@ -905,7 +905,7 @@ InstructionSet get_load_from_gep(Value* v)
             if (isa<GlobalValue>(i) || isa<ConstantExpr>(i) ||
                 isa<GetElementPtrInst>(i) || isa<LoadInst>(i) ||
                 //isa<BinaryOperator>(i)||
-                isa<CallInst>(i))
+                isa<AllocaInst>(i) || isa<CallInst>(i))
                 continue;
             if (!isa<Instruction>(i))
                 continue;
