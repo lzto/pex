@@ -31,6 +31,8 @@ StructType* find_assignment_to_struct_type(Value*, Indices&, ValueSet&);
 void get_callsite_inst(Value*, CallInstSet&);
 bool has_function_pointer_type(Type*);
 
+StructType* identify_ld_bcst_struct(Value*);
+
 InstructionSet get_load_from_gep(Value*);
 
 void get_gep_indicies(GetElementPtrInst*, Indices&);

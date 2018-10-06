@@ -638,18 +638,18 @@ end:
 }
 
 /*
- * trace point function as callee?
- * similar to load+gep, we can not know callee statically, because it is not defined
- * trace point is a special case where the indirect callee is defined at runtime,
- * we simply mark it as resolved since we can find where the callee fptr is loaded
- * from
+ * is this a load+bitcast of struct into fptr type?
  */
-bool is_tracepoint_func(Value* v)
+StructType* identify_ld_bcst_struct(Value* v)
 {
     LoadInst* li = dyn_cast<LoadInst>(v);
     if (!li)
-        return false;
-    Value* addr = li->getPointerOperand()->stripPointerCasts();
+        return NULL;
+    Value* addr = li->getPointerOperand();
+    if (BitCastInst* bci = dyn_cast<BitCastInst>(addr))
+        addr = bci->getOperand(0);
+    else
+        return NULL;
     //should be pointer type
     if (PointerType* pt = dyn_cast<PointerType>(addr->getType()))
     {
@@ -658,40 +658,58 @@ bool is_tracepoint_func(Value* v)
         {
             //resolved!, they are trying to load the first function pointer
             //from a struct type we already know!
-            errs()<<"Found:";
-            if (st->isLiteral())
-                errs()<<"Literal\n";
-            else
-                errs()<<st->getStructName()<<"\n";
-            //no name ...
-            if (!st->hasName())
-                return false;
-            StringRef name = st->getStructName();
-            if (name=="struct.tracepoint_func")
-            {
-                //errs()<<" ^ a tpfunc:";
-                //addr->print(errs());
-
-                //addr should be a phi
-                PHINode * phi = dyn_cast<PHINode>(addr);
-                assert(phi);
-                //one of the incomming value should be a load
-                for (int i=0;i<phi->getNumIncomingValues();i++)
-                {
-                    Value* iv = phi->getIncomingValue(i);
-                    //should be a load from a global defined object
-                    if (GlobalValue* gv = get_loaded_from_gv(iv))
-                    {
-                        //gv->print(errs());
-                        //errs()<<(gv->getName());
-                        break;
-                    }
-                }
-                //errs()<<"\n";
-                return true;
-            }
-            return false;
+            return st;
         }
+    }
+    return NULL;
+}
+
+/*
+ * trace point function as callee?
+ * similar to load+gep, we can not know callee statically, because it is not defined
+ * trace point is a special case where the indirect callee is defined at runtime,
+ * we simply mark it as resolved since we can find where the callee fptr is loaded
+ * from
+ */
+bool is_tracepoint_func(Value* v)
+{
+    if (StructType* st = identify_ld_bcst_struct(v))
+    {
+        errs()<<"Found:";
+        if (st->isLiteral())
+            errs()<<"Literal\n";
+        else
+            errs()<<st->getStructName()<<"\n";
+        //no name ...
+        if (!st->hasName())
+            return false;
+        StringRef name = st->getStructName();
+        if (name=="struct.tracepoint_func")
+        {
+            //errs()<<" ^ a tpfunc:";
+            //addr->print(errs());
+            LoadInst* li = dyn_cast<LoadInst>(v);
+            Value* addr = li->getPointerOperand()->stripPointerCasts();
+
+            //addr should be a phi
+            PHINode * phi = dyn_cast<PHINode>(addr);
+            assert(phi);
+            //one of the incomming value should be a load
+            for (int i=0;i<phi->getNumIncomingValues();i++)
+            {
+                Value* iv = phi->getIncomingValue(i);
+                //should be a load from a global defined object
+                if (GlobalValue* gv = get_loaded_from_gv(iv))
+                {
+                    //gv->print(errs());
+                    //errs()<<(gv->getName());
+                    break;
+                }
+            }
+            //errs()<<"\n";
+            return true;
+        }
+        return false;
     }
     //something else?
     return false;
@@ -735,6 +753,7 @@ bool is_container_of(Value* cv)
  *
  *   addr = (may bit cast) gep(struct addr, field)
  *   ptr = load(addr)
+ *   call ptr
  *
  *  may have other form like:
  *  addr1 = gep
@@ -742,6 +761,13 @@ bool is_container_of(Value* cv)
  *  ptr0 = phi/select addr1, addr2
  *  ptr1 = bitcast ptr0
  *  fptr = load(ptr1)
+ *  call fptr
+ *
+ *  or no gep at all like
+ *
+ *  fptr_addr = bitcast struct addr, func type*()
+ *  fptr = load fptr_addr
+ *  call fptr
  *
  */
 InstructionSet get_load_from_gep(Value* v)
@@ -754,8 +780,6 @@ InstructionSet get_load_from_gep(Value* v)
     ValueSet visited;
     ValueList worklist;
 
-    //if (!isa<Instruction>(v))
-    //    return lots_of_geps;
     //first, find all interesting load
     worklist.push_back(v);
     while(worklist.size())

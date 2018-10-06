@@ -614,15 +614,43 @@ again:
  * method 3 use the fact that most indirect call use function pointer loaded
  *          from struct(mi2m, kernel interface)
  */
-
 //method 3, improved accuracy
 FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
+
+    err = 0;
+#if 1
+    //non-gep case. loading from bitcasted struct address
+    if (StructType* ldbcstty = identify_ld_bcst_struct(ci->getCalledValue()))
+    {
+        errs()<<"Found ld+bitcast sty to ptrty:";
+        //dump_kmi_info(ci);
+        Indices indices;
+        indices.push_back(0);
+        //match
+        ModuleSet ms;
+        find_in_mi2m(ldbcstty, ms);
+        if (ms.size())
+            for (auto m: ms)
+                if (Value* v = get_value_from_composit(m, indices))
+                {
+                    Function *f = dyn_cast<Function>(v);
+                    assert(f);
+                    fs.insert(f);
+                }
+        if (fs.size()!=0)
+        {
+            errs()<<"resolved\n";
+            return fs;
+        }
+        errs()<<"Try rkmi\n";
+    }
+#endif
+    //GEP case.
     //need to find till gep is exhausted and mi2m doesn't have a match
     InstructionSet geps = get_load_from_gep(cv);
-    err = 0;
     for(auto _gep: geps)
     {
         GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(_gep);
