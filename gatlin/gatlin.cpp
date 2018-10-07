@@ -626,6 +626,10 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
     if (StructType* ldbcstty = identify_ld_bcst_struct(ci->getCalledValue()))
     {
         errs()<<"Found ld+bitcast sty to ptrty:";
+        if (ldbcstty->isLiteral())
+            errs()<<"Literal, ";
+        else
+            errs()<<ldbcstty->getName()<<", ";
         //dump_kmi_info(ci);
         Indices indices;
         indices.push_back(0);
@@ -908,6 +912,8 @@ void gatlin::dump_kmi_info(CallInst* ci)
     ValueSet visited;
     worklist.push_back(cv);
     int cnt = 0;
+    ci->print(errs());
+    errs()<<"\n";
     while(worklist.size() && (cnt++<5))
     {
         Value* v = worklist.front();
@@ -1083,7 +1089,7 @@ unresolvable:
                 errs()<<" [UNKNOWN]\n";
                 unknown++;
                 //dump the struct
-                //dump_kmi_info(idc);
+                dump_kmi_info(idc);
             }
         }
         continue;

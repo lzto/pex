@@ -639,9 +639,11 @@ end:
 
 /*
  * is this a load+bitcast of struct into fptr type?
+ * could be multiple load + bitcast 
  */
 StructType* identify_ld_bcst_struct(Value* v)
 {
+#if 0
     LoadInst* li = dyn_cast<LoadInst>(v);
     if (!li)
         return NULL;
@@ -662,6 +664,43 @@ StructType* identify_ld_bcst_struct(Value* v)
         }
     }
     return NULL;
+#else
+    int num_load = 0;
+    Value* nxtv = v;
+    while(1)
+    {
+        if (LoadInst* li = dyn_cast<LoadInst>(nxtv))
+        {
+            nxtv = li->getPointerOperand();
+            num_load++;
+            continue;
+        }
+        if (IntToPtrInst* itoptr = dyn_cast<IntToPtrInst>(nxtv))
+        {
+            nxtv = itoptr->getOperand(0);
+            continue;
+        }
+        break;
+    }
+    if (num_load==0)
+        return NULL;
+    if (BitCastInst* bci = dyn_cast<BitCastInst>(nxtv))
+    {
+        nxtv = bci->getOperand(0);
+    }else
+        return NULL;
+    //num_load = number of * in nxtv
+    Type* ret = nxtv->getType();
+    while(num_load)
+    {
+        //I am expecting a pointer type
+        PointerType* pt = dyn_cast<PointerType>(ret);
+        assert(pt);
+        ret = pt->getElementType();
+        num_load--;
+    }
+    return dyn_cast<StructType>(ret);
+#endif
 }
 
 /*
@@ -1058,9 +1097,9 @@ end:
     return ret;
 }
 
-Value* get_value_from_composit(Value* cv, std::list<int>& indices)
+Value* get_value_from_composit(Value* cv, Indices& indices)
 {
-    std::list<int> i = std::list<int>(indices);
+    Indices i = Indices(indices);
 
     bool array_type = false;
     Type* mod_interface = NULL;
