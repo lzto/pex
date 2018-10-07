@@ -853,25 +853,50 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
 
 bool gatlin::load_from_global_fptr(Value* cv)
 {
-    LoadInst* li = dyn_cast<LoadInst>(cv);
-    if (!li)
-        return false;
-    Value* addr;
-    //handle two levels of load?
-load_again:
-    addr = li->getPointerOperand();
-    if (isa<GlobalVariable>(addr))
-        return true;
-    if (addr!=addr->stripPointerCasts())
-        addr = addr->stripPointerCasts();
-    //could also load from constant expr
-    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
-        addr = ce->getAsInstruction();
-    //try to resolve load chain:
-    if (isa<LoadInst>(addr))
+    ValueList worklist;
+    ValueSet visited;
+    worklist.push_back(cv);
+    int cnt = 0;
+    while(worklist.size() && (cnt++<5))
     {
-        li = dyn_cast<LoadInst>(addr);
-        goto load_again;
+        Value* v = worklist.front();
+        worklist.pop_front();
+        if (visited.count(v))
+            continue;
+        visited.insert(v);
+        if (isa<Function>(v))
+            continue;
+
+        if (GlobalVariable* gv = dyn_cast<GlobalVariable>(v))
+            return true;
+
+        if (isa<GetElementPtrInst>(v) || isa<CallInst>(v))
+            continue;
+
+        if (LoadInst* li = dyn_cast<LoadInst>(v))
+        {
+            worklist.push_back(li->getPointerOperand());
+            continue;
+        }
+        if (SelectInst* sli = dyn_cast<SelectInst>(v))
+        {
+            worklist.push_back(sli->getTrueValue());
+            worklist.push_back(sli->getFalseValue());
+            continue;
+        }
+        if (PHINode* phi = dyn_cast<PHINode>(v))
+        {
+            for (int i=0;i<phi->getNumIncomingValues();i++)
+                worklist.push_back(phi->getIncomingValue(i));
+            continue;
+        }
+        //instruction
+        if (Instruction* i = dyn_cast<Instruction>(v))
+            for (int j = 0;j<i->getNumOperands();j++)
+                worklist.push_back(i->getOperand(j));
+        //constant value
+        if (ConstantExpr* cxpr = dyn_cast<ConstantExpr>(v))
+            worklist.push_back(cxpr->getAsInstruction());
     }
     return false;
 }
@@ -879,48 +904,44 @@ load_again:
 void gatlin::dump_kmi_info(CallInst* ci)
 {
     Value* cv = ci->getCalledValue();
-    //GetElementPtrInst* gep;
-    Indices indices;
-
-    ci->print(errs());
-    errs()<<"\n";
-    cv->print(errs());
-    errs()<<"\n";
-
-    LoadInst* li = dyn_cast<LoadInst>(cv);
-    if (!li)
-        return;
-    Value* addr;
-    //handle two levels of load?
-load_again:
-    addr = li->getPointerOperand();
-    errs()<<"LOAD ADDR:";
-    addr->print(errs());
-    errs()<<"\n";
-    if (addr!=addr->stripPointerCasts())
+    ValueList worklist;
+    ValueSet visited;
+    worklist.push_back(cv);
+    int cnt = 0;
+    while(worklist.size() && (cnt++<5))
     {
-        addr = addr->stripPointerCasts();
-        errs()<<"Strip PTRCast:";
-        addr->print(errs());
+        Value* v = worklist.front();
+        worklist.pop_front();
+        if (visited.count(v))
+            continue;
+        visited.insert(v);
+        if (isa<Function>(v))
+            errs()<<v->getName();
+        else
+            v->print(errs());
         errs()<<"\n";
-    }
-    //could also load from constant expr
-    if (ConstantExpr *ce = dyn_cast<ConstantExpr>(addr))
-    {
-        addr = ce->getAsInstruction();
-        addr->print(errs());
-        errs()<<"\n";
-    }
-    if (GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(addr))
-    {
-        gep->print(errs());
-        errs()<<"\n";
-    }
-    //try to resolve load chain:
-    if (isa<LoadInst>(addr))
-    {
-        li = dyn_cast<LoadInst>(addr);
-        goto load_again;
+        if (LoadInst* li = dyn_cast<LoadInst>(v))
+        {
+            worklist.push_back(li->getPointerOperand());
+            continue;
+        }
+        if (SelectInst* sli = dyn_cast<SelectInst>(v))
+        {
+            worklist.push_back(sli->getTrueValue());
+            worklist.push_back(sli->getFalseValue());
+            continue;
+        }
+        if (PHINode* phi = dyn_cast<PHINode>(v))
+        {
+            for (int i=0;i<phi->getNumIncomingValues();i++)
+                worklist.push_back(phi->getIncomingValue(i));
+            continue;
+        }
+        if (isa<CallInst>(v))
+            continue;
+        if (Instruction* i = dyn_cast<Instruction>(v))
+            for (int j = 0;j<i->getNumOperands();j++)
+                worklist.push_back(i->getOperand(j));
     }
 }
 
