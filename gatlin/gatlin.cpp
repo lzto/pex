@@ -614,26 +614,23 @@ again:
  * method 3 use the fact that most indirect call use function pointer loaded
  *          from struct(mi2m, kernel interface)
  */
-//method 3, improved accuracy
-FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
+FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err)
 {
     FunctionSet fs;
-    Value* cv = ci->getCalledValue();
-
-    err = 0;
-#if 1
     //non-gep case. loading from bitcasted struct address
     if (StructType* ldbcstty = identify_ld_bcst_struct(ci->getCalledValue()))
     {
+#if 1
         errs()<<"Found ld+bitcast sty to ptrty:";
         if (ldbcstty->isLiteral())
             errs()<<"Literal, ";
         else
             errs()<<ldbcstty->getName()<<", ";
+#endif
         //dump_kmi_info(ci);
         Indices indices;
         indices.push_back(0);
-        //match
+        //match - kmi
         ModuleSet ms;
         find_in_mi2m(ldbcstty, ms);
         if (ms.size())
@@ -645,13 +642,30 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
                     fs.insert(f);
                 }
         if (fs.size()!=0)
+            goto end;
+        //match - dkmi
+        indices.clear();
+        indices.push_back(0);
+        indices.push_back(0);
+        if (FunctionSet* _fs = dmi_exists(ldbcstty, indices, dmi))
         {
-            errs()<<"resolved\n";
-            return fs;
+            for (auto *f:*_fs)
+                fs.insert(f);
+            goto end;
         }
         errs()<<"Try rkmi\n";
     }
-#endif
+end:
+    return fs;
+}
+
+//method 3, improved accuracy
+FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
+{
+    FunctionSet fs;
+    Value* cv = ci->getCalledValue();
+
+    err = 0;
     //GEP case.
     //need to find till gep is exhausted and mi2m doesn't have a match
     InstructionSet geps = get_load_from_gep(cv);
@@ -677,7 +691,6 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
             find_in_mi2m(cvt, ms);
             if (ms.size())
             {
-                bool not_implemented = false;
                 for (auto m: ms)
                 {
                     Value* v = get_value_from_composit(m, indices);
@@ -696,7 +709,6 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
                             errs()<<","<<i;
                         errs()<<"], this method may not implemented yet.\n";
 #endif
-                        not_implemented = true;
                         continue;
                     }
                     Function *f = dyn_cast<Function>(v);
@@ -868,13 +880,11 @@ bool gatlin::load_from_global_fptr(Value* cv)
         if (visited.count(v))
             continue;
         visited.insert(v);
-        if (isa<Function>(v))
-            continue;
 
-        if (GlobalVariable* gv = dyn_cast<GlobalVariable>(v))
+        if (isa<GlobalVariable>(v))
             return true;
 
-        if (isa<GetElementPtrInst>(v) || isa<CallInst>(v))
+        if (isa<Function>(v) || isa<GetElementPtrInst>(v) || isa<CallInst>(v))
             continue;
 
         if (LoadInst* li = dyn_cast<LoadInst>(v))
@@ -999,8 +1009,13 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         //    - 3 fptr comes from function parameter
         //    - 4 fptr comes from global fptr
         int err;
-
-        FunctionSet fs = resolve_indirect_callee_using_kmi(idc, err);
+        FunctionSet fs = resolve_indirect_callee_ldcst_kmi(idc, err);
+        if (fs.size()!=0)
+        {
+            errs()<<" [LDCST-KMI]\n";
+            goto resolved;
+        }
+        fs = resolve_indirect_callee_using_kmi(idc, err);
         if (fs.size()!=0)
         {
             errs()<<" [KMI]\n";
@@ -1089,7 +1104,7 @@ unresolvable:
                 errs()<<" [UNKNOWN]\n";
                 unknown++;
                 //dump the struct
-                dump_kmi_info(idc);
+                //dump_kmi_info(idc);
             }
         }
         continue;

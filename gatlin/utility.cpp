@@ -1033,10 +1033,9 @@ bool is_skip_struct(StringRef str)
 }
 
 /*
- * FIXME: handle array 
+ * match a type/indices with known ones
  */
-
-static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
+static Value* _get_value_from_composit(Value* cv, Indices& indices)
 {
     //cv must be global value
     GlobalVariable* gi = dyn_cast<GlobalVariable>(cv);
@@ -1055,7 +1054,6 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
     if (gi)
         initializer = gi->getInitializer();
     assert(initializer && "must have a initializer!");
-//again:
     /*
      * no initializer? the member of struct in question does not have a
      * concreat assignment, we can return now.
@@ -1067,19 +1065,7 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
     v = initializer->getAggregateElement(i);
     assert(v!=cv);
     if (v==NULL)
-    {
         goto end;//means that this field is not initialized
-#if 0
-        dump_gdblst(dbglst);
-        errs()<<"Current i="<<i<<"\n";
-        errs()<<"initializer=";
-        initializer->print(errs());
-        errs()<<"\n";
-        initializer = initializer->getAggregateElement((unsigned)0);
-        llvm_unreachable("no possible!");
-        goto again;
-#endif
-    }
 
     v = v->stripPointerCasts();
     assert(v);
@@ -1089,9 +1075,7 @@ static Value* _get_value_from_composit(Value* cv, std::list<int>& indices)
         goto end;
     }
     if (indices.size())
-    {
         ret = _get_value_from_composit(v, indices);
-    }
 end:
     dbglst.pop_back();
     return ret;
@@ -1100,26 +1084,6 @@ end:
 Value* get_value_from_composit(Value* cv, Indices& indices)
 {
     Indices i = Indices(indices);
-
-    bool array_type = false;
-    Type* mod_interface = NULL;
-    GlobalVariable* gi = dyn_cast<GlobalVariable>(cv);
-    Constant* initializer = gi->getInitializer();
-
-    //is this an array?
-    mod_interface = gi->getType();
-    if (mod_interface->isPointerTy())
-        mod_interface = mod_interface->getPointerElementType();
-    assert(mod_interface->isAggregateType());
-    if (mod_interface->isArrayTy())
-        array_type = true;
-
-    if (array_type)
-    {
-        //FIXME: iterate through all elements
-        cv = initializer->getAggregateElement((unsigned)0);
-    }
-    
     return _get_value_from_composit(cv, i);
 }
 
