@@ -17,6 +17,7 @@
 #include "llvm/IR/Instructions.h"
 
 #include "commontypes.h"
+#include "simple_set.h"
 
 using namespace llvm;
 
@@ -57,5 +58,16 @@ void dump_callstack(InstructionList&);
 void dump_dbgstk(InstructionList&);
 void dump_gdblst(ValueList&);
 
+////////////////////////////////////////////////////////////////////////////////
+//some interesting list is also defined as global
+extern SimpleSet* skip_vars;
+extern SimpleSet* skip_funcs;
+extern SimpleSet* crit_syms;
+extern SimpleSet* kernel_api;
+
+void initialize_gatlin_sets(StringRef knob_skip_func_list,
+        StringRef knob_skip_var_list,
+        StringRef knob_crit_symbol,
+        StringRef knob_kernel_api);
 #endif //_GATLING_UTILITY_
 

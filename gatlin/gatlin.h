@@ -47,6 +47,7 @@
 #include "simple_set.h"
 #include "gating_function_base.h"
 #include "internal.h"
+#include "utility.h"
 
 #define DEBUG_TYPE "gatlin"
 
@@ -210,10 +211,6 @@ class gatlin : public ModulePass
         Module* m;
 
         GatingFunctionBase *gating;
-        SimpleSet* skip_vars;
-        SimpleSet* skip_funcs;
-        SimpleSet* crit_syms;
-        SimpleSet* kernel_api;
 
         //map function to its check instruction
         Function2ChkInst f2ci;

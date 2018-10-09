@@ -2825,28 +2825,8 @@ void gatlin::process_cpgf(Module& module)
      * pre-process
      * generate resource/functions from syscall entry function
      */
-    errs()<<"Load supplimental files...\n";
-    StringList builtin_skip_functions(std::begin(_builtin_skip_functions),
-            std::end(_builtin_skip_functions));
-    skip_funcs = new SimpleSet(knob_skip_func_list, builtin_skip_functions);
-    if (!skip_funcs->use_builtin())
-        errs()<<"    - Skip function list, total:"<<skip_funcs->size()<<"\n";
-
-    StringList builtin_skip_var(std::begin(_builtin_skip_var),
-            std::end(_builtin_skip_var));
-    skip_vars = new SimpleSet(knob_skip_var_list, builtin_skip_var);
-    if (!skip_vars->use_builtin())
-        errs()<<"    - Skip var list, total:"<<skip_vars->size()<<"\n";
-
-    StringList builtin_crit_symbol;
-    crit_syms = new SimpleSet(knob_crit_symbol, builtin_crit_symbol);
-    if (!crit_syms->use_builtin())
-        errs()<<"    - Critical symbols, total:"<<crit_syms->size()<<"\n";
-
-    StringList builtin_kapi;
-    kernel_api = new SimpleSet(knob_kernel_api, builtin_kapi);
-    if (!kernel_api->use_builtin())
-        errs()<<"    - Kernel API list, total:"<<kernel_api->size()<<"\n";
+    initialize_gatlin_sets(knob_skip_func_list, knob_skip_var_list,
+                            knob_crit_symbol, knob_kernel_api);
 
     errs()<<"Pre-processing...\n";
     STOP_WATCH_MON(WID_0, preprocess(module));
@@ -2864,6 +2844,7 @@ void gatlin::process_cpgf(Module& module)
     STOP_WATCH_STOP(WID_0);
     STOP_WATCH_REPORT(WID_0);
     dump_gating();
+    exit(0);
     //pass 0
     errs()<<"Collect Checkpoints\n";
     STOP_WATCH_MON(WID_0, collect_chkps(module));

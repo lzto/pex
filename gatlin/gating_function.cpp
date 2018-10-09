@@ -65,12 +65,13 @@ bool GatingCap::is_builtin_gatlin_function(const std::string& str)
         if (p->k==str)
             return true;
     }
-    return false;                                  
+    return false;
 }
 
 GatingCap::GatingCap(Module& module, std::string& capfile)
     : GatingFunctionBase(module)
 {
+    errs()<<"Gating Function Type: capability\n";
     load_cap_func_list(capfile);
     //add capable and ns_capable to chk_func_cap_position so that we can use them
     for (Module::iterator fi = module.begin(), f_end = module.end();
@@ -94,6 +95,65 @@ GatingCap::GatingCap(Module& module, std::string& capfile)
 
     for (auto fpair: chk_func_cap_position)
         pass_data[fpair.first] = fpair.second;
+
+    /*
+     * First round:
+     * discover inner permission check functions and add them all as basic
+     * permission check functions
+     */
+    for (auto fpair: pass_data)
+    {
+        Function* f = fpair.first;
+        int cap_pos = fpair.second;
+        assert(cap_pos>=0);
+        //discover call instructions which use the parameter directly
+        for(Function::iterator fi = f->begin(), fe = f->end(); fi != fe; ++fi)
+        {
+            BasicBlock* bb = dyn_cast<BasicBlock>(fi);
+            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+            {
+                CallInst* ci = dyn_cast<CallInst>(ii);
+                if (!ci)
+                    continue;
+                //we are expecting a direct call
+                Function* child = get_callee_function_direct(ci);
+                if (!child)
+                    continue;
+                StringRef fname = child->getName();
+                //dont bother if this belongs to skip function
+                if (skip_funcs->exists_ignore_dot_number(fname)
+                        || kernel_api->exists_ignore_dot_number(fname))
+                    continue;
+
+                //for each of the function argument
+                for (int i=0;i<ci->getNumArgOperands();++i)
+                {
+                    Value* capv = ci->getArgOperand(i);
+                    int pos = use_parent_func_arg(capv, f);
+                    if (pos==cap_pos)
+                    {
+                        pass_data_next[child] = i;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    //merge result of first round
+    if (pass_data_next.size())
+    {
+        errs()<<ANSI_COLOR(BG_WHITE, FG_RED)
+            <<"Inner checking functions:"<<ANSI_COLOR_RESET<<"\n";
+        for (auto fpair: pass_data_next)
+        {
+            Function* f = fpair.first;
+            int cap_pos = fpair.second;
+            errs()<<"    - "<< f->getName()<<" @ "<<cap_pos<<"\n";
+            pass_data[f] = cap_pos;
+        }
+        pass_data_next.clear();
+    }
+    //backward discovery and mark..
 again:
     for (auto fpair: pass_data)
     {
@@ -185,7 +245,8 @@ bool GatingCap::is_gating_function(std::string& str)
 void GatingCap::dump()
 {
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
-        <<"=chk functions and wrappers="
+        <<"=chk functions and wrappers (total:"
+        <<chk_func_cap_position.size()<<")="
         <<ANSI_COLOR_RESET<<"\n";
     for (auto &f2p: chk_func_cap_position)
     {
@@ -282,6 +343,7 @@ bool GatingLSM::is_lsm_hook(StringRef& str)
 GatingLSM::GatingLSM(Module& module, std::string& lsmfile)
     : GatingFunctionBase(module)
 {
+    errs()<<"Gating Function Type: LSM\n";
     load_lsm_hook_list(lsmfile);
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
@@ -368,7 +430,8 @@ bool GatingLSM::is_gating_function(std::string& str)
 void GatingLSM::dump()
 {
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
-        <<"=LSM hook functions="
+        <<"=LSM hook functions (total:"
+        <<lsm_hook_functions.size()<<")="
         <<ANSI_COLOR_RESET<<"\n";
     for (auto f: lsm_hook_functions)
     {
@@ -381,6 +444,7 @@ void GatingLSM::dump()
 //DAC
 GatingDAC::GatingDAC(Module& module) : GatingFunctionBase(module)
 {
+    errs()<<"Gating Function Type: DAC\n";
     for (Module::iterator fi = module.begin(), f_end = module.end();
             fi != f_end; ++fi)
     {
@@ -476,7 +540,8 @@ bool GatingDAC::is_gating_function(std::string& str)
 void GatingDAC::dump()
 {
     errs()<<ANSI_COLOR(BG_BLUE, FG_WHITE)
-        <<"=chk functions and wrappers="
+        <<"=chk functions and wrappers (total:"
+        <<dac_functions.size()<<")="
         <<ANSI_COLOR_RESET<<"\n";
     for (auto &f: dac_functions)
     {
