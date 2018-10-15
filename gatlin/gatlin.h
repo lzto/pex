@@ -107,7 +107,8 @@ class gatlin : public ModulePass
         FunctionSet resolve_indirect_callee_using_kmi(CallInst*, int&);
         FunctionSet resolve_indirect_callee_using_dkmi(CallInst*);
         FunctionSet resolve_indirect_callee(CallInst*);
-        FunctionSet resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err);
+        FunctionSet resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
+                int& kmi_cnt, int& dkmi_cnt);
 
         bool load_from_global_fptr(Value* cv);
 

@@ -1,7 +1,3 @@
-cap_capable 2
-security_capable_noaudit 2
-security_capable 2
 capable 0
 ns_capable 1
-file_ns_capable 2
 avc_has_perm_noaudit 5

@@ -614,7 +614,8 @@ again:
  * method 3 use the fact that most indirect call use function pointer loaded
  *          from struct(mi2m, kernel interface)
  */
-FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err)
+FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
+        int& kmi_cnt, int& dkmi_cnt)
 {
     FunctionSet fs;
     //non-gep case. loading from bitcasted struct address
@@ -642,7 +643,10 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err)
                     fs.insert(f);
                 }
         if (fs.size()!=0)
+        {
+            kmi_cnt++;
             goto end;
+        }
         //match - dkmi
         indices.clear();
         indices.push_back(0);
@@ -651,6 +655,7 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err)
         {
             for (auto *f:*_fs)
                 fs.insert(f);
+            dkmi_cnt++;
             goto end;
         }
         errs()<<"Try rkmi\n";
@@ -978,6 +983,8 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     int undefined_1 = 0;
     int undefined_2 = 0;
     int unknown = 0;
+    int kmi_cnt = 0;
+    int dkmi_cnt = 0;
     errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
         <<"indirect callsite, match"
         <<ANSI_COLOR_RESET<<"\n";
@@ -992,6 +999,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         {
             count++;
             targets++;
+            kmi_cnt++;
             errs()<<" [tracepoint]\n";
             continue;
         }
@@ -1009,7 +1017,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         //    - 3 fptr comes from function parameter
         //    - 4 fptr comes from global fptr
         int err;
-        FunctionSet fs = resolve_indirect_callee_ldcst_kmi(idc, err);
+        FunctionSet fs = resolve_indirect_callee_ldcst_kmi(idc, err, kmi_cnt, dkmi_cnt);
         if (fs.size()!=0)
         {
             errs()<<" [LDCST-KMI]\n";
@@ -1019,6 +1027,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         if (fs.size()!=0)
         {
             errs()<<" [KMI]\n";
+            kmi_cnt++;
             goto resolved;
         }
         //using a fptr not implemented yet
@@ -1058,6 +1067,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         if (fs.size()!=0)
         {
             errs()<<" [DKMI]\n";
+            dkmi_cnt++;
             goto resolved;
         }
         if (err==1)
@@ -1132,6 +1142,8 @@ resolved:
     }
     errs()<<"# of indirect call sites: "<< idcs.size()<<"\n";
     errs()<<"# resolved by KMI:"<< count<<" "<<(100*count/idcs.size())<<"%\n";
+    errs()<<"#     - KMI:"<< kmi_cnt<<" "<<(100*kmi_cnt/idcs.size())<<"%\n";
+    errs()<<"#     - DKMI:"<< dkmi_cnt<<" "<<(100*dkmi_cnt/idcs.size())<<"%\n";
     errs()<<"# (total target) of callee:"<<targets<<"\n";
     errs()<<"# undefined_1 : "<<undefined_1<<" "<<(100*undefined_1/idcs.size())<<"%\n";
     errs()<<"# undefined_2 : "<<undefined_2<<" "<<(100*undefined_2/idcs.size())<<"%\n";
@@ -2844,7 +2856,7 @@ void gatlin::process_cpgf(Module& module)
     STOP_WATCH_STOP(WID_0);
     STOP_WATCH_REPORT(WID_0);
     dump_gating();
-    exit(0);
+
     //pass 0
     errs()<<"Collect Checkpoints\n";
     STOP_WATCH_MON(WID_0, collect_chkps(module));
