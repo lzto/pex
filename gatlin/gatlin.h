@@ -104,11 +104,12 @@ class gatlin : public ModulePass
 
         void populate_indcall_list_using_cvf(Module&);
         void populate_indcall_list_through_kmi(Module&);
-        FunctionSet resolve_indirect_callee_using_kmi(CallInst*, int&);
-        FunctionSet resolve_indirect_callee_using_dkmi(CallInst*);
-        FunctionSet resolve_indirect_callee(CallInst*);
+
+        FunctionSet resolve_indirect_callee_using_kmi(CallInst*, int&err);
+        FunctionSet resolve_indirect_callee_using_dkmi(CallInst*, int&err);
         FunctionSet resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
                 int& kmi_cnt, int& dkmi_cnt);
+        FunctionSet resolve_indirect_callee(CallInst*);
 
         bool load_from_global_fptr(Value* cv);
 

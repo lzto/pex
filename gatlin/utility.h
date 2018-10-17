@@ -41,6 +41,7 @@ Value* get_value_from_composit(Value*, Indices&);
 
 void add_function_to_dmi(Function*, StructType*, Indices&, DMInterface&);
 FunctionSet* dmi_exists(StructType*, Indices&, DMInterface&);
+bool dmi_type_exists(StructType*, DMInterface&);
 
 bool function_has_gv_initcall_use(Function*);
 void str_truncate_dot_number(std::string&);

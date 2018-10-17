@@ -631,10 +631,13 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
         //dump_kmi_info(ci);
         Indices indices;
         indices.push_back(0);
+        err = 2;//got type
         //match - kmi
         ModuleSet ms;
         find_in_mi2m(ldbcstty, ms);
         if (ms.size())
+        {
+            err = 1;//found module object
             for (auto m: ms)
                 if (Value* v = get_value_from_composit(m, indices))
                 {
@@ -642,12 +645,16 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
                     assert(f);
                     fs.insert(f);
                 }
+        }
         if (fs.size()!=0)
         {
             kmi_cnt++;
             goto end;
         }
         //match - dkmi
+        if (dmi_type_exists(ldbcstty, dmi))
+            err = 1;
+
         indices.clear();
         indices.push_back(0);
         indices.push_back(0);
@@ -661,6 +668,8 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
         errs()<<"Try rkmi\n";
     }
 end:
+    if (fs.size())
+        err = 0;
     return fs;
 }
 
@@ -670,7 +679,7 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
 
-    err = 0;
+    err = 6;
     //GEP case.
     //need to find till gep is exhausted and mi2m doesn't have a match
     InstructionSet geps = get_load_from_gep(cv);
@@ -692,10 +701,14 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
         indices.pop_front();
         while(1)
         {
+            if (err>2)
+                err = 2;//found the type, going to match module
             ModuleSet ms;
             find_in_mi2m(cvt, ms);
             if (ms.size())
             {
+                if (err>1)
+                    err = 1;//found matching module
                 for (auto m: ms)
                 {
                     Value* v = get_value_from_composit(m, indices);
@@ -720,8 +733,6 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
                     assert(f);
                     fs.insert(f);
                 }
-                if ((fs.size()==0) && (err==0))
-                    err = 1;//found interface type but function is not implemented.
                 break;
             }
             //not found in mi2m
@@ -744,7 +755,6 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
                 //gep->print(errs());
                 errs()<<"\n";
 #endif
-                err = 2;
                 break;
             }
             //no match, we can try inner element
@@ -800,19 +810,21 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst* ci, int& err)
             err = 3;
         else if (load_from_global_fptr(cv))
             err = 4;
-    }
+    }else
+        err = 0;
     return fs;
 }
 
 /*
  * this is also kmi, but dynamic one
  */
-FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
+FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci, int& err)
 {
     FunctionSet fs;
     Value* cv = ci->getCalledValue();
     InstructionSet geps = get_load_from_gep(cv);
 
+    err = 6;
     for (auto * _gep: geps)
     {
         GetElementPtrInst* gep = dyn_cast<GetElementPtrInst>(_gep);
@@ -849,6 +861,10 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
         }
         if (!dyn_cast<StructType>(cvt))
             continue;
+        if (err>2)
+            err = 2;
+        if (dmi_type_exists(dyn_cast<StructType>(cvt), dmi) && (err>1))
+            err = 1;
         //OK. now we match through struct type and indices
         if (FunctionSet* _fs = dmi_exists(dyn_cast<StructType>(cvt), indices, dmi))
         {
@@ -869,6 +885,8 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci)
                 fs.insert(f);
         }
     }
+    if (fs.size())
+        err = 0;
     return fs;
 }
 
@@ -1012,18 +1030,34 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
 
         //try kmi
         //err - 0 no error
-        //    - 1 undefined fptr, mark as resolved
-        //    - 2 undefined module, mark as resolved(may try dkmi, ok to fail)
+        //    - 1 undefined fptr in module, mark as resolved
+        //    - 2 undefined module, mark as resolved(ok to fail)
         //    - 3 fptr comes from function parameter
         //    - 4 fptr comes from global fptr
-        int err;
+        //    - 5 bad cast
+        //    - 6 max error code- this is the bound 
+        int err = 6;
+        //we resolved type and there's a matching object, but no fptr defined
+        bool found_module = false;
+        //we resolved type but there's no matching object
+        bool udf_module = false;
         FunctionSet fs = resolve_indirect_callee_ldcst_kmi(idc, err, kmi_cnt, dkmi_cnt);
+        if (err<2)
+            found_module = true;
+        else if (err==2)
+            udf_module = true;
+
         if (fs.size()!=0)
         {
             errs()<<" [LDCST-KMI]\n";
             goto resolved;
         }
         fs = resolve_indirect_callee_using_kmi(idc, err);
+        if (err<2)
+            found_module = true;
+        else if (err==2)
+            udf_module = true;
+
         if (fs.size()!=0)
         {
             errs()<<" [KMI]\n";
@@ -1033,6 +1067,7 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         //using a fptr not implemented yet
         switch(err)
         {
+            case(6):
             case(0):
             {
                 goto unresolvable;
@@ -1063,24 +1098,30 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             llvm_unreachable("no way!");
         }
         //try dkmi
-        fs = resolve_indirect_callee_using_dkmi(idc);
+        fs = resolve_indirect_callee_using_dkmi(idc, err);
+        if (err<2)
+            found_module = true;
+        else if (err==2)
+            udf_module = true;
+
         if (fs.size()!=0)
         {
             errs()<<" [DKMI]\n";
             dkmi_cnt++;
             goto resolved;
         }
-        if (err==1)
+        if (found_module)
         {
-                errs()<<" [UNDEFINED1]\n";
+                errs()<<" [UNDEFINED1-found-m]\n";
                 count++;
                 targets++;
                 undefined_1++;
                 //dump_kmi_info(idc);
                 continue;
-        }else if (err==2)
+        }
+        if (udf_module)
         {
-            errs()<<" [UNDEFINED2]\n";
+            errs()<<" [UNDEFINED2-udf-m]\n";
             count++;
             targets++;
             undefined_2++;
@@ -1145,8 +1186,8 @@ resolved:
     errs()<<"#     - KMI:"<< kmi_cnt<<" "<<(100*kmi_cnt/idcs.size())<<"%\n";
     errs()<<"#     - DKMI:"<< dkmi_cnt<<" "<<(100*dkmi_cnt/idcs.size())<<"%\n";
     errs()<<"# (total target) of callee:"<<targets<<"\n";
-    errs()<<"# undefined_1 : "<<undefined_1<<" "<<(100*undefined_1/idcs.size())<<"%\n";
-    errs()<<"# undefined_2 : "<<undefined_2<<" "<<(100*undefined_2/idcs.size())<<"%\n";
+    errs()<<"# undefined-found-m : "<<undefined_1<<" "<<(100*undefined_1/idcs.size())<<"%\n";
+    errs()<<"# undefined-udf-m : "<<undefined_2<<" "<<(100*undefined_2/idcs.size())<<"%\n";
     errs()<<"# fpara(KMI can not handle, try SVF?): "
                 <<fpar_cnt
                 <<" "<<(100*fpar_cnt/idcs.size())

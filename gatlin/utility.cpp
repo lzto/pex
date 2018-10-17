@@ -157,6 +157,40 @@ void add_function_to_dmi(Function* f, StructType* t, Indices& idcs, DMInterface&
 }
 
 /*
+ * this type exists in dmi?
+ */
+bool dmi_type_exists(StructType* t, DMInterface& dmi)
+{
+//first method
+    auto ifps = dmi.find(t);
+    std::string stname;
+    IFPairs* ifpairs;
+    //only use this for literal
+    if (t->isLiteral())
+    {
+        if (ifps!=dmi.end())
+            return true;
+        return false;
+    }
+    //match using name
+    stname = t->getStructName();
+    str_truncate_dot_number(stname);
+    for (auto& ifpsp: dmi)
+    {
+        StructType* cst = ifpsp.first;
+        if (cst->isLiteral())
+            continue;
+        std::string cstn = cst->getStructName();
+        str_truncate_dot_number(cstn);
+        if (cstn==stname)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
  * given StructType and indices, return FunctionSet or NULL
  */
 FunctionSet* dmi_exists(StructType* t, Indices& idcs, DMInterface& dmi)
