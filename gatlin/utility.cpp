@@ -695,7 +695,14 @@ StructType* identify_ld_bcst_struct(Value* v)
     {
         //I am expecting a pointer type
         PointerType* pt = dyn_cast<PointerType>(ret);
-        assert(pt);
+        if (!pt)
+        {
+            errs()<<"I am expecting a pointer type! got:";
+            ret->print(errs());
+            errs()<<"\n";
+            return NULL;
+        }
+        //assert(pt);
         ret = pt->getElementType();
         num_load--;
     }
