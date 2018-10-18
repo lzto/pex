@@ -2883,6 +2883,7 @@ void gatlin::process_cpgf(Module& module)
 
     errs()<<"Pre-processing...\n";
     STOP_WATCH_MON(WID_0, preprocess(module));
+    errs()<<"Found "<<syscall_list.size()<<" syscalls\n";
 
     errs()<<"Process Gating Functions\n";
     STOP_WATCH_START(WID_0);

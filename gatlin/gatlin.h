@@ -305,7 +305,7 @@ class gatlin : public ModulePass
 
         bool is_syscall_prefix(StringRef str)
         {
-            for (int i=0;i<4;i++)
+            for (int i=0;i<8;i++)
                 if (str.startswith(_builtin_syscall_prefix[i]))
                     return true;
             return false;

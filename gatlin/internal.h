@@ -43,7 +43,11 @@ static const char* _builtin_syscall_prefix [] =
     "compat_SyS_",
     "compat_sys_",
     "SyS_",
-    "sys_"
+    "sys_",
+    "__x64_sys",
+    "__x32_compat_sys_",
+    "__ia32_sys_",
+    "__ia32_compat_sys_"
 };
 
 
