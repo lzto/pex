@@ -164,7 +164,6 @@ bool dmi_type_exists(StructType* t, DMInterface& dmi)
 //first method
     auto ifps = dmi.find(t);
     std::string stname;
-    IFPairs* ifpairs;
     //only use this for literal
     if (t->isLiteral())
     {
@@ -284,7 +283,7 @@ static StructType* resolve_where_is_it_stored_to(StoreInst* si, Indices& idcs)
                 case(Instruction::PHI):
                 {
                     PHINode* phi = dyn_cast<PHINode>(i);
-                    for (int i=0;i<phi->getNumIncomingValues();i++)
+                    for (unsigned int i=0;i<phi->getNumIncomingValues();i++)
                         worklist.push_back(phi->getIncomingValue(i));
                     break;
                 }
@@ -349,7 +348,7 @@ static StructType* resolve_where_is_it_stored_to(StoreInst* si, Indices& idcs)
                 {
                     //adjust pointer using arithmatic, seems to be weired
                     BinaryOperator *bop = dyn_cast<BinaryOperator>(i);
-                    for (int i=0;i<bop->getNumOperands();i++)
+                    for (unsigned int i=0;i<bop->getNumOperands();i++)
                         worklist.push_back(bop->getOperand(i));
                     break;
                 }
@@ -492,7 +491,7 @@ StructType* find_assignment_to_struct_type(Value* v, Indices& idcs, ValueSet& vi
             {
                 //try to figure out which argument is u corresponds to
                 int argidx = -1;
-                for (int ai = 0; ai<ci->getNumArgOperands(); ai++)
+                for (unsigned int ai = 0; ai<ci->getNumArgOperands(); ai++)
                 {
                     if (ci->getArgOperand(ai)==v)
                     {
@@ -755,11 +754,13 @@ bool is_tracepoint_func(Value* v)
 {
     if (StructType* st = identify_ld_bcst_struct(v))
     {
+#if 0
         errs()<<"Found:";
         if (st->isLiteral())
             errs()<<"Literal\n";
         else
             errs()<<st->getStructName()<<"\n";
+#endif
         //no name ...
         if (!st->hasName())
             return false;
@@ -775,7 +776,7 @@ bool is_tracepoint_func(Value* v)
             PHINode * phi = dyn_cast<PHINode>(addr);
             assert(phi);
             //one of the incomming value should be a load
-            for (int i=0;i<phi->getNumIncomingValues();i++)
+            for (unsigned int i=0;i<phi->getNumIncomingValues();i++)
             {
                 Value* iv = phi->getIncomingValue(i);
                 //should be a load from a global defined object

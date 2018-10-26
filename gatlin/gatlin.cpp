@@ -1,6 +1,6 @@
 /*
- * CapChecker
- * linux kernel capability checker
+ * PeX
+ * Linux kernel permission check checker
  * 2018 Tong Zhang<t.zhang2@partner.samsung.com>
  */
 
@@ -27,9 +27,14 @@ using namespace llvm;
 
 #include "module_duplicator.h"
 
+#include <thread>
+#include <mutex>
+
 char gatlin::ID;
 Instruction* x_dbg_ins;
 std::list<int> x_dbg_idx;
+
+std::mutex x_lock;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,8 +47,8 @@ void gatlin::find_in_mi2m(Type* t, ModuleSet& ms)
     StructType *st = dyn_cast<StructType>(t);
     if (!st)
     {
-        t->print(errs());
-        errs()<<"\n";
+        //t->print(errs());
+        //errs()<<"\n";
         return;
     }
     assert(st);
@@ -621,7 +626,7 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
     //non-gep case. loading from bitcasted struct address
     if (StructType* ldbcstty = identify_ld_bcst_struct(ci->getCalledValue()))
     {
-#if 1
+#if 0
         errs()<<"Found ld+bitcast sty to ptrty:";
         if (ldbcstty->isLiteral())
             errs()<<"Literal, ";
@@ -665,7 +670,9 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst* ci, int&err,
             dkmi_cnt++;
             goto end;
         }
+#if 0
         errs()<<"Try rkmi\n";
+#endif
     }
 end:
     if (fs.size())
@@ -853,9 +860,11 @@ FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst* ci, int& err)
             }else
             {
                 //no struct inside it and all of them are array?
+#if 0
                 errs()<<"All array?:";
                 cvt->print(errs());
                 errs()<<"\n";
+#endif
                 break;
             }
         }
@@ -923,13 +932,13 @@ bool gatlin::load_from_global_fptr(Value* cv)
         }
         if (PHINode* phi = dyn_cast<PHINode>(v))
         {
-            for (int i=0;i<phi->getNumIncomingValues();i++)
+            for (unsigned int i=0;i<phi->getNumIncomingValues();i++)
                 worklist.push_back(phi->getIncomingValue(i));
             continue;
         }
         //instruction
         if (Instruction* i = dyn_cast<Instruction>(v))
-            for (int j = 0;j<i->getNumOperands();j++)
+            for (unsigned int j = 0;j<i->getNumOperands();j++)
                 worklist.push_back(i->getOperand(j));
         //constant value
         if (ConstantExpr* cxpr = dyn_cast<ConstantExpr>(v))
@@ -972,14 +981,14 @@ void gatlin::dump_kmi_info(CallInst* ci)
         }
         if (PHINode* phi = dyn_cast<PHINode>(v))
         {
-            for (int i=0;i<phi->getNumIncomingValues();i++)
+            for (unsigned int i=0;i<phi->getNumIncomingValues();i++)
                 worklist.push_back(phi->getIncomingValue(i));
             continue;
         }
         if (isa<CallInst>(v))
             continue;
         if (Instruction* i = dyn_cast<Instruction>(v))
-            for (int j = 0;j<i->getNumOperands();j++)
+            for (unsigned int j = 0;j<i->getNumOperands();j++)
                 worklist.push_back(i->getOperand(j));
     }
 }
@@ -1003,14 +1012,18 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
     int unknown = 0;
     int kmi_cnt = 0;
     int dkmi_cnt = 0;
+#if 0
     errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
         <<"indirect callsite, match"
         <<ANSI_COLOR_RESET<<"\n";
+#endif
     for (auto* idc: idcs)
     {
+#if 0
         errs()<<ANSI_COLOR_YELLOW<<" * ";
         idc->getDebugLoc().print(errs());
         errs()<<ANSI_COLOR_RESET<<"";
+#endif
         //is this a trace point?
         //special condition, ignore tracepoint, we are not interested in them.
         if (is_tracepoint_func(idc->getCalledValue()))
@@ -1018,13 +1031,17 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
             count++;
             targets++;
             kmi_cnt++;
+#if 0
             errs()<<" [tracepoint]\n";
+#endif
             continue;
         }
         if (is_container_of(idc->getCalledValue()))
         {
             container_of_cnt++;
+#if 0
             errs()<<" [container_of]\n";
+#endif
             continue;
         }
 
@@ -1049,7 +1066,9 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
 
         if (fs.size()!=0)
         {
+#if 0
             errs()<<" [LDCST-KMI]\n";
+#endif
             goto resolved;
         }
         fs = resolve_indirect_callee_using_kmi(idc, err);
@@ -1060,7 +1079,9 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
 
         if (fs.size()!=0)
         {
+#if 0
             errs()<<" [KMI]\n";
+#endif
             kmi_cnt++;
             goto resolved;
         }
@@ -1106,13 +1127,17 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
 
         if (fs.size()!=0)
         {
+#if 0
             errs()<<" [DKMI]\n";
+#endif
             dkmi_cnt++;
             goto resolved;
         }
         if (found_module)
         {
+#if 0
                 errs()<<" [UNDEFINED1-found-m]\n";
+#endif
                 count++;
                 targets++;
                 undefined_1++;
@@ -1121,7 +1146,9 @@ void gatlin::populate_indcall_list_through_kmi(Module& module)
         }
         if (udf_module)
         {
+#if 0
             errs()<<" [UNDEFINED2-udf-m]\n";
+#endif
             count++;
             targets++;
             undefined_2++;
@@ -1136,23 +1163,31 @@ unresolvable:
             case (3):
             {
                 //function parameter
+#if 0
                 errs()<<" [UPARA]\n";
+#endif
                 break;
             }
             case (4):
             {
                 //global fptr
+#if 0
                 errs()<<" [GFPTR]\n";
+#endif
                 break;
             }
             case (5):
             {
+#if 0
                 errs()<<" [BAD CAST]\n";
+#endif
                 break;
             }
             default:
             {
+#if 0
                 errs()<<" [UNKNOWN]\n";
+#endif
                 unknown++;
                 //dump the struct
                 //dump_kmi_info(idc);
@@ -1170,7 +1205,9 @@ resolved:
         }
         for (auto f:fs)
         {
+#if 0
             errs()<<"     - "<<f->getName()<<"\n";
+#endif
             funcs->insert(f);
             InstructionSet* csis = f2csi_type1[f];
             if (csis==NULL)
@@ -1181,6 +1218,9 @@ resolved:
             csis->insert(idc);
         }
     }
+    errs()<<ANSI_COLOR(BG_WHITE, FG_RED)
+        <<"------ KMI STATISTICS ------"
+        <<ANSI_COLOR_RESET"\n";
     errs()<<"# of indirect call sites: "<< idcs.size()<<"\n";
     errs()<<"# resolved by KMI:"<< count<<" "<<(100*count/idcs.size())<<"%\n";
     errs()<<"#     - KMI:"<< kmi_cnt<<" "<<(100*kmi_cnt/idcs.size())<<"%\n";
@@ -1208,7 +1248,7 @@ resolved:
                 <<unknown
                 <<" "<<(100*unknown/idcs.size())
                 <<"%\n";
-    exit(0);
+    //exit(0);
 }
 
 
@@ -1822,16 +1862,24 @@ void gatlin::collect_crits(Module& module)
 
 /*
  * discover checks inside functions f, including checks inside other callee
+ * this is shared across all workers.
  */
-InstructionSet& gatlin::discover_chks(Function* f, FunctionSet& visited)
+std::mutex dc_lock;
+InstructionSet* gatlin::discover_chks(Function* f, FunctionSet& visited)
 {
-    InstructionSet* ret;
+    InstructionSet* ret = NULL;
+    //dc_lock.lock();
     if (visited.count(f))
-        return *f2chks_disc[f];
+    {
+        if (f2chks_disc.count(f))
+            ret = f2chks_disc[f];
+        //dc_lock.unlock();
+        return ret;
+    }
+    //dc_lock.unlock();
     visited.insert(f);
 
     ret = new InstructionSet;
-    f2chks_disc[f] = ret;
 
     //any direct check
     if (InstructionSet* chks = f2chks[f])
@@ -1853,23 +1901,38 @@ InstructionSet& gatlin::discover_chks(Function* f, FunctionSet& visited)
             Function *nextf = get_callee_function_direct(ci);
             if (!nextf)//ignore all indirect call
                 continue;
-            InstructionSet r = discover_chks(nextf, visited);
-            if (r.size())
-                ret->insert(ci);
+            if (InstructionSet* r = discover_chks(nextf, visited))
+                if (r->size())
+                    ret->insert(ci);
         }
     }
-
-    return *ret;
+    if (f2chks_disc.count(f)==0)
+    {
+        dc_lock.lock();
+        f2chks_disc[f] = ret;
+        dc_lock.unlock();
+    }else
+    {
+        delete ret;
+        ret = f2chks_disc[f];
+    }
+    return ret;
 }
 
 InstructionSet& gatlin::discover_chks(Function* f)
 {
+    //dc_lock.lock();
     if (f2chks_disc.count(f)!=0)
-        return *f2chks_disc[f];
+    {
+        InstructionSet* ret = f2chks_disc[f];
+        //dc_lock.unlock();
+        return *ret;
+    }
+    //dc_lock.unlock();
 
     FunctionSet visited;
-    InstructionSet& ret = discover_chks(f, visited);
-    return ret;
+    InstructionSet* ret = discover_chks(f, visited);
+    return *ret;
 }
 
 void gatlin::backward_slice_build_callgraph(InstructionList &callgraph,
@@ -2162,31 +2225,66 @@ bool gatlin::backward_slice_using_indcs(Function* func,
 
 /*
  * check possible critical function path 
+ *
+ * tid - thread id
+ * wgsize - total number of threads
  */
 void gatlin::check_critical_function_usage(Module& module)
 {
-    FunctionList processed_flist;
+    if (knob_mt==1)
+    {
+        _check_critical_function_usage(&module, 0, 1);
+        return;
+    }
+    std::thread workers[(int)knob_mt];
+    for (unsigned int i=0;i<knob_mt;i++)
+        workers[i] = std::thread(&gatlin::_check_critical_function_usage,
+                this, &module, i, (int)knob_mt);
+    for (unsigned int i=0;i<knob_mt;i++)
+        workers[i].join();
+}
+
+void gatlin::_check_critical_function_usage(Module* module, int tid, int wgsize)
+{
+    int divn = critical_functions.size()/wgsize;
+    int start = tid*divn;
+    int stop = (tid+1)*divn;
+    int idx = 0;
+
+    x_lock.lock();
+    errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
+        <<"Thread "<<tid<<"["<<start<<","<<stop<<")"<<ANSI_COLOR_RESET<<"\n";
+    x_lock.unlock();
     /*
      * collect critical indirect call site and check them in one shot
      */
     InstructionSet indirect_callsite_set;
-
     /*
      * for each critical function find out all callsite(use)
      */
     for (Function* func:critical_functions)
     {
+        if (idx<start)
+        {
+            idx++;
+            continue;
+        }else if (idx>=stop)
+            break;
+        idx++;
+
         if (!crit_syms->use_builtin())//means that not knob specified
             if (!crit_syms->exists(func->getName()))//means that symbol not matched
                 continue;
         if (is_skip_function(func->getName()))
             continue;
 
+        //x_lock.lock();
         errs()<<ANSI_COLOR_YELLOW
             <<"Check Use of Function:"
             <<func->getName()
             <<ANSI_COLOR_RESET
             <<"\n";
+        //x_lock.unlock();
         //iterate through all call site
         //direct call
         int good=0, bad=0, ignored=0;
@@ -2227,6 +2325,7 @@ void gatlin::check_critical_function_usage(Module& module)
         GoodPath+=good;
         IgnPath+=ignored;
     }
+#if 1
     //critical indirect call site
     errs()<<ANSI_COLOR_YELLOW
         <<"Check all other indirect call sites"
@@ -2259,16 +2358,50 @@ void gatlin::check_critical_function_usage(Module& module)
     BadPath+=bad;
     GoodPath+=good;
     IgnPath+=ignored;
+#endif
+    x_lock.lock();
+    errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
+        <<"Thread "<<tid<<" Done!"<<ANSI_COLOR_RESET<<"\n";
+    x_lock.unlock();
 }
 
 /*
  * run inter-procedural backward analysis to figure out whether the use of
  * critical variable can be reached from entry point without running check
+ *
+ * tid - thread id
+ * wgsize - total number of threads
  */
 void gatlin::check_critical_variable_usage(Module& module)
 {
+    if (knob_mt==1)
+    {
+        _check_critical_variable_usage(&module, 0, 1);
+        return;
+    }
+    std::thread *workers;
+    workers = new std::thread[knob_mt];
+    for (unsigned int i=0;i<knob_mt;i++)
+        workers[i] = std::thread(&gatlin::_check_critical_variable_usage,
+                this, &module, i, (int)knob_mt);
+    for (unsigned int i=0;i<knob_mt;i++)
+        workers[i].join();
+    delete workers;
+}
+void gatlin::_check_critical_variable_usage(Module* module, int tid, int wgsize)
+{
+    int divn = critical_variables.size()/wgsize;
+    int start = tid*divn;
+    int stop = (tid+1)*divn;
+    int idx = 0;
     for (auto *V: critical_variables)
     {
+        if ((idx<start) || (idx>=stop))
+        {
+            idx++;
+            continue;
+        }
+        idx++;
         FunctionList flist;//known functions
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Variable:"
@@ -2317,6 +2450,79 @@ void gatlin::check_critical_variable_usage(Module& module)
     }
 }
 
+
+void gatlin::check_critical_type_field_usage(Module& module)
+{
+    if (knob_mt==1)
+    {
+        _check_critical_type_field_usage(&module, 0, 1);
+        return;
+    }
+    std::thread *workers;
+    workers = new std::thread[knob_mt];
+    for (unsigned int i=0;i<knob_mt;i++)
+        workers[i] = std::thread(&gatlin::_check_critical_type_field_usage,
+                this, &module, i, (int)knob_mt);
+    for (unsigned int i=0;i<knob_mt;i++)
+        workers[i].join();
+    delete workers;
+}
+
+void gatlin::_check_critical_type_field_usage(Module* module, int tid, int wgsize)
+{
+    int divn = critical_typefields.size()/wgsize;
+    int start = tid*divn;
+    int stop = (tid+1)*divn;
+    int idx = 0;
+
+    for (auto V: critical_typefields)
+    {
+        if ((idx<start) || (idx>=stop))
+        {
+            idx++;
+            continue;
+        }
+        idx++;
+        StructType* t = dyn_cast<StructType>(V.first);
+        //std::set<int>& fields = V.second;
+
+        errs()<<ANSI_COLOR_YELLOW
+            <<"Inspect Use of Type:"
+            <<t->getStructName()
+            <<ANSI_COLOR_RESET<<"\n";
+
+        //figure out all use-def, put them info workset
+        InstructionSet workset;
+        //figure out where the type is used, and add all of them in workset
+        //mainly gep
+        figure_out_gep_using_type_field(workset, V, *module);
+
+        for (auto* U: workset)
+        {
+            Function*f = U->getFunction();
+            errs()<<" @ "<<f->getName()<<" ";
+            U->getDebugLoc().print(errs());
+            errs()<<"\n";
+
+            //is this instruction reachable from non-checked path?
+            int good=0, bad=0, ignored=0;
+            _backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U), good, bad, ignored);
+            if (bad!=0)
+            {
+                errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
+                      <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
+                      <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
+                      <<ANSI_COLOR_RESET<<"\n";
+            }
+            BadPath+=bad;
+            GoodPath+=good;
+            IgnPath+=ignored;
+        }
+    }
+
+}
+
+
 void gatlin::figure_out_gep_using_type_field(InstructionSet& workset,
         const std::pair<Type*,std::unordered_set<int>>& v, Module& module)
 {
@@ -2354,50 +2560,6 @@ void gatlin::figure_out_gep_using_type_field(InstructionSet& workset,
         }
     }
 }
-
-void gatlin::check_critical_type_field_usage(Module& module)
-{
-    for (auto V: critical_typefields)
-    {
-        StructType* t = dyn_cast<StructType>(V.first);
-        //std::set<int>& fields = V.second;
-
-        errs()<<ANSI_COLOR_YELLOW
-            <<"Inspect Use of Type:"
-            <<t->getStructName()
-            <<ANSI_COLOR_RESET<<"\n";
-
-        //figure out all use-def, put them info workset
-        InstructionSet workset;
-        //figure out where the type is used, and add all of them in workset
-        //mainly gep
-        figure_out_gep_using_type_field(workset, V, module);
-
-        for (auto* U: workset)
-        {
-            Function*f = U->getFunction();
-            errs()<<" @ "<<f->getName()<<" ";
-            U->getDebugLoc().print(errs());
-            errs()<<"\n";
-
-            //is this instruction reachable from non-checked path?
-            int good=0, bad=0, ignored=0;
-            _backward_slice_reachable_to_chk_function(dyn_cast<Instruction>(U), good, bad, ignored);
-            if (bad!=0)
-            {
-                errs()<<ANSI_COLOR_GREEN<<"Good: "<<good<<" "
-                      <<ANSI_COLOR_RED<<"Bad: "<<bad<<" "
-                      <<ANSI_COLOR_YELLOW<<"Ignored: "<<ignored
-                      <<ANSI_COLOR_RESET<<"\n";
-            }
-            BadPath+=bad;
-            GoodPath+=good;
-            IgnPath+=ignored;
-        }
-    }
-   
-}
-
 /*
  * collect critical function calls,
  * callee of direct call is collected directly,
@@ -2940,7 +3102,7 @@ void gatlin::process_cpgf(Module& module)
     dump_tf2ci();
 
     //pass 2
-    errs()<<"Run Analysis\n";
+    errs()<<"Run Analysis, Threads:"<<knob_mt<<"\n";
 
     if (knob_gatlin_critical_var)
     {

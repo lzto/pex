@@ -127,6 +127,12 @@ class gatlin : public ModulePass
         void check_critical_function_usage(Module& module);
         void check_critical_variable_usage(Module& module);
         void check_critical_type_field_usage(Module& module);
+        /*
+         * thread worker
+         */
+        void _check_critical_function_usage(Module*, int tid, int wgsize);
+        void _check_critical_variable_usage(Module*, int tid, int wgsize);
+        void _check_critical_type_field_usage(Module*, int tid, int wgsize);
 
         void backward_slice_build_callgraph(InstructionList &callgraph,
                 Instruction* I, FunctionToCheckResult& fvisited,
@@ -151,7 +157,7 @@ class gatlin : public ModulePass
                 int& good, int& bad, int& ignored);
 
         InstructionSet& discover_chks(Function* f);
-        InstructionSet& discover_chks(Function* f, FunctionSet& visited);
+        InstructionSet* discover_chks(Function* f, FunctionSet& visited);
 
 #ifdef CUSTOM_STATISTICS
         void dump_statistics();
@@ -303,7 +309,7 @@ class gatlin : public ModulePass
         bool _is_used_by_static_assign_to_interesting_type(Value* v,
                 std::unordered_set<Value*>& duchain);
 
-        bool is_syscall_prefix(StringRef str)
+        bool is_syscall_prefix(StringRef str) const
         {
             for (int i=0;i<8;i++)
                 if (str.startswith(_builtin_syscall_prefix[i]))
@@ -311,7 +317,7 @@ class gatlin : public ModulePass
             return false;
         }
 
-        inline bool is_syscall(Function *f)
+        inline bool is_syscall(Function *f) const
         {
             return syscall_list.count(f)!=0;
         }
@@ -324,11 +330,11 @@ class gatlin : public ModulePass
         Value* get_global_def(Value*);
         Value* get_global_def(Value*, ValueSet&);
 
-        inline bool is_skip_var(const std::string& str)
+        inline bool is_skip_var(const std::string& str) const
         {
             return skip_vars->exists_ignore_dot_number(str);
         };
-        inline bool is_skip_function(const std::string& str)
+        inline bool is_skip_function(const std::string& str) const
         {
             return skip_funcs->exists_ignore_dot_number(str)
                 || kernel_api->exists_ignore_dot_number(str);

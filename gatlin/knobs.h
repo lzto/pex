@@ -121,7 +121,9 @@ cl::opt<unsigned int> knob_bwd_depth("bwd-depth",
         cl::desc("backward search max depth - default 100"),
         cl::init(100));
 
-
+cl::opt<unsigned int> knob_mt("mt",
+        cl::desc("Multi-threading, number of threads - default 1"),
+        cl::init(1));
 
 #endif//_CAPCHK_KNOBS_
 

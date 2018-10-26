@@ -126,7 +126,7 @@ GatingCap::GatingCap(Module& module, std::string& capfile)
                     continue;
 
                 //for each of the function argument
-                for (int i=0;i<ci->getNumArgOperands();++i)
+                for (unsigned int i=0;i<ci->getNumArgOperands();++i)
                 {
                     Value* capv = ci->getArgOperand(i);
                     int pos = use_parent_func_arg(capv, f);
@@ -388,7 +388,7 @@ again:
                 Function* userf = ci->getFunction();
                 errs()<<"    used by - "<<userf->getName()<<"\n";
                 //parameters comes from wrapper's parameter?
-                for (int i = 0;i<ci->getNumOperands();i++)
+                for (unsigned int i = 0;i<ci->getNumOperands();i++)
                 {
                     Value* a = ci->getOperand(i);
                     if (use_parent_func_arg_deep(a, userf)>=0)
@@ -498,7 +498,7 @@ again:
                 Function* userf = ci->getFunction();
                 errs()<<"    used by - "<<userf->getName()<<"\n";
                 //parameters comes from wrapper's parameter?
-                for (int i = 0;i<ci->getNumOperands();i++)
+                for (unsigned int i = 0;i<ci->getNumOperands();i++)
                 {
                     Value* a = ci->getOperand(i);
                     if (use_parent_func_arg_deep(a, userf)>=0)
