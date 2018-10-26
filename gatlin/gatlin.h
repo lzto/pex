@@ -159,7 +159,7 @@ class gatlin : public ModulePass
                 InstructionList& callgraph, FunctionToCheckResult& visited,
                 int& good, int& bad, int& ignored);
 
-        InstructionSet& discover_chks(Function* f);
+        InstructionSet* discover_chks(Function* f);
         InstructionSet* discover_chks(Function* f, FunctionSet& visited);
 
 #ifdef CUSTOM_STATISTICS

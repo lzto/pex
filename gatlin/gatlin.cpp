@@ -29,6 +29,7 @@ using namespace llvm;
 
 #include <thread>
 #include <mutex>
+#include <pthread.h>
 
 char gatlin::ID;
 Instruction* x_dbg_ins;
@@ -1864,19 +1865,19 @@ void gatlin::collect_crits(Module& module)
  * discover checks inside functions f, including checks inside other callee
  * this is shared across all workers.
  */
-std::mutex dc_lock;
+pthread_rwlock_t dc_lock;
+
 InstructionSet* gatlin::discover_chks(Function* f, FunctionSet& visited)
 {
     InstructionSet* ret = NULL;
-    //dc_lock.lock();
     if (visited.count(f))
     {
+        pthread_rwlock_rdlock(&dc_lock);
         if (f2chks_disc.count(f))
             ret = f2chks_disc[f];
-        //dc_lock.unlock();
+        pthread_rwlock_unlock(&dc_lock);
         return ret;
     }
-    //dc_lock.unlock();
     visited.insert(f);
 
     ret = new InstructionSet;
@@ -1906,33 +1907,33 @@ InstructionSet* gatlin::discover_chks(Function* f, FunctionSet& visited)
                     ret->insert(ci);
         }
     }
+    pthread_rwlock_wrlock(&dc_lock);
     if (f2chks_disc.count(f)==0)
     {
-        dc_lock.lock();
         f2chks_disc[f] = ret;
-        dc_lock.unlock();
     }else
     {
         delete ret;
         ret = f2chks_disc[f];
     }
+    pthread_rwlock_unlock(&dc_lock);
     return ret;
 }
 
-InstructionSet& gatlin::discover_chks(Function* f)
+InstructionSet* gatlin::discover_chks(Function* f)
 {
-    //dc_lock.lock();
+    pthread_rwlock_rdlock(&dc_lock);
     if (f2chks_disc.count(f)!=0)
     {
         InstructionSet* ret = f2chks_disc[f];
-        //dc_lock.unlock();
-        return *ret;
+        pthread_rwlock_unlock(&dc_lock);
+        return ret;
     }
-    //dc_lock.unlock();
+    pthread_rwlock_unlock(&dc_lock);
 
     FunctionSet visited;
     InstructionSet* ret = discover_chks(f, visited);
-    return *ret;
+    return ret;
 }
 
 void gatlin::backward_slice_build_callgraph(InstructionList &callgraph,
@@ -1970,7 +1971,7 @@ void gatlin::backward_slice_build_callgraph(InstructionList &callgraph,
     //place holder
     fvisited[f] = RNA;
     DominatorTree dt(*f);
-    InstructionSet chks;
+    InstructionSet *chks;
 
     if (is_skip_function(f->getName()))
     {
@@ -1996,9 +1997,9 @@ void gatlin::backward_slice_build_callgraph(InstructionList &callgraph,
      *-------------------------------------------------------
      */
     chks = discover_chks(f);
-    if (chks.size())
+    if ((chks!=NULL) && chks->size())
     {
-        for (auto* chk: chks)
+        for (auto* chk: *chks)
         {
             if (dt.dominates(chk, I))
             {
@@ -2231,12 +2232,14 @@ bool gatlin::backward_slice_using_indcs(Function* func,
  */
 void gatlin::check_critical_function_usage(Module& module)
 {
+    witidx = 0;
     if (knob_mt==1)
     {
         _check_critical_function_usage(&module, 0, 1);
         return;
     }
-    witidx = 0;
+    pthread_rwlock_init(&dc_lock, NULL);
+
     std::thread workers[(int)knob_mt];
     for (unsigned int i=0;i<knob_mt;i++)
         workers[i] = std::thread(&gatlin::_check_critical_function_usage,
@@ -2379,6 +2382,7 @@ void gatlin::_check_critical_function_usage(Module* module, int tid, int wgsize)
  */
 void gatlin::check_critical_variable_usage(Module& module)
 {
+    witidx = 0;
     if (knob_mt==1)
     {
         _check_critical_variable_usage(&module, 0, 1);
@@ -2469,6 +2473,7 @@ void gatlin::_check_critical_variable_usage(Module* module, int tid, int wgsize)
 
 void gatlin::check_critical_type_field_usage(Module& module)
 {
+    witidx = 0;
     if (knob_mt==1)
     {
         _check_critical_type_field_usage(&module, 0, 1);
