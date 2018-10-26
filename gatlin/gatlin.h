@@ -130,6 +130,9 @@ class gatlin : public ModulePass
         /*
          * thread worker
          */
+        std::mutex witidx_lock;
+        int witidx;
+
         void _check_critical_function_usage(Module*, int tid, int wgsize);
         void _check_critical_variable_usage(Module*, int tid, int wgsize);
         void _check_critical_type_field_usage(Module*, int tid, int wgsize);

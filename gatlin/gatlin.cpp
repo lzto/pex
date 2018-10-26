@@ -2236,6 +2236,7 @@ void gatlin::check_critical_function_usage(Module& module)
         _check_critical_function_usage(&module, 0, 1);
         return;
     }
+    witidx = 0;
     std::thread workers[(int)knob_mt];
     for (unsigned int i=0;i<knob_mt;i++)
         workers[i] = std::thread(&gatlin::_check_critical_function_usage,
@@ -2246,15 +2247,6 @@ void gatlin::check_critical_function_usage(Module& module)
 
 void gatlin::_check_critical_function_usage(Module* module, int tid, int wgsize)
 {
-    int divn = critical_functions.size()/wgsize;
-    int start = tid*divn;
-    int stop = (tid+1)*divn;
-    int idx = 0;
-
-    x_lock.lock();
-    errs()<<ANSI_COLOR(BG_WHITE,FG_GREEN)
-        <<"Thread "<<tid<<"["<<start<<","<<stop<<")"<<ANSI_COLOR_RESET<<"\n";
-    x_lock.unlock();
     /*
      * collect critical indirect call site and check them in one shot
      */
@@ -2262,15 +2254,28 @@ void gatlin::_check_critical_function_usage(Module* module, int tid, int wgsize)
     /*
      * for each critical function find out all callsite(use)
      */
+    int idx = 0;
     for (Function* func:critical_functions)
     {
-        if (idx<start)
+        if (idx<witidx)
         {
             idx++;
             continue;
-        }else if (idx>=stop)
-            break;
-        idx++;
+        }
+        witidx_lock.lock();
+        if (idx==witidx)//revalidate
+        {
+            //success
+            idx++;
+            witidx = idx;
+        }else
+        {
+            //failed
+            idx++;
+            witidx_lock.unlock();
+            continue;
+        }
+        witidx_lock.unlock();
 
         if (!crit_syms->use_builtin())//means that not knob specified
             if (!crit_syms->exists(func->getName()))//means that symbol not matched
@@ -2390,18 +2395,29 @@ void gatlin::check_critical_variable_usage(Module& module)
 }
 void gatlin::_check_critical_variable_usage(Module* module, int tid, int wgsize)
 {
-    int divn = critical_variables.size()/wgsize;
-    int start = tid*divn;
-    int stop = (tid+1)*divn;
     int idx = 0;
     for (auto *V: critical_variables)
     {
-        if ((idx<start) || (idx>=stop))
+        if (idx<witidx)
         {
             idx++;
             continue;
         }
-        idx++;
+        witidx_lock.lock();
+        if (idx==witidx)//revalidate
+        {
+            //success
+            idx++;
+            witidx = idx;
+        }else
+        {
+            //failed
+            idx++;
+            witidx_lock.unlock();
+            continue;
+        }
+        witidx_lock.unlock();
+
         FunctionList flist;//known functions
         errs()<<ANSI_COLOR_YELLOW
             <<"Inspect Use of Variable:"
@@ -2470,19 +2486,30 @@ void gatlin::check_critical_type_field_usage(Module& module)
 
 void gatlin::_check_critical_type_field_usage(Module* module, int tid, int wgsize)
 {
-    int divn = critical_typefields.size()/wgsize;
-    int start = tid*divn;
-    int stop = (tid+1)*divn;
     int idx = 0;
 
     for (auto V: critical_typefields)
     {
-        if ((idx<start) || (idx>=stop))
+        if (idx<witidx)
         {
             idx++;
             continue;
         }
-        idx++;
+        witidx_lock.lock();
+        if (idx==witidx)//revalidate
+        {
+            //success
+            idx++;
+            witidx = idx;
+        }else
+        {
+            //failed
+            idx++;
+            witidx_lock.unlock();
+            continue;
+        }
+        witidx_lock.unlock();
+
         StructType* t = dyn_cast<StructType>(V.first);
         //std::set<int>& fields = V.second;
 
