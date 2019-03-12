@@ -1,4 +1,4 @@
-add_llvm_loadable_module( libgatlin
+add_llvm_library( libgatlin MODULE
     utility.cpp
     simple_set.cpp
     gating_function.cpp

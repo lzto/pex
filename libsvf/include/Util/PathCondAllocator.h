@@ -46,7 +46,7 @@ public:
     typedef DdNode Condition;
     typedef std::map<u32_t,Condition*> CondPosMap;		///< map a branch to its Condition
     typedef std::map<const llvm::BasicBlock*, CondPosMap > BBCondMap;	// map bb to a Condition
-    typedef std::map<const Condition*, const llvm::TerminatorInst* > CondToTermInstMap;	// map a condition to its branch instruction
+    typedef std::map<const Condition*, const llvm::Instruction* > CondToTermInstMap;	// map a condition to its branch instruction
     typedef std::set<const llvm::BasicBlock*> BasicBlockSet;
     typedef std::map<const llvm::Function*,  BasicBlockSet> FunToExitBBsMap;  ///< map a function to all its basic blocks calling program exit
     typedef std::map<const llvm::BasicBlock*, Condition*> BBToCondMap;	///< map a basic block to its condition during control-flow guard computation
@@ -85,7 +85,7 @@ public:
     void allocate(const SVFModule module);
 
     /// Get llvm conditional expression
-    inline const llvm::TerminatorInst* getCondInst(const Condition* cond) const {
+    inline const llvm::Instruction* getCondInst(const Condition* cond) const {
         CondToTermInstMap::const_iterator it = condToInstMap.find(cond);
         assert(it!=condToInstMap.end() && "this should be a fresh condition");
         return it->second;
@@ -239,7 +239,7 @@ private:
     //@}
 
     /// Allocate a new condition
-    inline Condition* newCond(const llvm::TerminatorInst* inst) {
+    inline Condition* newCond(const llvm::Instruction* inst) {
         Condition* cond = bddCondMgr->createNewCond(totalCondNum++);
         assert(condToInstMap.find(cond)==condToInstMap.end() && "this should be a fresh condition");
         condToInstMap[cond] = inst;

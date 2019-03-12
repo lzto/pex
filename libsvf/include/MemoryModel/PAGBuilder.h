@@ -148,7 +148,7 @@ public:
     void visitInsertValueInst(llvm::InsertValueInst &IVI) {
     }
     // Terminators
-    void visitTerminatorInst(llvm::TerminatorInst &TI) {
+    void visitTerminatorInst(llvm::Instruction &TI) {
     }
     void visitBinaryOperator(llvm::BinaryOperator &I) {
     }
@@ -170,11 +170,11 @@ public:
     }
 
     /// Instruction not that often
-    void visitResumeInst(llvm::TerminatorInst &I) { /*returns void*/
+    void visitResumeInst(llvm::Instruction &I) { /*returns void*/
     }
-    void visitUnwindInst(llvm::TerminatorInst &I) { /*returns void*/
+    void visitUnwindInst(llvm::Instruction &I) { /*returns void*/
     }
-    void visitUnreachableInst(llvm::TerminatorInst &I) { /*returns void*/
+    void visitUnreachableInst(llvm::Instruction &I) { /*returns void*/
     }
     void visitFenceInst(llvm::FenceInst &I) { /*returns void*/
     }

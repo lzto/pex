@@ -473,7 +473,7 @@ void PathCondAllocator::printPathCond() {
     for(BBCondMap::iterator it = bbConds.begin(), eit = bbConds.end(); it!=eit; ++it) {
         const BasicBlock* bb = it->first;
         for(CondPosMap::iterator cit = it->second.begin(), ecit = it->second.end(); cit!=ecit; ++cit) {
-            const TerminatorInst *Term = bb->getTerminator();
+            const Instruction *Term = bb->getTerminator();
             const BasicBlock* succ = Term->getSuccessor(cit->first);
             Condition* cond = cit->second;
             outs() << bb->getName() << "-->" << succ->getName() << ":";

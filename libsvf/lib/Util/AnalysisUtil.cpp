@@ -226,7 +226,7 @@ Value * analysisUtil::stripAllCasts(Value *val) {
  * Get position of a successor basic block
  */
 u32_t analysisUtil::getBBSuccessorPos(const BasicBlock *BB, const BasicBlock *Succ) {
-    const TerminatorInst *Term = BB->getTerminator();
+    const Instruction *Term = BB->getTerminator();
     u32_t e = Term->getNumSuccessors();
     for (u32_t i = 0; ; ++i) {
         assert(i != e && "Didn't find succesor edge?");

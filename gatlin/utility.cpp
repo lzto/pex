@@ -74,16 +74,16 @@ int use_parent_func_arg_deep(Value* v, Function* f)
 
 Instruction* GetNextInstruction(Instruction* i)
 {
-    if (isa<TerminatorInst>(i))
-        return i;
+    //if (isa<TerminatorInst>(i))
+    //    return i;
     BasicBlock::iterator BBI(i);
     return dyn_cast<Instruction>(++BBI);
 }
 
 Instruction* GetNextNonPHIInstruction(Instruction* i)
 {
-    if (isa<TerminatorInst>(i))
-        return i;
+    //if (isa<TerminatorInst>(i))
+    //    return i;
     BasicBlock::iterator BBI(i);
     while(isa<PHINode>(BBI))
         ++BBI;
