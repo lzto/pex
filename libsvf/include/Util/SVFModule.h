@@ -27,6 +27,27 @@
  *      Author: Xiaokang Fan
  */
 
+/*
+ * - Notes by Tong -
+ * The SVFModule class is purely for convinence, you can use it to navigate through
+ * functions/globals/alias set etc...
+ * It maintains a LLVMModuleSet object, which is created on initialization.
+ * everything is initialized in LLVMModuleSet constructor
+ *
+ * FunctionSet - all functions
+ * GlobalSet - all globals
+ * AliasSet - GlobalAlias
+ *
+ * --------------------------------------------------------------------------
+ * ---- The following variables are for resolving function/global symbol ----
+ * ---- decl and def in multiple LLVM Modules                            ----
+ * --------------------------------------------------------------------------
+ * FunDeclToDefMap - Function declaration to function definition map
+ * FunDefToDeclsMap - Function definition to function declaration map
+ * GlobalDefToRepMap - Global definition to a rep definition map
+ *
+ */
+
 #ifndef SVFMODULE_H_
 #define SVFMODULE_H_
 

@@ -43,10 +43,6 @@ class SVFGStat;
 typedef GenericGraph<SVFGNode,SVFGEdge> GenericSVFGGraphTy;
 class SVFG : public GenericSVFGGraphTy {
     friend class SVFGBuilder;
-    friend class SaberSVFGBuilder;
-    friend class DDASVFGBuilder;
-    friend class MTASVFGBuilder;
-    friend class RcSvfgBuilder;
 
 public:
     /// SVFG kind

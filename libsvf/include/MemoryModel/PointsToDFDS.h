@@ -100,10 +100,16 @@ public:
     ///@{
     inline Data& getDFInPtsSet(LocID loc, const Key& var) {
         PtsMap& inSet = dfInPtsMap[loc];
+        //assert(inSet[var]!=NULL);
+        if (inSet[var]==NULL)
+            inSet[var] = new Data();
         return *inSet[var];
     }
     inline Data& getDFOutPtsSet(LocID loc, const Key& var) {
         PtsMap& outSet = dfOutPtsMap[loc];
+        //assert(outSet[var]!=NULL);
+        if (outSet[var]==NULL)
+            outSet[var] = new Data();
         return *outSet[var];
     }
     ///@}

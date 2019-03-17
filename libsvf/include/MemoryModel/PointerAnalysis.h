@@ -27,6 +27,18 @@
  *      Author: Yulei Sui
  */
 
+/*
+ * - Notes by Tong -
+ * WPA - Whole Program Analysis
+ * PointerAnalysis is the base class for BVDataPTAImpl and CondPTAImpl
+ *
+ * BVDataPTAImpl - bit vector data structure is used in this type of point to analysis
+ *     - base class of Andersen, AndersenWave, AndersenWaveDiff, AndersenWaveDiffWithType
+ *       and AndersenLCD, FlowSensitive
+ * CondPTAImpl - conditional point to analysis, used for context sensitive analysis
+ *     - nobody use this
+ */
+
 #ifndef POINTERANALYSIS_H_
 #define POINTERANALYSIS_H_
 

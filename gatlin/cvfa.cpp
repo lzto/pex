@@ -20,7 +20,7 @@ STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 using namespace llvm;
 
 CVFA::CVFA()
-    :pta(new AndersenWaveDiffWithType)
+    :pta(new FlowSensitive)
 {
     m = NULL;
     svfg = NULL;
@@ -43,17 +43,8 @@ void CVFA::initialize(Module& module)
             <<"CVFA::initialize cost(0):"
             <<ANSI_COLOR_RESET;
     STOP_WATCH_REPORT(WID_INIT);
-#if 0
-    errs()<<"Build SVFG\n";
-    STOP_WATCH_START(WID_INIT);
-    SVFGBuilder memSSA(true);
-    svfg = memSSA.buildSVFG((BVDataPTAImpl*)pta);
-    STOP_WATCH_STOP(WID_INIT);
-    errs()<<ANSI_COLOR(BG_GREEN, FG_WHITE)
-        <<"CVFA::initialize cost(1):"
-        <<ANSI_COLOR_RESET;
-    STOP_WATCH_REPORT(WID_INIT);
-#endif
+
+    svfg = pta->getSVFG();
 }
 
 void CVFA::get_callee_function_indirect(Function* callee, ConstInstructionSet& css)

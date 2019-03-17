@@ -61,7 +61,8 @@ void FlowSensitive::analyze(SVFModule& svfModule) {
 
     double start = stat->getClk();
     /// Start solving constraints
-    DBOUT(DGENERAL, llvm::outs() << analysisUtil::pasMsg("Start Solving Constraints\n"));
+    //DBOUT(DGENERAL, llvm::outs() << analysisUtil::pasMsg("Start Solving Constraints\n"));
+    errs()<<"FlowSensitive: Start Solving Constraints\n";
 
     do {
         numOfIteration++;
@@ -75,7 +76,8 @@ void FlowSensitive::analyze(SVFModule& svfModule) {
 
     } while (updateCallGraph(getIndirectCallsites()));
 
-    DBOUT(DGENERAL, llvm::outs() << analysisUtil::pasMsg("Finish Solving Constraints\n"));
+    //DBOUT(DGENERAL, llvm::outs() << analysisUtil::pasMsg("Finish Solving Constraints\n"));
+    errs()<<"FlowSensitive: Finish Solving Constraints\n";
 
     double end = stat->getClk();
     solveTime += (end - start) / TIMEINTERVAL;

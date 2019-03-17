@@ -39,6 +39,24 @@
 
 /*
  * Generic graph solver for whole program pointer analysis
+ * - Notes by Tong -
+ * This class is used by several WPA Pointer analysis class: Andersen* etc
+ * This class provides an SCC detection algorithm and methods for merging SCC
+ * nodes, WPA Pointer Analysis classes may use binary vector to represent nodes
+ * and use this class to detect SCC and merge nodes and update the vector
+ * The WPA Pointer analysis class will need to construct a initial binary vector 
+ * by iterating through the IR then run the WPASolver
+ *
+ * This classis also the base class of WPAFSSolver, the flow sensitive solver
+ *
+ * There are two types of graphs implemented: ConstraintGraph and SVFG,
+ * Andersen* use ConstraintGraph + WPASolver
+ * FlowSensitive uses SVFG + WPAFSolver
+ *
+ * ConstraintGraph - Constraint Graph for Andersen*
+ *  - related classes: ConsG, ConsGEdge, ConsGNode, PAGBuilder
+ * SVFG - Sparse Value Flow Graph - use with SVFGBuilder 
+ *  - related classes: SVFG, SVFGNode, SVFGEdge, SVFGBuilder, SVFGStat
  */
 template<class GraphType>
 class WPASolver {

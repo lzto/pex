@@ -90,9 +90,10 @@ protected:
 };
 
 
-
+#if 0
 /*!
  * Solver based on SCC cycles.
+ * nobody uses this class
  */
 template<class GraphType>
 class WPASCCSolver : public WPAFSSolver<GraphType> {
@@ -223,5 +224,5 @@ private:
 
     NodeBS candidates;	///< nodes which need to be analyzed in current iteration.
 };
-
+#endif
 #endif /* WPAFSSOLVER_H_ */

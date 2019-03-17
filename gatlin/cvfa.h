@@ -17,7 +17,7 @@ class CVFA
 {
 private:
     Module* m;
-    PointerAnalysis* pta;
+    FlowSensitive* pta;
     SVFG* svfg;
 
 public:
