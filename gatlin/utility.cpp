@@ -7,6 +7,7 @@
 #include "color.h"
 #include "internal.h"
 #include "llvm/IR/InlineAsm.h"
+#include "llvm/IR/CFG.h"
 
 #include "llvm/Support/raw_ostream.h"
 
@@ -1307,6 +1308,77 @@ void dump_callstack(InstructionList& callstk)
     errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
 }
 
+bool dump_a_path_worker(std::vector<BasicBlock*> &bbl, Function* f, BasicBlockSet& visited)
+{
+    BasicBlock* bb = bbl.back();
+    if (bb==&f->getEntryBlock())
+        return true;
+    auto I = pred_begin(bb);
+    auto E = pred_end(bb);
+    for (;I!=E;++I)
+    {
+        if (visited.find(*I)!=visited.end())
+            continue;
+        visited.insert(*I);
+        bbl.push_back(*I);
+        if (dump_a_path_worker(bbl, f, visited))
+            return true;
+        bbl.pop_back();
+    }
+    return false;
+}
+
+void dump_a_path(InstructionList& callstk)
+{
+    errs()<<ANSI_COLOR_GREEN<<"Path: "<<ANSI_COLOR_RESET<<"\n";
+
+    std::vector<std::vector<Instruction*>> ill;
+    for (auto cI = callstk.rbegin(), E=callstk.rend(); cI!=E; ++cI)
+    {
+        Instruction* I = *cI;
+        BasicBlockSet visited;
+        std::vector<BasicBlock*> bbl;
+        std::vector<Instruction*> il;
+        Function* f = I->getFunction();
+        errs()<<f->getName()<<":";
+        //trace back till we reach the entry point of the function
+        bbl.push_back(I->getParent());
+        dump_a_path_worker(bbl, f, visited);
+        //print instructions from ebb till the end
+        for (auto bI = bbl.rbegin(), bE = bbl.rend(); bI!=bE; ++bI)
+        {
+            BasicBlock* bb = *bI;
+            for (BasicBlock::iterator ii = bb->begin(), ie = bb->end(); ii!=ie; ++ii)
+            {
+                Instruction *i = dyn_cast<Instruction>(ii);
+                if (CallInst *ci = dyn_cast<CallInst>(ii))
+                    if (Function* cf = ci->getCalledFunction())
+                        if (cf->getName().startswith("llvm."))
+                            continue;
+                il.push_back(i);
+                //errs()<<f->getName()<<":";
+                //i->print(errs());
+                //errs()<<"\n";
+                if (i==I)
+                    break;
+            }
+        }
+        ill.push_back(il);
+    }
+    for (unsigned int i=0;i<ill.size();i++)
+    {
+        auto& il = ill[i];
+        Function* f = il[0]->getFunction();
+        auto fname = f->getName();
+        errs()<<"Function:"<<fname<<"\n";
+        for (unsigned int j = 0;j<il.size();j++)
+        {
+            il[j]->print(errs());
+            errs()<<"\n";
+        }
+    }
+    errs()<<ANSI_COLOR_GREEN<<"-------------"<<ANSI_COLOR_RESET<<"\n";
+}
 
 void dump_dbgstk(InstructionList& dbgstk)
 {

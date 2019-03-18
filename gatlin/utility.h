@@ -58,6 +58,10 @@ extern std::list<int> x_dbg_idx;
 void dump_callstack(InstructionList&);
 void dump_dbgstk(InstructionList&);
 void dump_gdblst(ValueList&);
+/*
+ * dump a path consisted of Instructions in the list
+ */
+void dump_a_path(InstructionList&);
 
 ////////////////////////////////////////////////////////////////////////////////
 //some interesting list is also defined as global

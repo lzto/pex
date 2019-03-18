@@ -156,6 +156,7 @@ void gatlin::dump_as_bad(InstructionList& callstk)
         <<"=BAD PATH="
         <<ANSI_COLOR_RESET<<"\n";
     dump_callstack(callstk);
+    dump_a_path(callstk);
 }
 
 void gatlin::dump_as_ignored(InstructionList& callstk)
@@ -2233,7 +2234,7 @@ bool gatlin::backward_slice_using_indcs(Function* func,
 void gatlin::check_critical_function_usage(Module& module)
 {
     witidx = 0;
-    if (knob_mt==1)
+    if (knob_mt<=1)
     {
         _check_critical_function_usage(&module, 0, 1);
         return;
