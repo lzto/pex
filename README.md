@@ -6,20 +6,20 @@ global variable use, interesting struct type and field use) by looking at existi
 CAP/LSM/DAC check, then explore which path that uses such resource is not guarded by
 those check.
 
-#bugs discovered 
+# bugs discovered 
 
 see ```log/bug_report.md```
 
-#prerequisites
+# prerequisites
 
 * LLVM-6/7/8/9
 * compiler with C++11 support
 
-#build
+# build
 
 ./build.sh
 
-#usage
+# usage
 
 ```
 opt \
@@ -39,7 +39,7 @@ opt \
     -o /dev/null 2>&1 | tee log
 ```
 
-#options
+# options
 * gating - gating function: cap/lsm/dac, default: cap
 * ccv - check critical variables, default: 0
 * ccf - check critical functions, default: 1
@@ -70,7 +70,7 @@ opt \
 * bwd-depth - backward search max depth, default 100
 * svfbudget - # of iterations for cvf graph update, default 5
 
-#vmlinux.bc
+# vmlinux.bc
 
 You need to install wllvm(https://github.com/travitch/whole-program-llvm)
 and then use the following command to generate a single bc file.
@@ -81,7 +81,7 @@ and then use the following command to generate a single bc file.
 ~/linux: extract-bc vmlinux
 ```
 
-#Misc: where are the checks, which module should be builtin
+# Misc: where are the checks, which module should be builtin
 
 * DAC: they are mainly used in file systems(vfs),
        stage/luster and net/sunrpc also have some checks
@@ -89,13 +89,13 @@ and then use the following command to generate a single bc file.
 * CAP: capability checks are also scattered in different parts of the kernel,
        besides net/fs/mm/core, lots of device drivers also use capability checks
 
-#I want debug info
+# I want debug info
 
 ```
 CONFIG_DEBUG_INFO=y
 ```
 
-#resolve indirect call: KMI or CVF
+# resolve indirect call: KMI or CVF
 
 There are two ways to resolve indirect call: KMI and CVF
 
@@ -109,10 +109,10 @@ fairly accurate(over approximate)
 however this is very slow and memory hungry.
 CVF can process a module with ~40k functions in one hour on an Intel Xeon 6132 2.6GHz CPU.
 
-#kernel config
+# kernel config
 --------------
 
-##Kernel v4.18
+## Kernel v4.18
 
 1) ```kernel_config/allyesconfig1.config```
 
