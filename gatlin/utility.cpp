@@ -1340,7 +1340,7 @@ void dump_a_path(InstructionList& callstk)
         std::vector<BasicBlock*> bbl;
         std::vector<Instruction*> il;
         Function* f = I->getFunction();
-        errs()<<f->getName()<<":";
+        //errs()<<f->getName()<<":";
         //trace back till we reach the entry point of the function
         bbl.push_back(I->getParent());
         dump_a_path_worker(bbl, f, visited);
