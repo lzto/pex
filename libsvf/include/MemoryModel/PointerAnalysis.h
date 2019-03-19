@@ -37,6 +37,12 @@
  *       and AndersenLCD, FlowSensitive
  * CondPTAImpl - conditional point to analysis, used for context sensitive analysis
  *     - nobody use this
+ *
+ *
+ * PAG - Program Assignment Graph, used by SVFG and ConsG
+ *
+ * ConstraintGraph[ConsG] - Constraint Graph for Andersen
+ * SVFG - Sparse Value Flow Graph - use with SVFGBuilder
  */
 
 #ifndef POINTERANALYSIS_H_
