@@ -81,7 +81,7 @@ ModuleDuplicator::ModuleDuplicator(Module& m, FunctionSet &keep, FunctionSet &re
         std::string n = "_dummy_";
         n.append(f->getName());
         //errs()<<" erase "<<f->getName()<<"\n";
-#if (LLVM_VERSION_MAJOR>=8)
+#if (LLVM_VERSION_MAJOR>=9)
         FunctionCallee nf_callee = res_mod->getOrInsertFunction(n, f->getFunctionType(), f->getAttributes());
         auto* nf = dyn_cast<Function>(nf_callee.getCallee());
 #else

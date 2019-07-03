@@ -473,7 +473,11 @@ void PathCondAllocator::printPathCond() {
     for(BBCondMap::iterator it = bbConds.begin(), eit = bbConds.end(); it!=eit; ++it) {
         const BasicBlock* bb = it->first;
         for(CondPosMap::iterator cit = it->second.begin(), ecit = it->second.end(); cit!=ecit; ++cit) {
+#if (LLVM_VERSION_MAJOR>=8)
             const Instruction *Term = bb->getTerminator();
+#else
+            const TerminatorInst *Term = bb->getTerminator();
+#endif
             const BasicBlock* succ = Term->getSuccessor(cit->first);
             Condition* cond = cit->second;
             outs() << bb->getName() << "-->" << succ->getName() << ":";
