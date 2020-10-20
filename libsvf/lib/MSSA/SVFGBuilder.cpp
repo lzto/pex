@@ -26,6 +26,7 @@
  *  Created on: Apr 15, 2014
  *      Author: Yulei Sui
  */
+#include "llvm/Support/CommandLine.h"
 #include "Util/SVFModule.h"
 #include "MSSA/MemSSA.h"
 #include "MSSA/SVFG.h"

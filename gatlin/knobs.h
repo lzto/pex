@@ -6,6 +6,7 @@
 #ifndef _CAPCHK_KNOBS_
 #define _CAPCHK_KNOBS_
 
+#include "llvm/Support/CommandLine.h"
 /*
  * command line options
  */

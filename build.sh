@@ -4,25 +4,35 @@
 
 function build
 {
+
+JOBS=`getconf _NPROCESSORS_ONLN`
 #specify non default compiler here
-#-DCMAKE_C_COMPILER= 
-#-DCMAKE_CXX_COMPILER= 
     mkdir build
     pushd build
     cmake ../ \
-        -DLLVM_DIR=/opt/toolchain/llvm-git \
-        -DLLVM_ROOT=/opt/toolchain/llvm-git \
+        -DLLVM_DIR=/opt/toolchain/10.0.1 \
+        -DLLVM_ROOT=/opt/toolchain/10.0.1 \
         -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_C_COMPILER=clang-10  \
+        -DCMAKE_CXX_COMPILER=clang++-10
 
-    make -j
+
+    make -j${JOBS}
     popd
 }
 
 codedir=(
 gatlin
 include
-libsvf
+pex
 )
+
+formatdir=(
+gatlin
+include
+pex
+)
+
 scope_file=".scopefile"
 tag_file="tags"
 
@@ -42,6 +52,13 @@ function gen_scope
     cscope -Rb -i ${scope_file}
 }
 
+function indent
+{
+    for d in ${formatdir[@]}; do
+	    clang-format -i -style=llvm `find $d -name '*.cpp' -or -name "*.h"`
+    done
+}
+
 case $1 in
     "tag")
         gen_scope
@@ -53,8 +70,11 @@ case $1 in
         rm -rf build
         rm -f ${tag_file} ${scope_file} cscope.out
         ;;
+    "indent")
+        indent
+        ;;
     *)
-        build
+        echo ./build.sh tag build clean indent
         ;;
 esac
 

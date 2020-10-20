@@ -199,7 +199,7 @@ class gatlin : public ModulePass
             return "gatlin";
         }
 
-        virtual void print(raw_ostream &OS, const Module *M)
+        virtual void print(raw_ostream &OS, const Module *M) const override
         {
             OS<<"Analysis Result\n";
         }

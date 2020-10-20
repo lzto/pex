@@ -39,7 +39,7 @@ set(SOURCES
     WPA/FlowSensitiveStat.cpp
 )
 
-add_llvm_Library(LLVMSvf ${SOURCES})
+add_llvm_library(LLVMSvf ${SOURCES})
 
 link_directories( ${CMAKE_BINARY_DIR}/libsvf/lib/Cudd )
 
