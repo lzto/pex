@@ -19,37 +19,30 @@ STOP_WATCH(TOTOAL_NUMBER_OF_STOP_WATCHES);
 
 using namespace llvm;
 
-CVFA::CVFA()
-    :pta(new FlowSensitive)
-{
-    m = NULL;
-    svfg = NULL;
+CVFA::CVFA() : pta(new FlowSensitive) {
+  m = NULL;
+  svfg = NULL;
 }
 
-CVFA::~CVFA()
-{
+CVFA::~CVFA() {}
+
+void CVFA::initialize(Module &module) {
+  STOP_WATCH_START(WID_INIT);
+  m = &module;
+  errs() << "Create SVFModule\n";
+  SVFModule svfmod(module);
+  errs() << "Run Pointer Analysis\n";
+  pta->analyze(svfmod);
+  STOP_WATCH_STOP(WID_INIT);
+  errs() << ANSI_COLOR(BG_GREEN, FG_WHITE)
+         << "CVFA::initialize cost(0):" << ANSI_COLOR_RESET;
+  STOP_WATCH_REPORT(WID_INIT);
+
+  svfg = pta->getSVFG();
 }
 
-void CVFA::initialize(Module& module)
-{
-    STOP_WATCH_START(WID_INIT);
-    m = &module;
-    errs()<<"Create SVFModule\n";
-    SVFModule svfmod(module);
-    errs()<<"Run Pointer Analysis\n";
-    pta->analyze(svfmod);
-    STOP_WATCH_STOP(WID_INIT);
-    errs()<<ANSI_COLOR(BG_GREEN, FG_WHITE)
-            <<"CVFA::initialize cost(0):"
-            <<ANSI_COLOR_RESET;
-    STOP_WATCH_REPORT(WID_INIT);
-
-    svfg = pta->getSVFG();
+void CVFA::get_callee_function_indirect(Function *callee,
+                                        ConstInstructionSet &css) {
+  pta->getPTACallGraph()->getIndCallSitesInvokingCallee(callee, css);
+  // getPTACallGraph()->getAllCallSitesInvokingCallee(callee, css);
 }
-
-void CVFA::get_callee_function_indirect(Function* callee, ConstInstructionSet& css)
-{
-    pta->getPTACallGraph()->getIndCallSitesInvokingCallee(callee, css);
-    //getPTACallGraph()->getAllCallSitesInvokingCallee(callee, css);
-}
-

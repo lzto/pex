@@ -1,20 +1,21 @@
 #!/bin/bash
 # this little script will make life easier
 # 2018 Tong Zhang<t.zhang2@partner.samsung.com>
+# 2020 Tong Zhang<ztong0001@gmail.com>
 
 function build
 {
-
-JOBS=`getconf _NPROCESSORS_ONLN`
+    echo "NOTE: specify your own LLVM_DIR and LLVM_ROOT"
+    JOBS=`getconf _NPROCESSORS_ONLN`
 #specify non default compiler here
+#        -DCMAKE_C_COMPILER=clang-10  \
+#        -DCMAKE_CXX_COMPILER=clang++-10
     mkdir build
     pushd build
     cmake ../ \
         -DLLVM_DIR=/opt/toolchain/10.0.1 \
         -DLLVM_ROOT=/opt/toolchain/10.0.1 \
         -DCMAKE_BUILD_TYPE=Debug \
-        -DCMAKE_C_COMPILER=clang-10  \
-        -DCMAKE_CXX_COMPILER=clang++-10
 
 
     make -j${JOBS}
@@ -24,13 +25,13 @@ JOBS=`getconf _NPROCESSORS_ONLN`
 codedir=(
 gatlin
 include
-pex
+#pex
 )
 
 formatdir=(
 gatlin
 include
-pex
+#pex
 )
 
 scope_file=".scopefile"

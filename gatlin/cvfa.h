@@ -8,25 +8,22 @@
 #include "commontypes.h"
 
 #include "MSSA/SVFGOPT.h"
-#include "WPA/Andersen.h"
 #include "MemoryModel/PointerAnalysis.h"
+#include "WPA/Andersen.h"
 
 using namespace llvm;
 
-class CVFA
-{
+class CVFA {
 private:
-    Module* m;
-    FlowSensitive* pta;
-    SVFG* svfg;
+  Module *m;
+  FlowSensitive *pta;
+  SVFG *svfg;
 
 public:
-    CVFA();
-    ~CVFA();
-    void initialize(Module& module);
-    void get_callee_function_indirect(Function* callee, ConstInstructionSet& css);
-
+  CVFA();
+  ~CVFA();
+  void initialize(Module &module);
+  void get_callee_function_indirect(Function *callee, ConstInstructionSet &css);
 };
 
-#endif//_CVFA_H_
-
+#endif //_CVFA_H_

@@ -18,29 +18,30 @@
  * X - number of stop watch you want to use
  * Y,Z - watch id
  */
-#define STOP_WATCH(X) \
-static struct timeval _sw_time_start[X]; \
-static struct timeval _sw_time_end[X];
+#define STOP_WATCH(X)                                                          \
+  static struct timeval _sw_time_start[X];                                     \
+  static struct timeval _sw_time_end[X];
 
-#define STOP_WATCH_START(Y) \
-    gettimeofday(&_sw_time_start[Y], NULL);
+#define STOP_WATCH_START(Y) gettimeofday(&_sw_time_start[Y], NULL);
 
-#define STOP_WATCH_STOP(Y) \
-    gettimeofday(&_sw_time_end[Y], NULL);
+#define STOP_WATCH_STOP(Y) gettimeofday(&_sw_time_end[Y], NULL);
 
-#define STOP_WATCH_REPORT(Z) \
-{ \
-    double speed = (double)(_sw_time_end[Z].tv_sec - _sw_time_start[Z].tv_sec)*1000.0+ \
-        (_sw_time_end[Z].tv_usec-_sw_time_start[Z].tv_usec)/1000.0; \
-    fprintf(stderr,"STOP WATCH[%d]: %f ms\n", Z, speed); \
-    fflush(stderr);\
-}
+#define STOP_WATCH_REPORT(Z)                                                   \
+  {                                                                            \
+    double speed =                                                             \
+        (double)(_sw_time_end[Z].tv_sec - _sw_time_start[Z].tv_sec) * 1000.0 + \
+        (_sw_time_end[Z].tv_usec - _sw_time_start[Z].tv_usec) / 1000.0;        \
+    fprintf(stderr, "STOP WATCH[%d]: %f ms\n", Z, speed);                      \
+    fflush(stderr);                                                            \
+  }
 
-#define STOP_WATCH_MON(WATCH_ID, CODE) \
-    STOP_WATCH_START(WATCH_ID) \
-    do{CODE;}while(0); \
-    STOP_WATCH_STOP(WATCH_ID)\
-    STOP_WATCH_REPORT(WATCH_ID)
+#define STOP_WATCH_MON(WATCH_ID, CODE)                                         \
+  STOP_WATCH_START(WATCH_ID)                                                   \
+  do {                                                                         \
+    CODE;                                                                      \
+  } while (0);                                                                 \
+  STOP_WATCH_STOP(WATCH_ID)                                                    \
+  STOP_WATCH_REPORT(WATCH_ID)
 
 #else
 
@@ -48,11 +49,11 @@ static struct timeval _sw_time_end[X];
 #define STOP_WATCH_START(Y)
 #define STOP_WATCH_STOP(Y)
 #define STOP_WATCH_REPORT(Z)
-#define STOP_WATCH_MON(WATCH_ID, CODE) \
-    do{CODE;}while(0);
-
+#define STOP_WATCH_MON(WATCH_ID, CODE)                                         \
+  do {                                                                         \
+    CODE;                                                                      \
+  } while (0);
 
 #endif
 
 #endif //_STOP_WATCH_
-

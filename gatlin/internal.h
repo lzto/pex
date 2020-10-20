@@ -9,69 +9,43 @@
  * check functions
  */
 
-struct str2int
-{
-    std::string k;
-    int v;
+struct str2int {
+  std::string k;
+  int v;
 };
 
 #define BUILTIN_CAP_FUNC_LIST_SIZE 2
-[[maybe_unused]]
-static const struct str2int _builtin_cap_functions [] = 
-{
-    {"capable", 0},
-    {"ns_capable", 1}
-};
+[[maybe_unused]] static const struct str2int _builtin_cap_functions[] = {
+    {"capable", 0}, {"ns_capable", 1}};
 
 /*
  * kernel start function
  */
-[[maybe_unused]]
-static const char* _builtin_kernel_start_functions [] = 
-{
+[[maybe_unused]] static const char *_builtin_kernel_start_functions[] = {
     "start_kernel",
     "x86_64_start_kernel",
 };
 
-
 /*
  * syscall prefix
  */
-[[maybe_unused]]
-static const char* _builtin_syscall_prefix [] =
-{
-    "compat_SyS_",
-    "compat_sys_",
-    "SyS_",
-    "sys_",
-    "__x64_sys",
-    "__x32_compat_sys_",
-    "__ia32_sys_",
-    "__ia32_compat_sys_"
-};
-
+[[maybe_unused]] static const char *_builtin_syscall_prefix[] = {
+    "compat_SyS_", "compat_sys_",       "SyS_",        "sys_",
+    "__x64_sys",   "__x32_compat_sys_", "__ia32_sys_", "__ia32_compat_sys_"};
 
 /*
  * builtin list of skip variables
  */
-[[maybe_unused]]
-static const char* _builtin_skip_var [] = 
-{
-    "jiffies",
-    "nr_cpu_ids",
-    "nr_irqs",
-    "nr_threads",
-    "vmemmap_base",
-    "page_offset_base",
+[[maybe_unused]] static const char *_builtin_skip_var[] = {
+    "jiffies",    "nr_cpu_ids",   "nr_irqs",
+    "nr_threads", "vmemmap_base", "page_offset_base",
 };
 
 /*
  * builtin list of skip functions
  */
-[[maybe_unused]]
-static const char* _builtin_skip_functions [] = 
-{
-    //may operate on wrong source?
+[[maybe_unused]] static const char *_builtin_skip_functions[] = {
+    // may operate on wrong source?
     "add_taint",
     "__mutex_init",
     "mutex_lock",
@@ -118,16 +92,16 @@ static const char* _builtin_skip_functions [] =
     "drm_printk",
     "cpumask_next_and",
     "cpumask_next",
-    "dump_stack",//break KASLR here?
+    "dump_stack", // break KASLR here?
     "___ratelimit",
     "simple_strtoull",
     "simple_strtoul",
     "dec_ucount",
     "inc_ucount",
     "jiffies_to_msecs",
-    "__warn_printk",//break KASLR here?
+    "__warn_printk", // break KASLR here?
     "arch_release_task_struct",
-    "do_syscall_64",//syscall entry point
+    "do_syscall_64", // syscall entry point
     "do_fast_syscall_32",
     "do_int80_syscall_32",
     "complete",
@@ -213,33 +187,20 @@ static const char* _builtin_skip_functions [] =
     "_raw_spin_lock",
     "_raw_read_unlock_irqrestore",
     "_raw_read_lock_irqsave",
-    "__put_task_struct"
-};
+    "__put_task_struct"};
 
 /*
  * builtin list of interesting keywords
  */
-[[maybe_unused]]
-static const char* interesting_keyword [] = 
-{
-    "SyS",
-    "sys",
-    "open",
-    "release",
-    "lseek",
-    "read",
-    "write",
-    "sync",
-    "ioctl",
+[[maybe_unused]] static const char *interesting_keyword[] = {
+    "SyS", "sys", "open", "release", "lseek", "read", "write", "sync", "ioctl",
 };
 
 /*
  * sysfs stuff
  */
 #define BUILTIN_INTERESTING_TYPE_WORD_LIST_SIZE 64
-[[maybe_unused]]
-static const char* _builtin_interesting_type_word [] = 
-{
+[[maybe_unused]] static const char *_builtin_interesting_type_word[] = {
     "struct.file_operations",
     "struct.net_proto_family",
     "struct.sysfs_ops",
@@ -310,9 +271,7 @@ static const char* _builtin_interesting_type_word [] =
  * some common struct type to skip
  */
 #define BUILDIN_STRUCT_TO_SKIP 16
-[[maybe_unused]]
-static const char* _builtin_struct_to_skip [] = 
-{
+[[maybe_unused]] static const char *_builtin_struct_to_skip[] = {
     "struct.list_head",
     "struct.raw_spinlock",
     "struct.hlist_node",
@@ -331,5 +290,4 @@ static const char* _builtin_struct_to_skip [] =
     "struct.kernel_symbol",
 };
 
-#endif//_CAPCHK_INTERNAL_H_
-
+#endif //_CAPCHK_INTERNAL_H_
