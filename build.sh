@@ -1,7 +1,7 @@
 #!/bin/bash
 # this little script will make life easier
 # 2018 Tong Zhang<t.zhang2@partner.samsung.com>
-# 2020 Tong Zhang<ztong0001@gmail.com>
+# 2020-2021 Tong Zhang<ztong0001@gmail.com>
 
 function build
 {
@@ -13,10 +13,8 @@ function build
     mkdir build
     pushd build
     cmake ../ \
-        -DLLVM_DIR=/opt/toolchain/10.0.1 \
-        -DLLVM_ROOT=/opt/toolchain/10.0.1 \
+        -DLLVM_CMAKE_PATH=/usr/lib/llvm-11/lib/cmake \
         -DCMAKE_BUILD_TYPE=Debug \
-
 
     make -j${JOBS}
     popd

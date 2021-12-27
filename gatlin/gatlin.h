@@ -20,7 +20,9 @@
 #include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/ValueTracking.h"
 #include "llvm/IR/CFG.h"
+#if (LLVM_VERSION_MAJOR <= 10)
 #include "llvm/IR/CallSite.h"
+#endif
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Dominators.h"
@@ -97,7 +99,6 @@ private:
   void identify_kmi(Module &);
   void identify_dynamic_kmi(Module &);
 
-  void populate_indcall_list_using_cvf(Module &);
   void populate_indcall_list_through_kmi(Module &);
 
   FunctionSet resolve_indirect_callee_using_kmi(CallInst *, int &err);
@@ -152,9 +153,6 @@ private:
   bool match_cs_using_fptr_method_1(Function *, InstructionList &callgraph,
                                     FunctionToCheckResult &visited, int &good,
                                     int &bad, int &ignored);
-  bool match_cs_using_cvf(Function *, InstructionList &callgraph,
-                          FunctionToCheckResult &visited, int &good, int &bad,
-                          int &ignored);
 
   InstructionSet *discover_chks(Function *f);
   InstructionSet *discover_chks(Function *f, FunctionSet &visited);
@@ -330,6 +328,12 @@ private:
     return skip_funcs->exists_ignore_dot_number(str) ||
            kernel_api->exists_ignore_dot_number(str);
   };
+  inline bool is_skip_var(const StringRef &str) const {
+    return is_skip_var(std::string(str));
+  };
+  inline bool is_skip_function(const StringRef &str) const {
+    return is_skip_function(std::string(str));
+  }
 
   FunctionSet function_signature_match(CallInst *ci);
 };

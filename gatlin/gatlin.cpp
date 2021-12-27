@@ -6,7 +6,6 @@
 
 #include "gatlin.h"
 
-#include "cvfa.h"
 // my aux headers
 #include "color.h"
 #include "stopwatch.h"
@@ -58,13 +57,13 @@ void gatlin::find_in_mi2m(Type *t, ModuleSet &ms) {
     return;
   }
   // match using struct name
-  std::string name = t->getStructName();
+  auto name = std::string(t->getStructName());
   str_truncate_dot_number(name);
   for (auto msi : mi2m) {
     StructType *stype = dyn_cast<StructType>(msi.first);
     if (!stype->hasName())
       continue;
-    std::string struct_name = stype->getName();
+    auto struct_name = std::string(stype->getName());
     str_truncate_dot_number(struct_name);
     if (struct_name != name)
       continue;
@@ -555,8 +554,13 @@ FunctionSet gatlin::resolve_indirect_callee_ldcst_kmi(CallInst *ci, int &err,
                                                       int &kmi_cnt,
                                                       int &dkmi_cnt) {
   FunctionSet fs;
+#if (LLVM_VERSION_MAJOR <= 10)
+  Value *cv = ci->getCalledValue();
+#else
+  Value *cv = ci->getCalledOperand();
+#endif
   // non-gep case. loading from bitcasted struct address
-  if (StructType *ldbcstty = identify_ld_bcst_struct(ci->getCalledValue())) {
+  if (StructType *ldbcstty = identify_ld_bcst_struct(cv)) {
 #if 0
         errs()<<"Found ld+bitcast sty to ptrty:";
         if (ldbcstty->isLiteral())
@@ -610,8 +614,11 @@ end:
 // method 3, improved accuracy
 FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst *ci, int &err) {
   FunctionSet fs;
+#if (LLVM_VERSION_MAJOR <= 10)
   Value *cv = ci->getCalledValue();
-
+#else
+  Value *cv = ci->getCalledOperand();
+#endif
   err = 6;
   // GEP case.
   // need to find till gep is exhausted and mi2m doesn't have a match
@@ -742,7 +749,11 @@ FunctionSet gatlin::resolve_indirect_callee_using_kmi(CallInst *ci, int &err) {
  */
 FunctionSet gatlin::resolve_indirect_callee_using_dkmi(CallInst *ci, int &err) {
   FunctionSet fs;
+#if (LLVM_VERSION_MAJOR <= 10)
   Value *cv = ci->getCalledValue();
+#else
+  Value *cv = ci->getCalledOperand();
+#endif
   InstructionSet geps = get_load_from_gep(cv);
 
   err = 6;
@@ -852,7 +863,11 @@ bool gatlin::load_from_global_fptr(Value *cv) {
 }
 
 void gatlin::dump_kmi_info(CallInst *ci) {
+#if (LLVM_VERSION_MAJOR <= 10)
   Value *cv = ci->getCalledValue();
+#else
+  Value *cv = ci->getCalledOperand();
+#endif
   ValueList worklist;
   ValueSet visited;
   worklist.push_back(cv);
@@ -917,6 +932,11 @@ void gatlin::populate_indcall_list_through_kmi(Module &module) {
         <<ANSI_COLOR_RESET<<"\n";
 #endif
   for (auto *idc : idcs) {
+#if (LLVM_VERSION_MAJOR <= 10)
+    Value *idcv = idc->getCalledValue();
+#else
+    Value *idcv = idc->getCalledOperand();
+#endif
 #if 0
         errs()<<ANSI_COLOR_YELLOW<<" * ";
         idc->getDebugLoc().print(errs());
@@ -924,7 +944,7 @@ void gatlin::populate_indcall_list_through_kmi(Module &module) {
 #endif
     // is this a trace point?
     // special condition, ignore tracepoint, we are not interested in them.
-    if (is_tracepoint_func(idc->getCalledValue())) {
+    if (is_tracepoint_func(idcv)) {
       count++;
       targets++;
       kmi_cnt++;
@@ -933,7 +953,7 @@ void gatlin::populate_indcall_list_through_kmi(Module &module) {
 #endif
       continue;
     }
-    if (is_container_of(idc->getCalledValue())) {
+    if (is_container_of(idcv)) {
       container_of_cnt++;
 #if 0
             errs()<<" [container_of]\n";
@@ -1123,93 +1143,6 @@ void gatlin::populate_indcall_list_through_kmi(Module &module) {
   errs() << "# unknown pattern:" << unknown << " "
          << (100 * unknown / idcs.size()) << "%\n";
   // exit(0);
-}
-
-/*
- * method 2: cvf: Complex Value Flow Analysis
- * figure out candidate for indirect callee using value flow analysis
- */
-void gatlin::populate_indcall_list_using_cvf(Module &module) {
-  // create svf instance
-  CVFA cvfa;
-
-  /*
-   * NOTE: shrink our analyse scope so that we can run faster
-   * remove all functions which don't have function pointer use and
-   * function pointer propagation, because we only interested in getting
-   * indirect callee here, this will help us make cvf run faster
-   */
-  FunctionSet keep;
-  FunctionSet remove;
-  // add skip functions to remove
-  // add kernel_api to remove
-  for (auto f : *skip_funcs)
-    remove.insert(module.getFunction(f));
-  for (auto f : *kernel_api)
-    remove.insert(module.getFunction(f));
-  for (auto f : trace_event_funcs)
-    remove.insert(f);
-  for (auto f : bpf_funcs)
-    remove.insert(f);
-  for (auto f : irq_funcs)
-    remove.insert(f);
-
-  FunctionList new_add;
-  // for (auto f: all_functions)
-  //    if (is_using_function_ptr(f) || is_address_taken(f))
-  //        keep.insert(f);
-  for (auto f : fuidcs)
-    keep.insert(f);
-
-  for (auto f : syscall_list)
-    keep.insert(f);
-
-  ModuleDuplicator md(module, keep, remove);
-  Module &sm = md.getResult();
-
-  // CVF: Initialize, this will take some time
-  cvfa.initialize(sm);
-
-  // do analysis(idcs=sink)
-  // find out all possible value of indirect callee
-  errs() << ANSI_COLOR(BG_WHITE, FG_BLUE)
-         << "SVF indirect call track:" << ANSI_COLOR_RESET << "\n";
-  for (auto f : all_functions) {
-    ConstInstructionSet css;
-    Function *df = dyn_cast<Function>(md.map_to_duplicated(f));
-    cvfa.get_callee_function_indirect(df, css);
-    if (css.size() == 0)
-      continue;
-    errs() << ANSI_COLOR(BG_CYAN, FG_WHITE) << "FUNC:" << f->getName()
-           << ", found " << css.size() << ANSI_COLOR_RESET << "\n";
-    for (auto *_ci : css) {
-      // indirect call sites->function
-      const CallInst *ci = dyn_cast<CallInst>(md.map_to_origin(_ci));
-      assert(ci != NULL);
-      FunctionSet *funcs = idcs2callee[ci];
-      if (funcs == NULL) {
-        funcs = new FunctionSet;
-        idcs2callee[ci] = funcs;
-      }
-      funcs->insert(f);
-      // func->indirect callsites
-      InstructionSet *csis = f2csi_type1[f];
-      if (csis == NULL) {
-        csis = new InstructionSet;
-        f2csi_type1[f] = csis;
-      }
-      CallInst *non_const_ci =
-          const_cast<CallInst *>(static_cast<const CallInst *>(ci));
-
-      csis->insert(non_const_ci);
-
-#if 1
-      errs() << "CallSite: ";
-      ci->getDebugLoc().print(errs());
-      errs() << "\n";
-#endif
-    }
-  }
 }
 
 /*
@@ -1482,8 +1415,11 @@ void gatlin::identify_kmi(Module &module) {
     if (!mod_interface->isAggregateType())
       continue;
     if (mod_interface->isArrayTy()) {
-      mod_interface =
-          dyn_cast<ArrayType>(mod_interface)->getTypeAtIndex((unsigned)0);
+#if (LLVM_VERSION_MAJOR <= 10)
+      mod_interface = dyn_cast<ArrayType>(mod_interface)->getTypeAtIndex(0u);
+#else
+      mod_interface = dyn_cast<ArrayType>(mod_interface)->getElementType();
+#endif
     }
     if (!mod_interface->isStructTy()) {
       if (mod_interface->isFirstClassType())
@@ -1625,7 +1561,11 @@ void gatlin::preprocess(Module &module) {
         if (!ci || ci->getCalledFunction() || ci->isInlineAsm())
           continue;
 
+#if (LLVM_VERSION_MAJOR <= 10)
         Value *cv = ci->getCalledValue();
+#else
+        Value *cv = ci->getCalledOperand();
+#endif
         Function *bcf = dyn_cast<Function>(cv->stripPointerCasts());
         if (bcf) {
           // this is actually a direct call with function type cast
@@ -1937,7 +1877,11 @@ bool gatlin::match_cs_using_fptr_method_1(Function *func,
   if ((*fl->begin()) != func)
     goto end;
   for (auto *idc : idcs) {
+#if (LLVM_VERSION_MAJOR <= 10)
     Value *cv = idc->getCalledValue();
+#else
+    Value *cv = idc->getCalledOperand();
+#endif
     Type *ft = cv->getType()->getPointerElementType();
     Type *ft2 = cv->stripPointerCasts()->getType()->getPointerElementType();
     if ((func_type == ft) || (func_type == ft2)) {
@@ -1952,59 +1896,26 @@ end:
   return cnt != 0;
 }
 
-/*
- * get result from value flow analysis result
- */
-bool gatlin::match_cs_using_cvf(Function *func, InstructionList &callgraph,
-                                FunctionToCheckResult &visited, int &good,
-                                int &bad, int &ignored) {
-  // TODO: optimize this
-  int cnt = 0;
-  for (auto *idc : idcs) {
-    auto fs = idcs2callee.find(idc);
-    if (fs == idcs2callee.end())
-      continue;
-    for (auto *f : *(fs->second)) {
-      if (f != func)
-        continue;
-      cnt++;
-      backward_slice_build_callgraph(callgraph, idc, visited, good, bad,
-                                     ignored);
-      break;
-    }
-  }
-  return cnt != 0;
-}
-
 bool gatlin::backward_slice_using_indcs(Function *func,
                                         InstructionList &callgraph,
                                         FunctionToCheckResult &visited,
                                         int &good, int &bad, int &ignored) {
-  bool ret;
   /*
    * direct call using bitcast
    * this is exact match don't need to look further
    */
-  ret = match_cs_using_fptr_method_0(func, callgraph, visited, good, bad,
-                                     ignored);
-  if (ret)
-    return ret;
+  if (match_cs_using_fptr_method_0(func, callgraph, visited, good, bad,
+                                   ignored))
+    return true;
 
-  if (!knob_gatlin_cvf) {
-    ret = match_cs_using_fptr_method_1(func, callgraph, visited, good, bad,
-                                       ignored);
-    if (ret)
-      MatchCallCriticalFuncPtr++;
-    else
-      UnMatchCallCriticalFuncPtr++;
-    return ret;
-  }
-  ret = match_cs_using_cvf(func, callgraph, visited, good, bad, ignored);
-  if (ret)
+  if (match_cs_using_fptr_method_1(func, callgraph, visited, good, bad,
+                                   ignored)) {
     MatchCallCriticalFuncPtr++;
-  else
+    return true;
+  } else {
     UnMatchCallCriticalFuncPtr++;
-  return ret;
+    return false;
+  }
 }
 
 /*
@@ -2370,7 +2281,11 @@ void gatlin::crit_func_collect(CallInst *cs, FunctionSet &current_crit_funcs,
       ill->insert(chki);
 
   } // else if (Value* csv = cs->getCalledValue())
+#if (LLVM_VERSION_MAJOR <= 10)
   else if (cs->getCalledValue() != NULL) {
+#else
+  else if (cs->getCalledOperand() != NULL) {
+#endif
     if (knob_gatlin_ccfv) {
       errs() << "Resolve indirect call @ ";
       cs->getDebugLoc().print(errs());
@@ -2570,7 +2485,7 @@ void gatlin::forward_all_interesting_usage(Instruction *I, unsigned int depth,
   Function *func = I->getFunction();
   DominatorTree dt(*func);
 
-  if (is_skip_function(func->getName())) {
+  if (is_skip_function(std::string(func->getName()))) {
     skipped_functions.insert(func);
     return;
   }
@@ -2733,7 +2648,11 @@ out:
 
 FunctionSet gatlin::function_signature_match(CallInst *ci) {
   FunctionSet fs;
+#if (LLVM_VERSION_MAJOR <= 10)
   Value *cv = ci->getCalledValue();
+#else
+  Value *cv = ci->getCalledOperand();
+#endif
   Type *ft = cv->getType()->getPointerElementType();
   if (t2fs.find(ft) == t2fs.end())
     return fs;
@@ -2811,10 +2730,6 @@ void gatlin::process_cpgf(Module &module) {
   errs() << "Populate indirect callsite using kernel module interface\n";
   STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
 
-  if (knob_gatlin_cvf) {
-    errs() << "Resolve indirect callsite.\n";
-    STOP_WATCH_MON(WID_0, populate_indcall_list_using_cvf(module));
-  }
   // exit(0);
   // pass 1
   errs() << "Collect all permission-checked variables and functions\n";

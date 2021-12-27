@@ -21,12 +21,15 @@ private:
   StringSet vars;
 
 public:
-  SimpleSet(const string &, const StringList);
+  SimpleSet(const string &, const StringList &);
+  SimpleSet(const StringRef _f, const StringList &sl)
+      : SimpleSet(std::string(_f), sl) {}
   ~SimpleSet(){};
-  bool use_builtin();
+  bool use_builtin() { return _use_builtin; }
   bool exists(const std::string &);
+  bool exists(const StringRef str) { return exists(std::string(str)); }
   bool exists_ignore_dot_number(const std::string &);
-  size_t size();
+  size_t size() { return vars.size(); };
 
   /*
    * iterator stuff

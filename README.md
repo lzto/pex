@@ -12,7 +12,7 @@ see ```log/bug_report.md```
 
 # prerequisites
 
-* LLVM-6/7/8/9/10
+* LLVM-6/7/8/9/10/11
 * compiler with C++14 support
 
 # build
@@ -20,6 +20,8 @@ see ```log/bug_report.md```
 ./build.sh
 
 # usage
+
+Example:
 
 ```
 opt \
@@ -39,6 +41,9 @@ opt \
     -o /dev/null 2>&1 | tee log
 ```
 
+Please make sure ```skip.fun, skip.var and lsm.hook``` is copied to your working directory
+or make sure the path specified in the option is correct.
+
 # options
 * gating - gating function: cap/lsm/dac, default: cap
 * ccv - check critical variables, default: 0
@@ -55,7 +60,7 @@ opt \
 * nkinit - print kernel non init functions, default 1
 * kmi - dump kernel interface, default 0
 * dkmi - dump dkmi result, default 0
-* cvf - complex value flow, default 0
+* cvf - deprecated - complex value flow, default 0
 * skipfun - list of functions don't care
 * skipvar - list of variables don't care
 * capfunc - list of capability check functions
@@ -68,7 +73,7 @@ opt \
 * wcapchk-kinit - warn capability check during kernel boot process, default 0
 * fwd-depth - forward search max depth, default 100
 * bwd-depth - backward search max depth, default 100
-* svfbudget - # of iterations for cvf graph update, default 5
+* svfbudget - deprecated - # of iterations for cvf graph update, default 5
 
 # vmlinux.bc
 
@@ -105,7 +110,8 @@ a constant struct which statically stores a function pointer,
 by matching those struct type and indicies we can match indirect call
 fairly accurate(over approximate)
 
-* CVF: this is built upon SVF, and can accurately figure out callee for indirect call,
+* CVF: this method is deprecated, please checkout tag svf if you want to use svf.
+This is built upon SVF, and can accurately figure out callee for indirect call,
 however this is very slow and memory hungry.
 CVF can process a module with ~40k functions in one hour on an Intel Xeon 6132 2.6GHz CPU.
 

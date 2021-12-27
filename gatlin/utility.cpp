@@ -84,7 +84,11 @@ Function *get_callee_function_direct(Instruction *i) {
   CallInst *ci = dyn_cast<CallInst>(i);
   if (Function *f = ci->getCalledFunction())
     return f;
+#if (LLVM_VERSION_MAJOR <= 10)
   Value *cv = ci->getCalledValue();
+#else
+  Value *cv = ci->getCalledOperand();
+#endif
   Function *f = dyn_cast<Function>(cv->stripPointerCasts());
   return f;
 }
@@ -152,13 +156,13 @@ bool dmi_type_exists(StructType *t, DMInterface &dmi) {
     return false;
   }
   // match using name
-  stname = t->getStructName();
+  stname = std::string(t->getStructName());
   str_truncate_dot_number(stname);
   for (auto &ifpsp : dmi) {
     StructType *cst = ifpsp.first;
     if (cst->isLiteral())
       continue;
-    std::string cstn = cst->getStructName();
+    std::string cstn = std::string(cst->getStructName());
     str_truncate_dot_number(cstn);
     if (cstn == stname) {
       return true;
@@ -187,13 +191,13 @@ FunctionSet *dmi_exists(StructType *t, Indices &idcs, DMInterface &dmi) {
   }
 
   // match using name
-  stname = t->getStructName();
+  stname = std::string(t->getStructName());
   str_truncate_dot_number(stname);
   for (auto &ifpsp : dmi) {
     StructType *cst = ifpsp.first;
     if (cst->isLiteral())
       continue;
-    std::string cstn = cst->getStructName();
+    std::string cstn = std::string(cst->getStructName());
     str_truncate_dot_number(cstn);
     if (cstn == stname) {
       ifpairs = ifpsp.second;
@@ -413,7 +417,11 @@ StructType *find_assignment_to_struct_type(Value *v, Indices &idcs,
     if (CallInst *ci = dyn_cast<CallInst>(tu)) {
       // currently only deal with direct call...
       Function *cif = get_callee_function_direct(ci);
+#if (LLVM_VERSION_MAJOR <= 10)
       if ((ci->getCalledValue() == v) || (cif == u)) {
+#else
+      if ((ci->getCalledOperand() == v) || (cif == u)) {
+#endif
         // ignore calling myself..
         continue;
       } else if (cif == NULL) {

@@ -12,7 +12,7 @@
  * _f: file name
  * sl: builtin set
  */
-SimpleSet::SimpleSet(const std::string &_f, const StringList sl) : f(_f) {
+SimpleSet::SimpleSet(const std::string &_f, const StringList &sl) : f(_f) {
   _use_builtin = false;
   for (auto n : sl)
     builtin.insert(n);
@@ -44,7 +44,3 @@ bool SimpleSet::exists_ignore_dot_number(const std::string &str) {
   str_truncate_dot_number(_str);
   return exists(_str);
 }
-
-size_t SimpleSet::size() { return vars.size(); }
-
-bool SimpleSet::use_builtin() { return _use_builtin; }

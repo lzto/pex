@@ -7,6 +7,9 @@
 
 #include "module_duplicator.h"
 
+#if (LLVM_VERSION_MAJOR <= 10)
+#include "llvm/IR/CallSite.h"
+#endif
 #include "llvm/IR/Verifier.h"
 #include "llvm/Transforms/Utils/Cloning.h"
 
@@ -71,7 +74,7 @@ ModuleDuplicator::ModuleDuplicator(Module &m, FunctionSet &keep,
   for (auto f : to_erase) {
     // create declaration
     std::string n = "_dummy_";
-    n.append(f->getName());
+    n.append(std::string(f->getName()));
     // errs()<<" erase "<<f->getName()<<"\n";
 #if (LLVM_VERSION_MAJOR >= 9)
     FunctionCallee nf_callee = res_mod->getOrInsertFunction(

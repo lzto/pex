@@ -84,9 +84,9 @@ cl::opt<bool>
                      cl::desc("print dkmi result - disabled by default"),
                      cl::init(false));
 
-cl::opt<bool> knob_gatlin_cvf(
-    "cvf", cl::desc("complex value flow analysis - disabled by default"),
-    cl::init(false));
+cl::opt<bool>
+    knob_gatlin_cvf("cvf", cl::desc("complex value flow analysis - deprecated"),
+                    cl::init(false));
 
 cl::opt<string> knob_skip_func_list("skipfun",
                                     cl::desc("non-critical function list"),

@@ -6,7 +6,9 @@
 #include "color.h"
 #include "gating_function_base.h"
 
+#if (LLVM_VERSION_MAJOR <= 10)
 #include "llvm/IR/CallSite.h"
+#endif
 #include "llvm/Support/raw_ostream.h"
 
 #include "utility.h"
@@ -68,7 +70,7 @@ GatingCap::GatingCap(Module &module, std::string &capfile)
   for (Module::iterator fi = module.begin(), f_end = module.end(); fi != f_end;
        ++fi) {
     Function *func = dyn_cast<Function>(fi);
-    StringRef fname = func->getName();
+    auto fname = std::string(func->getName());
 
     if (cap_func_name2cap_arg_pos.find(fname) !=
         cap_func_name2cap_arg_pos.end()) {
@@ -107,7 +109,7 @@ GatingCap::GatingCap(Module &module, std::string &capfile)
         Function *child = get_callee_function_direct(ci);
         if (!child)
           continue;
-        StringRef fname = child->getName();
+        auto fname = std::string(child->getName());
         // dont bother if this belongs to skip function
         if (skip_funcs->exists_ignore_dot_number(fname) ||
             kernel_api->exists_ignore_dot_number(fname))
@@ -289,7 +291,7 @@ void GatingLSM::load_lsm_hook_list(std::string &file) {
 
 bool GatingLSM::is_lsm_hook(StringRef &str) {
   if (lsm_hook_names.size()) {
-    return lsm_hook_names.find(str) != lsm_hook_names.end();
+    return lsm_hook_names.find(std::string(str)) != lsm_hook_names.end();
   }
   // use builtin name
   if (str.startswith("security_"))

@@ -4,7 +4,8 @@ project(pex)
 
 set(CMAKE_CXX_STANDARD 14)
 
-find_package(LLVM REQUIRED CONFIG)
+find_package(LLVM REQUIRED CONFIG
+  HINTS "${LLVM_CMAKE_PATH}")
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
@@ -17,13 +18,10 @@ link_directories(${LLVM_LIBRARY_DIRS})
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(AddLLVM)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
-                    ${CMAKE_CURRENT_SOURCE_DIR}/libsvf/include
-                    ${CMAKE_CURRENT_BINARY_DIR}/libsvf/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 
-                  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fPIC -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fPIC -Wall")
 
-add_subdirectory(libsvf/lib)
 add_subdirectory(gatlin)
 
