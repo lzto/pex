@@ -12,7 +12,7 @@ see ```log/bug_report.md```
 
 # prerequisites
 
-* LLVM-6/7/8/9/10/11
+* LLVM-6/7/8/9/10/11/12
 * compiler with C++14 support
 
 # build
