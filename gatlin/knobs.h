@@ -146,4 +146,9 @@ cl::opt<unsigned int>
     knob_mt("mt", cl::desc("Multi-threading, number of threads - default 1"),
             cl::init(1));
 
+cl::opt<bool> knob_dump_call_graph(
+    "dump-callgraph",
+    cl::desc("dump call graph into .dot file and exit - default false"),
+    cl::init(false));
+
 #endif //_CAPCHK_KNOBS_

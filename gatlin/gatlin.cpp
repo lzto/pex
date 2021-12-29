@@ -2677,6 +2677,38 @@ void gatlin::my_debug(Module &module) {
   errs() << "# fsm targets:" << targets << "\n";
 }
 
+///
+/// dump call graph into .dot file
+///
+void gatlin::dump_call_graph(Module &module) {
+  if (!knob_dump_call_graph)
+    return;
+  ofstream dotfile;
+  dotfile.open("vmlinux-cfg.dot");
+  dotfile << "digraph G { \n";
+  for (auto pair : f2csi_type0) {
+    const auto *f = pair.first;
+    auto calleeName = std::string(f->getName());
+    const auto *ins = pair.second;
+    for (auto i : *ins) {
+      auto callerName = std::string(i->getFunction()->getName());
+      dotfile << callerName << "->" << calleeName << ";\n";
+    }
+  }
+  for (auto pair : f2csi_type1) {
+    const auto *f = pair.first;
+    auto calleeName = std::string(f->getName());
+    const auto *ins = pair.second;
+    for (auto i : *ins) {
+      auto callerName = std::string(i->getFunction()->getName());
+      dotfile << callerName << "->" << calleeName << " [style=dotted];\n";
+    }
+  }
+  dotfile << "}\n";
+  dotfile.close();
+  exit(0);
+}
+
 /*
  * process capability protected globals and functions
  */
@@ -2729,6 +2761,8 @@ void gatlin::process_cpgf(Module &module) {
 
   errs() << "Populate indirect callsite using kernel module interface\n";
   STOP_WATCH_MON(WID_0, populate_indcall_list_through_kmi(module));
+
+  dump_call_graph(module);
 
   // exit(0);
   // pass 1

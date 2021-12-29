@@ -86,6 +86,9 @@ private:
   // capability checker
   void process_cpgf(Module &module);
 
+  // dump call graph into .dot file
+  void dump_call_graph(Module &module);
+
   /*
    * prepare
    */

@@ -1,4 +1,4 @@
-Gatlin: Gating Function Checker for Linux Kernel
+PeX - A Permission Check Analysis Framework for Linux Kernel
 -------
 
 This checker figures out critical resource(callee of direct/indirect callsite,
@@ -74,6 +74,7 @@ or make sure the path specified in the option is correct.
 * fwd-depth - forward search max depth, default 100
 * bwd-depth - backward search max depth, default 100
 * svfbudget - deprecated - # of iterations for cvf graph update, default 5
+* dump-callgraph - dump call graph into .dot file and exit, default false
 
 # vmlinux.bc
 
@@ -164,4 +165,17 @@ so that it won't complain
 
 * \+ DEBUG_INFO
 * \- AMDGPU, I915, KCOV, KEXEC_FILE
+
+## Citation
+
+If you use this tool and find it useful in your project please cite our paper. Thanks!
+```
+@inproceedings{zhang2019pex,
+  title={Pex: A permission check analysis framework for linux kernel},
+  author={Zhang, Tong and Shen, Wenbo and Lee, Dongyoon and Jung, Changhee and Azab, Ahmed M and Wang, Ruowen},
+  booktitle={28th $\{$USENIX$\}$ Security Symposium ($\{$USENIX$\}$ Security 19)},
+  pages={1205--1220},
+  year={2019}
+}
+```
 
